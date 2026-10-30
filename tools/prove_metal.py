@@ -60,11 +60,29 @@ def main():
             previous_withdrawal = report.get('withdrawal', {})
             published_path = ROOT / 'bench/results/metal-paid-proof.json'
             published = json.loads(published_path.read_text(encoding='utf-8')) if published_path.exists() else {}
-            prior_queue = previous_withdrawal.get('queued') or published.get('withdrawal', {}).get('queued')
+            published_withdrawal = published.get('withdrawal', {})
+            prior_queue = previous_withdrawal.get('queued') or published_withdrawal.get('queued')
             withdrawal = rail.withdraw()
             if withdrawal.get('status') == 'waiting' and prior_queue:
                 withdrawal['queued'] = prior_queue
+            transactions = {}
+            for entry in report.get('withdrawal_transactions', []) + published.get('withdrawal_transactions', []):
+                if isinstance(entry, dict) and isinstance(entry.get('tx'), str):
+                    transactions.setdefault(entry['tx'], entry)
+
+            def remember(kind, transaction):
+                if isinstance(transaction, dict) and isinstance(transaction.get('tx'), str):
+                    transactions.setdefault(transaction['tx'], {'kind': kind, **transaction})
+
+            for prior in (previous_withdrawal, published_withdrawal, withdrawal):
+                remember('queue', prior.get('queued'))
+                for claim in prior.get('claimed', []):
+                    remember('claim', claim)
+            withdrawal['returned_float_confirmed'] = any(
+                prior.get('returned_float_confirmed', False)
+                for prior in (previous_withdrawal, published_withdrawal, withdrawal))
             report['withdrawal'] = withdrawal
+            report['withdrawal_transactions'] = list(transactions.values())
             report['observed_at'] = time.time()
             save(path, report)
             public = {**report, 'terms': {k:v for k,v in terms.items() if k != 'provider_url'}}

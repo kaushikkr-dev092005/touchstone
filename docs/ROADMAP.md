@@ -25,6 +25,7 @@ The public event page lists build completion on **13 November, 18:29 UTC / 23:59
 - [x] Add account setup guide, readiness command and dashboard readiness indicators.
 - [x] Configure supplied credentials locally, verify RPC chain 63825 and Airwallex authentication/read scopes.
 - [x] Fund a dedicated testnet wallet, deposit 0.10 USDZ, purchase one 0.01 USDZ GPU inference call and replay its original receipt/delivery.
+- [x] Return the remaining 0.09 testnet USDZ through a finalized non-deferred withdrawal claim; record queue and claim transactions.
 - [ ] Validate a real sandbox authorization/capture: merchant PaymentIntent creation currently returns `configuration_error`.
 - [x] Measure two model sizes on the RTX 3050; preserve raw outputs and paired replay results.
 - [x] Add task-specific offline eligibility screening with deduplicated sources and a separate retrospective evaluation partition.
@@ -33,7 +34,7 @@ The public event page lists build completion on **13 November, 18:29 UTC / 23:59
 - [x] Implement the integrated `banked-job` workflow, real SDK process bridge, local x402 provider and original-delivery recovery.
 - [ ] Qualify useful paid inference and prove the complete external sandbox banking loop after merchant configuration is enabled.
 
-The real paid proof rejected an incorrect answer (1250 cents instead of 2000), retained the failed-call charge and demonstrated both cached and provider-side replay without another payment. Receipt assurance is preconfirmed; unused float is not yet confirmed returned. Actual Airwallex authentication, balance reads and Global Account reads pass. PaymentIntent creation fails before authorization. See LIVE_PROOF.md for the precise evidence and blocker.
+The real paid proof rejected an incorrect answer (1250 cents instead of 2000), retained the failed-call charge and demonstrated both cached and provider-side replay without another payment. The remaining 0.09 testnet USDZ has now returned through a non-deferred claim; the receipt assurance remains preconfirmed. Actual Airwallex authentication, balance reads and Global Account reads pass. PaymentIntent creation fails before authorization. See LIVE_PROOF.md for the precise evidence and blocker.
 
 The updated simulator has 100% median true success for Touchstone at $6.162 versus premium's 99.5% at $10.200 on supported synthetic templates. This is a bounded-rule regression result; general semantic accuracy and real model savings remain unproven.
 

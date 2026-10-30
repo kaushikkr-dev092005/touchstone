@@ -68,11 +68,11 @@ The model uses NVIDIA Vulkan on loopback port 8080. The x402 seller binds loopba
 python tools/prove_metal.py --withdraw-only
 ```
 
-This resumes the existing withdrawal for `funded-proof-001` without replaying inference. The original proof preserves one reservation, a 0.10 USDZ deposit and a 0.01 USDZ purchase cap. Both cached retry and direct provider receipt replay were verified without another payment. The purchased model answer failed verification; its expense remains recorded. The current withdrawal is queued and must be checked again after its epoch finalizes.
+This resumes the existing withdrawal for `funded-proof-001` without replaying inference. The original proof preserves one reservation, a 0.10 USDZ deposit and a 0.01 USDZ purchase cap. Both cached retry and direct provider receipt replay were verified without another payment. The purchased model answer failed verification; its expense remains recorded. A non-deferred claim has now returned 0.09 testnet USDZ to the funding wallet.
 
 A paid missing output remains blocked until the original provider accepts receipt replay. A definitive SDK refusal can establish `UNPAID_CONFIRMED`; only the same reservation, URL, seller and price may retry. SDK pending state is durable before sending, and is cleared only after definitive outcomes in the pinned version.
 
-Withdrawals expose `empty`, `waiting`, queued and non-deferred claims separately. `empty` can mean funds are not finalized; it is not returned float. The original proof's unused allocation has not yet been confirmed returned. Repeated deposits are blocked until the original deposit is reconciled; no automatic top-up is implemented.
+Withdrawals expose `empty`, `waiting`, queued and non-deferred claims separately. `empty` can mean funds are not finalized; it is not returned float. The proof records the queue and successful claim transactions separately. Repeated deposits are blocked until the original deposit is reconciled; no automatic top-up is implemented.
 
 ## Integrated banked job
 

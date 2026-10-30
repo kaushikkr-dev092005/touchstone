@@ -34,7 +34,7 @@ SDK pending state is durably stored before send and cleared only after verified 
 
 The included loopback seller issues real x402 requirements, validates task-digest resource binding, verifies SDK signatures against chain/service state, and caches delivery by payment ID. A plain receipt replay cannot create a replacement payment. The provider receives no funding or Airwallex keys, and its model worker receives no RPC credential. It has one execution slot and refuses quotes when the local model is unavailable.
 
-Seventeen Node tests cover wallets, price/unit caps, immutable retries, pending invoice replay, unpaid refusal handling, durable delivery and source binding. A separate actual proof records a 0.10 USDZ deposit, one 0.01 USDZ GPU inference purchase, and identical buyer/provider replays. The purchased output failed source verification; the charge remains recorded. Receipt assurance is preconfirmed, and unused float is not yet confirmed returned.
+Seventeen Node tests cover wallets, price/unit caps, immutable retries, pending invoice replay, unpaid refusal handling, durable delivery and source binding. A separate actual proof records a 0.10 USDZ deposit, one 0.01 USDZ GPU inference purchase, identical buyer/provider replays, and a non-deferred return of the remaining 0.09 USDZ. The purchased output failed source verification; the charge remains recorded. Receipt assurance remains preconfirmed.
 
 Sources: [Metal clearing](https://docs.metalntwx.com/agents/clearing), [x402](https://github.com/coinbase/x402), pinned SDK source/types under installed `@metalntwx/metal-pay`.
 
@@ -44,4 +44,4 @@ Sources: [Metal clearing](https://docs.metalntwx.com/agents/clearing), [x402](ht
 
 Two measured tiers achieved 22.2% and 48.9% strict correctness on 90 calls each. Raw profiles include available layer-offload logs and VRAM evidence. Paired replay uses assumed prices and rejects a blanket cheap-first savings claim. Bounded tools solve 1,000 generated tasks without model calls. The deduplicated offline eligibility screen authorizes no model for autonomous procurement. Protocol probes require their explicit purpose flag and do not bypass this screen while claiming useful autonomous model selection.
 
-The main dashboard's three-job scenario remains simulated. Its separate actual-evidence panel and banked-job journal report the real integration state. A complete banking demonstration needs merchant configuration resolved, actual hold/capture, withdrawal/finality evidence and a qualified model on representative finance-operations sources.
+The main dashboard's three-job scenario remains simulated. Its separate actual-evidence panel and banked-job journal report the real integration state. A complete banking demonstration still needs merchant configuration resolved, actual hold/capture, finality of the paid inference receipt and a qualified model on representative finance-operations sources.

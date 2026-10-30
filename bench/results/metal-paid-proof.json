@@ -115,13 +115,21 @@
   "real_receipt_verified_by_provider": true,
   "withdrawal": {
     "mode": "TESTNET",
-    "status": "waiting",
-    "epoch": "93301",
-    "returned_float_confirmed": false,
-    "queued": {
-      "tx": "0xf5a00b55cdb84d5ffaf9d5a04b8c73aba7238ee858270641c8b05d4af8d73a98"
-    }
+    "status": "empty",
+    "returned_float_confirmed": true
   },
   "provider_receipt_replay_identical": true,
-  "observed_at": 1793382876.9394581
+  "observed_at": 1793383409.203695,
+  "withdrawal_transactions": [
+    {
+      "kind": "queue",
+      "tx": "0xf5a00b55cdb84d5ffaf9d5a04b8c73aba7238ee858270641c8b05d4af8d73a98"
+    },
+    {
+      "kind": "claim",
+      "amount": "90000000000000000",
+      "tx": "0x5e6f4e180c98f5843db3d98c7cc149c19e9f79c0c12b24235901ae3de30b398d",
+      "deferred": false
+    }
+  ]
 }

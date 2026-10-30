@@ -18,9 +18,9 @@ The probe deposited **0.10 testnet USDZ** into its own persisted clearing wallet
 | Cached buyer retry | Identical original result; no second payment |
 | Provider receipt replay | Original signed proof returned identical stored delivery; no payment creation |
 | Receipt assurance | Preconfirmed; no per-call blockchain transaction hash invented |
-| Unused float | Withdrawal queued in transaction `0xf5a00b55cdb84d5ffaf9d5a04b8c73aba7238ee858270641c8b05d4af8d73a98`; SDK reports waiting for epoch `93301`, with no claim returned yet |
+| Unused float | 0.09 testnet USDZ returned in non-deferred claim transaction `0x5e6f4e180c98f5843db3d98c7cc149c19e9f79c0c12b24235901ae3de30b398d`; withdrawal was queued in transaction `0xf5a00b55cdb84d5ffaf9d5a04b8c73aba7238ee858270641c8b05d4af8d73a98` |
 
-The queued withdrawal is not a returned-float proof. Finalized balance, queued withdrawals and actual non-deferred claims must be distinguished. Run `python tools/prove_metal.py --withdraw-only` again after epoch `93301` finalizes; this resumes the existing withdrawal and updates the evidence without replaying the paid inference request.
+The SDK confirmed the withdrawal claim after epoch `93301` finalized. `returned_float_confirmed` is true. Run `python tools/prove_metal.py --withdraw-only` to recheck withdrawal state; it retains the queue and claim transaction history and does not replay the paid inference request.
 
 The initial attempt hit a clearing epoch refusal. Recovery examined the durable SDK state, which stores pending before sending and clears it only for a verified receipt or authoritative refusal. An unpaid reservation could retry only the same URL, seller, deployment and price. Unknown held invoices retain the original SDK invoice and block replacement purchases. This behavior is covered by separate local tests.
 
