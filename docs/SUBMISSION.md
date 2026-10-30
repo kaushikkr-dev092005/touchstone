@@ -20,7 +20,7 @@ The financial stress scenario uses three customer holds totaling $2.50 with only
 - Two local model profiles, an honest negative cheap-first cost result, a 1,000-case bounded-tool baseline, and a source-deduplicated eligibility screen.
 - Local failure tests for lost payment/capture responses, changed mandates, receipt mismatches, uncertain outcomes and unavailable withdrawal float.
 
-The actual Airwallex hold/capture is blocked by a merchant `configuration_error`. The integrated workflow is implemented and tested with controlled adapters, but the full external banking loop is not yet demonstrated. Unused testnet float has not been confirmed returned. Keep these limits visible in the final submission unless later evidence supersedes them.
+The actual Airwallex hold/capture is blocked by a merchant `configuration_error`. The integrated workflow is implemented and tested with controlled adapters, but the full external banking loop is not yet demonstrated. The unused 0.09 testnet USDZ was returned through a finalized non-deferred claim; the paid receipt remains preconfirmed. Keep these limits visible in the final submission unless later evidence supersedes them.
 
 ## Differentiation
 

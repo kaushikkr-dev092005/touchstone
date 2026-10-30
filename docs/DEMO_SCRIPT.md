@@ -12,7 +12,7 @@ The financial stress scenario is a **local simulator**. Keep its mode badges vis
 | 2:50–3:20 | Close jobs, capture actual simulated spend, release rest | Explain customer capture and provider payments as different accounting entries. |
 | 3:20–3:55 | Real testnet evidence panel | Show the USD 0.01 inference purchase, signed preconfirmed receipt and identical cached/provider receipt replay. The answer was wrong and rejected; its charge remains recorded. State that this was a protocol probe. |
 | 3:55–4:30 | Planning preview and measured model evidence | Select a calculation, then a foreign-currency invoice. Show local resolution versus review with zero purchases. Explain that 1,000 generated tasks need no model, both measured models fail eligibility, and live paid inference still needs proof. |
-| 4:30–4:45 | Banked job and Airwallex status | Authentication and account reads pass; creation is blocked by merchant configuration. The integrated workflow exists and passes fixture tests; actual customer hold/capture and returned-float proof remain open. |
+| 4:30–4:45 | Banked job and Airwallex status | Authentication and account reads pass; creation is blocked by merchant configuration. The integrated workflow exists and passes fixture tests; actual customer hold/capture remains open. The 0.09 testnet USDZ return is confirmed, while the paid receipt remains preconfirmed. |
 
 Commands for rehearsal:
 
