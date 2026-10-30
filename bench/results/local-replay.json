@@ -1,0 +1,3366 @@
+{
+  "mode": "LOCAL_PROFILE_REPLAY",
+  "payments": "NONE",
+  "verifier_version": "source-rules-v2",
+  "source_sha256": {
+    "providers.py": "4fb52f6fa6bcbdb7a6bc49372dc17a25eb40e4cb9a4025f8736d7446ece8ce31",
+    "verifier.py": "2f45199c3fbd057b2be7ad900b5b308725b383c424ee2ae3a8620c4a753d6296",
+    "workload.py": "af42df6367bbca65dd76dfa7397b1a712db3022999968a8f3dc26b9f3133a90b"
+  },
+  "method": "Same paired model outputs and seeds. Online source checks choose escalation; private truth scores decisions afterward. Actual call latency is replayed, not newly measured concurrent service latency. Model prices are assumptions.",
+  "assumed_price_micro_usd": {
+    "economy": 10000,
+    "balanced": 20000
+  },
+  "checking_charge_micro_usd": 1000,
+  "gpu_offload_confirmed": true,
+  "seeds": [
+    41,
+    42,
+    43
+  ],
+  "summary": [
+    {
+      "policy": "always-economy",
+      "steps": 90,
+      "true_success_rate": 0.2222222222222222,
+      "assumed_cost_micro_usd": 990000,
+      "assumed_cost_per_true_correct_micro_usd": 49500.0,
+      "replayed_latency_p50_ms": 187.5,
+      "replayed_latency_p95_ms": 331,
+      "escalations": 0
+    },
+    {
+      "policy": "always-balanced",
+      "steps": 90,
+      "true_success_rate": 0.4888888888888889,
+      "assumed_cost_micro_usd": 1890000,
+      "assumed_cost_per_true_correct_micro_usd": 42954.545454545456,
+      "replayed_latency_p50_ms": 172.0,
+      "replayed_latency_p95_ms": 374,
+      "escalations": 0
+    },
+    {
+      "policy": "verify-then-escalate",
+      "steps": 90,
+      "true_success_rate": 0.5,
+      "assumed_cost_micro_usd": 2460000,
+      "assumed_cost_per_true_correct_micro_usd": 54666.666666666664,
+      "replayed_latency_p50_ms": 344.5,
+      "replayed_latency_p95_ms": 572,
+      "escalations": 70
+    }
+  ],
+  "rows": [
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0000",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 201,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0001",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 150,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0002",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 314,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0003",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 174,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0004",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 124,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0005",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 317,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0006",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 182,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0007",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 136,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0008",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 331,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0009",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 179,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0010",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 183,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0011",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 340,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0012",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 207,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0013",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 118,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0014",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 123,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0015",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 213,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0016",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 142,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0017",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 88,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0018",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 210,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0019",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 120,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0020",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 348,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0021",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 219,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0022",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 144,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0023",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 82,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0024",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 184,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0025",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 182,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0026",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 76,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0027",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 187,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0028",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 184,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 41,
+      "step_id": "step-0029",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 337,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0000",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 179,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0001",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 201,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0002",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 325,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0003",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 179,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0004",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 135,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0005",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 328,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0006",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 188,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0007",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 196,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0008",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 319,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0009",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 202,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0010",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 180,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0011",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 306,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0012",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 189,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0013",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 119,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0014",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 90,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0015",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 187,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0016",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 137,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0017",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 86,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0018",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 197,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0019",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 132,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0020",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 329,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0021",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 217,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0022",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 183,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0023",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 321,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0024",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 199,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0025",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 128,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0026",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 92,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0027",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 191,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0028",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 196,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 42,
+      "step_id": "step-0029",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 346,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0000",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 176,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0001",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 115,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0002",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 318,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0003",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 199,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0004",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 119,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0005",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 284,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0006",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 175,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0007",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 136,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0008",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 311,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0009",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 179,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0010",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 171,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0011",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 314,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0012",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 188,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0013",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 136,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0014",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 318,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0015",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 193,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0016",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 208,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0017",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 344,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0018",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 188,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0019",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 121,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0020",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 318,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0021",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 182,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0022",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 188,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0023",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 316,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0024",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 185,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0025",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 126,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0026",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 301,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0027",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 189,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0028",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 121,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-economy",
+      "seed": 43,
+      "step_id": "step-0029",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 292,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0000",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 338,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0001",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 180,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0002",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 80,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0003",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 357,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0004",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 172,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0005",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 83,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0006",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 358,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0007",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 161,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0008",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 115,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0009",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 343,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0010",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 205,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0011",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 106,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0012",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 357,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0013",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 172,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0014",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 125,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0015",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 361,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0016",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 210,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0017",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 132,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0018",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 368,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0019",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 185,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0020",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 136,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0021",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 346,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0022",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 201,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0023",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 125,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0024",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 360,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0025",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 152,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0026",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 97,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0027",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 369,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0028",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 177,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 41,
+      "step_id": "step-0029",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 106,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0000",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 329,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0001",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 176,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0002",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 114,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0003",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 347,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0004",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 173,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0005",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 88,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0006",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 339,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0007",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 143,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0008",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 99,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0009",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 363,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0010",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 177,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0011",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 107,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0012",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 390,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0013",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 181,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0014",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 118,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0015",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 358,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0016",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 156,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0017",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 119,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0018",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 342,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0019",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 179,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0020",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 128,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0021",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 382,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0022",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 168,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0023",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 80,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0024",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 374,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0025",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 183,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0026",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 111,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0027",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 362,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0028",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 151,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 42,
+      "step_id": "step-0029",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 127,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0000",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 333,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0001",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 220,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0002",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 101,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0003",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 350,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0004",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 171,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0005",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 61,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0006",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 349,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0007",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 155,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0008",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 68,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0009",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 360,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0010",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 167,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0011",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 141,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0012",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 353,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0013",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 154,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0014",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 98,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0015",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 352,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0016",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 154,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0017",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 116,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0018",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 350,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0019",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 163,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0020",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 98,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0021",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 390,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0022",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 184,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0023",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 92,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0024",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 387,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0025",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 153,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0026",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 80,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0027",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 381,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0028",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 153,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "always-balanced",
+      "seed": 43,
+      "step_id": "step-0029",
+      "calls": [
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 21000,
+      "replayed_latency_ms": 62,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0000",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 539,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0001",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 330,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0002",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 394,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0003",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 531,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0004",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 296,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0005",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 400,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0006",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 182,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0007",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 297,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0008",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 331,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0009",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 522,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0010",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 388,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0011",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 446,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0012",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 207,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0013",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 290,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0014",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 248,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0015",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 574,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0016",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 352,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0017",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 220,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0018",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 578,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0019",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 305,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0020",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 348,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0021",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 565,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0022",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 345,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0023",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 207,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0024",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 544,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0025",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 334,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0026",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 173,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0027",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 187,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0028",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 361,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 41,
+      "step_id": "step-0029",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 337,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0000",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 508,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0001",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 377,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0002",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 325,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0003",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 526,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0004",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 308,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0005",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 328,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0006",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 527,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0007",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 339,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0008",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 319,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0009",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 565,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0010",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 357,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0011",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 413,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0012",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 579,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0013",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 300,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0014",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 208,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0015",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 187,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0016",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 293,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0017",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 205,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0018",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 539,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0019",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 311,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0020",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 329,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0021",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 599,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0022",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 351,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0023",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 401,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0024",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 573,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0025",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 311,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0026",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 203,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0027",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 553,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0028",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 347,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 42,
+      "step_id": "step-0029",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 346,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0000",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 176,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0001",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 335,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0002",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 419,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0003",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 549,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0004",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 290,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0005",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 345,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0006",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 175,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0007",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 291,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0008",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 379,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0009",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 539,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0010",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 338,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0011",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 314,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0012",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 541,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0013",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 290,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0014",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 318,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0015",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 545,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0016",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 362,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0017",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 344,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0018",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 538,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0019",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 284,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0020",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 318,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0021",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 182,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0022",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 372,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0023",
+      "calls": [
+        "economy"
+      ],
+      "assumed_cost_micro_usd": 11000,
+      "replayed_latency_ms": 316,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0024",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 572,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0025",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 279,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0026",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 381,
+      "accepted": true,
+      "true_correct": true
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0027",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 570,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0028",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 274,
+      "accepted": false,
+      "true_correct": false
+    },
+    {
+      "policy": "verify-then-escalate",
+      "seed": 43,
+      "step_id": "step-0029",
+      "calls": [
+        "economy",
+        "balanced"
+      ],
+      "assumed_cost_micro_usd": 32000,
+      "replayed_latency_ms": 354,
+      "accepted": true,
+      "true_correct": true
+    }
+  ]
+}

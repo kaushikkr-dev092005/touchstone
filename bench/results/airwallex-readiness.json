@@ -1,0 +1,11 @@
+{
+  "mode": "SANDBOX",
+  "host": "https://api.sandbox.airwallex.com",
+  "authenticated": true,
+  "balance_read": true,
+  "global_accounts_read": true,
+  "read_errors": {},
+  "account_context_configured": false,
+  "writes_performed": false,
+  "dashboard_mode_changed": false
+}

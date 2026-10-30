@@ -1,0 +1,18 @@
+{
+  "mode": "SANDBOX",
+  "authenticated": true,
+  "balance_read": true,
+  "global_accounts_read": true,
+  "payment_intent_create_verified": false,
+  "authorization_verified": false,
+  "capture_verified": false,
+  "failure": {
+    "http_status": 400,
+    "code": "configuration_error",
+    "message": "Invalid request against merchant configuration. Please contact your account manager."
+  },
+  "scopes_updated": true,
+  "api_keys_disclosed": false,
+  "customer_holds_completed": 0,
+  "next_action": "Airwallex must enable/configure Payments for the sandbox merchant before the hold test can proceed."
+}

@@ -1,0 +1,17 @@
+{
+  "name": "touchstone-metal-adapter",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "test": "node --test",
+    "inspect": "node cli.mjs inspect"
+  },
+  "dependencies": {
+    "@metalntwx/metal-pay": "0.3.3",
+    "viem": "2.57.13"
+  }
+}

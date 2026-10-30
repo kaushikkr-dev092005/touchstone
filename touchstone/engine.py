@@ -1,0 +1,162 @@
+"""Round-robin orchestration across jobs; recovery precedes new purchases."""
+import json
+import time
+from .ledger import PolicyError
+from .providers import Quote, quotes, simulate
+from .router import Router
+from .verifier import VERIFY_COST, VERIFIER_VERSION, check
+from .workload import Task, generate
+
+
+class InjectedCrash(Exception):
+    pass
+
+
+class Engine:
+    def __init__(self, ledger, rail):
+        self.ledger, self.rail = ledger, rail
+
+    def create_demo(self, seed=42, count=24):
+        specs = []
+        for offset, hold in enumerate([1000000, 750000, 750000]):
+            tasks, _ = generate(seed + offset, count)
+            specs.append({"seed": seed + offset, "policy": "touchstone", "hold": hold,
+                          "price_cap": 60000, "allocation": 300000,
+                          "tasks": [t.public() for t in tasks]})
+        return self.ledger.create_run(specs, 1500000)
+
+    def recover(self, run_id=None):
+        recovered = 0
+        jobs = {j["id"]: j for j in self.ledger.jobs(run_id)}
+        for a in self.ledger.attempts():
+            if a["job_id"] not in jobs or a["state"] not in {"RESERVED", "PAID"}:
+                continue
+            receipt = self.rail.lookup(a["key"])
+            if receipt is None:
+                # The simulator can authoritatively prove non-payment. Live rail timeouts cannot.
+                self.ledger.void(a["key"], "Mock rail confirms no payment; release reservation")
+                continue
+            self.ledger.record_paid(a["key"], receipt)
+            task = next(Task(**t) for t in json.loads(jobs[a["job_id"]]["tasks"]) if t["id"] == a["step_id"])
+            verdict = check(task, receipt["output"])
+            self.ledger.finish_attempt(a["key"], receipt["output"], verdict)
+            if not verdict.get("retryable", True):
+                self.ledger.status(a["job_id"], "PAUSED_REVIEW", verdict["reason"])
+            recovered += 1
+        if recovered:
+            self.ledger.event("RECOVERED", {"attempts": recovered, "mode": "SIMULATED"})
+        return recovered
+
+    def run(self, run_id, delay=0, crash_at=None):
+        self.recover(run_id)
+        routers = {}
+        for j in self.ledger.jobs(run_id):
+            router = routers[j["id"]] = Router()
+            for a in self.ledger.attempts(j["id"]):
+                if a["passed"] is not None and (not a["verdict"] or json.loads(a["verdict"]).get("retryable", True)):
+                    kind = next(t["kind"] for t in json.loads(j["tasks"]) if t["id"] == a["step_id"])
+                    router.observe(a["provider"], kind, a["passed"])
+        while True:
+            progressed = False
+            for job in self.ledger.jobs(run_id):
+                if job["status"] != "RUNNING":
+                    continue
+                router = routers[job["id"]]
+                attempts = self.ledger.attempts(job["id"])
+                tasks = [Task(**t) for t in json.loads(job["tasks"])]
+                max_attempts = 3 if job["policy"] == "touchstone" else 1
+                task = None
+                for index, candidate in enumerate(tasks):
+                    past = [a for a in attempts if a["step_id"] == candidate.id]
+                    exhausted = any(a["provider"] == "premium" and a["state"] == "VERIFIED_FAIL" for a in past)
+                    if not exhausted and not any(a["passed"] == 1 for a in past) and len(past) < max_attempts:
+                        task = candidate
+                        break
+                if task is None:
+                    self.ledger.settle_job(job["id"])
+                    progressed = True
+                    continue
+                attempt = len(past)
+                # Demo job 2 grows 4x halfway through; identical index events in benchmark policies.
+                inflated = job["policy"] == "touchstone" and job["id"].endswith("-2") and index >= len(tasks) // 2 and len(tasks) < 100
+                scenario_index = int(index * 100 / len(tasks)) if len(tasks) < 100 else index
+                previous_index = int((index - 1) * 100 / len(tasks)) if len(tasks) < 100 else index - 1
+                offers = quotes(job["seed"], scenario_index, inflated)
+                if attempt == 0:
+                    for threshold, label in {20: "Economy latency spike", 35: "Balanced price spike", 50: "Balanced quality drop"}.items():
+                        if previous_index < threshold <= scenario_index:
+                            self.ledger.event("CHAOS", {"job_id": job["id"], "index": index, "event": label})
+                    if inflated and index == len(tasks) // 2:
+                        self.ledger.event("CHAOS", {"job_id": job["id"], "index": index, "event": "4x prompt expansion"})
+                offer, reason = router.select(offers, task, job, [a["provider"] for a in past])
+                if offer is None:
+                    self.ledger.status(job["id"], "PAUSED_POLICY", reason)
+                    continue
+                try:
+                    key = self.ledger.reserve(job["id"], task, attempt, offer, VERIFY_COST)
+                    if crash_at == "after_reserve":
+                        raise InjectedCrash("Crash after reservation, before rail request")
+                    self.ledger.event("ROUTED", {"job_id": job["id"], "step_id": task.id, "provider": offer.provider, "reason": reason, "quote": offer.public()})
+                    self.ledger.assert_can_pay(key)
+                    receipt = self.rail.pay(key, offer, lambda: simulate(task, offer.provider, job["seed"], scenario_index, attempt))
+                    if crash_at == "after_rail":
+                        raise InjectedCrash("Crash after durable rail receipt, before local payment commit")
+                    self.ledger.record_paid(key, receipt)
+                    if crash_at == "after_paid":
+                        raise InjectedCrash("Crash after payment commit, before verification")
+                    verdict = check(task, receipt["output"])
+                    self.ledger.finish_attempt(key, receipt["output"], verdict)
+                    if verdict.get("retryable", True):
+                        router.observe(offer.provider, task.kind, verdict["passed"])
+                    else:
+                        self.ledger.status(job["id"], "PAUSED_REVIEW", verdict["reason"])
+                    progressed = True
+                except PolicyError as error:
+                    self.ledger.status(job["id"], "PAUSED_POLICY", str(error))
+                if delay:
+                    time.sleep(delay)
+            if not progressed:
+                return self.snapshot(run_id)
+
+    def reconcile(self, run_id=None):
+        jobs = self.ledger.jobs(run_id)
+        ids = {j["id"] for j in jobs}
+        attempts = [a for a in self.ledger.attempts() if a["job_id"] in ids]
+        keys = {a["key"] for a in attempts}
+        receipts = [r for r in self.rail.receipts() if run_id is None or r["key"] in keys]
+        paid = {a["key"]: a for a in attempts if a["receipt"]}
+        mismatches = []
+        for r in receipts:
+            a = paid.get(r["key"])
+            if not a or a["receipt"] != r["id"] or a["price"] != r["amount"] or a["provider"] != r["provider"] or json.loads(a["quote"])["id"] != r["quote_id"]:
+                mismatches.append({"key": r["key"], "reason": "Rail receipt differs from local committed payment"})
+        rail_keys = {r["key"] for r in receipts}
+        mismatches += [{"key": k, "reason": "Local payment has no rail receipt"} for k in paid if k not in rail_keys]
+        pending = sum(a["state"] in {"RESERVED", "PAID"} for a in attempts)
+        return {"matched": not mismatches and not pending,
+                "ledger_provider_total": sum(a["price"] for a in paid.values()),
+                "rail_total": sum(r["amount"] for r in receipts),
+                "verification_total": sum(a["verify_cost"] for a in attempts if a["passed"] is not None),
+                "customer_captured": sum(j["captured"] for j in jobs),
+                "pending": pending, "mismatches": mismatches,
+                "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+                "mode": "SIMULATED"}
+
+    def snapshot(self, run_id=None):
+        jobs = self.ledger.jobs(run_id)
+        ids = {j["id"] for j in jobs}
+        attempts = [a for a in self.ledger.attempts() if a["job_id"] in ids]
+        for j in jobs:
+            own = [a for a in attempts if a["job_id"] == j["id"]]
+            j["count"] = len(json.loads(j.pop("tasks")))
+            j["accepted"] = sum(a["passed"] == 1 for a in own)
+            j["failed_attempts"] = sum(a["passed"] == 0 for a in own)
+            j["reserved"] = sum(a["price"] + a["verify_cost"] for a in own if a["state"] in {"RESERVED", "PAID"})
+        with self.ledger.connect() as db:
+            runs = [dict(r) for r in db.execute("SELECT * FROM runs ORDER BY rowid DESC")]
+            halted = bool(db.execute("SELECT halted FROM control").fetchone()[0])
+        return {"jobs": jobs, "runs": runs, "halted": halted,
+                "attempts": [{k: a[k] for k in ("job_id", "step_id", "attempt", "state", "provider", "price", "verify_cost", "score", "reason", "receipt")} for a in attempts[-80:]],
+                "reconciliation": self.reconcile(run_id), "audit": self.ledger.audit(),
+                "verifier_version": VERIFIER_VERSION,
+                "modes": {"airwallex": "SIMULATED", "metal": "SIMULATED", "inference": "SIMULATED"}}

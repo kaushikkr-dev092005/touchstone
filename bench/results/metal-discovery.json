@@ -1,0 +1,18 @@
+{
+  "mode": "READ_ONLY",
+  "sdk": "0.3.3",
+  "node": "v22.23.4",
+  "deployment": {
+    "network": "eip155:63825",
+    "asset": "0x000000000000000000000000000000000000B5d5",
+    "settlement": "0xab3cC15A5Ad1812D0BfEA239bbcF076d2437Ec22",
+    "serviceUrl": "https://clearing-testnet.metalntwx.com",
+    "validatorUrls": []
+  },
+  "configured": {
+    "rpc": false,
+    "funding_key": false,
+    "provider": false
+  },
+  "payments_sent": 0
+}

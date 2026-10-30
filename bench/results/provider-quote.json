@@ -1,0 +1,37 @@
+{
+  "mode": "READ_ONLY_X402_QUOTE",
+  "payments_sent": 0,
+  "provider": {
+    "mode": "TESTNET_PROVIDER",
+    "provider_type": "model",
+    "inference_ready": true,
+    "chain": 63825,
+    "paid_delivery": "UNVERIFIED",
+    "seller_public_key": "0x02036e68fe68babdd62fbf11ddd6c0e48f1464d79bb46bc24d9d565a75c7bc2a4c",
+    "price_base_units": "10000000000000000"
+  },
+  "quote": {
+    "id": "fcc5a00d13a2a46b1babba56aa2167d4b5abd50ed0351f8508ee75cc9c2a5e3c",
+    "provider": "metal-provider",
+    "price": 10000,
+    "expires_at": 1793360326.274,
+    "terms": {
+      "url": "http://127.0.0.1:8092/inference/6f1b959c9e558787289bd68c9abe30c0e910c81a71acf0ba6c1ca06ad98eebf1?task=eyJpZCI6InByb3RvY29sLXByb2JlIiwia2luZCI6ImFyaXRobWV0aWMiLCJtaW5fcXVhbGl0eSI6MS4wLCJzb3VyY2UiOnsiYW1vdW50c19jZW50cyI6WzEyNTAsMjc1LDQ5OV0sImRpc2NvdW50X2NlbnRzIjoyNH19",
+      "offer": {
+        "scheme": "bajillion",
+        "network": "eip155:63825",
+        "asset": "0x000000000000000000000000000000000000B5d5",
+        "amount": "10000000000000000",
+        "payTo": "0x02036e68fe68babdd62fbf11ddd6c0e48f1464d79bb46bc24d9d565a75c7bc2a4c",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "settlement": "0xab3cC15A5Ad1812D0BfEA239bbcF076d2437Ec22",
+          "serviceUrl": "https://clearing-testnet.metalntwx.com",
+          "invoicePrefix": "0x1dd182453dea5a728086ed93f14aee6dcadf8c3470f4e26da81164c05ad0f723"
+        }
+      },
+      "expires_at": 1793360326274
+    },
+    "mode": "TESTNET"
+  }
+}

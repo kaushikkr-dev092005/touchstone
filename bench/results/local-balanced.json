@@ -1,0 +1,1292 @@
+{
+  "mode": "LOCAL_MEASURED",
+  "payments": "NONE",
+  "provider_tier": "balanced",
+  "gpu_offload_confirmed": true,
+  "offloaded_layers": [
+    "29",
+    "29"
+  ],
+  "gpu_confirmation": {
+    "selected_device": "Vulkan1: NVIDIA GeForce RTX 3050 Laptop GPU (3962 MiB, 3367 MiB free)",
+    "n_gpu_layers_requested": 99,
+    "exclusive_device_selection": true,
+    "nvidia_vram_allocation_observed": true
+  },
+  "decoding": "json-schema-v1",
+  "warmups_discarded": 1,
+  "steps_per_seed": 30,
+  "seeds": [
+    41,
+    42,
+    43
+  ],
+  "verifier_version": "source-rules-v2",
+  "environment": {
+    "tier": "balanced",
+    "runtime_release": "b12000",
+    "backend": "Vulkan",
+    "runtime_archive_sha256": "7377042036a1db75639316459accc336e8fd4b772b27ae35f7ce19a66226a95d",
+    "model": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+    "model_revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
+    "model_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+    "quantization": "Q4_K_M",
+    "model_source": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/91cad51170dc346986eccefdc2dd33a9da36ead9/qwen2.5-1.5b-instruct-q4_k_m.gguf",
+    "license": "apache-2.0",
+    "context_tokens": 2048,
+    "parallel_slots": 1
+  },
+  "python": "3.12.10",
+  "hardware_samples": [
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "0",
+      "temperature_c": "42",
+      "power_w": "12.41",
+      "clock_mhz": "1500",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1073",
+      "temperature_c": "48",
+      "power_w": "23.53",
+      "clock_mhz": "1942",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1073",
+      "temperature_c": "48",
+      "power_w": "23.53",
+      "clock_mhz": "1942",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1074",
+      "temperature_c": "54",
+      "power_w": "77.24",
+      "clock_mhz": "1935",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1074",
+      "temperature_c": "56",
+      "power_w": "73.42",
+      "clock_mhz": "1965",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1074",
+      "temperature_c": "57",
+      "power_w": "76.39",
+      "clock_mhz": "1950",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1074",
+      "temperature_c": "58",
+      "power_w": "77.27",
+      "clock_mhz": "1927",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1074",
+      "temperature_c": "59",
+      "power_w": "77.33",
+      "clock_mhz": "1920",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1074",
+      "temperature_c": "59",
+      "power_w": "76.91",
+      "clock_mhz": "1927",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1074",
+      "temperature_c": "61",
+      "power_w": "79.83",
+      "clock_mhz": "1935",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1074",
+      "temperature_c": "61",
+      "power_w": "77.29",
+      "clock_mhz": "1950",
+      "driver": "610.62"
+    }
+  ],
+  "true_success_rate": 0.4888888888888889,
+  "verifier_acceptance_rate": 0.4888888888888889,
+  "latency_p50_ms": 172.0,
+  "latency_p95_ms": 374,
+  "rows": [
+    {
+      "seed": 41,
+      "step_id": "step-0000",
+      "kind": "invoice",
+      "latency_ms": 338,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-41-0",
+        "currency": "USD",
+        "total_cents": 72693
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0001",
+      "kind": "arithmetic",
+      "latency_ms": 180,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 38761
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0002",
+      "kind": "classification",
+      "latency_ms": 80,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "shipping"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0003",
+      "kind": "invoice",
+      "latency_ms": 357,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-41-3",
+        "currency": "USD",
+        "total_cents": 92110
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0004",
+      "kind": "arithmetic",
+      "latency_ms": 172,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 42477
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0005",
+      "kind": "classification",
+      "latency_ms": 83,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "shipping"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0006",
+      "kind": "invoice",
+      "latency_ms": 358,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-41-6",
+        "currency": "USD",
+        "total_cents": 12949
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0007",
+      "kind": "arithmetic",
+      "latency_ms": 161,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 57686
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0008",
+      "kind": "classification",
+      "latency_ms": 115,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "billing"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0009",
+      "kind": "invoice",
+      "latency_ms": 343,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-41-9",
+        "currency": "USD",
+        "total_cents": 59990
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0010",
+      "kind": "arithmetic",
+      "latency_ms": 205,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 20998
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0011",
+      "kind": "classification",
+      "latency_ms": 106,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "shipping"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0012",
+      "kind": "invoice",
+      "latency_ms": 357,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-41-12",
+        "currency": "USD",
+        "total_cents": 194280
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0013",
+      "kind": "arithmetic",
+      "latency_ms": 172,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 7952
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0014",
+      "kind": "classification",
+      "latency_ms": 125,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "technical"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0015",
+      "kind": "invoice",
+      "latency_ms": 361,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-41-15",
+        "currency": "USD",
+        "total_cents": 139290
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0016",
+      "kind": "arithmetic",
+      "latency_ms": 210,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 48257
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0017",
+      "kind": "classification",
+      "latency_ms": 132,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "technical"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0018",
+      "kind": "invoice",
+      "latency_ms": 368,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-41-18",
+        "currency": "USD",
+        "total_cents": 186840
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0019",
+      "kind": "arithmetic",
+      "latency_ms": 185,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 36488
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0020",
+      "kind": "classification",
+      "latency_ms": 136,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "billing"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0021",
+      "kind": "invoice",
+      "latency_ms": 346,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-41-21",
+        "currency": "USD",
+        "total_cents": 10008
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0022",
+      "kind": "arithmetic",
+      "latency_ms": 201,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 45244
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0023",
+      "kind": "classification",
+      "latency_ms": 125,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "technical"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0024",
+      "kind": "invoice",
+      "latency_ms": 360,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-41-24",
+        "currency": "USD",
+        "total_cents": 824480
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0025",
+      "kind": "arithmetic",
+      "latency_ms": 152,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 37965
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0026",
+      "kind": "classification",
+      "latency_ms": 97,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "technical"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0027",
+      "kind": "invoice",
+      "latency_ms": 369,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-41-27",
+        "currency": "USD",
+        "total_cents": 10176
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0028",
+      "kind": "arithmetic",
+      "latency_ms": 177,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 26278
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 41,
+      "step_id": "step-0029",
+      "kind": "classification",
+      "latency_ms": 106,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "billing"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0000",
+      "kind": "invoice",
+      "latency_ms": 329,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-42-0",
+        "currency": "USD",
+        "total_cents": 4200
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0001",
+      "kind": "arithmetic",
+      "latency_ms": 176,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 48698
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0002",
+      "kind": "classification",
+      "latency_ms": 114,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "billing"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0003",
+      "kind": "invoice",
+      "latency_ms": 347,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-42-3",
+        "currency": "USD",
+        "total_cents": 61080
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0004",
+      "kind": "arithmetic",
+      "latency_ms": 173,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 44448
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0005",
+      "kind": "classification",
+      "latency_ms": 88,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "billing"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0006",
+      "kind": "invoice",
+      "latency_ms": 339,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-42-6",
+        "currency": "USD",
+        "total_cents": 7062
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0007",
+      "kind": "arithmetic",
+      "latency_ms": 143,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 3430
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0008",
+      "kind": "classification",
+      "latency_ms": 99,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "billing"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0009",
+      "kind": "invoice",
+      "latency_ms": 363,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-42-9",
+        "currency": "USD",
+        "total_cents": 17000
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0010",
+      "kind": "arithmetic",
+      "latency_ms": 177,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 36881
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0011",
+      "kind": "classification",
+      "latency_ms": 107,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "shipping"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0012",
+      "kind": "invoice",
+      "latency_ms": 390,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-42-12",
+        "currency": "USD",
+        "total_cents": 207714
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0013",
+      "kind": "arithmetic",
+      "latency_ms": 181,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 38686
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0014",
+      "kind": "classification",
+      "latency_ms": 118,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "technical"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0015",
+      "kind": "invoice",
+      "latency_ms": 358,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-42-15",
+        "currency": "USD",
+        "total_cents": 12582
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0016",
+      "kind": "arithmetic",
+      "latency_ms": 156,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 51844
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0017",
+      "kind": "classification",
+      "latency_ms": 119,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "technical"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0018",
+      "kind": "invoice",
+      "latency_ms": 342,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-42-18",
+        "currency": "USD",
+        "total_cents": 18385
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0019",
+      "kind": "arithmetic",
+      "latency_ms": 179,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 22159
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0020",
+      "kind": "classification",
+      "latency_ms": 128,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "billing"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0021",
+      "kind": "invoice",
+      "latency_ms": 382,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-42-21",
+        "currency": "USD",
+        "total_cents": 14035
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0022",
+      "kind": "arithmetic",
+      "latency_ms": 168,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 55669
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0023",
+      "kind": "classification",
+      "latency_ms": 80,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "shipping"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0024",
+      "kind": "invoice",
+      "latency_ms": 374,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-42-24",
+        "currency": "USD",
+        "total_cents": 133925
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0025",
+      "kind": "arithmetic",
+      "latency_ms": 183,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 24907
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0026",
+      "kind": "classification",
+      "latency_ms": 111,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "technical"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0027",
+      "kind": "invoice",
+      "latency_ms": 362,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-42-27",
+        "currency": "USD",
+        "total_cents": 2152540
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0028",
+      "kind": "arithmetic",
+      "latency_ms": 151,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 48520
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 42,
+      "step_id": "step-0029",
+      "kind": "classification",
+      "latency_ms": 127,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "billing"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0000",
+      "kind": "invoice",
+      "latency_ms": 333,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-43-0",
+        "currency": "USD",
+        "total_cents": 9674
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0001",
+      "kind": "arithmetic",
+      "latency_ms": 220,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 45727
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0002",
+      "kind": "classification",
+      "latency_ms": 101,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "shipping"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0003",
+      "kind": "invoice",
+      "latency_ms": 350,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-43-3",
+        "currency": "USD",
+        "total_cents": 300534
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0004",
+      "kind": "arithmetic",
+      "latency_ms": 171,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 29800
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0005",
+      "kind": "classification",
+      "latency_ms": 61,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "shipping"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0006",
+      "kind": "invoice",
+      "latency_ms": 349,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-43-6",
+        "currency": "USD",
+        "total_cents": 8572
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0007",
+      "kind": "arithmetic",
+      "latency_ms": 155,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 45638
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0008",
+      "kind": "classification",
+      "latency_ms": 68,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "shipping"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0009",
+      "kind": "invoice",
+      "latency_ms": 360,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-43-9",
+        "currency": "USD",
+        "total_cents": 181500
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0010",
+      "kind": "arithmetic",
+      "latency_ms": 167,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 34238
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0011",
+      "kind": "classification",
+      "latency_ms": 141,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "billing"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0012",
+      "kind": "invoice",
+      "latency_ms": 353,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-43-12",
+        "currency": "USD",
+        "total_cents": 34632
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0013",
+      "kind": "arithmetic",
+      "latency_ms": 154,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 13366
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0014",
+      "kind": "classification",
+      "latency_ms": 98,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "billing"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0015",
+      "kind": "invoice",
+      "latency_ms": 352,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "invoice_id": "INV-43-15",
+        "currency": "USD",
+        "total_cents": 162200
+      },
+      "verification_reason": "Source evidence and numeric checks passed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0016",
+      "kind": "arithmetic",
+      "latency_ms": 154,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 49713
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0017",
+      "kind": "classification",
+      "latency_ms": 116,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "billing"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0018",
+      "kind": "invoice",
+      "latency_ms": 350,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-43-18",
+        "currency": "USD",
+        "total_cents": 15270
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0019",
+      "kind": "arithmetic",
+      "latency_ms": 163,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 38062
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0020",
+      "kind": "classification",
+      "latency_ms": 98,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "billing"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0021",
+      "kind": "invoice",
+      "latency_ms": 390,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-43-21",
+        "currency": "USD",
+        "total_cents": 300120
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0022",
+      "kind": "arithmetic",
+      "latency_ms": 184,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 20051
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0023",
+      "kind": "classification",
+      "latency_ms": 92,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "billing"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0024",
+      "kind": "invoice",
+      "latency_ms": 387,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-43-24",
+        "currency": "USD",
+        "total_cents": 1985960
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0025",
+      "kind": "arithmetic",
+      "latency_ms": 153,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 87486
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0026",
+      "kind": "classification",
+      "latency_ms": 80,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "shipping"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0027",
+      "kind": "invoice",
+      "latency_ms": 381,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "invoice_id": "INV-43-27",
+        "currency": "USD",
+        "total_cents": 1956300
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0028",
+      "kind": "arithmetic",
+      "latency_ms": 153,
+      "verifier_passed": false,
+      "true_correct": false,
+      "output": {
+        "total_cents": 86699
+      },
+      "verification_reason": "Source evidence or numeric checks failed"
+    },
+    {
+      "seed": 43,
+      "step_id": "step-0029",
+      "kind": "classification",
+      "latency_ms": 62,
+      "verifier_passed": true,
+      "true_correct": true,
+      "output": {
+        "label": "shipping"
+      },
+      "verification_reason": "Label agrees with supported source evidence"
+    }
+  ],
+  "source_sha256": {
+    "providers.py": "4fb52f6fa6bcbdb7a6bc49372dc17a25eb40e4cb9a4025f8736d7446ece8ce31",
+    "verifier.py": "2f45199c3fbd057b2be7ad900b5b308725b383c424ee2ae3a8620c4a753d6296",
+    "workload.py": "af42df6367bbca65dd76dfa7397b1a712db3022999968a8f3dc26b9f3133a90b"
+  }
+}

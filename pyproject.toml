@@ -1,0 +1,9 @@
+[project]
+name = "touchstone-agent"
+version = "0.1.0"
+description = "Auditable, quality-aware inference procurement for autonomous agents"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.unittest]
+start-directory = "tests"
