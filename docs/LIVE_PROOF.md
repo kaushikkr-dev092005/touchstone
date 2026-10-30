@@ -18,9 +18,9 @@ The probe deposited **0.10 testnet USDZ** into its own persisted clearing wallet
 | Cached buyer retry | Identical original result; no second payment |
 | Provider receipt replay | Original signed proof returned identical stored delivery; no payment creation |
 | Receipt assurance | Preconfirmed; no per-call blockchain transaction hash invented |
-| Unused float | Not yet confirmed returned; the withdrawal call reported `empty` |
+| Unused float | Withdrawal queued in transaction `0xf5a00b55cdb84d5ffaf9d5a04b8c73aba7238ee858270641c8b05d4af8d73a98`; SDK reports waiting for epoch `93301`, with no claim returned yet |
 
-`empty` does not prove a clearing account has no unfinalized funds. Finalized balance, queued withdrawals and actual non-deferred claims must be distinguished. Repeating `python tools/prove_metal.py --recover --withdraw` preserves the original purchase and checks the SDK withdrawal path again.
+The queued withdrawal is not a returned-float proof. Finalized balance, queued withdrawals and actual non-deferred claims must be distinguished. Run `python tools/prove_metal.py --withdraw-only` again after epoch `93301` finalizes; this resumes the existing withdrawal and updates the evidence without replaying the paid inference request.
 
 The initial attempt hit a clearing epoch refusal. Recovery examined the durable SDK state, which stores pending before sending and clears it only for a verified receipt or authoritative refusal. An unpaid reservation could retry only the same URL, seller, deployment and price. Unknown held invoices retain the original SDK invoice and block replacement purchases. This behavior is covered by separate local tests.
 
@@ -37,6 +37,8 @@ PaymentIntent creation returns **HTTP 400 `configuration_error`** with the messa
 No customer authorization or capture has been completed. See `bench/results/airwallex-hold-proof.json` and `airwallex-readiness.json`. Unresolved create scopes remain in the private operation journal; they have not been treated as successful authorizations or available liquidity.
 
 Airwallex must resolve the sandbox merchant Payments configuration before the banking proof can continue. The error does not identify the exact missing setting. The [Payments readiness guide](https://www.airwallex.com/docs/payments/get-started/get-started-with-payments) covers activation and settlement configuration. The [sandbox settings reference](https://www.airwallex.com/docs/developer-tools/sandbox-environment/sandbox-settings) also explains that Native API checkout/PCI enablement is not provisioned by default. The current fixed-card smoke workflow uses Native API confirmation; a hosted checkout alternative would require a separate browser-assisted flow.
+
+The integrated `banked-proof-001` create operation is still journaled as `UNKNOWN` after HTTP 400 `duplicate_request`. A read-only lookup by its merchant order ID found no matching PaymentIntent at the time checked. Preserve this scope and do not count it as an authorization; the create outcome needs Airwallex reconciliation.
 
 ## Integrated job implementation
 

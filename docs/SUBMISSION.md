@@ -32,4 +32,4 @@ Run `python -m touchstone serve` and open `http://127.0.0.1:8088`. Show the loca
 
 ## Required work before submitting
 
-Resolve sandbox merchant configuration and record actual authorization/capture; qualify a model on representative finance-operations sources if claiming useful autonomous inference; verify withdrawal/finality; confirm the signed-in hackathon submission requirements; add the team details, repository URL and video URL. No repository publication or hackathon submission has been performed.
+Resolve sandbox merchant configuration and record actual authorization/capture; qualify a model on representative finance-operations sources if claiming useful autonomous inference; verify withdrawal/finality; confirm the signed-in hackathon submission requirements; add the team details and video URL. The repository has been pushed privately to `https://github.com/kaushikkr-dev092005/touchstone`; public publication and hackathon submission have not been performed.

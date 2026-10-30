@@ -19,7 +19,7 @@ These checks do not send a financial transaction. Doctor reports configuration p
 
 For a new checkout, create a sandbox account at https://www.sandbox.airwallex.com/signup. In Developer > API keys, configure account-level **Payment Acceptance: Write** and **Global Accounts: Read** or **Balances: Read**. Organization webhook access alone is insufficient. Select one sandbox account, or set `AIRWALLEX_ACCOUNT_ID` for the selected account if the key spans several. Its value is sent as `x-login-as` during authentication.
 
-The current account now passes login, balances and Global Account reads. Create returns HTTP 400 `configuration_error`: Invalid request against merchant configuration. Please contact your account manager. Resolve the merchant Payments configuration with Airwallex before running another hold. Native API card confirmation also requires checkout/PCI enablement, which is not provisioned by default. The API error does not identify the exact missing merchant setting.
+The current account now passes login, balances and Global Account reads. Create returns HTTP 400 `configuration_error`: Invalid request against merchant configuration. The error does not identify the exact missing setting, and it occurs before card confirmation. Current sandbox documentation says Hosted Payment Page is the default checkout, while Native API checkout and PCI DSS enablement require Airwallex Support. Ask Support to confirm Payments activation, merchant configuration and the allowed checkout mode before retrying. If Native API is unavailable, the workflow needs a customer-facing hosted-checkout path; that path has not been implemented.
 
 After merchant setup is resolved, use a fresh, clearly named test scope and retain all failed scopes:
 
@@ -65,10 +65,10 @@ The model uses NVIDIA Vulkan on loopback port 8080. The x402 seller binds loopba
 ## Resume the existing funded proof
 
 ```powershell
-python tools/prove_metal.py --recover --withdraw
+python tools/prove_metal.py --withdraw-only
 ```
 
-This preserves one original reservation in `funded-proof-001`, a 0.10 USDZ deposit and a 0.01 USDZ purchase cap. Both cached retry and direct provider receipt replay were verified without another payment. The purchased model answer failed verification; its expense remains recorded.
+This resumes the existing withdrawal for `funded-proof-001` without replaying inference. The original proof preserves one reservation, a 0.10 USDZ deposit and a 0.01 USDZ purchase cap. Both cached retry and direct provider receipt replay were verified without another payment. The purchased model answer failed verification; its expense remains recorded. The current withdrawal is queued and must be checked again after its epoch finalizes.
 
 A paid missing output remains blocked until the original provider accepts receipt replay. A definitive SDK refusal can establish `UNPAID_CONFIRMED`; only the same reservation, URL, seller and price may retry. SDK pending state is durable before sending, and is cleared only after definitive outcomes in the pinned version.
 

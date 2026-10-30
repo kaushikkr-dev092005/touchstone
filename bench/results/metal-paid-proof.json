@@ -115,9 +115,13 @@
   "real_receipt_verified_by_provider": true,
   "withdrawal": {
     "mode": "TESTNET",
-    "status": "empty",
-    "returned_float_confirmed": false
+    "status": "waiting",
+    "epoch": "93301",
+    "returned_float_confirmed": false,
+    "queued": {
+      "tx": "0xf5a00b55cdb84d5ffaf9d5a04b8c73aba7238ee858270641c8b05d4af8d73a98"
+    }
   },
   "provider_receipt_replay_identical": true,
-  "observed_at": 1793361009.4326055
+  "observed_at": 1793382800.6091807
 }

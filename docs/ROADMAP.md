@@ -93,7 +93,7 @@ The archived membership-only simulator baseline was 86% median true success. The
 
 ## 12–13 November: submit
 
-Record the final video on 12 November. Submit the repository, working demonstration and requested materials on 13 November with several hours to spare. Confirm receipt in the portal. Publishing, pushing a repository and submission are not done by the current local build.
+Record the final video on 12 November. Submit the repository, working demonstration and requested materials on 13 November with several hours to spare. Confirm receipt in the portal. The private repository was pushed on 30 October 2026; public publication and hackathon submission remain pending.
 
 ## Cut order
 

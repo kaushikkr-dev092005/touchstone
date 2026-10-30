@@ -36,6 +36,7 @@ def main():
     parser.add_argument('--scope', default='funded-proof-001')
     parser.add_argument('--recover', action='store_true')
     parser.add_argument('--withdraw', action='store_true')
+    parser.add_argument('--withdraw-only', action='store_true')
     args = parser.parse_args()
     if not re.fullmatch('[A-Za-z0-9_-]{1,48}', args.scope):
         parser.error('Invalid scope')
@@ -50,8 +51,27 @@ def main():
         'airwallex': 'NOT_CONNECTED', 'model_eligibility': 'NOT_AUTHORIZED_FOR_AUTONOMOUS_PROCUREMENT'}
     if report['terms'] != terms:
         raise ValueError('Existing proof has different terms; preserve it')
-    rail = MetalRail(args.scope, url, 10000, 100000)
     owner = BankedStore(ROOT / 'data/metal-proofs/owner-ledger.sqlite', ROOT / 'data/metal/funding-owner.sqlite')
+    if args.withdraw_only:
+        if report.get('phase') != 'DELIVERED' or report.get('result', {}).get('state') != 'DELIVERED':
+            raise ValueError('Withdrawal recovery requires the existing delivered proof')
+        rail = MetalRail(args.scope, terms['provider_url'], terms['price_cap_micro_usd'], terms['allocation_micro_usd'])
+        with owner.owner():
+            previous_withdrawal = report.get('withdrawal', {})
+            published_path = ROOT / 'bench/results/metal-paid-proof.json'
+            published = json.loads(published_path.read_text(encoding='utf-8')) if published_path.exists() else {}
+            prior_queue = previous_withdrawal.get('queued') or published.get('withdrawal', {}).get('queued')
+            withdrawal = rail.withdraw()
+            if withdrawal.get('status') == 'waiting' and prior_queue:
+                withdrawal['queued'] = prior_queue
+            report['withdrawal'] = withdrawal
+            report['observed_at'] = time.time()
+            save(path, report)
+            public = {**report, 'terms': {k:v for k,v in terms.items() if k != 'provider_url'}}
+            save(published_path, public)
+            print(json.dumps({'scope': args.scope, 'withdrawal': report['withdrawal']}, indent=2))
+        return 0
+    rail = MetalRail(args.scope, url, 10000, 100000)
     with owner.owner():
         save(path, report)
         if 'result' not in report:
