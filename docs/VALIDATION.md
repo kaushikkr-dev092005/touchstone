@@ -65,7 +65,7 @@ See `bench/results/PROCUREMENT_RESULTS.md`, `procurement-evidence.json` and `doc
 
 The user funded the locally generated testnet wallet through the console. Chain 63825 was verified, 0.10 testnet USDZ deposited and one 0.01 USDZ inference call purchased through the SDK. The provider verified a real signed receipt. Both buyer-cache replay and direct provider receipt replay returned identical original delivery without another payment. The real model output was 1250 cents rather than the correct 2000, and the verifier rejected it. The charge remains recorded. Receipt assurance is preconfirmed. The remaining 0.09 testnet USDZ was returned in a non-deferred claim after withdrawal epoch 93301 finalized. Queue and claim transactions are recorded in `metal-paid-proof.json`; the payment receipt itself remains preconfirmed. See LIVE_PROOF.md.
 
-Airwallex authentication, balances and Global Account reads passed after the user updated scoped-key account permissions. Actual PaymentIntent creation returns HTTP 400 `configuration_error` from the merchant configuration. No customer authorization/capture has completed. The failure is retained in `airwallex-hold-proof.json`; unknown operation scopes are preserved privately.
+Airwallex authentication, balances and Global Account reads pass. The latest read-only smoke could not check Checkout Sessions read access because `AIRWALLEX_ACCOUNT_ID` is unset; it performed no writes, and Checkout Sessions write access remains unverified. Direct PaymentIntent creation returns HTTP 400 `configuration_error` from merchant configuration. No customer authorization/capture has completed. The failure is retained in `airwallex-hold-proof.json`; unknown operation scopes are preserved privately.
 
 ## Not executed
 
