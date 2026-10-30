@@ -19,6 +19,7 @@ The public event page lists build completion on **13 November, 18:29 UTC / 23:59
 - [x] Replace classification membership checks with bounded source evidence and explicit review pauses.
 - [x] Preserve the original simulator baseline; regenerate all three policies over five seeds using verifier v2.
 - [x] Implement standalone sandbox pre-authorization/capture/cancel with immutable terms and read-based recovery.
+- [x] Implement user-present hosted sandbox checkout with uncaptured authorization, durable recovery and reuse in the integrated job.
 - [x] Install verified portable Node and lock the supported Metal SDK dependencies.
 - [x] Implement a Windows-compatible SDK wallet, guarded clearing purchases and recovery commands.
 - [x] Read current public Metal deployment metadata successfully; no payment sent.
@@ -26,7 +27,7 @@ The public event page lists build completion on **13 November, 18:29 UTC / 23:59
 - [x] Configure supplied credentials locally, verify RPC chain 63825 and Airwallex authentication/read scopes.
 - [x] Fund a dedicated testnet wallet, deposit 0.10 USDZ, purchase one 0.01 USDZ GPU inference call and replay its original receipt/delivery.
 - [x] Return the remaining 0.09 testnet USDZ through a finalized non-deferred withdrawal claim; record queue and claim transactions.
-- [ ] Validate a real sandbox authorization/capture: merchant PaymentIntent creation currently returns `configuration_error`.
+- [ ] Validate a real sandbox authorization/capture: direct PaymentIntent creation returns `configuration_error`; hosted Checkout Sessions access and account setup are not yet verified.
 - [x] Measure two model sizes on the RTX 3050; preserve raw outputs and paired replay results.
 - [x] Add task-specific offline eligibility screening with deduplicated sources and a separate retrospective evaluation partition.
 - [x] Execute a deterministic-tool baseline on 1,000 new-seed tasks and 24 authored boundary cases; expose tool/review decisions in the dashboard.
@@ -102,4 +103,4 @@ Drop PDF export, per-token precision switching, extra provider types, reference-
 
 ## Unresolved dependencies
 
-Sandbox credentials and accepted registration are user-controlled. Metal needs a funded testnet key, RPC access and current deployment details. A verified local runtime and two licensed model files are installed and profiled, but no measured provider is approved for autonomous paid inference. Official judging rubric, submission schema and license requirements must be confirmed in the portal.
+Sandbox account context, Checkout Sessions read/write scope, active payment methods and accepted registration are user-controlled. The live testnet provider URL is not configured in this checkout, although the existing paid proof and returned-float evidence remain recorded. No representative finance-operations evaluation set or qualified provider is available. Official judging rubric, submission schema, team details, video requirements and license requirements must be confirmed in the signed-in portal.

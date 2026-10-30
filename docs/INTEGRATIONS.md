@@ -1,18 +1,18 @@
 # Integration contracts and verified sources
 
-Updated 30 October 2026. Credentials are local, one funded SDK inference purchase is verified, and Airwallex authentication/read access passes. Merchant PaymentIntent creation is blocked by `configuration_error`. See [actual proof](LIVE_PROOF.md) and [commands](ACCOUNT_SETUP.md).
+Updated 30 October 2026. Credentials are local, one funded SDK inference purchase is verified, and Airwallex authentication/read access passes. Direct PaymentIntent creation is blocked by `configuration_error`; a user-present hosted-checkout path is implemented but has not been exercised. See [actual proof](LIVE_PROOF.md) and [commands](ACCOUNT_SETUP.md).
 
 ## Airwallex transport and authorization
 
-`treasury.py` pins `https://api.sandbox.airwallex.com`, refuses redirects, authenticates with Client ID/API key and optionally `x-login-as`, then reuses its token. It reports read permissions separately from authentication, so a scoped-key read denial is not misreported as an invalid API key. Tokens, raw bank account data and card fields are not printed.
+`treasury.py` pins `https://api.sandbox.airwallex.com`, refuses redirects, authenticates with Client ID/API key and optionally `x-login-as`, then reuses its token. It reports read permissions separately from authentication, so a scoped-key read denial is not misreported as an invalid API key. Tokens, raw bank account data and card fields are not printed. `checkout.py` uses Checkout Sessions API version `2026-05-29` for a hosted, user-present card flow; it disables auto-capture, persists only safe session/intent fields, and resumes by read-only scope lookup if create response is lost. It requires `AIRWALLEX_ACCOUNT_ID` and Checkout Sessions read/write scope.
 
 `holds.py` implements create/confirm/retrieve/capture/cancel and persists immutable terms and operation UUIDs. Unknown outcomes are retained. Create recovery first reads the merchant order, then may replay the identical body and original UUID under Airwallex's documented idempotency. It never silently generates another create UUID. Capture/cancel unknown outcomes remain read-reconciled.
 
 The fixed public test-card workflow uses USD whole cents and holds capped at USD 10. It excludes raw card fields, CVC and client secrets from persisted response data. Merchant configuration currently rejects creation before authorization. Native API checkout/PCI enablement is not provisioned by default and may require Airwallex support. The exact configuration issue is not established by the generic API error.
 
-`banked-job` obtains authorization before allocating a clearing wallet and purchasing. It then captures actual accounted spend, records merchant-absorbed fractional cents and tracks returned float. Its full path is covered by controlled adapter tests. An actual external hold/capture has not yet completed. Hold increases, refunds, FX execution and token bridging are not implemented.
+`banked-job` obtains authorization before allocating a clearing wallet and purchasing. It then captures actual accounted spend, records merchant-absorbed fractional cents and tracks returned float. Its full path is covered by controlled adapter tests. The HPP authorization can continue into that workflow without creating a duplicate PaymentIntent. An actual external hold/capture has not yet completed. Hold increases, refunds, FX execution and token bridging are not implemented.
 
-Sources: [authentication](https://www.airwallex.com/docs/api/authentication/api_access_token), [scoped keys](https://www.airwallex.com/docs/developer-tools/api/manage-api-keys), [Payment Intents](https://www.airwallex.com/docs/api/payments/payment_intents), [idempotency](https://www.airwallex.com/docs/payments/get-started/using-payments-intent-api), [sandbox settings](https://www.airwallex.com/docs/developer-tools/sandbox-environment/sandbox-settings).
+Sources: [authentication](https://www.airwallex.com/docs/api/authentication/api_access_token), [scoped keys](https://www.airwallex.com/docs/developer-tools/api/manage-api-keys), [Payment Intents](https://www.airwallex.com/docs/api/payments/payment_intents), [Checkout Sessions](https://www.airwallex.com/docs/api/checkout/checkout_sessions), [API versioning](https://www.airwallex.com/docs/api/versioning), [sandbox settings](https://www.airwallex.com/docs/developer-tools/sandbox-environment/sandbox-settings).
 
 ## Metal SDK bridge and seller
 

@@ -26,7 +26,7 @@ The initial attempt hit a clearing epoch refusal. Recovery examined the durable 
 
 The test is an explicit protocol probe. These generated arithmetic inputs can be solved locally; the purchase is not a claim that inference was economically necessary. The failed answer and its charge remain in the evidence. Neither measured model has autonomous procurement authorization.
 
-## Airwallex sandbox: authenticated; merchant configuration blocks holds
+## Airwallex sandbox: authenticated; direct create blocked; hosted fallback untested
 
 The supplied scoped key and Client ID authenticate successfully. After the user updated its account-level permissions, balance and Global Account reads both passed. No token, API key, raw account details, card body or client secret is retained in public evidence.
 
@@ -36,7 +36,7 @@ PaymentIntent creation returns **HTTP 400 `configuration_error`** with the messa
 
 No customer authorization or capture has been completed. See `bench/results/airwallex-hold-proof.json` and `airwallex-readiness.json`. Unresolved create scopes remain in the private operation journal; they have not been treated as successful authorizations or available liquidity.
 
-Airwallex must resolve the sandbox merchant Payments configuration before the banking proof can continue. The error does not identify the exact missing setting. The [Payments readiness guide](https://www.airwallex.com/docs/payments/get-started/get-started-with-payments) covers activation and settlement configuration. The [sandbox settings reference](https://www.airwallex.com/docs/developer-tools/sandbox-environment/sandbox-settings) also explains that Native API checkout/PCI enablement is not provisioned by default. The current fixed-card smoke workflow uses Native API confirmation; a hosted checkout alternative would require a separate browser-assisted flow.
+The direct PaymentIntent route remains blocked by merchant configuration. A browser-assisted alternative is now implemented with the beta Checkout Sessions API at version `2026-05-29`; it creates an uncaptured card session, returns a hosted URL to the operator, and verifies authorization from read-back state. That path is not yet exercised and requires the sandbox payment account ID, Checkout Sessions read/write scope, and an activated payment method. The [Checkout Sessions guide](https://www.airwallex.com/docs/payments/integration-options/web-checkout/checkout-session/quickstart) explains its account/API prerequisites, while [sandbox settings](https://www.airwallex.com/docs/developer-tools/sandbox-environment/sandbox-settings) notes Native API checkout/PCI enablement is not provisioned by default.
 
 The integrated `banked-proof-001` create operation is still journaled as `UNKNOWN` after HTTP 400 `duplicate_request`. A read-only lookup by its merchant order ID found no matching PaymentIntent at the time checked. Preserve this scope and do not count it as an authorization; the create outcome needs Airwallex reconciliation.
 

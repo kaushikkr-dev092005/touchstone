@@ -34,8 +34,8 @@ def api_usd(micros):
 
 
 def public_intent(raw):
-    # No client_secret, tokens, card fields, next-action URLs or raw error bodies on disk.
-    fields = ("id", "status", "amount", "currency", "captured_amount", "merchant_order_id", "updated_at")
+    fields = ("id", "status", "amount", "currency", "captured_amount", "merchant_order_id", "updated_at",
+              "account_id", "expires_at", "mode", "payment_intent_id", "created_at")
     return {k: raw[k] for k in fields if k in raw}
 
 
@@ -184,6 +184,18 @@ class SandboxHoldWorkflow:
             raise ValueError("Invalid sandbox authorization scope or amount")
         api_usd(hold)
         self.journal.bind_authorization(scope, hold)
+        hosted = self.journal.get(scope, "hosted_authorization")
+        if hosted:
+            if hosted["state"] != "OBSERVED" or self.journal.get(scope, "create"):
+                raise OutcomeUnknown("Hosted authorization conflicts with an unresolved direct create; reconcile before proceeding")
+            intent = json.loads(hosted["response"])
+            self._validate(intent, scope, hold)
+            current = self._get(intent["id"])
+            self._validate(current, scope, hold)
+            ready = current.get("status") == "REQUIRES_CAPTURE" and micro_usd(current.get("captured_amount", 0)) == 0
+            return {"mode": "SANDBOX", "intent": current, "ready": ready, "approved_micro_usd": hold}
+        if self.journal.get(scope, "checkout_create"):
+            raise OutcomeUnknown("Hosted checkout is pending; complete it and verify with airwallex-checkout --status")
         create = self.journal.get(scope, "create")
         if create and create["state"] != "OBSERVED" and recover:
             self._recover_create(scope, hold)
@@ -220,12 +232,21 @@ class SandboxHoldWorkflow:
         api_usd(capture)
         # Bind capture terms before ANY network write, including create/confirm.
         self.journal.bind_terms(scope, hold, capture)
-        create = self.journal.get(scope, "create")
-        if create and create["state"] != "OBSERVED" and recover:
-            self._recover_create(scope, hold)
-        intent = self._write(scope, "create", "/api/v1/pa/payment_intents/create",
-                             {"amount": api_usd(hold), "currency": "USD", "merchant_order_id": scope})
-        self._validate(intent, scope, hold)
+        hosted = self.journal.get(scope, "hosted_authorization")
+        if hosted:
+            if hosted["state"] != "OBSERVED" or self.journal.get(scope, "create"):
+                raise OutcomeUnknown("Hosted authorization conflicts with an unresolved direct create; reconcile before proceeding")
+            intent = json.loads(hosted["response"])
+            self._validate(intent, scope, hold)
+        else:
+            if self.journal.get(scope, "checkout_create"):
+                raise OutcomeUnknown("Hosted checkout is pending; complete it and verify with airwallex-checkout --status")
+            create = self.journal.get(scope, "create")
+            if create and create["state"] != "OBSERVED" and recover:
+                self._recover_create(scope, hold)
+            intent = self._write(scope, "create", "/api/v1/pa/payment_intents/create",
+                                 {"amount": api_usd(hold), "currency": "USD", "merchant_order_id": scope})
+            self._validate(intent, scope, hold)
         intent_id = intent["id"]
         current = self._get(intent_id)
         self._validate(current, scope, hold)

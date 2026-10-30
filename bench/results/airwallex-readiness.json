@@ -4,8 +4,14 @@
   "authenticated": true,
   "balance_read": true,
   "global_accounts_read": true,
-  "read_errors": {},
+  "checkout_sessions_read": false,
+  "read_errors": {
+    "checkout_sessions_read": {
+      "reason": "Set AIRWALLEX_ACCOUNT_ID to check Checkout Sessions access"
+    }
+  },
   "account_context_configured": false,
+  "checkout_sessions_write_verified": false,
   "writes_performed": false,
   "dashboard_mode_changed": false
 }

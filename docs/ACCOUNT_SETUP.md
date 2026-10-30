@@ -17,18 +17,25 @@ These checks do not send a financial transaction. Doctor reports configuration p
 
 ## Airwallex permissions and merchant setup
 
-For a new checkout, create a sandbox account at https://www.sandbox.airwallex.com/signup. In Developer > API keys, configure account-level **Payment Acceptance: Write** and **Global Accounts: Read** or **Balances: Read**. Organization webhook access alone is insufficient. Select one sandbox account, or set `AIRWALLEX_ACCOUNT_ID` for the selected account if the key spans several. Its value is sent as `x-login-as` during authentication.
+For a new checkout, create a sandbox account at https://www.sandbox.airwallex.com/signup. In Developer > API keys, configure account-level **Payment Acceptance: Write** and **Global Accounts: Read** or **Balances: Read**. Hosted checkout also needs Checkout Sessions read/write access and an activated sandbox payment method. Set `AIRWALLEX_ACCOUNT_ID` to the payment account shown in Settings > Account details; it is required for Checkout Sessions and is also sent as `x-login-as` during authentication.
 
-The current account now passes login, balances and Global Account reads. Create returns HTTP 400 `configuration_error`: Invalid request against merchant configuration. The error does not identify the exact missing setting, and it occurs before card confirmation. Current sandbox documentation says Hosted Payment Page is the default checkout, while Native API checkout and PCI DSS enablement require Airwallex Support. Ask Support to confirm Payments activation, merchant configuration and the allowed checkout mode before retrying. If Native API is unavailable, the workflow needs a customer-facing hosted-checkout path; that path has not been implemented.
+The current account passes login, balance and Global Account reads, but direct PaymentIntent creation returns HTTP 400 `configuration_error` before card confirmation. The exact missing setting is not established. `airwallex-checkout` now provides a browser-assisted Hosted Payment Page path using the Checkout Sessions API (beta, API version `2026-05-29`) with `auto_capture: false`; it still requires Payment Acceptance activation, Checkout Sessions read/write access, and the payment account ID. If those are not available in the portal, ask Airwallex Support to confirm Payments activation and supported checkout mode. No hosted session has been created yet.
 
-After merchant setup is resolved, use a fresh, clearly named test scope and retain all failed scopes:
+For the hosted flow, use a fresh scope (do not reuse `banked-proof-001`, whose direct create outcome remains unresolved). The start command creates an unpaid Checkout Session and prints its hosted URL; complete payment only with a sandbox test card in the Airwallex page, then retrieve the session status:
 
 ```powershell
-python -m touchstone airwallex-hold --scope touchstone-smoke-002 --hold-usd 1.00 --capture-usd 0.50
-python -m touchstone airwallex-hold --scope touchstone-smoke-002 --hold-usd 1.00 --capture-usd 0.50 --recover
+python -m touchstone airwallex-checkout --scope hpp-smoke-001 --hold-usd 1.00
+python -m touchstone airwallex-checkout --scope hpp-smoke-001 --hold-usd 1.00 --status
 ```
 
-The fixed public sandbox card workflow is limited to USD 10 holds and whole cents. It persists UUIDs before dispatch, captures once and cancels remaining capture-ready authorization. Review/customer-action states are incomplete. Unused authorization does not prove issuer balance availability.
+The second command must report `authorization_ready: true` and an intent in `REQUIRES_CAPTURE` before a job may dispatch. To test a standalone partial capture and remainder cancellation, pass the same scope to the existing command:
+
+```powershell
+python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50
+python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50 --recover
+```
+
+For the integrated banked flow, pass `--journal data/banked/airwallex.sqlite` to both `airwallex-checkout` commands, then use the same scope with `banked-job --integration-probe`; this deliberately proceeds to a testnet provider purchase and should only be run when that separate expense is intended. The fixed sandbox workflow is limited to USD 10 holds and whole cents. It persists UUIDs before writes, captures once and cancels remaining capture-ready authorization. Customer-action states are completed only by the customer on Airwallex's hosted page. Unused authorization does not prove issuer balance availability.
 
 Recovery reads existing intents. For unresolved create only, it may replay the identical body using the original UUID under documented Airwallex idempotency. It never silently invents another create UUID. Unknown capture/cancel outcomes remain read-reconciled. A cached `duplicate_request` from a rejected create is not authorization; preserve that scope for inspection.
 

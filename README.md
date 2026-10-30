@@ -2,7 +2,7 @@
 
 Quality-aware inference procurement for autonomous agents. A customer approves a job budget; Touchstone allocates scarce operator float, purchases calls, checks results, and records what every attempt actually cost.
 
-Built for the Airwallex Agentic Banking Hackathon, extending Kit 12 with quality checks and payment recovery. **A real Metal testnet inference purchase is proven. Airwallex authentication/reads pass; merchant configuration currently blocks the customer hold.** The three-job financial scenario remains simulated.
+Built for the Airwallex Agentic Banking Hackathon, extending Kit 12 with quality checks and payment recovery. **A real Metal testnet inference purchase is proven. Airwallex authentication/reads pass; direct PaymentIntent creation is blocked by merchant configuration. A hosted-checkout fallback is implemented but not yet exercised.** The three-job financial scenario remains simulated.
 
 ## Run it
 
@@ -127,16 +127,15 @@ The profiler discards one warm-up and records measured latency and offline corre
 
 ## Evidence and next milestones
 
-Start the real local provider and resume integration proofs in separate terminals:
+Start the local model and testnet provider in separate terminals; these commands do not start a checkout:
 
 ```powershell
 python tools/run_local.py --tier balanced
 python tools/metal.py provider
-python tools/prove_metal.py --recover --withdraw
-python -m touchstone banked-job --scope banked-proof-001 --integration-probe --recover
+python tools/prove_metal.py --withdraw-only
 ```
 
-`prove_metal.py` uses one persistent protocol-probe reservation and a USD 0.01 cap; reruns preserve its original payment. `banked-job` is currently blocked by Airwallex merchant configuration. Its live checking fee is zero, fractional cents are absorbed by the merchant, and gas is merchant expense. No fiat-to-token bridge is implied. See [account/integration setup](docs/ACCOUNT_SETUP.md).
+`prove_metal.py` uses one persistent protocol-probe reservation and a USD 0.01 cap; reruns preserve its original payment. The old `banked-proof-001` scope has an unresolved direct-create outcome and is for recovery only. Use a fresh scope for hosted checkout; that fallback needs a sandbox account ID, Checkout Sessions API access and an explicit customer action. `banked-job --integration-probe` then makes a separate testnet purchase and should only be run when that expense is intended. Live checking fees are zero, fractional cents are absorbed by the merchant, and gas is merchant expense. No fiat-to-token bridge is implied. See [account/integration setup](docs/ACCOUNT_SETUP.md).
 
 The new local planner resolves bounded inputs before any model purchase. It solved **1,000/1,000 generated tasks with zero inference calls**, and handled 24 authored boundary cases as expected (6 resolved, 18 deferred for review). This demonstrates why these templates are accounting fixtures rather than evidence that paid inference is necessary. Neither measured model meets the offline eligibility screen; repeated classification messages count only once.
 

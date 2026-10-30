@@ -12,10 +12,15 @@ class Treasury(unittest.TestCase):
             if path.endswith('/login'):
                 self.assertEqual(headers['x-login-as'], 'fixture-account')
                 return {'token':'DO_NOT_PRINT'}
+            if '/checkout_sessions?' in path:
+                self.assertEqual(headers['x-api-version'], '2026-05-29')
+                return {'items': []}
             raise AirwallexHTTPError(401, 'unauthorized')
         client._request = request
         report = client.smoke()
         self.assertTrue(report['authenticated'])
+        self.assertTrue(report['checkout_sessions_read'])
+        self.assertFalse(report['checkout_sessions_write_verified'])
         self.assertFalse(report['balance_read'])
         self.assertFalse(report['global_accounts_read'])
         self.assertEqual(report['read_errors']['balance_read']['http_status'], 401)

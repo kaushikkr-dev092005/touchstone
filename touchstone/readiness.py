@@ -34,6 +34,11 @@ def inspect():
         airwallex = json.loads((ROOT / 'data/airwallex-readiness.json').read_text(encoding='utf-8'))
     except (OSError, ValueError):
         pass
+    account_context = bool(os.environ.get('AIRWALLEX_ACCOUNT_ID'))
+    checkout_read = bool(airwallex.get('checkout_sessions_read'))
+    hosted_checkout_workflow = ('BLOCKED_ACCOUNT_CONTEXT' if not account_context else
+                                'BLOCKED_CHECKOUT_SESSIONS_READ' if not checkout_read else
+                                'WRITE_UNVERIFIED')
     try:
         raw = json.loads((ROOT / 'bench/results/metal-paid-proof.json').read_text(encoding='utf-8'))
         result = raw.get('result', {})
@@ -59,9 +64,13 @@ def inspect():
                           "authenticated": airwallex.get('authenticated', False),
                           "balance_read": airwallex.get('balance_read', False),
                           "global_accounts_read": airwallex.get('global_accounts_read', False),
-                          "account_context_configured": bool(os.environ.get('AIRWALLEX_ACCOUNT_ID')),
+                          "account_context_configured": account_context,
                           "hold_workflow": "BLOCKED_MERCHANT_CONFIGURATION" if hold.get('failure', {}).get('code') == 'configuration_error' else "IMPLEMENTED_UNVERIFIED",
-                          "hold_error": hold.get('failure'), "dashboard_mode": "SIMULATED"},
+                          "hold_error": hold.get('failure'),
+                          "hosted_checkout": {"workflow": hosted_checkout_workflow,
+                                               "read_access_verified": checkout_read,
+                                               "write_access_verified": False},
+                          "dashboard_mode": "SIMULATED"},
             "metal": {"rpc_configured": bool(os.environ.get("METAL_RPC_URL")),
                       "funding_key_configured": bool(os.environ.get("AGENT_PRIVATE_KEY")),
                       "provider_configured": bool(os.environ.get("METAL_PROVIDER_URL")),

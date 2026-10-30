@@ -5,6 +5,7 @@ import urllib.error
 import urllib.request
 import time
 import re
+from urllib.parse import urlencode
 
 BASE_URL = "https://api.sandbox.airwallex.com"
 
@@ -45,12 +46,17 @@ class AirwallexSandbox:
         except urllib.error.URLError:
             raise RuntimeError("Airwallex sandbox could not be reached") from None
 
-    def request(self, method, path, body=None):
+    def request(self, method, path, body=None, api_version=None):
         if not self.token or time.monotonic() >= self.token_until:
             login = self._request("/api/v1/authentication/login", "POST", self.login_headers())
             self.token = login["token"]
             self.token_until = time.monotonic() + 25 * 60
-        return self._request(path, method, {"Authorization": "Bearer " + self.token, "Content-Type": "application/json"}, body)
+        headers = {"Authorization": "Bearer " + self.token, "Content-Type": "application/json"}
+        if api_version is not None:
+            if not re.fullmatch(r"20\d{2}-\d{2}-\d{2}", api_version):
+                raise ValueError("Invalid Airwallex API version")
+            headers["x-api-version"] = api_version
+        return self._request(path, method, headers, body)
 
     def login_headers(self):
         headers = {"x-client-id": self.client_id, "x-api-key": self.api_key}
@@ -69,10 +75,23 @@ class AirwallexSandbox:
             except AirwallexHTTPError as error:
                 reads[name] = False
                 errors[name] = {"http_status": error.status, "reason": "Check account selection and scoped key permissions"}
+        if self.account_id:
+            checkout_headers = {**headers, "x-api-version": "2026-05-29"}
+            checkout_path = "/api/v1/checkout/checkout_sessions?" + urlencode({"account_id": self.account_id, "page_size": 1})
+            try:
+                result = self._request(checkout_path, headers=checkout_headers)
+                reads["checkout_sessions_read"] = isinstance(result, dict) and isinstance(result.get("items"), list)
+            except AirwallexHTTPError as error:
+                reads["checkout_sessions_read"] = False
+                errors["checkout_sessions_read"] = {"http_status": error.status,
+                    "reason": "Check Checkout Sessions read permission and API availability"}
+        else:
+            reads["checkout_sessions_read"] = False
+            errors["checkout_sessions_read"] = {"reason": "Set AIRWALLEX_ACCOUNT_ID to check Checkout Sessions access"}
         # Do not print credentials, tokens, bank account details, or raw responses.
         return {"mode": "SANDBOX", "host": BASE_URL, "authenticated": True,
                 **reads, "read_errors": errors, "account_context_configured": bool(self.account_id),
-                "writes_performed": False, "dashboard_mode_changed": False}
+                "checkout_sessions_write_verified": False, "writes_performed": False, "dashboard_mode_changed": False}
 
 
 class AirwallexHTTPError(RuntimeError):

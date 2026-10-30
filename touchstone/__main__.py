@@ -46,6 +46,12 @@ def main():
     holds.add_argument("--capture-usd", default="0.50")
     holds.add_argument("--recover", action="store_true")
     holds.add_argument("--journal", default="data/airwallex-operations.sqlite")
+    checkout = commands.add_parser("airwallex-checkout", help="Start or inspect a hosted sandbox card authorization")
+    checkout.add_argument("--scope", required=True, help="Stable unique order ID; reuse after interruption")
+    checkout.add_argument("--hold-usd", default="1.00")
+    checkout.add_argument("--status", action="store_true", help="Retrieve the session and verify an uncaptured authorization")
+    checkout.add_argument("--recover", action="store_true", help="Reconcile an uncertain create through read-only session lookup")
+    checkout.add_argument("--journal", default="data/airwallex-operations.sqlite")
     profile = commands.add_parser("profile-local", help="Measure an already-running local model; no payment")
     profile.add_argument("--steps", type=int, default=12)
     profile.add_argument("--output", default="bench/results/local-profile.json")
@@ -157,6 +163,15 @@ def main():
             result = workflow.run(args.scope, micro_usd(args.hold_usd), micro_usd(args.capture_usd), args.recover)
             print(json.dumps(result, indent=2))
             return 0 if result["complete"] else 2
+        elif args.command == "airwallex-checkout":
+            from .treasury import AirwallexSandbox
+            from .holds import OperationJournal, micro_usd
+            from .checkout import HostedCheckoutWorkflow
+            workflow = HostedCheckoutWorkflow(AirwallexSandbox(), OperationJournal(args.journal))
+            result = workflow.status(args.scope, micro_usd(args.hold_usd), args.recover) if args.status else \
+                workflow.start(args.scope, micro_usd(args.hold_usd), args.recover)
+            print(json.dumps(result, indent=2))
+            return 0 if result.get("authorization_ready") or result.get("checkout_url") else 2
         elif args.command == "profile-local":
             from .providers import local_inference
             from .verifier import check
