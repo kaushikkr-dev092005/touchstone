@@ -2,7 +2,7 @@
 
 Offline planning and real local tool execution. No payments sent.
 
-Bounded tools solved 1000/1000 generated tasks over five new seeds with no model calls or provider spend. CPU p50 0.0017 ms; p95 0.0024 ms (single local run).
+Bounded tools solved 1000/1000 generated tasks over five new seeds with no model calls or provider spend. CPU p50 0.0015 ms; p95 0.0020 ms (single local run).
 
 No provider purchase. CPU, development, review and service costs are not priced; this is not a zero-total-cost claim.
 

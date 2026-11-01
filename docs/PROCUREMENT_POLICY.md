@@ -36,6 +36,16 @@ The default screen requires at least 20 unique sources and a lower endpoint of t
 
 All six current provider/task combinations fail the screen. Passing this offline screen would still not authorize a financial transaction: source-domain validation, current provider identity, quote and ledger checks, funded adapter integration and recovery proof remain required. The standalone Metal CLI is an explicit integration test tool and is not governed by this offline report; it must not be described as an autonomous quality-gated buyer.
 
+## Invoice-exception preflight
+
+`python -m touchstone plan --input path/to/tasks.json` accepts a bounded `invoice_exception` task with an OCR text string, cited invoice fields and line items, one typed purchase order, and typed payment history. Every citation is a `{ "value": "...", "start": 0, "end": 0 }` character span whose value must match the source text exactly; verified spans are returned for review. The currently supported currency is USD with explicit two-decimal amounts. Line totals, subtotal, tax and invoice total are recomputed with integer cents. Supplier/PO mismatches, duplicate or in-progress payments and purchase-order limit overruns are returned as review issues.
+
+Even a clean match returns `REVIEW_REQUIRED` with `MATCHED_REQUIRES_HUMAN_APPROVAL`; exceptions return `EXCEPTION_REQUIRES_HUMAN_REVIEW`. Unsupported or malformed inputs abstain. The tool has no payment adapter and reports `payments_sent: 0` and `live_purchase_authorized: false`. The test fixtures are authored synthetic cases: this code is an initial deterministic baseline, not representative evidence, a prospective model evaluation, or payment authorization. See `tests/test_invoice_exceptions.py`.
+
+## Public dataset assessment
+
+FATURA2 is licensed CC BY 4.0, but its authors describe 10,000 generated invoices per background variant from 50 templates (200 instances per template). It can support a synthetic layout-generalization probe, not representative vendor/payment exception qualification ([Zenodo record](https://zenodo.org/records/10371464), [dataset paper](https://arxiv.org/abs/2311.11856)). Another public set contains 813 Portuguese invoices/receipts from one private company, with seller/buyer tax-ID annotations; its single-company and language scope is insufficient for the intended evaluation and needs a privacy review before use ([Zenodo record](https://zenodo.org/records/6371710)). Neither source provides the paired purchase-order/payment history required by the proposed exception workflow. No dataset files are retained in the repository, and no model was evaluated on either corpus.
+
 ## What the experiment changes
 
 The generated workload is a useful accounting stress test, but a poor proof of the commercial value of buying model inference. Bounded tools solve 1,000/1,000 generated cases across seeds 101–105 with no inference purchases. This does not mean processing is free: CPU, maintenance, review and service charges are not priced in that baseline. The original model results and negative cheap-first replay remain intact.

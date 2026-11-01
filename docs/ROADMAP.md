@@ -35,6 +35,10 @@ The public event page lists build completion on **13 November, 18:29 UTC / 23:59
 - [x] Implement the integrated `banked-job` workflow, real SDK process bridge, local x402 provider and original-delivery recovery.
 - [ ] Qualify useful paid inference and prove the complete external sandbox banking loop after merchant configuration is enabled.
 
+## Progress on 31 October
+
+- [x] Add a no-payment invoice-exception preflight with exact source citations, integer-total recomputation, purchase-order/payment checks and mandatory human review.
+
 The real paid proof rejected an incorrect answer (1250 cents instead of 2000), retained the failed-call charge and demonstrated both cached and provider-side replay without another payment. The remaining 0.09 testnet USDZ has now returned through a non-deferred claim; the receipt assurance remains preconfirmed. Actual Airwallex authentication, balance reads and Global Account reads pass. PaymentIntent creation fails before authorization. See LIVE_PROOF.md for the precise evidence and blocker.
 
 The updated simulator has 100% median true success for Touchstone at $6.162 versus premium's 99.5% at $10.200 on supported synthetic templates. This is a bounded-rule regression result; general semantic accuracy and real model savings remain unproven.

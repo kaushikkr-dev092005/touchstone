@@ -27,7 +27,7 @@ Benchmark results are saved to [bench/results/RESULTS.md](bench/results/RESULTS.
 - SQLite WAL accounting with integer micro-USD, atomic reservations, hold limits, per-call caps, provider allowlists, mandate expiry and shared-float allocation.
 - Three provider simulators, expiring price offers, observed-check routing and bounded escalation.
 - Independent durable mock payment receipts, receipt matching, idempotency conflicts and recovery before new purchases.
-- Source-based invoice and arithmetic checks; classification evidence rules that reject contradictory labels and pause on ambiguous or unsupported sources.
+- Source-based invoice and arithmetic checks; a cited invoice-to-purchase-order/payment cross-check that recomputes totals and always pauses for human review.
 - Separate offline truth scoring, paired three-policy evaluation over five seeds, and explicit synthetic latency estimates.
 - Simulated authorization, capture once, release unused hold, partial closure, kill switch and operator resume.
 - Append-only audit events with hash chaining; responsive dashboard with mode disclosures.
