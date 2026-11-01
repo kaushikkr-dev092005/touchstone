@@ -45,6 +45,7 @@ class Ledger:
               price_cap INTEGER NOT NULL, allocation INTEGER NOT NULL, rail_spent INTEGER NOT NULL DEFAULT 0,
               spent INTEGER NOT NULL DEFAULT 0, captured INTEGER NOT NULL DEFAULT 0,
               released INTEGER NOT NULL DEFAULT 0, expires_at REAL NOT NULL, tasks TEXT NOT NULL,
+              mandate_version INTEGER NOT NULL DEFAULT 1,
               CHECK(spent>=0 AND spent<=budget AND budget<=hold), CHECK(captured<=hold));
             CREATE TABLE IF NOT EXISTS attempts(
               key TEXT PRIMARY KEY, job_id TEXT NOT NULL REFERENCES jobs(id), step_id TEXT NOT NULL,
@@ -66,6 +67,9 @@ class Ledger:
             columns = {r["name"] for r in db.execute("PRAGMA table_info(attempts)")}
             if "verdict" not in columns:
                 db.execute("ALTER TABLE attempts ADD COLUMN verdict TEXT")
+            job_columns = {r["name"] for r in db.execute("PRAGMA table_info(jobs)")}
+            if "mandate_version" not in job_columns:
+                db.execute("ALTER TABLE jobs ADD COLUMN mandate_version INTEGER NOT NULL DEFAULT 1")
 
     def connect(self):
         db = sqlite3.connect(self.path, timeout=15, isolation_level=None, factory=ClosingConnection)
@@ -115,7 +119,8 @@ class Ledger:
                               VALUES(?,?,?,?,?,?,?,?,?,?,?)""",
                            (job_id, run_id, s["seed"], s["policy"], "RUNNING", hold, hold, cap, allocation,
                             time.time() + 86400, canonical(s["tasks"])))
-                self._event(db, "HOLD_AUTHORIZED", {"job_id": job_id, "hold": hold, "allocation": allocation, "mode": "SIMULATED"})
+                self._event(db, "HOLD_AUTHORIZED", {"job_id": job_id, "hold": hold, "allocation": allocation,
+                    "mandate_version": 1, "mode": "SIMULATED"})
         return run_id
 
     def get_job(self, job_id):
@@ -127,6 +132,51 @@ class Ledger:
         with self.connect() as db:
             rows = db.execute("SELECT * FROM jobs WHERE run_id=? ORDER BY id", (run_id,)) if run_id else db.execute("SELECT * FROM jobs ORDER BY rowid DESC")
             return [dict(r) for r in rows]
+
+    def approve_mandate_increase(self, job_id, expected_version, hold, budget, price_cap, allocation, approver, reason):
+        values = (hold, budget, price_cap, allocation)
+        if any(type(value) is not int or value <= 0 for value in values):
+            raise ValueError("Approved mandate limits must be positive integer micro-USD")
+        if type(expected_version) is not int or expected_version < 1:
+            raise ValueError("Expected mandate version must be a positive integer")
+        if not isinstance(approver, str) or not approver.strip() or len(approver.strip()) > 100:
+            raise ValueError("Approver name is required and limited to 100 characters")
+        if not isinstance(reason, str) or not reason.strip() or len(reason.strip()) > 300:
+            raise ValueError("Approval reason is required and limited to 300 characters")
+        with self.tx() as db:
+            job = db.execute("SELECT * FROM jobs WHERE id=?", (job_id,)).fetchone()
+            if not job:
+                raise PolicyError("Unknown job")
+            if job["status"] != "PAUSED_POLICY":
+                raise PolicyError("A mandate increase can be approved only while the job is policy-paused")
+            if expected_version != job["mandate_version"]:
+                raise PolicyError("Mandate version changed; refresh before approving")
+            if db.execute("SELECT 1 FROM attempts WHERE job_id=? AND state IN ('RESERVED','PAID')", (job_id,)).fetchone():
+                raise PolicyError("Cannot revise a mandate while a purchase outcome is unresolved")
+            if hold <= job["hold"] or budget <= job["budget"]:
+                raise PolicyError("A new version must increase both the hold and job budget")
+            if budget > hold or allocation > hold or price_cap > budget:
+                raise PolicyError("New mandate limits are inconsistent")
+            if hold > 10_000_000:
+                raise PolicyError("Simulated hold cannot exceed USD 10")
+            if allocation < job["rail_spent"]:
+                raise PolicyError("Allocation cannot be below provider spend")
+            run = db.execute("SELECT float_total FROM runs WHERE id=?", (job["run_id"],)).fetchone()
+            allocated = db.execute("SELECT COALESCE(SUM(allocation),0) FROM jobs WHERE run_id=?", (job["run_id"],)).fetchone()[0]
+            if allocated - job["allocation"] + allocation > run["float_total"]:
+                raise PolicyError("Approved allocation exceeds the run's existing operator float")
+            old = {name: job[name] for name in ("hold", "budget", "price_cap", "allocation")}
+            new_version = job["mandate_version"] + 1
+            db.execute("UPDATE jobs SET hold=?,budget=?,price_cap=?,allocation=?,mandate_version=? WHERE id=?",
+                       (hold, budget, price_cap, allocation, new_version, job_id))
+            self._event(db, "MANDATE_INCREASE_APPROVED", {
+                "job_id": job_id, "previous_version": job["mandate_version"], "mandate_version": new_version,
+                "previous_limits": old,
+                "approved_limits": {"hold": hold, "budget": budget, "price_cap": price_cap, "allocation": allocation},
+                "approver": approver.strip(), "reason": reason.strip(), "mode": "SIMULATED"})
+            return {"job_id": job_id, "mandate_version": new_version, "status": job["status"],
+                    "hold": hold, "budget": budget, "price_cap": price_cap, "allocation": allocation,
+                    "mode": "SIMULATED"}
 
     def attempts(self, job_id=None):
         with self.connect() as db:

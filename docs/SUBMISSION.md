@@ -2,7 +2,7 @@
 
 ## One sentence
 
-Touchstone controls an agent's inference purchases within a customer mandate, verifies outputs, recovers paid deliveries and accounts for failed calls.
+Touchstone buys inference only when bounded tools cannot resolve a task, verifies the paid result, recovers its receipt and records failed-call cost without charging beyond a mandate.
 
 ## Problem and approach
 
@@ -29,10 +29,21 @@ The actual Airwallex hold/capture is blocked by a merchant `configuration_error`
 
 The product's decision is whether an inference purchase is warranted, not just which provider has the lowest price. It connects output quality to an explicit financial trail while preserving the difference between authorization, operator liquidity, a preconfirmed receipt and returned funds.
 
+## Kit fit and claim boundary
+
+The current three-job scenario maps to the official **Kit 12: Inference Sourcing Agent**: three concurrent jobs, $2.50 in holds, $1.50 in float, provider rerouting, and asking before exceeding a hold. The official guide labels **Kit 11** as x402 Business Agents, which instead requires separate sourcing/support/treasury agent mandates, signed customer orders, a dispute/refund path and treasury settlement. Touchstone does not yet implement that separate mandate/refund workflow, so do not claim Kit 11 based only on the three-job simulation. See the [current starter-kit guide](https://airwallexdev.com/guide).
+
 ## Demonstration
 
-Run `python -m touchstone serve` and open `http://127.0.0.1:8088`. Show the local-tool/review preview, then the financial stress scenario. Open the real testnet evidence panel and explain that the purchased answer failed verification. Finish with the banked-job journal and the precise Airwallex merchant blocker. Use `docs/DEMO_SCRIPT.md` for timing and `docs/VALIDATION.md` for evidence boundaries.
+Run `python -m touchstone serve` and open `http://127.0.0.1:8088`. The first card is the historical real $0.01 USDZ GPU purchase: source total 2,000 cents, paid model output 1,250, verifier rejection, identical replays, and no customer capture. Then show the code-only planner and clearly labeled simulated three-policy stress test. The dashboard's simulator approval flow changes only a versioned local mandate and uses no new real funds. Finish with the Airwallex readiness blocker. Use `docs/DEMO_SCRIPT.md` for timing and `docs/VALIDATION.md` for evidence boundaries.
 
-## Required work before submitting
+## Priority gates from the current review
+
+1. Set the sandbox account ID and FX Conversion Write scope, then perform one explicitly approved small conversion and reconcile it against Airwallex wallet history. Do not wait on card-acquiring configuration for this treasury proof.
+2. Configure a local small-model provider and a hosted premium provider with partner credits; configure a separate Metal origin for each live tier and approve an aggregate testnet budget before running policy measurements. The present dashboard table remains simulator-only.
+3. Ask the sponsor whether sandbox Developer MCP/CLI usage qualifies as “Airwallex tooling.” The official AgentOS MCP and skills use production connectors, and no production account approval is available in this environment.
+4. Keep the Kit 11 claim separate: the official guide labels this three-job scenario Kit 12; Kit 11 requires agent mandates, signed orders, dispute/refund handling and treasury settlement.
+
+## Additional submission checklist
 
 Before submission, set the Airwallex account context and verify Checkout Sessions/FX read and write scopes; exercise hosted authorization/capture and a small FX conversion/report; execute 30–50 testnet engine steps plus the chaos and kill/restart demonstrations only with an explicitly approved funded budget; qualify a model on representative finance-operations sources if claiming useful autonomous inference; verify finality of the paid inference receipt; and confirm the signed-in submission requirements. MIT license is included. Freeze features by 11 November, record on 12 November and submit by 13 November. The testnet withdrawal has returned; the private repository was previously pushed to `https://github.com/kaushikkr-dev092005/touchstone`; public publication and hackathon submission have not been performed.

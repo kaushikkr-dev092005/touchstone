@@ -2,6 +2,10 @@
 
 The public event page lists build completion on **13 November, 18:29 UTC / 23:59 IST**. Target submission by 18:00 IST. Registration is listed as closed on 25 October; verify accepted participation in the signed-in portal now. No registration or submission has been performed by this agent.
 
+## Official kit mapping
+
+The [current Airwallex developer-lab guide](https://airwallexdev.com/guide) maps the three-job, short-float inference sourcing story to **Kit 12**. Its **Kit 11** is x402 Business Agents: separate agent mandates, signed orders, dispute/refund handling and treasury settlement. Do not claim Kit 11 until that distinct workflow is implemented and evidenced.
+
 ## Completed foundation
 
 - [x] Read and review all 17 proposal pages and inspect rendered architecture/tables.
@@ -57,8 +61,14 @@ See VALIDATION.md and saved results for what was actually executed. A checked fo
 - [x] Unify the simulated and Metal payment rails in the engine, route an explicit Metal tier, and retain reservations when the live rail cannot prove non-payment.
 - [x] Add queue-aware signed quote pricing, measured service-latency metadata, opt-in provider outage/quality chaos, and a hard process-kill recovery switch.
 - [x] Add MIT `LICENSE` with the requested 2026 Kaushik Kumar copyright.
-- [ ] Run the Airwallex read-only readiness check; account context is still unset, so FX writes and hosted checkout remain untested.
+- [x] Put the one real paid GPU failure and its unbilled probe outlay before the simulator on the dashboard; remove the deleted calibration metric and expose the noisy-checker chart.
+- [x] Add audited versioned approvals for simulated limit increases; the job remains paused until a separate Resume, and no real hold or wallet is affected.
+- [x] Run the Airwallex read-only readiness check; authentication/balance/account reads pass, but `AIRWALLEX_ACCOUNT_ID` is still unset.
+- [ ] Set sandbox account context and Conversion Write scope, then execute one approved FX conversion and reconcile the wallet-history entries. This does not require a card-acquiring/merchant configuration change.
 - [ ] Run 30–50 real paid engine steps, a real-provider chaos scenario, and a Metal process-kill/restart demonstration. The provider URL is unset and the dedicated Metal wallet's prior balance was withdrawn, so no new charge is authorized or possible from this checkout as configured.
+- [ ] Configure a hosted premium endpoint and multiple live provider origins before claiming a three-policy real-provider cost comparison. No hosted-provider credits/key are configured in this checkout.
+- [ ] Use sandbox Developer connectors for sandbox work; AgentOS MCP/skills require a production connector, and the official CLI has no Windows build. Confirm with the sponsor what tooling evidence counts.
+- [ ] Do not claim Kit 11 without implementing its separate signed-order, agent-mandate and dispute/refund flow.
 
 ## 29–31 October: prove the external integrations
 

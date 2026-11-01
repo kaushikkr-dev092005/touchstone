@@ -1,6 +1,7 @@
 """Loopback dashboard and SSE. All browser mutations require a session token."""
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 import secrets
 import threading
@@ -12,6 +13,19 @@ from .ledger import Ledger, PolicyError
 from .payments import MockRail
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def usd_to_micros(value):
+    if not isinstance(value, str):
+        raise ValueError("Limit amounts must be decimal USD strings")
+    try:
+        amount = Decimal(value)
+    except InvalidOperation:
+        raise ValueError("Limit amounts must be valid decimal USD strings") from None
+    micros = amount * 1_000_000
+    if not amount.is_finite() or amount <= 0 or micros != micros.to_integral_value():
+        raise ValueError("Limit amounts must be positive and precise to at most six decimals")
+    return int(micros)
 
 
 def serve(port=8088, data_dir="data"):
@@ -74,6 +88,11 @@ def serve(port=8088, data_dir="data"):
             if path == "/api/benchmark":
                 p = ROOT / "bench/results/simulated.json"
                 return self.respond(200, json.loads(p.read_text()) if p.exists() else {"summary": [], "mode": "NOT_RUN"})
+            if path == "/api/noisy-verification-chart":
+                chart = ROOT / "bench/results/noisy-verification.svg"
+                if not chart.exists():
+                    return self.respond(404, {"error": "Generate the benchmark before loading the chart"})
+                return self.send_bytes(200, chart.read_bytes(), "image/svg+xml; charset=utf-8")
             if path == "/api/readiness":
                 from .readiness import inspect
                 return self.respond(200, inspect())
@@ -134,6 +153,16 @@ def serve(port=8088, data_dir="data"):
                         return self.respond(200, {"halted": True})
                     if busy:
                         return self.respond(409, {"error": "A run is active; halt it before changing execution"})
+                    if self.path == "/api/approve-increase":
+                        approved = ledger.approve_mandate_increase(
+                            payload.get("job_id"), payload.get("expected_version"),
+                            usd_to_micros(payload.get("hold_usd")),
+                            usd_to_micros(payload.get("budget_usd")),
+                            usd_to_micros(payload.get("price_cap_usd")),
+                            usd_to_micros(payload.get("allocation_usd")),
+                            payload.get("approver"), payload.get("reason"))
+                        return self.respond(200, {"approved": True, "resumed": False,
+                            "remote_authorization_changed": False, **approved})
                     if self.path == "/api/demo":
                         if any(j["status"] != "COMPLETED" for j in ledger.jobs()):
                             return self.respond(409, {"error": "Resume or close the previous jobs before starting another run"})

@@ -14,6 +14,7 @@ from touchstone.ledger import Ledger, PolicyError, payment_key
 from touchstone.payments import CompositeRail, MockRail, MetalRail
 from touchstone.providers import quotes
 from touchstone.router import Router
+from touchstone.server import usd_to_micros
 from touchstone.treasury import AirwallexSandbox
 from touchstone.verifier import check
 from touchstone.workload import generate
@@ -36,6 +37,46 @@ class Controls(unittest.TestCase):
                            "allocation": allocation, "price_cap": 60000, "tasks": [t.public() for t in self.tasks]}], float_total)
         return self.ledger.jobs(self.run_id)[0]["id"]
 
+    def test_approved_mandate_increase_is_versioned_and_audited_before_resume(self):
+        job_id = self.job(hold=1000000, allocation=800000, float_total=1000000)
+        self.ledger.status(job_id, "PAUSED_POLICY", "Customer hold exhausted")
+        approved = self.ledger.approve_mandate_increase(
+            job_id, 1, 1250000, 1250000, 60000, 1000000, "Kaushik Kumar", "Customer approved a higher simulated hold")
+        self.assertEqual(approved["mandate_version"], 2)
+        self.assertEqual(approved["status"], "PAUSED_POLICY")
+        stored = self.ledger.get_job(job_id)
+        self.assertEqual((stored["hold"], stored["budget"], stored["allocation"], stored["mandate_version"]),
+                         (1250000, 1250000, 1000000, 2))
+        approval_event = next(event for event in reversed(self.ledger.events()) if event["kind"] == "MANDATE_INCREASE_APPROVED")
+        self.assertEqual(approval_event["payload"]["approver"], "Kaushik Kumar")
+        self.assertEqual(approval_event["payload"]["mode"], "SIMULATED")
+        self.assertTrue(self.ledger.audit()["valid"])
+        self.ledger.resume()
+        self.assertEqual(self.ledger.get_job(job_id)["status"], "RUNNING")
+
+    def test_mandate_increase_requires_pause_fresh_version_and_unused_float(self):
+        job_id = self.job(hold=1000000, allocation=1000000, float_total=1000000)
+        args = (job_id, 1, 1250000, 1250000, 60000, 1100000, "Operator", "Approved by operator")
+        with self.assertRaisesRegex(PolicyError, "policy-paused"):
+            self.ledger.approve_mandate_increase(*args)
+        self.ledger.status(job_id, "PAUSED_POLICY", "Needs a new authorization")
+        with self.assertRaisesRegex(PolicyError, "float"):
+            self.ledger.approve_mandate_increase(*args)
+        approved = self.ledger.approve_mandate_increase(job_id, 1, 1250000, 1250000, 60000, 1000000,
+                                                       "Operator", "Approved by operator")
+        with self.assertRaisesRegex(PolicyError, "version changed"):
+            self.ledger.approve_mandate_increase(*args[:1], 1, 1500000, 1500000, 60000, 1000000,
+                                                 "Operator", "Stale approval")
+        self.assertEqual(approved["mandate_version"], 2)
+
+    def test_mandate_increase_cannot_hide_an_unresolved_purchase(self):
+        job_id = self.job(hold=1000000, allocation=1000000, float_total=1000000)
+        self.ledger.reserve(job_id, self.tasks[0], 0, quotes(42, 0)[0], 1000)
+        self.ledger.status(job_id, "PAUSED_POLICY", "Paused during recovery")
+        with self.assertRaisesRegex(PolicyError, "unresolved"):
+            self.ledger.approve_mandate_increase(job_id, 1, 1250000, 1250000, 60000, 1000000,
+                                                 "Operator", "Do not bypass payment recovery")
+
     def test_concurrent_reservations_cannot_overspend_hold(self):
         job = self.job(25000, 25000, 25000)
         offer = quotes(42, 0)[1]
@@ -49,6 +90,14 @@ class Controls(unittest.TestCase):
             results = list(pool.map(reserve, self.tasks[:2]))
         self.assertEqual(sum(results), 1)
         self.assertEqual(len(self.ledger.attempts(job)), 1)
+
+    def test_dashboard_limit_parser_uses_exact_decimal_micro_usd(self):
+        self.assertEqual(usd_to_micros("1.25"), 1250000)
+        self.assertEqual(usd_to_micros("0.010001"), 10001)
+        with self.assertRaisesRegex(ValueError, "decimal USD strings"):
+            usd_to_micros(1.25)
+        with self.assertRaisesRegex(ValueError, "six decimals"):
+            usd_to_micros("1.0000001")
 
     def test_shared_float_is_not_customer_credit(self):
         specs = [{"seed": 42, "policy": "touchstone", "hold": 1000000, "allocation": 15000,

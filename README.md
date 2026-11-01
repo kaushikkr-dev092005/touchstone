@@ -12,7 +12,7 @@ Python 3.11+; no runtime dependencies. Tested on Windows with Python 3.12.
 python -m touchstone serve
 ```
 
-Open **http://127.0.0.1:8088** and select **Run three-job demo**. Three simulated customer holds total $2.50 against $1.50 in operator float. Watch prices, latency and quality change, a prompt expand, and jobs pause within policy. Close unfinished jobs to capture their actual simulated cost and release unused authorization. Resume preserves every existing limit.
+Open **http://127.0.0.1:8088**. The first card presents the recorded real $0.01 USDZ GPU call, incorrect answer, verifier rejection, and no-customer-capture disclosure. Then select **Run three-job demo** for the separate simulated scenario: $2.50 in synthetic customer holds against $1.50 in operator float. Watch prices, latency and quality change, a prompt expand, and jobs pause within policy. A human can approve a versioned limit increase for a policy-paused simulator job using only its existing float; this does not change a real hold or wallet.
 
 ```powershell
 python -m unittest discover -s tests -v

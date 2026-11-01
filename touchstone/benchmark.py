@@ -80,12 +80,12 @@ def write_noisy_verification_chart(report, path):
                          f'<text x="{x:.1f}" y="{y - 10:.1f}" text-anchor="middle" font-family="sans-serif" font-size="12">{row["false_accept_rate"]:.1%}</text>',
                          f'<text x="{x:.1f}" y="{bottom + 22}" text-anchor="middle" font-family="sans-serif" font-size="12">{row["sampled_rows"]}</text>'])
     elements.extend([f'<line x1="{left}" y1="{bottom:.1f}" x2="{right}" y2="{bottom:.1f}" stroke="#2563eb" stroke-width="2" stroke-dasharray="7 5"/>',
-                     f'<text x="{(left + right) / 2:.1f}" y="{height - 36}" text-anchor="middle" font-family="sans-serif" font-size="13">Line items sampled per invoice</text>',
-                     f'<line x1="{left}" y1="{height - 14}" x2="{left + 28}" y2="{height - 14}" stroke="#c2410c" stroke-width="3"/>',
-                     f'<text x="{left + 36}" y="{height - 10}" font-family="sans-serif" font-size="12">Noisy checker</text>',
-                     f'<line x1="{left + 185}" y1="{height - 14}" x2="{left + 213}" y2="{height - 14}" stroke="#2563eb" stroke-width="2" stroke-dasharray="7 5"/>',
-                     f'<text x="{left + 221}" y="{height - 10}" font-family="sans-serif" font-size="12">{exact_label}</text>',
-                     '<text x="88" y="388" font-family="sans-serif" font-size="11" fill="#555">20 synthetic 10-line invoices; two offsetting 1-cent errors; 100 seeded checks per case.</text>',
+                     f'<text x="{(left + right) / 2:.1f}" y="352" text-anchor="middle" font-family="sans-serif" font-size="13">Line items sampled per invoice</text>',
+                     f'<line x1="{left}" y1="370" x2="{left + 28}" y2="370" stroke="#c2410c" stroke-width="3"/>',
+                     f'<text x="{left + 36}" y="374" font-family="sans-serif" font-size="12">Noisy checker</text>',
+                     f'<line x1="{left + 185}" y1="370" x2="{left + 213}" y2="370" stroke="#2563eb" stroke-width="2" stroke-dasharray="7 5"/>',
+                     f'<text x="{left + 221}" y="374" font-family="sans-serif" font-size="12">{exact_label}</text>',
+                     '<text x="88" y="392" font-family="sans-serif" font-size="11" fill="#555">Synthetic invoices; offsetting 1-cent errors; seeded checks per case.</text>',
                      '</svg>'])
     Path(path).write_text("\n".join(elements) + "\n", encoding="utf-8")
 

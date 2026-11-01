@@ -1,18 +1,17 @@
 # Demo script, target 4 minutes 45 seconds
 
-The financial stress scenario is a **local simulator**. Keep its mode badges visible. A separate funded Metal GPU purchase and original paid delivery replay have run; show their real-evidence panel with its rejected answer and preconfirmed receipt. Airwallex authentication/balance/account reads pass, but merchant configuration blocks customer authorization/capture. The account ID is still unset, so Checkout Sessions and FX have not been probed.
+Lead with the **real paid GPU failure**, then label the three-job policy run as a simulator. The opening evidence card shows one $0.01 USDZ Metal call: the local GPU returned 1,250 cents for a 2,000-cent total, the verifier rejected it, and buyer/provider replays did not pay again. The $0.01 is an unbilled operator probe outlay; no customer hold or capture exists. The remaining demo is a financial-control regression simulator, not an all-real-provider comparison.
 
 | Time | Show | Explain |
 |---|---|---|
-| 0:00–0:25 | Dashboard and mode badges | “An agent buying intelligence needs a spending mandate and evidence of what it got. This local prototype simulates the external services.” |
-| 0:25–1:00 | Three holds and $1.50 operator float | “Customers authorized $2.50, but authorization is not liquidity. We cannot allocate money we do not have.” |
-| 1:00–1:45 | Start demo, route reasons, quote board and ledger | Show price/latency changes and a rejected call. Every failed paid attempt remains in cost. |
-| 1:45–2:20 | Quality degradation and prompt expansion in decision stream | Show a reroute or escalation; explain that higher quality costs more and the hold still wins. |
-| 2:20–2:50 | Policy pause and float allocation | Show which constraint blocks the next purchase. No silent authorization increase. |
-| 2:50–3:20 | Close jobs, capture actual simulated spend, release rest | Explain customer capture and provider payments as different accounting entries. |
-| 3:20–3:55 | Real testnet evidence panel | Show the USD 0.01 inference purchase, signed preconfirmed receipt and identical cached/provider receipt replay. The answer was wrong and rejected; its charge remains recorded. State that this was a protocol probe. |
-| 3:55–4:30 | Planning, measured models and invoice-check chart | Show local resolution versus review, then the fault-injection table: the one-row noisy checker false-accepts 79% on offsetting errors; exact source arithmetic rejects all 20 injected cases. Explain this is synthetic, not a population estimate. |
-| 4:30–4:45 | Banked job and Airwallex status | Authentication and account reads pass; merchant configuration blocks PaymentIntent creation. Account context is missing, so Checkout Sessions/FX are untested. No actual customer hold/capture or new Metal engine run is claimed. The 0.09 testnet USDZ return is confirmed; the old paid receipt remains preconfirmed. |
+| 0:00–0:45 | First card: real paid GPU evidence and probe P&L | “The model answered 1,250 cents where the source totals 2,000. It was paid, rejected and not retried for a second charge. Provider outlay was $0.01; no customer hold or capture was made.” Show the preconfirmed receipt status. |
+| 0:45–1:15 | Planning evidence | “For bounded tasks, buy no model: deterministic tools solve these cases. Defer unfamiliar sources to review. When a paid model is justified, check the answer.” This is a synthetic workload result, not general business accuracy. |
+| 1:15–1:40 | Mode badges and simulated stress test | Explicitly introduce the following flow as simulation. Three simulated holds total $2.50 against $1.50 operator float. |
+| 1:40–2:30 | Policy table, quotes, chaos and ledger | Explain that the three-policy table is simulator-only; show price/latency/quality changes and that rejected simulated calls remain charged. Do not call these real-provider cost measurements. |
+| 2:30–3:10 | Policy pause and mandate approval | Show a policy pause. A human can approve a new **simulated** mandate version from the existing run float, then click Resume. This does not increment an Airwallex hold or add real funds. |
+| 3:10–3:35 | Close and reconcile | Simulated capture/release remains separate from the real $0.01 testnet provider outlay; do not imply revenue was collected for the probe. |
+| 3:35–4:10 | Noisy-check chart | One-row noisy spot-check false-accepts 79% on injected offsetting errors; exact source arithmetic rejects all 20. Synthetic fault injection, not population calibration. |
+| 4:10–4:45 | Airwallex state and remaining gates | Authentication and balance/account reads pass. `AIRWALLEX_ACCOUNT_ID` is unset; FX and hosted checkout have not been tested. The planned next live finance action is a small sandbox FX conversion plus wallet-history reconciliation after account context and write scope are configured. No new live Metal engine run is claimed. |
 
 Commands for rehearsal:
 
@@ -23,8 +22,8 @@ python -m unittest discover -s tests -p test_controls.py -v
 python -m touchstone serve --data-dir data/rehearsal
 ```
 
-A live version should use tens of requests with one wallet per job. Clearing payments and withdrawals can take longer than the video window. Record finality separately and never claim a queued withdrawal was returned immediately.
+A live three-policy comparison still requires multiple qualified real model endpoints, a configured provider URL, funded testnet wallets and an operator-approved aggregate cap. Clearing payments and withdrawals can take longer than the video window. Record finality separately and never claim a queued withdrawal was returned immediately.
 
 Feature freeze is scheduled for 11 November, recording for 12 November, and submission for 13 November. These are planned milestones, not actions completed by this code change. The integrated engine, live-provider chaos and kill/restart path still need a configured provider, testnet funds and an operator-authorized budget before they can be demonstrated on the real rail.
 
-Do not promise “only pays for quality”, production banking readiness or zero semantic errors. The claim supported by the prototype is bounded purchases, explicit verification limits, charged-failure accounting and recovery evidence.
+Do not promise “only pays for quality”, production banking readiness or zero semantic errors. The supported claim is narrower: tools avoid some unnecessary inference; one real paid model result was wrong and rejected; the simulator exercises budget, recovery and approval controls.

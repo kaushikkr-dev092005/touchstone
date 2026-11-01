@@ -43,11 +43,20 @@ def inspect():
         raw = json.loads((ROOT / 'bench/results/metal-paid-proof.json').read_text(encoding='utf-8'))
         result = raw.get('result', {})
         if raw.get('mode') == 'REAL_TESTNET_PROTOCOL_PROBE' and result.get('state') == 'DELIVERED':
+            task = raw.get('terms', {}).get('task', {})
+            source = task.get('source', {})
+            amounts = source.get('amounts_cents')
+            discount = source.get('discount_cents')
+            expected_output = ({"total_cents": sum(amounts) - discount}
+                               if task.get('kind') == 'arithmetic' and isinstance(amounts, list)
+                               and amounts and all(type(amount) is int for amount in amounts)
+                               and type(discount) is int else None)
             proof = {"phase": result['state'], "paid_calls": raw.get('paid_calls_recorded'),
                      "price_micro_usd": int(result['receipt']['invoice']['amount'])//10**12,
                      "receipt_id": result['receipt']['invoice']['id'], "receipt_status": result['receipt']['status'],
                      "verification_passed": raw.get('verdict', {}).get('passed'),
                      "actual_output": result.get('output', {}).get('body', {}).get('output'),
+                     "expected_output": expected_output,
                      "cached_retry_identical": raw.get('cached_retry_identical'),
                      "provider_receipt_replay_identical": raw.get('provider_receipt_replay_identical'),
                      "withdrawal_status": raw.get('withdrawal', {}).get('status'),

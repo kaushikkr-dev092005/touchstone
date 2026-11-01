@@ -6,7 +6,7 @@ Updated 1 November 2026. Environment: Windows, Python 3.12.10, portable Node 22.
 
 `python -m unittest discover -s tests -v`
 
-75 Python tests pass, covering accounting, concurrency, process-death recovery, source evidence, planning, invoice checks, wallet FX journaling/reconciliation, Metal engine routing, and hosted checkout/banked-job cases. No remote paid operations are part of the suite.
+80 Python tests pass, covering accounting, concurrency, process-death recovery, source evidence, planning, invoice checks, wallet FX journaling/reconciliation, Metal engine routing, hosted checkout/banked-job cases, and versioned simulated mandate approval. No remote paid operations are part of the suite.
 
 Sandbox workflow tests exercise lost create and capture responses, repeated execution without a second write, immutable scope/amounts, pending review refusal, monetary precision, and exclusion of card fields/client secrets from persisted response data. A read-only smoke check can verify Checkout Sessions read access but never verifies write access. The remote API is replaced with controlled fixtures in these tests; no actual hosted checkout or sandbox authorization is claimed.
 
@@ -20,7 +20,7 @@ The recovery test starts a subprocess, commits one receipt to the independent mo
 
 `python -m touchstone benchmark`
 
-The saved `bench/results/simulated.json` and RESULTS.md record three policies over five paired seeds with 200 tasks per seed. Results are entirely simulated and include verification charges. The raw file includes each run, policy-control gates, and a separate seeded invoice fault-injection study.
+The saved `bench/results/simulated.json` and RESULTS.md record three policies over five paired seeds with 200 tasks per seed. Results are entirely simulated and include verification charges. The raw file includes each run, policy-control gates, and a separate seeded invoice fault-injection study. Dashboard copy labels the comparison as simulated; the first evidence card instead leads with the single recorded live paid call and its rejected answer.
 
 All five gates passed: no budget breaches, no price-cap breaches, no duplicate mock payment keys, matching mock rail receipts, and complete workloads under every policy.
 

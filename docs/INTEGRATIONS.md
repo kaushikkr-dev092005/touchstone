@@ -18,6 +18,14 @@ The fixed public test-card workflow uses USD whole cents and holds capped at USD
 
 Sources: [Airwallex API key scopes](https://www.airwallex.com/docs/developer-tools/api/api-key-scopes), [conversion API](https://www.airwallex.com/docs/api/transactional_fx/conversion), [quotes API](https://www.airwallex.com/docs/api/transactional_fx/quotes), [balances API](https://www.airwallex.com/docs/api/core_resources/balances/current).
 
+### Airwallex CLI, MCP and AgentOS boundary
+
+The current Airwallex guide separates sandbox development connectors from production AgentOS. The Airwallex CLI can use sandbox or production, but the beta CLI officially supports macOS/Linux; this Windows checkout has no CLI or Airwallex MCP tools connected. The AgentOS MCP endpoint and AgentOS workflow skills are production-account connectors, not a safe substitute for sandbox testing. Do not connect them to production without the account owner's explicit OAuth approval and an approved production use case.
+
+For this sandbox project, use the Airwallex Developer MCP/Docs MCP for sandbox development and documentation. The current hackathon guide says FX conversions have no MCP tool, so the actual conversion must go through the sandbox REST API (the `airwallex-fx` adapter) and a human-approved request ID. The current terminal environment does not provide a connected MCP session, and the sponsor has not confirmed whether the CLI/Developer MCP path satisfies its “Airwallex tooling” criterion. Ask the sponsor in Slack before claiming that criterion. The account ID and conversion write scope are also not set, so no write has been attempted.
+
+Sources: [Airwallex CLI](https://www.airwallex.com/docs/developer-tools/cli), [AgentOS and connector environments](https://www.airwallex.com/docs/developer-tools/ai/agentos), [sandbox Developer MCP setup](https://airwallex.com/en-us/blog/devx-ai-guide), [hackathon guide](https://airwallexdev.com/guide).
+
 Sources: [authentication](https://www.airwallex.com/docs/api/authentication/api_access_token), [scoped keys](https://www.airwallex.com/docs/developer-tools/api/manage-api-keys), [Payment Intents](https://www.airwallex.com/docs/api/payments/payment_intents), [Checkout Sessions](https://www.airwallex.com/docs/api/checkout/checkout_sessions), [API versioning](https://www.airwallex.com/docs/api/versioning), [sandbox settings](https://www.airwallex.com/docs/developer-tools/sandbox-environment/sandbox-settings).
 
 ## Metal SDK bridge and seller
