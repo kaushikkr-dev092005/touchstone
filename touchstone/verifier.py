@@ -3,7 +3,7 @@ import re
 from .workload import Task
 
 VERIFY_COST = 1000  # millionths of a demo USD; explicit internal checking charge
-VERIFIER_VERSION = "source-rules-v2"
+VERIFIER_VERSION = "source-rules-v3-invoice-consistency"
 
 # Deliberately bounded source rules, not a general-purpose semantic classifier.
 CLASS_EVIDENCE = {
@@ -30,6 +30,9 @@ def check(task: Task, output):
     if not isinstance(output, dict):
         return {"score": 0.0, "passed": False, "reason": "Response is not a JSON object"}
     try:
+        if task.kind == "invoice_consistency":
+            from .invoice_consistency import check_invoice_consistency
+            return check_invoice_consistency(task, output)
         if task.kind == "invoice":
             text = task.source["text"]
             invoice = re.search(r"Invoice (\S+)\.", text)[1]

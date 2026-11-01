@@ -33,6 +33,16 @@ try {
       const row = wallet.db.prepare('SELECT state,result FROM purchases WHERE id=?').get(request.id);
       result = row ? { state: row.state, result: row.result ? JSON.parse(row.result) : null } : { state: 'NOT_DISPATCHED', result: null };
     } finally { wallet.close(); }
+  } else if (request.command === 'receipts') {
+    const wallet = openWallet(config.directory);
+    try {
+      result = wallet.db.prepare('SELECT id,terms,state,result FROM purchases ORDER BY rowid').all().map(row => {
+        const purchase = row.result ? JSON.parse(row.result) : null;
+        const receipt = purchase?.receipt;
+        return { key: row.id, terms: JSON.parse(row.terms), state: row.state,
+          receipt: receipt ? { id: receipt.id, invoice: { amount: receipt.invoice.amount } } : null };
+      });
+    } finally { wallet.close(); }
   } else if (request.command === 'deposit') result = await deposit(config, request.dollars);
   else if (request.command === 'withdraw') result = await withdraw(config);
   else {

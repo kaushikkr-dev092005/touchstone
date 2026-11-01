@@ -1,7 +1,9 @@
 """Round-robin orchestration across jobs; recovery precedes new purchases."""
 import json
+import os
 import time
 from .ledger import PolicyError
+from .metal import PaymentPending
 from .providers import Quote, quotes, simulate
 from .router import Router
 from .verifier import VERIFY_COST, VERIFIER_VERSION, check
@@ -31,11 +33,27 @@ class Engine:
         for a in self.ledger.attempts():
             if a["job_id"] not in jobs or a["state"] not in {"RESERVED", "PAID"}:
                 continue
-            receipt = self.rail.lookup(a["key"])
-            if receipt is None:
-                # The simulator can authoritatively prove non-payment. Live rail timeouts cannot.
-                self.ledger.void(a["key"], "Mock rail confirms no payment; release reservation")
+            quote = json.loads(a["quote"])
+            try:
+                outcome = self.rail.lookup(a["key"], quote)
+            except PaymentPending:
+                outcome = {"state": "UNKNOWN"}
+            state = outcome.get("state") if isinstance(outcome, dict) else "UNKNOWN"
+            if state in {"NOT_DISPATCHED", "UNPAID_CONFIRMED"} and outcome.get("authoritative"):
+                self.ledger.void(a["key"], "Rail authoritatively confirms no payment; release reservation")
                 continue
+            if state == "PAID_OUTPUT_MISSING":
+                try:
+                    outcome = self.rail.recover(a["key"], quote)
+                except PaymentPending:
+                    outcome = {"state": "UNKNOWN"}
+                state = outcome.get("state") if isinstance(outcome, dict) else "UNKNOWN"
+            if state != "PAID":
+                reason = "Rail outcome remains unknown; reservation retained and this job is paused"
+                self.ledger.status(a["job_id"], "PAUSED_RECOVERY", reason)
+                self.ledger.event("RECOVERY_PENDING", {"job_id": a["job_id"], "key": a["key"], "state": state or "UNKNOWN", "mode": self.rail.mode})
+                continue
+            receipt = outcome
             self.ledger.record_paid(a["key"], receipt)
             task = next(Task(**t) for t in json.loads(jobs[a["job_id"]]["tasks"]) if t["id"] == a["step_id"])
             verdict = check(task, receipt["output"])
@@ -44,14 +62,16 @@ class Engine:
                 self.ledger.status(a["job_id"], "PAUSED_REVIEW", verdict["reason"])
             recovered += 1
         if recovered:
-            self.ledger.event("RECOVERED", {"attempts": recovered, "mode": "SIMULATED"})
+            self.ledger.event("RECOVERED", {"attempts": recovered, "mode": self.rail.mode})
         return recovered
 
-    def run(self, run_id, delay=0, crash_at=None):
+    def run(self, run_id, delay=0, crash_at=None, kill_at=None):
+        if crash_at and kill_at:
+            raise ValueError("Choose either exception-based crash injection or process termination")
         self.recover(run_id)
         routers = {}
         for j in self.ledger.jobs(run_id):
-            router = routers[j["id"]] = Router()
+            router = routers[j["id"]] = Router(j["seed"])
             for a in self.ledger.attempts(j["id"]):
                 if a["passed"] is not None and (not a["verdict"] or json.loads(a["verdict"]).get("retryable", True)):
                     kind = next(t["kind"] for t in json.loads(j["tasks"]) if t["id"] == a["step_id"])
@@ -82,6 +102,10 @@ class Engine:
                 scenario_index = int(index * 100 / len(tasks)) if len(tasks) < 100 else index
                 previous_index = int((index - 1) * 100 / len(tasks)) if len(tasks) < 100 else index - 1
                 offers = quotes(job["seed"], scenario_index, inflated)
+                if hasattr(self.rail, "quote_for_task"):
+                    live_offer = self.rail.quote_for_task(task)
+                    if live_offer is not None:
+                        offers.append(live_offer)
                 if attempt == 0:
                     for threshold, label in {20: "Economy latency spike", 35: "Balanced price spike", 50: "Balanced quality drop"}.items():
                         if previous_index < threshold <= scenario_index:
@@ -96,14 +120,20 @@ class Engine:
                     key = self.ledger.reserve(job["id"], task, attempt, offer, VERIFY_COST)
                     if crash_at == "after_reserve":
                         raise InjectedCrash("Crash after reservation, before rail request")
+                    if kill_at == "after_reserve":
+                        os._exit(86)
                     self.ledger.event("ROUTED", {"job_id": job["id"], "step_id": task.id, "provider": offer.provider, "reason": reason, "quote": offer.public()})
                     self.ledger.assert_can_pay(key)
                     receipt = self.rail.pay(key, offer, lambda: simulate(task, offer.provider, job["seed"], scenario_index, attempt))
                     if crash_at == "after_rail":
                         raise InjectedCrash("Crash after durable rail receipt, before local payment commit")
+                    if kill_at == "after_rail":
+                        os._exit(86)
                     self.ledger.record_paid(key, receipt)
                     if crash_at == "after_paid":
                         raise InjectedCrash("Crash after payment commit, before verification")
+                    if kill_at == "after_paid":
+                        os._exit(86)
                     verdict = check(task, receipt["output"])
                     self.ledger.finish_attempt(key, receipt["output"], verdict)
                     if verdict.get("retryable", True):
@@ -140,7 +170,7 @@ class Engine:
                 "customer_captured": sum(j["captured"] for j in jobs),
                 "pending": pending, "mismatches": mismatches,
                 "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
-                "mode": "SIMULATED"}
+                "mode": self.rail.mode}
 
     def snapshot(self, run_id=None):
         jobs = self.ledger.jobs(run_id)
@@ -159,4 +189,4 @@ class Engine:
                 "attempts": [{k: a[k] for k in ("job_id", "step_id", "attempt", "state", "provider", "price", "verify_cost", "score", "reason", "receipt")} for a in attempts[-80:]],
                 "reconciliation": self.reconcile(run_id), "audit": self.ledger.audit(),
                 "verifier_version": VERIFIER_VERSION,
-                "modes": {"airwallex": "SIMULATED", "metal": "SIMULATED", "inference": "SIMULATED"}}
+                "modes": {"airwallex": "SIMULATED", "metal": self.rail.mode, "inference": self.rail.mode}}

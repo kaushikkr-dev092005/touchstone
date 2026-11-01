@@ -1,6 +1,6 @@
 # Account setup and integrated test runbook
 
-Updated 30 October 2026. The user has created both accounts, configured local credentials and funded a dedicated testnet wallet. RPC, Airwallex authentication/account reads, and one actual paid Metal inference call are verified. Airwallex merchant configuration currently blocks PaymentIntent creation. See [live evidence](LIVE_PROOF.md).
+Updated 1 November 2026. The user has created both accounts, configured local credentials and funded a dedicated testnet wallet. RPC, Airwallex authentication/account reads, and one actual paid Metal inference call are verified. `AIRWALLEX_ACCOUNT_ID` is currently unset, so account-scoped Checkout Sessions and Treasury FX have not been tested. Airwallex merchant configuration currently blocks PaymentIntent creation. See [live evidence](LIVE_PROOF.md).
 
 ## Local configuration
 
@@ -39,6 +39,20 @@ For the integrated banked flow, pass `--journal data/banked/airwallex.sqlite` to
 
 Recovery reads existing intents. For unresolved create only, it may replay the identical body using the original UUID under documented Airwallex idempotency. It never silently invents another create UUID. Unknown capture/cancel outcomes remain read-reconciled. A cached `duplicate_request` from a rejected create is not authorization; preserve that scope for inspection.
 
+## Treasury wallet and FX
+
+Set `AIRWALLEX_ACCOUNT_ID` from the sandbox payment account and verify read access with `python -m touchstone airwallex-smoke`. The key needs **Core Resources > Balances > Read** for wallet balances/history and **Transactional FX > Conversion > Read** for conversion/quote reads. **Transactional FX > Conversion > Write** covers both `POST /api/v1/fx/quotes/create` and `POST /api/v1/fx/conversions/create`; do not infer write permission from a successful read. Check current [API key scopes](https://www.airwallex.com/docs/developer-tools/api/api-key-scopes), [conversion API](https://www.airwallex.com/docs/api/transactional_fx/conversion), [quote API](https://www.airwallex.com/docs/api/transactional_fx/quotes), and [balances API](https://www.airwallex.com/docs/api/core_resources/balances/current) before enabling writes.
+
+```powershell
+python -m touchstone airwallex-fx balances
+python -m touchstone airwallex-fx quote --sell-currency USD --buy-currency EUR --sell-amount 10.00
+python -m touchstone airwallex-fx convert --request-id fx-demo-unique-001
+python -m touchstone airwallex-fx convert --request-id fx-demo-unique-001 --execute
+python -m touchstone airwallex-fx report --request-id fx-demo-unique-001
+```
+
+Quote is a non-settling preview saved locally. Conversion is a separate sandbox wallet write and requires a unique request ID (Airwallex rejects duplicates; use the same ID for read-based recovery, never mint a replacement to retry uncertainty). The local journal binds that ID to exact quote terms before posting. A report shows wallet balances and reconciles a settled conversion with its sell/buy balance-history entries. Keep this isolated from Metal funding; no fiat/token bridge is implemented. No Airwallex quote or conversion has been created yet.
+
 ## Metal wallet and runtime
 
 For a fresh checkout, prepare portable Node and dependencies:
@@ -69,6 +83,26 @@ The model uses NVIDIA Vulkan on loopback port 8080. The x402 seller binds loopba
 
 `TOUCHSTONE_PROVIDER_MODE=tool` explicitly selects a bounded tool instead of a model for protocol testing. The saved actual proof used `model`. The seller refuses model quotes while the model health endpoint is unavailable.
 
+### Engine Metal route, chaos and restart
+
+The unified engine requires RPC credentials, the local provider URL, a funded dedicated Metal wallet, a total budget and per-step cap. The testnet route uses only the Metal tier and never falls back to MockRail. Do not treat the probe as model eligibility evidence. A 30-step run with the 5-cent per-step ceiling needs up to USD 1.53 including the internal verification charges; a 50-step ceiling is USD 2.55.
+
+```powershell
+python -m touchstone engine-metal --scope engine-30-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute
+```
+
+To test provider outage before any quote, set `$env:TOUCHSTONE_PROVIDER_CHAOS = 'outage'` before starting `python tools/metal.py provider`; it returns 503 and no payment is initiated. To test a paid quality degradation, use `quality-drop`; the provider deliberately corrupts one result, which is charged and then rejected. Only use that mode with an explicit small test budget.
+
+The process-kill demonstration spends a real request at `after_rail`, exits with code 86, recovers the same persisted scope without `--execute`, and then explicitly resumes the remaining steps:
+
+```powershell
+python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute --kill-at after_rail
+python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --recover
+python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute
+```
+
+The stable scope binds tasks, budget, cap and provider URL. Preserve those exact values across restarts. These are operator runbook instructions only; the real provider, chaos, 30-step run and kill/restart have not yet been executed in this checkout.
+
 ## Resume the existing funded proof
 
 ```powershell
@@ -91,7 +125,7 @@ python -m touchstone banked-job --scope banked-proof-002 --integration-probe --r
 python -m touchstone banked-status
 ```
 
-The immutable mandate binds source, origin, hold, allocation and call cap. Authorization precedes funding/payment; exact receipt terms are checked before capture. Live checking fees are zero. The merchant absorbs sub-cent rounding and gas. Customer closure and returned-float completion are distinct. Fiat and token accounts remain separate; no bridge or FX conversion is implied.
+The immutable mandate binds source, origin, hold, allocation and call cap. Authorization precedes funding/payment; exact receipt terms are checked before capture. Live checking fees are zero. The merchant absorbs sub-cent rounding and gas. Customer closure and returned-float completion are distinct. Fiat and token accounts remain separate; no automated bridge is implied. Treasury FX is a separate optional workflow, not connected to this job.
 
 `banked-halt` stops new dispatches and `banked-resume` preserves limits. Funded jobs sharing the EVM key are serialized through a shared owner lock. The original three-job dashboard remains a financial simulator; actual banked jobs and paid evidence appear in separate panels.
 

@@ -1,6 +1,6 @@
 {
   "mode": "SIMULATED",
-  "verifier_version": "source-rules-v2",
+  "verifier_version": "source-rules-v3-invoice-consistency",
   "method": "Paired seeds; identical tasks, chaos indices and verifier across policies. All attempts and checking charges included. Latencies are simulator estimates. No GPU or live payments used.",
   "seeds": [
     41,
@@ -18,8 +18,7 @@
       "true_success_rate": 0.995,
       "estimated_latency_p50_ms": 360,
       "estimated_latency_p95_ms": 360,
-      "retries": 0,
-      "verifier_calibration_mae": 0.0
+      "retries": 0
     },
     {
       "policy": "always-cheapest",
@@ -28,8 +27,7 @@
       "true_success_rate": 0.805,
       "estimated_latency_p50_ms": 980,
       "estimated_latency_p95_ms": 980,
-      "retries": 0,
-      "verifier_calibration_mae": 0.0
+      "retries": 0
     },
     {
       "policy": "touchstone",
@@ -38,8 +36,7 @@
       "true_success_rate": 1.0,
       "estimated_latency_p50_ms": 980,
       "estimated_latency_p95_ms": 1340,
-      "retries": 42,
-      "verifier_calibration_mae": 0.0
+      "retries": 42
     }
   ],
   "runs": [
@@ -56,7 +53,6 @@
       "estimated_latency_p95_ms": 360,
       "retries": 0,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": null,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -77,7 +73,6 @@
       "estimated_latency_p95_ms": 980,
       "retries": 0,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": null,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -98,7 +93,6 @@
       "estimated_latency_p95_ms": 1340,
       "retries": 43,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": 9,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -119,7 +113,6 @@
       "estimated_latency_p95_ms": 360,
       "retries": 0,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": null,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -140,7 +133,6 @@
       "estimated_latency_p95_ms": 980,
       "retries": 0,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": null,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -161,7 +153,6 @@
       "estimated_latency_p95_ms": 580,
       "retries": 22,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": 5,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -182,7 +173,6 @@
       "estimated_latency_p95_ms": 360,
       "retries": 0,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": null,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -203,7 +193,6 @@
       "estimated_latency_p95_ms": 980,
       "retries": 0,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": null,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -224,7 +213,6 @@
       "estimated_latency_p95_ms": 1200,
       "retries": 33,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": 6,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -245,7 +233,6 @@
       "estimated_latency_p95_ms": 360,
       "retries": 0,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": null,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -266,7 +253,6 @@
       "estimated_latency_p95_ms": 980,
       "retries": 0,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": null,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -287,7 +273,6 @@
       "estimated_latency_p95_ms": 1340,
       "retries": 42,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": 6,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -308,7 +293,6 @@
       "estimated_latency_p95_ms": 360,
       "retries": 0,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": null,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -329,7 +313,6 @@
       "estimated_latency_p95_ms": 980,
       "retries": 0,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": null,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -350,7 +333,6 @@
       "estimated_latency_p95_ms": 1340,
       "retries": 50,
       "attempted_steps": 200,
-      "verifier_calibration_mae": 0.0,
       "quality_drop_detection_delay_steps": 5,
       "budget_breaches": 0,
       "price_cap_breaches": 0,
@@ -359,6 +341,41 @@
       "status": "COMPLETED"
     }
   ],
+  "noisy_invoice_verification": {
+    "task": "10-line synthetic invoices with two offsetting one-cent line-total errors",
+    "cases": 20,
+    "repetitions_per_case": 100,
+    "trials_per_sample_size": 2000,
+    "exact_checker_false_accepts": 0,
+    "exact_checker_false_accept_rate": 0.0,
+    "noisy_checker": [
+      {
+        "sampled_rows": 1,
+        "false_accepts": 1580,
+        "false_accept_rate": 0.79,
+        "clean_accept_rate": 1.0
+      },
+      {
+        "sampled_rows": 2,
+        "false_accepts": 1240,
+        "false_accept_rate": 0.62,
+        "clean_accept_rate": 1.0
+      },
+      {
+        "sampled_rows": 3,
+        "false_accepts": 929,
+        "false_accept_rate": 0.4645,
+        "clean_accept_rate": 1.0
+      },
+      {
+        "sampled_rows": 5,
+        "false_accepts": 418,
+        "false_accept_rate": 0.209,
+        "clean_accept_rate": 1.0
+      }
+    ],
+    "note": "Synthetic fault-injection estimate, not a production population rate or confidence interval."
+  },
   "gates": {
     "zero_budget_breaches": true,
     "zero_price_cap_breaches": true,

@@ -2,7 +2,7 @@
 
 Quality-aware inference procurement for autonomous agents. A customer approves a job budget; Touchstone allocates scarce operator float, purchases calls, checks results, and records what every attempt actually cost.
 
-Built for the Airwallex Agentic Banking Hackathon, extending Kit 12 with quality checks and payment recovery. **A real Metal testnet inference purchase is proven. Airwallex authentication/reads pass; direct PaymentIntent creation is blocked by merchant configuration. A hosted-checkout fallback is implemented but not yet exercised.** The three-job financial scenario remains simulated.
+Built for the Airwallex Agentic Banking Hackathon, extending Kit 12 with quality checks and payment recovery. **One real Metal testnet inference purchase is proven. The unified engine can route the Metal tier, but its 30–50-step live run has not been executed. Airwallex authentication/reads pass; merchant configuration blocks PaymentIntents, hosted checkout is untested, and the new treasury FX path has not been exercised.** The three-job financial scenario remains simulated.
 
 ## Run it
 
@@ -27,11 +27,11 @@ Benchmark results are saved to [bench/results/RESULTS.md](bench/results/RESULTS.
 - SQLite WAL accounting with integer micro-USD, atomic reservations, hold limits, per-call caps, provider allowlists, mandate expiry and shared-float allocation.
 - Three provider simulators, expiring price offers, observed-check routing and bounded escalation.
 - Independent durable mock payment receipts, receipt matching, idempotency conflicts and recovery before new purchases.
-- Source-based invoice and arithmetic checks; a cited invoice-to-purchase-order/payment cross-check that recomputes totals and always pauses for human review.
+- Source-based invoice and arithmetic checks; cited invoice consistency checks recompute line extensions and totals without a hidden answer map. A separate noisy spot-check has measured synthetic fault-injection false-accept rates.
 - Separate offline truth scoring, paired three-policy evaluation over five seeds, and explicit synthetic latency estimates.
 - Simulated authorization, capture once, release unused hold, partial closure, kill switch and operator resume.
 - Append-only audit events with hash chaining; responsive dashboard with mode disclosures.
-- A recoverable Airwallex sandbox hold/capture workflow, a Metal SDK adapter, and reproducible local-model setup/profiling tools.
+- A recoverable Airwallex sandbox hold/capture workflow, an opt-in wallet FX quote/conversion and reconciliation path, a unified simulated/Metal rail, and reproducible local-model setup/profiling tools.
 
 ## What is simulated, measured, or unfinished
 
@@ -40,7 +40,9 @@ Benchmark results are saved to [bench/results/RESULTS.md](bench/results/RESULTS.
 | Ledger and control logic | Real local code | Concurrency and process-death tests |
 | Airwallex holds/capture | Integrated adapter implemented; external blocker | PaymentIntent creation returns merchant `configuration_error`; no completed authorization/capture |
 | Airwallex connectivity | Verified sandbox authentication and reads | Balance and Global Account reads passed after scope update |
+| Airwallex Treasury FX | Implemented, not exercised | Account context and conversion write scopes are not configured; no FX quote or conversion was created |
 | Metal and x402 | Real funded testnet proof | 0.10 USDZ deposit, one 0.01 USDZ paid inference, signed receipt and original-delivery replay |
+| Unified Metal engine | Implemented, not yet live-run | Explicit engine route, dynamic queue-based quotes and conservative unknown-outcome recovery; live run needs a configured provider and funded wallet |
 | Inference | SIMULATED | Synthetic reliability and latency; no model runs in the dashboard |
 | Local GPU profiling | Measured on RTX 3050 | Two Qwen model sizes, 90 paired calls each; raw results and hardware telemetry saved separately |
 | Benchmark | Simulator only | Not evidence of model savings or real-world quality |
@@ -68,7 +70,7 @@ flowchart LR
     B[Offline truth scorer] --> Q[Benchmark reports]
 ```
 
-Python owns the control plane and SQLite ledger. The standalone Metal adapter uses Node 22.13+ and the supported SDK for signing, clearing payments and recovery.
+Python owns the control plane and SQLite ledger. `CompositeRail` unifies mock and Metal payment contracts; Metal execution is selected explicitly by provider and never silently falls back to a mock. The standalone Metal adapter uses Node 22.13+ and the supported SDK for signing, clearing payments and recovery.
 
 The SDK adapter is in `integrations/metal/`, with pinned dependencies, a lockfile and a Windows-compatible SQLite wallet. The separate `banked-job` orchestrator connects it to sandbox authorization/capture and a durable job journal. It requires an explicit integration-probe purpose; measured models remain ineligible for autonomous purchases. The original multi-job simulator retains `MockRail`.
 
@@ -85,7 +87,7 @@ python tools/metal.py inspect
 
 The first prints configuration flags only. The second reads public testnet deployment metadata and sends no payment. Once your sandbox credentials are set, `airwallex-hold` tests one authorization/capture cycle using a fixed test card and an immutable operation scope. `--recover` retrieves an interrupted operation before allowing another write.
 
-The updated `source-rules-v2` simulator benchmark reports 100% median accepted-and-correct outcomes at $6.162 for Touchstone, versus 99.5% at $10.200 for premium. These templates fall within the verifier's explicit source rules; this is not general semantic accuracy or measured GPU savings. The original 86% membership-only baseline remains in `bench/results/baseline-v1/`.
+The updated `source-rules-v3` simulator benchmark reports policy outcomes on bounded synthetic templates plus an invoice fault-injection sweep. The prior source-derived calibration score was circular and has been removed; noisy-checker rates are not population estimates or live payment gates. These results are not general semantic accuracy or measured GPU savings. The original membership-only baseline remains in `bench/results/baseline-v1/`.
 
 Two real local tiers have also been profiled on the RTX 3050 using schema-constrained output and explicit NVIDIA Vulkan device selection. Qwen2.5 0.5B Q4_K_M achieved 22.2% strict correctness; 1.5B Q4_K_M achieved 48.9% across 90 calls each. The measured-output replay shows that blindly trying economy and then escalating is less cost-effective than starting with balanced at the assumed prices. Neither tier is approved for autonomous paid work from this evidence. See [local results](bench/results/LOCAL_RESULTS.md).
 
@@ -105,7 +107,7 @@ Profiles use three paired seeds, discard one warm-up per model, and record actua
 
 Set sandbox keys **in your shell**, never in chat or tracked files. `.env.example` is documentation and is not auto-loaded.
 
-The CLI also loads ignored `data/local-config.json` and an optional locally generated `data/metal/funding-wallet.json`. Process environment takes precedence. Existing local credentials are already configured in this workspace. Restart long-running processes after changing configuration values.
+The CLI also loads ignored `data/local-config.json` and an optional locally generated `data/metal/funding-wallet.json`. Process environment takes precedence. Local Airwallex credentials are configured, but `AIRWALLEX_ACCOUNT_ID` is currently unset. Restart long-running processes after changing configuration values.
 
 ```powershell
 $env:AIRWALLEX_CLIENT_ID = '<sandbox-client-id>'
@@ -114,6 +116,20 @@ python -m touchstone airwallex-smoke
 ```
 
 This authenticates and reads balances/accounts without printing tokens, secrets or bank details. It does not alter dashboard mode or perform funding, FX, holds or captures.
+
+### Airwallex Treasury FX
+
+Read-only wallet/conversion reports require `AIRWALLEX_ACCOUNT_ID`, **Core Resources > Balances > Read**, and **Transactional FX > Conversion > Read**. Creating a quote and conversion requires **Transactional FX > Conversion > Write**. Quotes do not settle funds; a conversion is a separate write that requires `--execute`. Each conversion is journaled before dispatch, bound to a unique request ID and quote, and looked up—not blindly resubmitted—if its outcome is unknown. See [Airwallex API key scopes](https://www.airwallex.com/docs/developer-tools/api/api-key-scopes), [conversion API](https://www.airwallex.com/docs/api/transactional_fx/conversion), [quotes API](https://www.airwallex.com/docs/api/transactional_fx/quotes), and [wallet balances](https://www.airwallex.com/docs/api/core_resources/balances/current).
+
+```powershell
+python -m touchstone airwallex-fx balances
+python -m touchstone airwallex-fx quote --sell-currency USD --buy-currency EUR --sell-amount 10.00
+python -m touchstone airwallex-fx convert --request-id unique-fx-2026-11-01
+python -m touchstone airwallex-fx convert --request-id unique-fx-2026-11-01 --execute
+python -m touchstone airwallex-fx report --request-id unique-fx-2026-11-01
+```
+
+`report` compares a settled conversion with both wallet balance-history entries and reports current wallet balances. FX does not fund the Metal wallet or bridge fiat and tokens. No sandbox FX write has been run in this checkout.
 
 For an already-running llama.cpp/OpenAI-compatible server on loopback:
 
@@ -137,6 +153,8 @@ python tools/prove_metal.py --withdraw-only
 
 `prove_metal.py` uses one persistent protocol-probe reservation and a USD 0.01 cap; reruns preserve its original payment. The old `banked-proof-001` scope has an unresolved direct-create outcome and is for recovery only. Use a fresh scope for hosted checkout; that fallback needs a sandbox account ID, Checkout Sessions API access and an explicit customer action. `banked-job --integration-probe` then makes a separate testnet purchase and should only be run when that expense is intended. Live checking fees are zero, fractional cents are absorbed by the merchant, and gas is merchant expense. No fiat-to-token bridge is implied. See [account/integration setup](docs/ACCOUNT_SETUP.md).
 
+The unified engine's real Metal route requires a configured local provider, RPC and funded job wallet. `--execute` is mandatory to dispatch; `--recover` requires an existing scope and can run without it. `--kill-at after_rail` deliberately terminates the process after a real paid response (exit 86); rerun the exact scope/mandate with `--recover` and reconcile one receipt. This kill/restart path has only been exercised against the mock rail so far. The local provider supports `TOUCHSTONE_PROVIDER_CHAOS=outage` (503 before quote/payment) and `quality-drop` (an intentionally incorrect paid delivery); both are opt-in and currently locally tested only. Live quotes add 20% per queued request, capped by the 5-cent provider ceiling, and report observed service latency. No real-provider chaos run has been performed.
+
 The new local planner resolves bounded inputs before any model purchase. It solved **1,000/1,000 generated tasks with zero inference calls**, and handled 24 authored boundary cases as expected (6 resolved, 18 deferred for review). This demonstrates why these templates are accounting fixtures rather than evidence that paid inference is necessary. Neither measured model meets the offline eligibility screen; repeated classification messages count only once.
 
 ```powershell
@@ -157,6 +175,6 @@ The dashboard's **Planning** section lets you explore local-tool and review deci
 - [Actual integration evidence](docs/LIVE_PROOF.md)
 - [Submission draft](docs/SUBMISSION.md)
 
-The official event page currently lists the build phase ending **13 November 2026, 18:29 UTC / 23:59 IST** and registration ending 25 October. Confirm your accepted registration and the submission portal status. Judging criteria, license requirements and award eligibility remain unverified.
+The official event page currently lists the build phase ending **13 November 2026, 18:29 UTC / 23:59 IST** and registration ending 25 October. This repository uses the MIT License. Confirm accepted registration, judging criteria, award eligibility and submission assets in the signed-in portal. The planned recording date is 12 November; feature freeze is 11 November.
 
 Sources: [event page](https://www.hackerearth.com/community/challenges/hackathon/agentic-banking-hackathon/), [builder guide linked by the event](https://airwallexdev.com/guide), [Airwallex sandbox documentation](https://www.airwallex.com/docs/developer-tools/sandbox-environment), [Metal clearing documentation](https://docs.metalntwx.com/agents/clearing). Reviewed 29 October 2026.

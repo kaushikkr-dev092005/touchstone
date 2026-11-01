@@ -63,7 +63,10 @@ export async function quote(url, deployment, maximum, fetcher = fetch) {
   const response = await fetcher(url, { redirect: 'error', signal: AbortSignal.timeout(20000) });
   if (response.status !== 402) throw Error('Provider did not return a 402 challenge');
   const offer = approvedOffer(response.headers.get('PAYMENT-REQUIRED'), deployment, maximum);
-  return { url, offer, expires_at: Date.now() + 30000 };
+  const queueDepth = Number(response.headers.get('X-Touchstone-Queue-Depth') || 0);
+  const latencyMs = Number(response.headers.get('X-Touchstone-Latency-Ms') || 0);
+  if (!Number.isSafeInteger(queueDepth) || queueDepth < 0 || !Number.isSafeInteger(latencyMs) || latencyMs < 0) throw Error('Invalid provider load metadata');
+  return { url, offer, expires_at: Date.now() + 30000, queue_depth: queueDepth, latency_ms: latencyMs };
 }
 
 function purchase(wallet, id) {

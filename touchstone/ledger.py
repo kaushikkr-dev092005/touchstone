@@ -146,7 +146,7 @@ class Ledger:
                 raise PolicyError("Payments are halted or job is not running")
             if time.time() >= job["expires_at"] or time.time() >= quote.expires_at:
                 raise PolicyError("Mandate or quote expired")
-            if quote.provider not in {"economy", "balanced", "premium"} or not 0 <= attempt < 3:
+            if quote.provider not in {"economy", "balanced", "premium", "metal-provider"} or not 0 <= attempt < 3:
                 raise PolicyError("Provider or attempt is outside mandate")
             if type(quote.price) is not int or type(verify_cost) is not int or quote.price <= 0 or verify_cost < 0:
                 raise PolicyError("Money must be integer micro-USD")
@@ -243,7 +243,7 @@ class Ledger:
     def resume(self):
         with self.tx() as db:
             db.execute("UPDATE control SET halted=0")
-            db.execute("UPDATE jobs SET status='RUNNING' WHERE status IN ('PAUSED_KILL','PAUSED_POLICY')")
+            db.execute("UPDATE jobs SET status='RUNNING' WHERE status IN ('PAUSED_KILL','PAUSED_POLICY','PAUSED_RECOVERY')")
             self._event(db, "OPERATOR_RESUME", {"policy_changed": False})
 
     def audit(self):

@@ -1,6 +1,6 @@
 # Integration contracts and verified sources
 
-Updated 30 October 2026. Credentials are local, one funded SDK inference purchase is verified, and Airwallex authentication/read access passes. Direct PaymentIntent creation is blocked by `configuration_error`; a user-present hosted-checkout path is implemented but has not been exercised. See [actual proof](LIVE_PROOF.md) and [commands](ACCOUNT_SETUP.md).
+Updated 1 November 2026. Credentials are local, one funded SDK inference purchase is verified, and Airwallex authentication/read access passes. Direct PaymentIntent creation is blocked by `configuration_error`; hosted checkout remains untested. The FX API path, engine Metal route, queue pricing, and chaos modes are implemented but have not been exercised against their live services. See [actual proof](LIVE_PROOF.md) and [commands](ACCOUNT_SETUP.md).
 
 ## Airwallex transport and authorization
 
@@ -10,13 +10,19 @@ Updated 30 October 2026. Credentials are local, one funded SDK inference purchas
 
 The fixed public test-card workflow uses USD whole cents and holds capped at USD 10. It excludes raw card fields, CVC and client secrets from persisted response data. Merchant configuration currently rejects creation before authorization. Native API checkout/PCI enablement is not provisioned by default and may require Airwallex support. The exact configuration issue is not established by the generic API error.
 
-`banked-job` obtains authorization before allocating a clearing wallet and purchasing. It then captures actual accounted spend, records merchant-absorbed fractional cents and tracks returned float. Its full path is covered by controlled adapter tests. The HPP authorization can continue into that workflow without creating a duplicate PaymentIntent. An actual external hold/capture has not yet completed. Hold increases, refunds, FX execution and token bridging are not implemented.
+`banked-job` obtains authorization before allocating a clearing wallet and purchasing. It then captures actual accounted spend, records merchant-absorbed fractional cents and tracks returned float. Its full path is covered by controlled adapter tests. The HPP authorization can continue into that workflow without creating a duplicate PaymentIntent. An actual external hold/capture has not yet completed. Hold increases, refunds and token bridging are not implemented.
+
+### Treasury FX
+
+`airwallex-fx` exposes current wallet balances, quote creation, guarded conversion creation, request-ID recovery and a read-only spend report. Read-only operations need account context plus **Core Resources > Balances > Read** and **Transactional FX > Conversion > Read**. Quote/conversion writes need **Transactional FX > Conversion > Write**. The conversion journal stores the request ID, quote ID, immutable terms and opening balances before posting. If the response is uncertain, it looks up that same request ID and refuses a second write. The report compares a settled conversion with both corresponding wallet-history entries and displays current balances. No live quote or conversion has been attempted because `AIRWALLEX_ACCOUNT_ID` is unset and write scopes are unverified.
+
+Sources: [Airwallex API key scopes](https://www.airwallex.com/docs/developer-tools/api/api-key-scopes), [conversion API](https://www.airwallex.com/docs/api/transactional_fx/conversion), [quotes API](https://www.airwallex.com/docs/api/transactional_fx/quotes), [balances API](https://www.airwallex.com/docs/api/core_resources/balances/current).
 
 Sources: [authentication](https://www.airwallex.com/docs/api/authentication/api_access_token), [scoped keys](https://www.airwallex.com/docs/developer-tools/api/manage-api-keys), [Payment Intents](https://www.airwallex.com/docs/api/payments/payment_intents), [Checkout Sessions](https://www.airwallex.com/docs/api/checkout/checkout_sessions), [API versioning](https://www.airwallex.com/docs/api/versioning), [sandbox settings](https://www.airwallex.com/docs/developer-tools/sandbox-environment/sandbox-settings).
 
 ## Metal SDK bridge and seller
 
-`touchstone.metal.MetalRail` invokes `bridge.mjs` over stdin/stdout. Portable Node 22.23.4, Metal SDK 0.3.3 and viem 2.57.13 are pinned and locked. The original multi-job simulator retains `MockRail`; real errors never silently fall back to mocks.
+`touchstone.metal.MetalRail` invokes `bridge.mjs` over stdin/stdout. Portable Node 22.23.4, Metal SDK 0.3.3 and viem 2.57.13 are pinned and locked. `CompositeRail` presents a common quote/pay/lookup/recover/reconcile contract to the engine and dispatches by the persisted quote provider; real errors never silently fall back to mocks. The dedicated `metal-probe` policy routes only to Metal.
 
 The bridge discovers the supported clearing deployment and verifies RPC chain ID 63825. The SDK owns cryptography, invoices, receipts and payment state. A SQLite implementation of its supported store interface provides Windows durability and exclusive per-wallet ownership. Each job retains a separate clearing key and purchase history. Funding jobs sharing the EVM account also use a shared owner lock.
 
@@ -24,7 +30,7 @@ The bridge discovers the supported clearing deployment and verifies RPC chain ID
 |---|---|
 | Wallet | Persisted signer/store; never print private key; refuse simultaneous owners |
 | Funding | Exact capped deposit; broadcast and spendability are separate; duplicate deposit blocked |
-| Quote | Bind resource, seller, chain, asset, deployment, amount and expiry |
+| Quote | Bind resource, seller, chain, asset, deployment, amount and expiry; apply live queue-depth pricing and report observed service latency |
 | Purchase | Persist reservation before SDK payment; enforce cap and total wallet budget |
 | Recovery | Replay the held SDK invoice or retrieve the original paid delivery |
 | Definitive refusal | `UNPAID_CONFIRMED` permits only identical reservation terms to retry |
@@ -32,9 +38,11 @@ The bridge discovers the supported clearing deployment and verifies RPC chain ID
 
 SDK pending state is durably stored before send and cleared only after verified receipt or authoritative refusal. Recovery uses that protocol state, not an empty remote lookup, to distinguish an unpaid retry from an uncertain payment. Held invoices retain their original URL and price. The exact fallback is disabled and its ephemeral EVM account is unfunded.
 
-The included loopback seller issues real x402 requirements, validates task-digest resource binding, verifies SDK signatures against chain/service state, and caches delivery by payment ID. A plain receipt replay cannot create a replacement payment. The provider receives no funding or Airwallex keys, and its model worker receives no RPC credential. It has one execution slot and refuses quotes when the local model is unavailable.
+The included loopback seller issues real x402 requirements, validates task-digest resource binding, verifies SDK signatures against chain/service state, and caches delivery by payment ID. Queue depth is measured from pending deliveries; each queued task adds 20% to the current quote, capped at the configured USD 0.05 seller maximum. The exact offer is durably recorded and matched on paid delivery, and the quote includes observed worker latency for routing. A plain receipt replay cannot create a replacement payment. The provider receives no funding or Airwallex keys, and its model worker receives no RPC credential. It runs one task at a time and refuses quotes when the local model is unavailable.
 
-Seventeen Node tests cover wallets, price/unit caps, immutable retries, pending invoice replay, unpaid refusal handling, durable delivery and source binding. A separate actual proof records a 0.10 USDZ deposit, one 0.01 USDZ GPU inference purchase, identical buyer/provider replays, and a non-deferred return of the remaining 0.09 USDZ. The purchased output failed source verification; the charge remains recorded. Receipt assurance remains preconfirmed.
+Explicit local chaos controls are `TOUCHSTONE_PROVIDER_CHAOS=outage` (503 before an offer, so no call is paid) and `quality-drop` (a paid, deliberately corrupted delivery). The latter keeps aggregate invoice totals balanced while corrupting line arithmetic. The engine also supports `--kill-at after_rail`, which terminates the Python process after the rail returns a paid receipt, plus `--recover` against the same durable scope. These are test capabilities only; no real-provider chaos/kill run has yet been performed. A single historical Metal payment is not the requested 30–50-step integrated run.
+
+The Node tests cover wallets, price/unit caps, immutable retries, pending invoice replay, unpaid refusal handling, durable delivery and source binding, queue-aware pricing and injected quality loss. A separate actual proof records a 0.10 USDZ deposit, one 0.01 USDZ GPU inference purchase, identical buyer/provider replays, and a non-deferred return of the remaining 0.09 USDZ. The purchased output failed source verification; the charge remains recorded. Receipt assurance remains preconfirmed.
 
 Sources: [Metal clearing](https://docs.metalntwx.com/agents/clearing), [x402](https://github.com/coinbase/x402), pinned SDK source/types under installed `@metalntwx/metal-pay`.
 

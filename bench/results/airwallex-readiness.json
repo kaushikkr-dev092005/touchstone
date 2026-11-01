@@ -5,9 +5,13 @@
   "balance_read": true,
   "global_accounts_read": true,
   "checkout_sessions_read": false,
+  "fx_conversions_read": false,
   "read_errors": {
     "checkout_sessions_read": {
       "reason": "Set AIRWALLEX_ACCOUNT_ID to check Checkout Sessions access"
+    },
+    "fx_conversions_read": {
+      "reason": "Set AIRWALLEX_ACCOUNT_ID to check Transactional FX access"
     }
   },
   "account_context_configured": false,

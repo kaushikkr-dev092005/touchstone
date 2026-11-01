@@ -14,6 +14,11 @@
     "nvidia_vram_allocation_observed": true
   },
   "decoding": "json-schema-v1",
+  "source_sha256": {
+    "providers.py": "3aac5936a2c56e04e0cc10894fd114d62f0bbdc5a59c42f918b63ab8681843b4",
+    "verifier.py": "eb06f6ad9b96d29d2d801ce30505b5104e146fad3482db3059a060fe42048472",
+    "workload.py": "af42df6367bbca65dd76dfa7397b1a712db3022999968a8f3dc26b9f3133a90b"
+  },
   "warmups_discarded": 1,
   "steps_per_seed": 30,
   "seeds": [
@@ -21,7 +26,7 @@
     42,
     43
   ],
-  "verifier_version": "source-rules-v2",
+  "verifier_version": "source-rules-v3-invoice-consistency",
   "environment": {
     "tier": "balanced",
     "runtime_release": "b12000",
@@ -42,53 +47,26 @@
       "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
       "total_vram_mib": "4096",
       "used_vram_mib": "0",
-      "temperature_c": "42",
-      "power_w": "12.41",
-      "clock_mhz": "1500",
-      "driver": "610.62"
-    },
-    {
-      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
-      "total_vram_mib": "4096",
-      "used_vram_mib": "1073",
-      "temperature_c": "48",
-      "power_w": "23.53",
-      "clock_mhz": "1942",
-      "driver": "610.62"
-    },
-    {
-      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
-      "total_vram_mib": "4096",
-      "used_vram_mib": "1073",
-      "temperature_c": "48",
-      "power_w": "23.53",
-      "clock_mhz": "1942",
-      "driver": "610.62"
-    },
-    {
-      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
-      "total_vram_mib": "4096",
-      "used_vram_mib": "1074",
-      "temperature_c": "54",
-      "power_w": "77.24",
-      "clock_mhz": "1935",
-      "driver": "610.62"
-    },
-    {
-      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
-      "total_vram_mib": "4096",
-      "used_vram_mib": "1074",
       "temperature_c": "56",
-      "power_w": "73.42",
-      "clock_mhz": "1965",
+      "power_w": "30.20",
+      "clock_mhz": "1950",
       "driver": "610.62"
     },
     {
       "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
       "total_vram_mib": "4096",
-      "used_vram_mib": "1074",
-      "temperature_c": "57",
-      "power_w": "76.39",
+      "used_vram_mib": "1073",
+      "temperature_c": "55",
+      "power_w": "14.86",
+      "clock_mhz": "1515",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1073",
+      "temperature_c": "61",
+      "power_w": "31.72",
       "clock_mhz": "1950",
       "driver": "610.62"
     },
@@ -96,17 +74,53 @@
       "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
       "total_vram_mib": "4096",
       "used_vram_mib": "1074",
-      "temperature_c": "58",
-      "power_w": "77.27",
-      "clock_mhz": "1927",
+      "temperature_c": "64",
+      "power_w": "72.96",
+      "clock_mhz": "1942",
       "driver": "610.62"
     },
     {
       "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
       "total_vram_mib": "4096",
       "used_vram_mib": "1074",
-      "temperature_c": "59",
-      "power_w": "77.33",
+      "temperature_c": "63",
+      "power_w": "62.99",
+      "clock_mhz": "1942",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1074",
+      "temperature_c": "62",
+      "power_w": "63.01",
+      "clock_mhz": "1942",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1074",
+      "temperature_c": "64",
+      "power_w": "64.59",
+      "clock_mhz": "1905",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1074",
+      "temperature_c": "66",
+      "power_w": "76.57",
+      "clock_mhz": "1942",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1074",
+      "temperature_c": "67",
+      "power_w": "79.78",
       "clock_mhz": "1920",
       "driver": "610.62"
     },
@@ -114,40 +128,31 @@
       "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
       "total_vram_mib": "4096",
       "used_vram_mib": "1074",
-      "temperature_c": "59",
-      "power_w": "76.91",
+      "temperature_c": "67",
+      "power_w": "79.19",
+      "clock_mhz": "1897",
+      "driver": "610.62"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "total_vram_mib": "4096",
+      "used_vram_mib": "1074",
+      "temperature_c": "67",
+      "power_w": "78.90",
       "clock_mhz": "1927",
-      "driver": "610.62"
-    },
-    {
-      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
-      "total_vram_mib": "4096",
-      "used_vram_mib": "1074",
-      "temperature_c": "61",
-      "power_w": "79.83",
-      "clock_mhz": "1935",
-      "driver": "610.62"
-    },
-    {
-      "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
-      "total_vram_mib": "4096",
-      "used_vram_mib": "1074",
-      "temperature_c": "61",
-      "power_w": "77.29",
-      "clock_mhz": "1950",
       "driver": "610.62"
     }
   ],
   "true_success_rate": 0.4888888888888889,
   "verifier_acceptance_rate": 0.4888888888888889,
-  "latency_p50_ms": 172.0,
-  "latency_p95_ms": 374,
+  "latency_p50_ms": 183.0,
+  "latency_p95_ms": 410,
   "rows": [
     {
       "seed": 41,
       "step_id": "step-0000",
       "kind": "invoice",
-      "latency_ms": 338,
+      "latency_ms": 360,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -161,7 +166,7 @@
       "seed": 41,
       "step_id": "step-0001",
       "kind": "arithmetic",
-      "latency_ms": 180,
+      "latency_ms": 172,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -173,7 +178,7 @@
       "seed": 41,
       "step_id": "step-0002",
       "kind": "classification",
-      "latency_ms": 80,
+      "latency_ms": 119,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -185,7 +190,7 @@
       "seed": 41,
       "step_id": "step-0003",
       "kind": "invoice",
-      "latency_ms": 357,
+      "latency_ms": 372,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -211,7 +216,7 @@
       "seed": 41,
       "step_id": "step-0005",
       "kind": "classification",
-      "latency_ms": 83,
+      "latency_ms": 70,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -223,7 +228,7 @@
       "seed": 41,
       "step_id": "step-0006",
       "kind": "invoice",
-      "latency_ms": 358,
+      "latency_ms": 383,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -237,7 +242,7 @@
       "seed": 41,
       "step_id": "step-0007",
       "kind": "arithmetic",
-      "latency_ms": 161,
+      "latency_ms": 175,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -249,7 +254,7 @@
       "seed": 41,
       "step_id": "step-0008",
       "kind": "classification",
-      "latency_ms": 115,
+      "latency_ms": 192,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -261,7 +266,7 @@
       "seed": 41,
       "step_id": "step-0009",
       "kind": "invoice",
-      "latency_ms": 343,
+      "latency_ms": 398,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -275,7 +280,7 @@
       "seed": 41,
       "step_id": "step-0010",
       "kind": "arithmetic",
-      "latency_ms": 205,
+      "latency_ms": 360,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -287,7 +292,7 @@
       "seed": 41,
       "step_id": "step-0011",
       "kind": "classification",
-      "latency_ms": 106,
+      "latency_ms": 99,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -299,7 +304,7 @@
       "seed": 41,
       "step_id": "step-0012",
       "kind": "invoice",
-      "latency_ms": 357,
+      "latency_ms": 413,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -313,7 +318,7 @@
       "seed": 41,
       "step_id": "step-0013",
       "kind": "arithmetic",
-      "latency_ms": 172,
+      "latency_ms": 239,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -325,7 +330,7 @@
       "seed": 41,
       "step_id": "step-0014",
       "kind": "classification",
-      "latency_ms": 125,
+      "latency_ms": 174,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -337,7 +342,7 @@
       "seed": 41,
       "step_id": "step-0015",
       "kind": "invoice",
-      "latency_ms": 361,
+      "latency_ms": 428,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -351,7 +356,7 @@
       "seed": 41,
       "step_id": "step-0016",
       "kind": "arithmetic",
-      "latency_ms": 210,
+      "latency_ms": 240,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -363,7 +368,7 @@
       "seed": 41,
       "step_id": "step-0017",
       "kind": "classification",
-      "latency_ms": 132,
+      "latency_ms": 184,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -375,7 +380,7 @@
       "seed": 41,
       "step_id": "step-0018",
       "kind": "invoice",
-      "latency_ms": 368,
+      "latency_ms": 425,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -389,7 +394,7 @@
       "seed": 41,
       "step_id": "step-0019",
       "kind": "arithmetic",
-      "latency_ms": 185,
+      "latency_ms": 197,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -401,7 +406,7 @@
       "seed": 41,
       "step_id": "step-0020",
       "kind": "classification",
-      "latency_ms": 136,
+      "latency_ms": 207,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -413,7 +418,7 @@
       "seed": 41,
       "step_id": "step-0021",
       "kind": "invoice",
-      "latency_ms": 346,
+      "latency_ms": 390,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -427,7 +432,7 @@
       "seed": 41,
       "step_id": "step-0022",
       "kind": "arithmetic",
-      "latency_ms": 201,
+      "latency_ms": 236,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -439,7 +444,7 @@
       "seed": 41,
       "step_id": "step-0023",
       "kind": "classification",
-      "latency_ms": 125,
+      "latency_ms": 184,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -451,7 +456,7 @@
       "seed": 41,
       "step_id": "step-0024",
       "kind": "invoice",
-      "latency_ms": 360,
+      "latency_ms": 378,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -465,7 +470,7 @@
       "seed": 41,
       "step_id": "step-0025",
       "kind": "arithmetic",
-      "latency_ms": 152,
+      "latency_ms": 200,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -477,7 +482,7 @@
       "seed": 41,
       "step_id": "step-0026",
       "kind": "classification",
-      "latency_ms": 97,
+      "latency_ms": 173,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -489,7 +494,7 @@
       "seed": 41,
       "step_id": "step-0027",
       "kind": "invoice",
-      "latency_ms": 369,
+      "latency_ms": 385,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -503,7 +508,7 @@
       "seed": 41,
       "step_id": "step-0028",
       "kind": "arithmetic",
-      "latency_ms": 177,
+      "latency_ms": 257,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -515,7 +520,7 @@
       "seed": 41,
       "step_id": "step-0029",
       "kind": "classification",
-      "latency_ms": 106,
+      "latency_ms": 198,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -527,7 +532,7 @@
       "seed": 42,
       "step_id": "step-0000",
       "kind": "invoice",
-      "latency_ms": 329,
+      "latency_ms": 382,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -541,7 +546,7 @@
       "seed": 42,
       "step_id": "step-0001",
       "kind": "arithmetic",
-      "latency_ms": 176,
+      "latency_ms": 177,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -553,7 +558,7 @@
       "seed": 42,
       "step_id": "step-0002",
       "kind": "classification",
-      "latency_ms": 114,
+      "latency_ms": 145,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -565,7 +570,7 @@
       "seed": 42,
       "step_id": "step-0003",
       "kind": "invoice",
-      "latency_ms": 347,
+      "latency_ms": 450,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -579,7 +584,7 @@
       "seed": 42,
       "step_id": "step-0004",
       "kind": "arithmetic",
-      "latency_ms": 173,
+      "latency_ms": 211,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -591,7 +596,7 @@
       "seed": 42,
       "step_id": "step-0005",
       "kind": "classification",
-      "latency_ms": 88,
+      "latency_ms": 235,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -603,7 +608,7 @@
       "seed": 42,
       "step_id": "step-0006",
       "kind": "invoice",
-      "latency_ms": 339,
+      "latency_ms": 410,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -617,7 +622,7 @@
       "seed": 42,
       "step_id": "step-0007",
       "kind": "arithmetic",
-      "latency_ms": 143,
+      "latency_ms": 187,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -629,7 +634,7 @@
       "seed": 42,
       "step_id": "step-0008",
       "kind": "classification",
-      "latency_ms": 99,
+      "latency_ms": 95,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -641,7 +646,7 @@
       "seed": 42,
       "step_id": "step-0009",
       "kind": "invoice",
-      "latency_ms": 363,
+      "latency_ms": 354,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -655,7 +660,7 @@
       "seed": 42,
       "step_id": "step-0010",
       "kind": "arithmetic",
-      "latency_ms": 177,
+      "latency_ms": 182,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -667,7 +672,7 @@
       "seed": 42,
       "step_id": "step-0011",
       "kind": "classification",
-      "latency_ms": 107,
+      "latency_ms": 113,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -679,7 +684,7 @@
       "seed": 42,
       "step_id": "step-0012",
       "kind": "invoice",
-      "latency_ms": 390,
+      "latency_ms": 383,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -693,7 +698,7 @@
       "seed": 42,
       "step_id": "step-0013",
       "kind": "arithmetic",
-      "latency_ms": 181,
+      "latency_ms": 164,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -705,7 +710,7 @@
       "seed": 42,
       "step_id": "step-0014",
       "kind": "classification",
-      "latency_ms": 118,
+      "latency_ms": 117,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -717,7 +722,7 @@
       "seed": 42,
       "step_id": "step-0015",
       "kind": "invoice",
-      "latency_ms": 358,
+      "latency_ms": 367,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -731,7 +736,7 @@
       "seed": 42,
       "step_id": "step-0016",
       "kind": "arithmetic",
-      "latency_ms": 156,
+      "latency_ms": 158,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -743,7 +748,7 @@
       "seed": 42,
       "step_id": "step-0017",
       "kind": "classification",
-      "latency_ms": 119,
+      "latency_ms": 125,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -755,7 +760,7 @@
       "seed": 42,
       "step_id": "step-0018",
       "kind": "invoice",
-      "latency_ms": 342,
+      "latency_ms": 356,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -769,7 +774,7 @@
       "seed": 42,
       "step_id": "step-0019",
       "kind": "arithmetic",
-      "latency_ms": 179,
+      "latency_ms": 178,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -781,7 +786,7 @@
       "seed": 42,
       "step_id": "step-0020",
       "kind": "classification",
-      "latency_ms": 128,
+      "latency_ms": 124,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -793,7 +798,7 @@
       "seed": 42,
       "step_id": "step-0021",
       "kind": "invoice",
-      "latency_ms": 382,
+      "latency_ms": 352,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -807,7 +812,7 @@
       "seed": 42,
       "step_id": "step-0022",
       "kind": "arithmetic",
-      "latency_ms": 168,
+      "latency_ms": 158,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -819,7 +824,7 @@
       "seed": 42,
       "step_id": "step-0023",
       "kind": "classification",
-      "latency_ms": 80,
+      "latency_ms": 100,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -831,7 +836,7 @@
       "seed": 42,
       "step_id": "step-0024",
       "kind": "invoice",
-      "latency_ms": 374,
+      "latency_ms": 382,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -845,7 +850,7 @@
       "seed": 42,
       "step_id": "step-0025",
       "kind": "arithmetic",
-      "latency_ms": 183,
+      "latency_ms": 156,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -857,7 +862,7 @@
       "seed": 42,
       "step_id": "step-0026",
       "kind": "classification",
-      "latency_ms": 111,
+      "latency_ms": 117,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -869,7 +874,7 @@
       "seed": 42,
       "step_id": "step-0027",
       "kind": "invoice",
-      "latency_ms": 362,
+      "latency_ms": 367,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -883,7 +888,7 @@
       "seed": 42,
       "step_id": "step-0028",
       "kind": "arithmetic",
-      "latency_ms": 151,
+      "latency_ms": 161,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -895,7 +900,7 @@
       "seed": 42,
       "step_id": "step-0029",
       "kind": "classification",
-      "latency_ms": 127,
+      "latency_ms": 139,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -907,7 +912,7 @@
       "seed": 43,
       "step_id": "step-0000",
       "kind": "invoice",
-      "latency_ms": 333,
+      "latency_ms": 335,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -921,7 +926,7 @@
       "seed": 43,
       "step_id": "step-0001",
       "kind": "arithmetic",
-      "latency_ms": 220,
+      "latency_ms": 179,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -933,7 +938,7 @@
       "seed": 43,
       "step_id": "step-0002",
       "kind": "classification",
-      "latency_ms": 101,
+      "latency_ms": 102,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -945,7 +950,7 @@
       "seed": 43,
       "step_id": "step-0003",
       "kind": "invoice",
-      "latency_ms": 350,
+      "latency_ms": 356,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -959,7 +964,7 @@
       "seed": 43,
       "step_id": "step-0004",
       "kind": "arithmetic",
-      "latency_ms": 171,
+      "latency_ms": 165,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -971,7 +976,7 @@
       "seed": 43,
       "step_id": "step-0005",
       "kind": "classification",
-      "latency_ms": 61,
+      "latency_ms": 82,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -997,7 +1002,7 @@
       "seed": 43,
       "step_id": "step-0007",
       "kind": "arithmetic",
-      "latency_ms": 155,
+      "latency_ms": 154,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -1009,7 +1014,7 @@
       "seed": 43,
       "step_id": "step-0008",
       "kind": "classification",
-      "latency_ms": 68,
+      "latency_ms": 78,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -1021,7 +1026,7 @@
       "seed": 43,
       "step_id": "step-0009",
       "kind": "invoice",
-      "latency_ms": 360,
+      "latency_ms": 387,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -1035,7 +1040,7 @@
       "seed": 43,
       "step_id": "step-0010",
       "kind": "arithmetic",
-      "latency_ms": 167,
+      "latency_ms": 165,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -1047,7 +1052,7 @@
       "seed": 43,
       "step_id": "step-0011",
       "kind": "classification",
-      "latency_ms": 141,
+      "latency_ms": 125,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -1059,7 +1064,7 @@
       "seed": 43,
       "step_id": "step-0012",
       "kind": "invoice",
-      "latency_ms": 353,
+      "latency_ms": 367,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -1073,7 +1078,7 @@
       "seed": 43,
       "step_id": "step-0013",
       "kind": "arithmetic",
-      "latency_ms": 154,
+      "latency_ms": 155,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -1085,7 +1090,7 @@
       "seed": 43,
       "step_id": "step-0014",
       "kind": "classification",
-      "latency_ms": 98,
+      "latency_ms": 109,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -1097,7 +1102,7 @@
       "seed": 43,
       "step_id": "step-0015",
       "kind": "invoice",
-      "latency_ms": 352,
+      "latency_ms": 370,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -1111,7 +1116,7 @@
       "seed": 43,
       "step_id": "step-0016",
       "kind": "arithmetic",
-      "latency_ms": 154,
+      "latency_ms": 180,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -1123,7 +1128,7 @@
       "seed": 43,
       "step_id": "step-0017",
       "kind": "classification",
-      "latency_ms": 116,
+      "latency_ms": 127,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -1135,7 +1140,7 @@
       "seed": 43,
       "step_id": "step-0018",
       "kind": "invoice",
-      "latency_ms": 350,
+      "latency_ms": 357,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -1149,7 +1154,7 @@
       "seed": 43,
       "step_id": "step-0019",
       "kind": "arithmetic",
-      "latency_ms": 163,
+      "latency_ms": 152,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -1161,7 +1166,7 @@
       "seed": 43,
       "step_id": "step-0020",
       "kind": "classification",
-      "latency_ms": 98,
+      "latency_ms": 94,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -1173,7 +1178,7 @@
       "seed": 43,
       "step_id": "step-0021",
       "kind": "invoice",
-      "latency_ms": 390,
+      "latency_ms": 387,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -1187,7 +1192,7 @@
       "seed": 43,
       "step_id": "step-0022",
       "kind": "arithmetic",
-      "latency_ms": 184,
+      "latency_ms": 171,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -1199,7 +1204,7 @@
       "seed": 43,
       "step_id": "step-0023",
       "kind": "classification",
-      "latency_ms": 92,
+      "latency_ms": 112,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -1211,7 +1216,7 @@
       "seed": 43,
       "step_id": "step-0024",
       "kind": "invoice",
-      "latency_ms": 387,
+      "latency_ms": 423,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -1225,7 +1230,7 @@
       "seed": 43,
       "step_id": "step-0025",
       "kind": "arithmetic",
-      "latency_ms": 153,
+      "latency_ms": 159,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -1237,7 +1242,7 @@
       "seed": 43,
       "step_id": "step-0026",
       "kind": "classification",
-      "latency_ms": 80,
+      "latency_ms": 96,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -1249,7 +1254,7 @@
       "seed": 43,
       "step_id": "step-0027",
       "kind": "invoice",
-      "latency_ms": 381,
+      "latency_ms": 391,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -1263,7 +1268,7 @@
       "seed": 43,
       "step_id": "step-0028",
       "kind": "arithmetic",
-      "latency_ms": 153,
+      "latency_ms": 172,
       "verifier_passed": false,
       "true_correct": false,
       "output": {
@@ -1275,7 +1280,7 @@
       "seed": 43,
       "step_id": "step-0029",
       "kind": "classification",
-      "latency_ms": 62,
+      "latency_ms": 71,
       "verifier_passed": true,
       "true_correct": true,
       "output": {
@@ -1283,10 +1288,5 @@
       },
       "verification_reason": "Label agrees with supported source evidence"
     }
-  ],
-  "source_sha256": {
-    "providers.py": "4fb52f6fa6bcbdb7a6bc49372dc17a25eb40e4cb9a4025f8736d7446ece8ce31",
-    "verifier.py": "2f45199c3fbd057b2be7ad900b5b308725b383c424ee2ae3a8620c4a753d6296",
-    "workload.py": "af42df6367bbca65dd76dfa7397b1a712db3022999968a8f3dc26b9f3133a90b"
-  }
+  ]
 }

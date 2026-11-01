@@ -8,6 +8,10 @@ Keep Touchstone and its quality-aware procurement thesis. Put a concrete banking
 
 The original plan is strong on engineering depth but too broad for the remaining build window. Its largest gap is that the current Kit 12 recipe uses customer pre-authorizations and short operator float; wallet reads and optional FX alone do not demonstrate that cycle. The event links the developer lab guide, although that guide explicitly says it is not official API documentation. Exact payloads must come from official API references.
 
+## Implementation update — 1 November 2026
+
+The earlier review described missing features, not live evidence. The code now has a separate Airwallex treasury path for balance reads, FX quotes/conversions with a unique request ID, and reconciliation against wallet balance history. The account ID remains unset, so scoped access and all FX operations are still unverified. The engine now uses a unified Mock/Metal rail contract, has an explicit real Metal tier, queue-sensitive signed quotes and conservative recovery. Local outage/quality chaos switches and process-kill recovery are implemented but have not been run against a configured live provider. Source-cited invoice consistency checks remove the hidden-answer dependency; a seeded noisy checker now has a measured synthetic false-accept curve. See [validation](VALIDATION.md) and [live evidence](LIVE_PROOF.md) for executed versus pending items.
+
 ## Corrections before implementation
 
 1. **Payment is not contingent on verification.** The proposed loop pays before output checks. A failed check prevents acceptance and may change the next purchase; it does not reverse the previous charge. Count all attempts. A credit receivable is not spendable money until confirmed.

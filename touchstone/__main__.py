@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 from pathlib import Path
 import platform
 import sqlite3
@@ -36,6 +37,20 @@ def main():
     demo = commands.add_parser("demo", help="Run the three-job short-float scenario")
     demo.add_argument("--data-dir", default="data")
     demo.add_argument("--seed", type=int, default=42)
+    metal_engine = commands.add_parser("engine-metal", help="Run the engine with its explicit real Metal testnet provider tier")
+    metal_engine.add_argument("--scope", required=True, help="Stable testnet wallet/job scope; reuse after interruption")
+    metal_engine.add_argument("--steps", type=int, default=30)
+    metal_engine.add_argument("--seed", type=int, default=42)
+    metal_engine.add_argument("--budget-usd", required=True, help="Hard total job cap, including verification charges")
+    metal_engine.add_argument("--price-cap-usd", required=True, help="Maximum Metal provider quote per step")
+    metal_engine.add_argument("--provider-url", help="Approved local test provider origin")
+    metal_engine.add_argument("--task-file", help="JSON list of public tasks; otherwise generated test tasks are used")
+    metal_engine.add_argument("--execute", action="store_true", help="Explicitly authorize real testnet calls within the supplied cap")
+    metal_engine.add_argument("--recover", action="store_true", help="Recover only; do not dispatch new tasks")
+    metal_engine.add_argument("--crash-at", choices=["after_reserve", "after_rail", "after_paid"],
+                               help="Test a recovery boundary; after_rail performs a real paid request")
+    metal_engine.add_argument("--kill-at", choices=["after_reserve", "after_rail", "after_paid"],
+                               help="Abruptly terminate this process at a recovery boundary; after_rail spends testnet funds")
     bench = commands.add_parser("benchmark", help="Three paired policies, five seeds, simulator only")
     bench.add_argument("--steps", type=int, default=200)
     bench.add_argument("--output", default="bench/results")
@@ -52,6 +67,23 @@ def main():
     checkout.add_argument("--status", action="store_true", help="Retrieve the session and verify an uncaptured authorization")
     checkout.add_argument("--recover", action="store_true", help="Reconcile an uncertain create through read-only session lookup")
     checkout.add_argument("--journal", default="data/airwallex-operations.sqlite")
+    fx = commands.add_parser("airwallex-fx", help="Read wallet balances, quote FX, or explicitly create/reconcile a conversion")
+    fx_actions = fx.add_subparsers(dest="fx_action", required=True)
+    fx_actions.add_parser("balances", help="Read Airwallex wallet balances")
+    fx_quote = fx_actions.add_parser("quote", help="Create a non-settling Airwallex FX quote")
+    fx_quote.add_argument("--sell-currency", required=True)
+    fx_quote.add_argument("--buy-currency", required=True)
+    fx_quote.add_argument("--sell-amount", required=True)
+    fx_quote.add_argument("--validity", default="MIN_15")
+    fx_quote.add_argument("--output", default="data/airwallex-fx-quote.json")
+    fx_convert = fx_actions.add_parser("convert", help="Preview or explicitly execute a wallet FX conversion")
+    fx_convert.add_argument("--quote", default="data/airwallex-fx-quote.json")
+    fx_convert.add_argument("--request-id", required=True)
+    fx_convert.add_argument("--execute", action="store_true", help="Explicitly authorize the sandbox wallet conversion")
+    fx_convert.add_argument("--journal", default="data/airwallex-fx.sqlite")
+    fx_report = fx_actions.add_parser("report", help="Reconcile a conversion request against wallet balance history")
+    fx_report.add_argument("--request-id", required=True)
+    fx_report.add_argument("--journal", default="data/airwallex-fx.sqlite")
     profile = commands.add_parser("profile-local", help="Measure an already-running local model; no payment")
     profile.add_argument("--steps", type=int, default=12)
     profile.add_argument("--output", default="bench/results/local-profile.json")
@@ -141,6 +173,68 @@ def main():
             from .payments import MockRail
             engine = Engine(Ledger(Path(args.data_dir) / "ledger.sqlite"), MockRail(Path(args.data_dir) / "rail.sqlite"))
             print(json.dumps(engine.run(engine.create_demo(args.seed)), indent=2))
+        elif args.command == "engine-metal":
+            from .config import ROOT
+            from .engine import Engine, InjectedCrash
+            from .holds import micro_usd
+            from .ledger import Ledger
+            from .metal import MetalRail
+            from .payments import CompositeRail, MetalEngineRail, MockRail
+            from .workload import generate, Task
+            import re
+            if not args.execute and not args.recover:
+                raise ValueError("No provider payment is sent unless --execute is supplied")
+            if not 1 <= args.steps <= 50:
+                parser.error("Use 1 to 50 engine tasks; 30-50 is the recommended live test range")
+            if not re.fullmatch(r"[A-Za-z0-9_-]{1,48}", args.scope):
+                raise ValueError("Invalid Metal testnet scope")
+            budget, cap = micro_usd(args.budget_usd), micro_usd(args.price_cap_usd)
+            if budget <= 0 or cap <= 0 or cap > budget:
+                raise ValueError("Require a positive total budget and per-step cap no greater than the budget")
+            tasks = ([Task(**item) for item in json.loads(Path(args.task_file).read_text(encoding="utf-8"))]
+                     if args.task_file else generate(args.seed, args.steps)[0])
+            if not tasks or len(tasks) > args.steps or any(task.kind not in {"invoice", "arithmetic", "classification", "invoice_consistency"} for task in tasks):
+                raise ValueError("Supply 1 to --steps supported provider tasks")
+            data_dir = ROOT / "data/metal-engine"
+            data_dir.mkdir(parents=True, exist_ok=True)
+            scope_file = data_dir / (args.scope + ".json")
+            if args.recover and not scope_file.exists():
+                raise ValueError("Recovery requires an existing scope; it cannot create or dispatch a job")
+            mandate = {"seed": args.seed, "steps": len(tasks), "budget": budget, "cap": cap,
+                       "provider_url": args.provider_url or os.environ.get("METAL_PROVIDER_URL"),
+                       "task_digest": __import__("hashlib").sha256(json.dumps([task.public() for task in tasks], sort_keys=True).encode()).hexdigest()}
+            if scope_file.exists():
+                saved = json.loads(scope_file.read_text(encoding="utf-8"))
+                if saved["mandate"] != mandate:
+                    raise ValueError("Scope is already bound to different tasks or spend limits; recover the original scope")
+                run_id = saved["run_id"]
+            else:
+                ledger = Ledger(data_dir / "ledger.sqlite")
+                run_id = ledger.create_run([{"seed": args.seed, "policy": "metal-probe", "hold": budget,
+                    "price_cap": cap, "allocation": budget, "tasks": [task.public() for task in tasks]}], budget)
+                scope_file.write_text(json.dumps({"run_id": run_id, "mandate": mandate}, indent=2) + "\n", encoding="utf-8")
+            ledger = Ledger(data_dir / "ledger.sqlite")
+            job = ledger.jobs(run_id)[0]
+            live = MetalEngineRail(args.scope, mandate["provider_url"], cap, budget,
+                                   client=MetalRail(args.scope, mandate["provider_url"], cap, budget))
+            rail = CompositeRail(MockRail(data_dir / args.scope / "simulated-rail.sqlite"), live)
+            engine = Engine(ledger, rail)
+            if args.recover:
+                engine.recover(run_id)
+                result = engine.snapshot(run_id)
+            else:
+                try:
+                    result = engine.run(run_id, crash_at=args.crash_at, kill_at=args.kill_at)
+                except InjectedCrash as error:
+                    print(json.dumps({"mode": "TESTNET", "scope": args.scope, "run_id": run_id,
+                                      "crash_injected": str(error), "next": "rerun with --recover"}, indent=2))
+                    return 2
+            print(json.dumps({"mode": "TESTNET", "customer_hold": "SIMULATED", "run_id": run_id,
+                              "scope": args.scope, "job": job["id"], "steps": len(tasks),
+                              "paid_steps": sum(attempt["provider"] == "metal-provider" and attempt["receipt"] is not None
+                                                for attempt in ledger.attempts(job["id"])),
+                              "snapshot": result}, indent=2))
+            return 0 if result["jobs"][0]["status"] == "COMPLETED" else 2
         elif args.command == "benchmark":
             from .benchmark import run_benchmark
             if not 1 <= args.steps <= 2000:
@@ -172,6 +266,34 @@ def main():
                 workflow.start(args.scope, micro_usd(args.hold_usd), args.recover)
             print(json.dumps(result, indent=2))
             return 0 if result.get("authorization_ready") or result.get("checkout_url") else 2
+        elif args.command == "airwallex-fx":
+            from .treasury import AirwallexSandbox
+            from .fx import FxJournal, execute_conversion, spend_report
+            client = AirwallexSandbox()
+            if args.fx_action == "balances":
+                print(json.dumps({"mode": "SANDBOX", "balances": client.current_balances(), "writes_performed": False}, indent=2))
+            elif args.fx_action == "quote":
+                result = client.create_fx_quote(args.sell_currency, args.buy_currency, args.sell_amount, args.validity)
+                target = Path(args.output)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+                print(json.dumps({"mode": "SANDBOX", "quote_id": result["quote_id"],
+                                  "sell_currency": result["sell_currency"], "sell_amount": result["sell_amount"],
+                                  "buy_currency": result["buy_currency"], "buy_amount": result["buy_amount"],
+                                  "client_rate": result.get("client_rate"), "valid_to_at": result.get("valid_to_at"),
+                                  "quote_file": str(target), "conversion_created": False}, indent=2))
+            elif args.fx_action == "convert":
+                quote = json.loads(Path(args.quote).read_text(encoding="utf-8"))
+                if not args.execute:
+                    print(json.dumps({"mode": "SANDBOX", "request_id": args.request_id,
+                                      "quote_id": quote.get("quote_id"), "conversion_created": False,
+                                      "requires_explicit_execute": True}, indent=2))
+                    return 0
+                conversion = execute_conversion(client, FxJournal(args.journal), quote, args.request_id)
+                print(json.dumps({"mode": "SANDBOX", "conversion": conversion,
+                                  "note": "Use airwallex-fx report to verify wallet balance-history entries"}, indent=2))
+            else:
+                print(json.dumps(spend_report(client, FxJournal(args.journal), args.request_id), indent=2))
         elif args.command == "profile-local":
             from .providers import local_inference
             from .verifier import check

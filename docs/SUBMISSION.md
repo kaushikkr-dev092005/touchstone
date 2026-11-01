@@ -19,8 +19,11 @@ The financial stress scenario uses three customer holds totaling $2.50 with only
 - Airwallex sandbox authentication and balance/Global Account reads.
 - Two local model profiles, an honest negative cheap-first cost result, a 1,000-case bounded-tool baseline, and a source-deduplicated eligibility screen.
 - Local failure tests for lost payment/capture responses, changed mandates, receipt mismatches, uncertain outcomes and unavailable withdrawal float.
+- A unified engine-facing Metal tier, queue-priced signed quotes, provider outage/quality chaos switches, and an abrupt process-kill recovery command; these have local fixture tests but no live engine run.
+- A separate Airwallex treasury path for wallet balances, FX quotes/conversions with unique request IDs, and wallet-history spend reconciliation; no live quote or conversion has been attempted.
+- An invoice consistency verifier using cited line arithmetic and a measured synthetic false-accept curve for a deliberately noisy checker.
 
-The actual Airwallex hold/capture is blocked by a merchant `configuration_error`. The integrated workflow is implemented and tested with controlled adapters, but the full external banking loop is not yet demonstrated. The unused 0.09 testnet USDZ was returned through a finalized non-deferred claim; the paid receipt remains preconfirmed. Keep these limits visible in the final submission unless later evidence supersedes them.
+The actual Airwallex hold/capture is blocked by a merchant `configuration_error`. The latest read-only smoke has `account_context_configured=false`; hosted Checkout Sessions and FX access remain untested. The integrated workflow is implemented and tested with controlled adapters, but the full external banking loop is not yet demonstrated. No 30–50-step paid engine run, real-provider chaos run or real Metal kill/restart has been executed. The unused 0.09 testnet USDZ was returned through a finalized non-deferred claim; the paid receipt remains preconfirmed. Keep these limits visible in the final submission unless later evidence supersedes them.
 
 ## Differentiation
 
@@ -32,4 +35,4 @@ Run `python -m touchstone serve` and open `http://127.0.0.1:8088`. Show the loca
 
 ## Required work before submitting
 
-Complete a hosted sandbox authorization/capture using an enabled Checkout Sessions API key and record the full external banked loop; qualify a model on representative finance-operations sources if claiming useful autonomous inference; verify finality of the paid inference receipt; confirm the signed-in hackathon submission requirements; add the team details and video URL. The testnet withdrawal has returned; the repository has been pushed privately to `https://github.com/kaushikkr-dev092005/touchstone`; public publication and hackathon submission have not been performed.
+Before submission, set the Airwallex account context and verify Checkout Sessions/FX read and write scopes; exercise hosted authorization/capture and a small FX conversion/report; execute 30–50 testnet engine steps plus the chaos and kill/restart demonstrations only with an explicitly approved funded budget; qualify a model on representative finance-operations sources if claiming useful autonomous inference; verify finality of the paid inference receipt; and confirm the signed-in submission requirements. MIT license is included. Freeze features by 11 November, record on 12 November and submit by 13 November. The testnet withdrawal has returned; the private repository was previously pushed to `https://github.com/kaushikkr-dev092005/touchstone`; public publication and hackathon submission have not been performed.

@@ -11,8 +11,9 @@ import unittest
 
 from touchstone.engine import Engine, InjectedCrash
 from touchstone.ledger import Ledger, PolicyError, payment_key
-from touchstone.payments import MockRail, MetalRail
+from touchstone.payments import CompositeRail, MockRail, MetalRail
 from touchstone.providers import quotes
+from touchstone.router import Router
 from touchstone.treasury import AirwallexSandbox
 from touchstone.verifier import check
 from touchstone.workload import generate
@@ -126,16 +127,15 @@ class Controls(unittest.TestCase):
 
     def test_process_death_recovers_without_second_payment(self):
         job = self.job()
-        script = """import os,sys
+        script = """import sys
 from touchstone.ledger import Ledger
 from touchstone.payments import MockRail
-from touchstone.engine import Engine,InjectedCrash
+from touchstone.engine import Engine
 e=Engine(Ledger(sys.argv[1]),MockRail(sys.argv[2]))
-try: e.run(sys.argv[3],crash_at='after_rail')
-except InjectedCrash: os._exit(73)
+e.run(sys.argv[3],kill_at='after_rail')
 """
         result = subprocess.run([sys.executable,"-c",script,str(self.root/"ledger.sqlite"),str(self.root/"rail.sqlite"),self.run_id],capture_output=True,text=True,timeout=30)
-        self.assertEqual(result.returncode,73,result.stderr)
+        self.assertEqual(result.returncode,86,result.stderr)
         before = self.rail.receipts()
         self.assertEqual(len(before),1)
         self.assertEqual(self.ledger.attempts(job)[0]["state"],"RESERVED")
@@ -146,6 +146,74 @@ except InjectedCrash: os._exit(73)
         self.assertTrue(final["reconciliation"]["matched"])
         self.assertEqual(sum(r["key"]==before[0]["key"] for r in self.rail.receipts()),1)
         self.assertEqual(final["jobs"][0]["status"],"COMPLETED")
+
+    def test_unknown_live_rail_outcome_keeps_reservation_and_pauses_job(self):
+        job = self.job()
+        quote = quotes(42, 0)[0]
+        key = self.ledger.reserve(job, self.tasks[0], 0, quote, 1000)
+        class UnknownRail:
+            mode = "TESTNET"
+            def lookup(self, key, quote=None):
+                return None
+            def receipts(self):
+                return []
+        engine = Engine(self.ledger, UnknownRail())
+        self.assertEqual(engine.recover(self.run_id), 0)
+        attempt = self.ledger.attempts(job)[0]
+        self.assertEqual(attempt["key"], key)
+        self.assertEqual(attempt["state"], "RESERVED")
+        self.assertEqual(self.ledger.get_job(job)["status"], "PAUSED_RECOVERY")
+        self.assertEqual(self.ledger.get_job(job)["spent"], 0)
+
+    def test_engine_can_route_real_metal_tier_through_unified_rail(self):
+        from dataclasses import dataclass
+        @dataclass(frozen=True)
+        class MetalOffer:
+            id: str = "metal-quote-1"
+            provider: str = "metal-provider"
+            price: int = 10000
+            latency_ms: int = 0
+            expires_at: float = time.time() + 60
+            mode: str = "TESTNET"
+            terms: dict = None
+            def public(self):
+                return {"id": self.id, "provider": self.provider, "price": self.price,
+                        "latency_ms": self.latency_ms, "expires_at": self.expires_at,
+                        "mode": self.mode, "terms": {"url": "http://127.0.0.1/inference/task"}}
+        class MetalTier:
+            mode = "TESTNET"
+            def __init__(self):
+                self.receipt = None
+            def quote_for_task(self, task):
+                return MetalOffer()
+            def pay(self, key, quote, output_factory=None):
+                self.receipt = {"key": key, "id": "metal-receipt-1", "amount": quote.price,
+                                "provider": quote.provider, "quote_id": quote.id,
+                                "output": self.truth}
+                return self.receipt
+            def lookup(self, key, quote=None):
+                return self.receipt or {"state": "NOT_DISPATCHED", "authoritative": True}
+            def recover(self, key, quote=None):
+                return self.receipt
+            def receipts(self):
+                return [self.receipt] if self.receipt else []
+        task = self.tasks[0]
+        tier = MetalTier()
+        tier.truth = self.truth[task.id]
+        rails = CompositeRail(self.rail, tier)
+        run = self.ledger.create_run([{"seed": 42, "policy": "metal-probe", "hold": 30000,
+            "price_cap": 20000, "allocation": 30000, "tasks": [task.public()]}], 30000)
+        snapshot = Engine(self.ledger, rails).run(run)
+        self.assertEqual(snapshot["attempts"][0]["provider"], "metal-provider")
+        self.assertTrue(snapshot["reconciliation"]["matched"])
+        self.assertEqual(snapshot["jobs"][0]["status"], "COMPLETED")
+
+    def test_thompson_policy_is_seeded_and_respects_hard_caps(self):
+        job = {"policy": "thompson", "price_cap": 30000, "budget": 40000, "spent": 0}
+        first, _ = Router(seed=7).select(quotes(42, 0, chaos=False), self.tasks[0], job, [])
+        second, _ = Router(seed=7).select(quotes(42, 0, chaos=False), self.tasks[0], job, [])
+        self.assertEqual(first, second)
+        self.assertLessEqual(first.price, job["price_cap"])
 
     def test_recovery_at_other_crash_boundaries(self):
         for point in ["after_reserve","after_paid"]:
@@ -194,6 +262,17 @@ except InjectedCrash: os._exit(73)
         with patch.dict('os.environ', {'METAL_PROVIDER_URL': ''}):
             with self.assertRaisesRegex(RuntimeError,"not configured"):
                 MetalRail('unconfigured-test')
+
+    def test_metal_quote_carries_live_queue_and_latency_observations(self):
+        from unittest.mock import patch
+        with patch.dict('os.environ', {'METAL_PROVIDER_URL': 'http://127.0.0.1:8092', 'METAL_RPC_URL': 'http://127.0.0.1:8545'}):
+            rail = MetalRail('queue-metadata-test', 'http://127.0.0.1:8092', transport=lambda request: {
+                'url': 'http://127.0.0.1:8092/inference/task', 'expires_at': (time.time() + 30) * 1000,
+                'offer': {'amount': str(12000 * 10**12)}, 'queue_depth': 2, 'latency_ms': 3000})
+        quote = rail.quote('http://127.0.0.1:8092/inference/task')
+        self.assertEqual(quote.price, 12000)
+        self.assertEqual(quote.queue_depth, 2)
+        self.assertEqual(quote.latency_ms, 3000)
 
 
 if __name__ == "__main__":

@@ -6,6 +6,7 @@ import urllib.request
 import time
 import re
 from urllib.parse import urlencode
+from decimal import Decimal, InvalidOperation
 
 BASE_URL = "https://api.sandbox.airwallex.com"
 
@@ -85,13 +86,108 @@ class AirwallexSandbox:
                 reads["checkout_sessions_read"] = False
                 errors["checkout_sessions_read"] = {"http_status": error.status,
                     "reason": "Check Checkout Sessions read permission and API availability"}
+            try:
+                result = self.request("GET", "/api/v1/fx/conversions?" + urlencode({"page_size": 1}))
+                reads["fx_conversions_read"] = isinstance(result, dict) and isinstance(result.get("items"), list)
+            except AirwallexHTTPError as error:
+                reads["fx_conversions_read"] = False
+                errors["fx_conversions_read"] = {"http_status": error.status,
+                    "reason": "Check Transactional FX Conversion read permission"}
         else:
             reads["checkout_sessions_read"] = False
             errors["checkout_sessions_read"] = {"reason": "Set AIRWALLEX_ACCOUNT_ID to check Checkout Sessions access"}
+            reads["fx_conversions_read"] = False
+            errors["fx_conversions_read"] = {"reason": "Set AIRWALLEX_ACCOUNT_ID to check Transactional FX access"}
         # Do not print credentials, tokens, bank account details, or raw responses.
         return {"mode": "SANDBOX", "host": BASE_URL, "authenticated": True,
                 **reads, "read_errors": errors, "account_context_configured": bool(self.account_id),
                 "checkout_sessions_write_verified": False, "writes_performed": False, "dashboard_mode_changed": False}
+
+    def current_balances(self):
+        self._require_account_context()
+        result = self.request("GET", "/api/v1/balances/current")
+        if not isinstance(result, list) or any(not isinstance(row, dict) for row in result):
+            raise ValueError("Airwallex returned an invalid balances response")
+        return result
+
+    def create_fx_quote(self, sell_currency, buy_currency, sell_amount, validity="MIN_15"):
+        self._require_account_context()
+        sell_currency, buy_currency = _currency(sell_currency), _currency(buy_currency)
+        amount = _amount(sell_amount)
+        if sell_currency == buy_currency:
+            raise ValueError("FX currencies must differ")
+        numeric_amount = float(amount)
+        if Decimal(str(numeric_amount)) != amount:
+            raise ValueError("Sell amount cannot be represented exactly as an Airwallex JSON number")
+        if validity not in {"MIN_1", "MIN_15", "MIN_30", "HR_1", "HR_4", "HR_8", "HR_24"}:
+            raise ValueError("Unsupported Airwallex quote validity")
+        result = self.request("POST", "/api/v1/fx/quotes/create", {
+            "sell_currency": sell_currency, "buy_currency": buy_currency,
+            "sell_amount": numeric_amount, "validity": validity,
+        })
+        if not isinstance(result, dict) or not isinstance(result.get("quote_id"), str):
+            raise ValueError("Airwallex returned an invalid FX quote")
+        if result.get("sell_currency") != sell_currency or result.get("buy_currency") != buy_currency:
+            raise ValueError("Airwallex quote currencies differ from the request")
+        return result
+
+    def create_conversion(self, quote, request_id):
+        self._require_account_context()
+        if not isinstance(quote, dict) or not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", request_id or ""):
+            raise ValueError("Conversion requires a valid quote and unique request_id")
+        quote_id = quote.get("quote_id")
+        sell_currency, buy_currency = _currency(quote.get("sell_currency")), _currency(quote.get("buy_currency"))
+        if not isinstance(quote_id, str) or not quote_id or sell_currency == buy_currency:
+            raise ValueError("Invalid FX quote")
+        dealt_currency = quote.get("dealt_currency")
+        if dealt_currency == sell_currency:
+            amount_field, amount = "sell_amount", quote.get("sell_amount")
+        elif dealt_currency == buy_currency:
+            amount_field, amount = "buy_amount", quote.get("buy_amount")
+        else:
+            raise ValueError("FX quote has no supported dealt currency")
+        payload = {"request_id": request_id, "quote_id": quote_id,
+                   "sell_currency": sell_currency, "buy_currency": buy_currency,
+                   amount_field: format(_amount(amount), "f")}
+        if quote.get("conversion_date"):
+            payload["conversion_date"] = quote["conversion_date"]
+        return self.request("POST", "/api/v1/fx/conversions/create", payload)
+
+    def conversions_by_request_id(self, request_id):
+        self._require_account_context()
+        if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", request_id or ""):
+            raise ValueError("Invalid conversion request_id")
+        result = self.request("GET", "/api/v1/fx/conversions?" + urlencode({"request_id": request_id, "page_size": 10}))
+        return [item for item in result.get("items", []) if item.get("request_id") == request_id]
+
+    def conversion_balance_history(self, request_id):
+        self._require_account_context()
+        if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", request_id or ""):
+            raise ValueError("Invalid conversion request_id")
+        result = self.request("GET", "/api/v1/balances/history?" + urlencode({"request_id": request_id, "page_size": 200}))
+        if not isinstance(result, dict) or not isinstance(result.get("items"), list):
+            raise ValueError("Airwallex returned an invalid balance-history response")
+        return result["items"]
+
+    def _require_account_context(self):
+        if not self.account_id:
+            raise ValueError("Set AIRWALLEX_ACCOUNT_ID before accessing account-specific Treasury APIs")
+
+
+def _currency(value):
+    if not isinstance(value, str) or not re.fullmatch(r"[A-Z]{3}", value):
+        raise ValueError("Use an uppercase three-letter currency code")
+    return value
+
+
+def _amount(value):
+    try:
+        amount = Decimal(str(value))
+    except (InvalidOperation, TypeError, ValueError):
+        raise ValueError("Amount must be a positive decimal") from None
+    if not amount.is_finite() or amount <= 0 or amount > Decimal("5000000"):
+        raise ValueError("Amount must be positive and within Airwallex conversion limits")
+    return amount
 
 
 class AirwallexHTTPError(RuntimeError):

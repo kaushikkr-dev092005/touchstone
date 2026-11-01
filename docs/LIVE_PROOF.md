@@ -44,6 +44,14 @@ The integrated `banked-proof-001` create operation is still journaled as `UNKNOW
 
 `python -m touchstone banked-job --scope banked-proof-001 --integration-probe --recover` resumes one durable sandbox/testnet job. Its immutable mandate includes source, provider URL, price cap, allocation, hold and purpose. The job obtains an actual authorization before allocating a funded clearing wallet, then reserves a quote, pays, verifies, captures accounted spend and tracks withdrawal claims. The full path passes controlled adapter tests; the actual banked job is currently blocked at PaymentIntent creation.
 
-Live probe checking fees are zero. Customer capture rounds provider spend down to whole cents and records the sub-cent difference as merchant expense. Gas and any native-token costs are not charged to the customer. Fiat and token accounts remain separate; no automated bridge or FX conversion is implemented. Funded jobs sharing the EVM account are serialized to avoid nonce and allocation races.
+Live probe checking fees are zero. Customer capture rounds provider spend down to whole cents and records the sub-cent difference as merchant expense. Gas and any native-token costs are not charged to the customer. Fiat and token accounts remain separate; no automated bridge is implemented. A separate Airwallex Treasury FX workflow has since been added, but it has not been configured or exercised and is not connected to Metal funding. Funded jobs sharing the EVM account are serialized to avoid nonce and allocation races.
 
 The three-job dashboard scenario remains a simulator. Its separate real-evidence panel and banked-job journal disclose the state of these integrations.
+
+## 1 November readiness update
+
+The read-only `python -m touchstone airwallex-smoke` run authenticated and read balances and Global Accounts. It reported `account_context_configured: false` because `AIRWALLEX_ACCOUNT_ID` is unset; Checkout Sessions read access and FX conversion read access were therefore not tested. The smoke performed no writes. No Checkout Session, FX quote or conversion was created.
+
+The code now has a unified engine-facing Metal rail, explicit `engine-metal` command, queue-sensitive quotes, observed service-latency metadata, fail-closed recovery, opt-in provider outage/quality-drop modes and an abrupt process-kill recovery boundary. These behaviors have local tests only. No 30–50 paid-step run, real-provider chaos run or real Metal kill/restart has taken place: the provider URL is unset, and the prior testnet wallet balance was withdrawn. The Airwallex customer-hold side remains `NOT_RECONCILED` in the engine because no customer authorization/capture completed. FX wallet-history reconciliation is a separate read-only report, not a customer-payment reconciliation.
+
+The invoice fault-injection study is synthetic: across 20 ten-line inputs and 100 seeded checks per input, the noisy checker false-accepted 79.0% of offsetting errors when sampling one line (20.9% when sampling five). The exact source-arithmetic checker false-accepted none of the 20 injected cases. These rates are test measurements, not real invoice prevalence estimates.

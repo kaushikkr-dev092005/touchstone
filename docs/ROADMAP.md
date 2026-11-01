@@ -49,6 +49,17 @@ The deterministic baseline solves 1,000/1,000 generated tasks without a model ca
 
 See VALIDATION.md and saved results for what was actually executed. A checked foundation item is not a live-service completion claim.
 
+## Progress on 1 November
+
+- [x] Add Airwallex wallet-balance reads, FX quote/conversion writes guarded by an explicit execute flag, durable request-ID journaling, and wallet-history reconciliation.
+- [x] Add an invoice-consistency task whose checker verifies cited source spans and arithmetic without recomputing from a hidden answer map.
+- [x] Measure a deliberately noisy invoice checker against offsetting line-item errors; remove the circular verifier calibration MAE from current benchmark output.
+- [x] Unify the simulated and Metal payment rails in the engine, route an explicit Metal tier, and retain reservations when the live rail cannot prove non-payment.
+- [x] Add queue-aware signed quote pricing, measured service-latency metadata, opt-in provider outage/quality chaos, and a hard process-kill recovery switch.
+- [x] Add MIT `LICENSE` with the requested 2026 Kaushik Kumar copyright.
+- [ ] Run the Airwallex read-only readiness check; account context is still unset, so FX writes and hosted checkout remain untested.
+- [ ] Run 30–50 real paid engine steps, a real-provider chaos scenario, and a Metal process-kill/restart demonstration. The provider URL is unset and the dedicated Metal wallet's prior balance was withdrawn, so no new charge is authorized or possible from this checkout as configured.
+
 ## 29–31 October: prove the external integrations
 
 1. Confirm accepted hackathon registration and exact submission requirements in the portal.
@@ -66,7 +77,7 @@ See VALIDATION.md and saved results for what was actually executed. A checked fo
 3. Replace one synthetic provider with the profiled model and measure actual queue depth. Quote a bounded maximum call price and never bill beyond it without a new approval.
 4. Implement a second verification pass for uncertain classifications; account for its real cost. Keep ground truth offline and measure false acceptance.
 
-The archived membership-only simulator baseline was 86% median true success. The current source-rules-v2 simulator reaches 100% on supported templates, which bounded tools can also solve. Neither simulator result establishes accuracy on unfamiliar documents. Require representative model evidence and an appropriate tool-only comparison before pitching quality-preserving savings.
+The archived membership-only simulator baseline was 86% median true success. The current source-rules-v3 simulator reaches 100% on supported templates, which bounded tools can also solve. Its prior tautological calibration MAE is removed; invoice false-accept results now come from explicit fault injection. Neither simulator result establishes accuracy on unfamiliar documents. Require representative model evidence and an appropriate tool-only comparison before pitching quality-preserving savings.
 
 **Exit gate:** paid local-model call with measured latency, linked receipt and verifier result. A paid quote must stay valid through dispatch or be re-quoted without silently changing the authorized purchase.
 
@@ -92,7 +103,7 @@ The archived membership-only simulator baseline was 86% median true success. The
 
 ## 10–11 November: freeze and rehearse
 
-1. Freeze features by 11 November. Keep the simple router if bandit calibration is unfinished.
+1. Freeze features by 11 November. Thompson sampling is implemented as an optional policy but remains uncalibrated; do not treat it as production routing evidence.
 2. Rehearse the five-minute story with a recorded backup. Show one changed decision and the resulting financial state.
 3. Keep finality/withdrawal evidence prerecorded if chain timing exceeds the video window. Show whether a receipt is preconfirmed or final.
 4. Review README setup from a clean checkout and verify required submission assets in the portal.
@@ -103,8 +114,8 @@ Record the final video on 12 November. Submit the repository, working demonstrat
 
 ## Cut order
 
-Drop PDF export, per-token precision switching, extra provider types, reference-model summaries, Thompson sampling and FX embellishments before cutting the paid-call proof, customer hold lifecycle, verification, recovery, evidence or mode disclosures. The current synthetic tasks are intentionally narrow; one credible finance-ops workflow is enough for the first demonstration.
+Drop PDF export, per-token precision switching, extra provider types, reference-model summaries and any claim that the uncalibrated Thompson policy is production-ready before cutting the paid-call proof, customer hold lifecycle, verification, recovery, evidence or mode disclosures. The current synthetic tasks are intentionally narrow; one credible finance-ops workflow is enough for the first demonstration.
 
 ## Unresolved dependencies
 
-Sandbox account context, Checkout Sessions read/write scope, active payment methods and accepted registration are user-controlled. The live testnet provider URL is not configured in this checkout, although the existing paid proof and returned-float evidence remain recorded. No representative finance-operations evaluation set or qualified provider is available. Official judging rubric, submission schema, team details, video requirements and license requirements must be confirmed in the signed-in portal.
+`AIRWALLEX_ACCOUNT_ID`, Checkout Sessions/Transactional FX permissions, active payment methods and accepted registration are user-controlled. The live testnet provider URL is not configured and the previously funded wallet was withdrawn; one old paid proof and returned-float evidence remain recorded. No representative finance-operations evaluation set or qualified provider is available. Record the demo on 12 November and submit by 13 November with hours to spare, after verifying portal requirements. MIT is selected; official judging rubric, submission schema, team details and video requirements still need portal confirmation.
