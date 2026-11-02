@@ -1,5 +1,7 @@
 # Validation record
 
+M1 update, 2 November: **MEASURED local execution** — 148 Python tests and 24 Node tests pass. New M1 tests cover account/scope diagnostics, guarded commands, rejected/consumed IDs, evidence-based retirement, immutable FX caps, uncertain outcomes, separate-account job reconciliation and dashboard rendering. Test financial adapters are **MOCK**; the demo-rate entry is **SIMULATED**. See [M1 report and raw logs](M1_REPORT.md). The earlier M0 counts below remain historical.
+
 Updated 2 November 2026. Environment: Windows, Python 3.12.10, portable Node 22.23.4, NVIDIA RTX 3050 Laptop GPU with 4096 MiB VRAM, driver 610.62. Any measured GPU profiles are stored separately from simulator results.
 
 ## Automated financial controls

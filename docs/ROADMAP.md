@@ -53,6 +53,7 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 - [x] M0 complete: README status labels, Bash equivalents, 133 local Python tests and 21 Node tests pass; all four GitHub Actions jobs on Ubuntu/Windows with Python 3.11/3.12 pass for `b8819d7`. See [M0 report](M0_REPORT.md).
 - [x] MEASURED history scan: no secret-pattern findings or sensitive committed paths in the reported heuristic scope. Ignored private data is excluded; this is not a guarantee that no secret exists.
 - [x] Repository is public (verified through the GitHub API on 2 November 2026).
+- [x] M1 implementation and documented-blocker exit: environment-only doctor, guarded FX job accounting with separate demo USDZ, definitive create rejection/consumed-ID handling, evidence-based scope retirement, visible treasury stages, controlled tests and support draft. [M1 report](M1_REPORT.md). No live FX or acquiring write is claimed.
 
 ## Not done
 

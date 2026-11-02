@@ -1,5 +1,7 @@
 # Account setup and integrated test runbook
 
+M1 update (2 November): use [M1_RUNBOOK.md](M1_RUNBOOK.md) for the environment-only doctor, current execute/cap flags and job-linked FX proof. Airwallex doctor/FX/hold/checkout/retirement/treasury-job commands use process environment only; the older general CLI config behavior below still applies to other commands. Written capped chat approval remains mandatory before money movement. Historical examples below are reference commands, not approval.
+
 Updated 1 November 2026. The user has created both accounts, configured local credentials and funded a dedicated testnet wallet. RPC, Airwallex authentication/account reads, and one actual paid Metal inference call are verified. `AIRWALLEX_ACCOUNT_ID` is currently unset, so account-scoped Checkout Sessions and Treasury FX have not been tested. Airwallex merchant configuration currently blocks PaymentIntent creation. See [live evidence](LIVE_PROOF.md).
 
 ## Local configuration
@@ -33,29 +35,29 @@ The current account passes login, balance and Global Account reads, but direct P
 For the hosted flow, use a fresh scope (do not reuse `banked-proof-001`, whose direct create outcome remains unresolved). The start command creates an unpaid Checkout Session and prints its hosted URL; complete payment only with a sandbox test card in the Airwallex page, then retrieve the session status:
 
 ```powershell
-python -m touchstone airwallex-checkout --scope hpp-smoke-001 --hold-usd 1.00
+python -m touchstone airwallex-checkout --scope hpp-smoke-001 --hold-usd 1.00 --execute
 python -m touchstone airwallex-checkout --scope hpp-smoke-001 --hold-usd 1.00 --status
 ```
 
 macOS / Linux / Git Bash equivalent:
 
 ```bash
-python -m touchstone airwallex-checkout --scope hpp-smoke-001 --hold-usd 1.00
+python -m touchstone airwallex-checkout --scope hpp-smoke-001 --hold-usd 1.00 --execute
 python -m touchstone airwallex-checkout --scope hpp-smoke-001 --hold-usd 1.00 --status
 ```
 
 The second command must report `authorization_ready: true` and an intent in `REQUIRES_CAPTURE` before a job may dispatch. To test a standalone partial capture and remainder cancellation, pass the same scope to the existing command:
 
 ```powershell
-python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50
-python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50 --recover
+python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50 --execute
+python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50 --recover --execute
 ```
 
 macOS / Linux / Git Bash equivalent:
 
 ```bash
-python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50
-python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50 --recover
+python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50 --execute
+python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50 --recover --execute
 ```
 
 For the integrated banked flow, pass `--journal data/banked/airwallex.sqlite` to both `airwallex-checkout` commands, then use the same scope with `banked-job --integration-probe`; this deliberately proceeds to a testnet provider purchase and should only be run when that separate expense is intended. The fixed sandbox workflow is limited to USD 10 holds and whole cents. It persists UUIDs before writes, captures once and cancels remaining capture-ready authorization. Customer-action states are completed only by the customer on Airwallex's hosted page. Unused authorization does not prove issuer balance availability.
@@ -70,7 +72,7 @@ Set `AIRWALLEX_ACCOUNT_ID` from the sandbox payment account and verify read acce
 python -m touchstone airwallex-fx balances
 python -m touchstone airwallex-fx quote --sell-currency USD --buy-currency EUR --sell-amount 10.00
 python -m touchstone airwallex-fx convert --request-id fx-demo-unique-001
-python -m touchstone airwallex-fx convert --request-id fx-demo-unique-001 --execute
+python -m touchstone airwallex-fx convert --request-id fx-demo-unique-001 --sell-currency USD --max-sell-amount 10.00 --execute
 python -m touchstone airwallex-fx report --request-id fx-demo-unique-001
 ```
 
@@ -80,7 +82,7 @@ macOS / Linux / Git Bash equivalent:
 python -m touchstone airwallex-fx balances
 python -m touchstone airwallex-fx quote --sell-currency USD --buy-currency EUR --sell-amount 10.00
 python -m touchstone airwallex-fx convert --request-id fx-demo-unique-001
-python -m touchstone airwallex-fx convert --request-id fx-demo-unique-001 --execute
+python -m touchstone airwallex-fx convert --request-id fx-demo-unique-001 --sell-currency USD --max-sell-amount 10.00 --execute
 python -m touchstone airwallex-fx report --request-id fx-demo-unique-001
 ```
 
@@ -213,20 +215,20 @@ Withdrawals expose `empty`, `waiting`, queued and non-deferred claims separately
 After merchant configuration is enabled, a new test job can run:
 
 ```powershell
-python -m touchstone banked-job --scope banked-proof-002 --integration-probe
-python -m touchstone banked-job --scope banked-proof-002 --integration-probe --recover
+python -m touchstone banked-job --scope banked-proof-002 --integration-probe --execute
+python -m touchstone banked-job --scope banked-proof-002 --integration-probe --recover --execute
 python -m touchstone banked-status
 ```
 
 macOS / Linux / Git Bash equivalent:
 
 ```bash
-python -m touchstone banked-job --scope banked-proof-002 --integration-probe
-python -m touchstone banked-job --scope banked-proof-002 --integration-probe --recover
+python -m touchstone banked-job --scope banked-proof-002 --integration-probe --execute
+python -m touchstone banked-job --scope banked-proof-002 --integration-probe --recover --execute
 python -m touchstone banked-status
 ```
 
-The immutable mandate binds source, origin, hold, allocation and call cap. Authorization precedes funding/payment; exact receipt terms are checked before capture. Live checking fees are zero. The merchant absorbs sub-cent rounding and gas. Customer closure and returned-float completion are distinct. Fiat and token accounts remain separate; no automated bridge is implied. Treasury FX is a separate optional workflow, not connected to this job.
+The immutable mandate binds source, origin, hold, allocation and call cap. Authorization precedes funding/payment; exact receipt terms are checked before capture. Live checking fees are zero. The merchant absorbs sub-cent rounding and gas. Customer closure and returned-float completion are distinct. Fiat and token accounts remain separate; no automated bridge is implied. Treasury FX can now be linked by scope and `--treasury-request-id` after its wallet-history reconciliation; this accounting link does not fund the Metal wallet.
 
 `banked-halt` stops new dispatches and `banked-resume` preserves limits. Funded jobs sharing the EVM key are serialized through a shared owner lock. The original three-job dashboard remains a financial simulator; actual banked jobs and paid evidence appear in separate panels.
 

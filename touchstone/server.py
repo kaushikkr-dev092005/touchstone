@@ -151,11 +151,13 @@ def serve(port=8088, data_dir="data"):
                 return self.respond(200, summary())
             if path == "/api/banked-jobs":
                 from .banked import BankedStore
+                from .treasury_job import read_treasury_jobs
                 p = ROOT / 'data/banked/ledger.sqlite'
                 if not p.exists():
-                    return self.respond(200, {"mode": "SANDBOX_TESTNET", "jobs": [], "funded_run_verified": False})
+                    return self.respond(200, {"mode": "SANDBOX_TESTNET", "jobs": [], "treasury_jobs": [], "funded_run_verified": False})
                 store = BankedStore(p)
-                return self.respond(200, {"mode": "SANDBOX_TESTNET", "jobs": store.jobs(), "audit": store.ledger.audit()})
+                return self.respond(200, {"mode": "SANDBOX_TESTNET", "jobs": store.jobs(),
+                                          "treasury_jobs": read_treasury_jobs(store.ledger), "audit": store.ledger.audit()})
             if path == "/api/audit":
                 return self.respond(200, {"audit": ledger.audit(), "events": ledger.events(limit=100000)})
             if path == "/api/events":

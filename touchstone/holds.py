@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import re
 import sqlite3
+import time
 import uuid
 from urllib.parse import urlencode
 
@@ -13,6 +14,14 @@ from .treasury import AirwallexHTTPError
 
 
 class OutcomeUnknown(RuntimeError):
+    pass
+
+
+class CreateRejected(RuntimeError):
+    """Definitive configuration rejection; the create UUID is consumed."""
+
+
+class ScopeRetired(RuntimeError):
     pass
 
 
@@ -50,6 +59,18 @@ class OperationJournal:
               path TEXT NOT NULL, digest TEXT NOT NULL, state TEXT NOT NULL, response TEXT,
               PRIMARY KEY(scope,action))""")
             db.execute('CREATE TABLE IF NOT EXISTS operation_errors(scope TEXT,action TEXT,status INTEGER,code TEXT,PRIMARY KEY(scope,action))')
+            db.execute('''CREATE TABLE IF NOT EXISTS retired_scopes(
+                scope TEXT PRIMARY KEY, replacement TEXT UNIQUE NOT NULL,
+                evidence TEXT NOT NULL, retired_at REAL NOT NULL)''')
+
+    @staticmethod
+    def _active(db, scope):
+        if db.execute('SELECT 1 FROM retired_scopes WHERE scope=?', (scope,)).fetchone():
+            raise ScopeRetired("Scope is permanently retired; use its fresh replacement scope")
+
+    def assert_active(self, scope):
+        with self.connect() as db:
+            self._active(db, scope)
 
     def connect(self):
         db = sqlite3.connect(self.path, timeout=15, factory=ClosingConnection)
@@ -65,12 +86,15 @@ class OperationJournal:
         digest = hashlib.sha256(canonical(body).encode()).hexdigest()
         with self.connect() as db:
             db.execute("BEGIN IMMEDIATE")
+            self._active(db, scope)
             row = db.execute("SELECT * FROM operations WHERE scope=? AND action=?", (scope, action)).fetchone()
             if row:
                 if row["digest"] != digest or row["path"] != path:
                     raise ValueError("Existing operation is bound to different terms; refusing a changed retry")
                 if row["state"] == "OBSERVED":
                     return row["request_id"], json.loads(row["response"])
+                if row["state"] == "REJECTED_NO_OBJECT":
+                    raise CreateRejected("Create rejected without an object; request ID consumed. Retire scope with evidence before a fresh scope.")
                 raise OutcomeUnknown(f"{action} is {row['state']}; retrieve and reconcile before any new write")
             request_id = str(uuid.uuid4())
             db.execute("INSERT INTO operations VALUES(?,?,?,?,?,?,NULL)", (scope, action, request_id, path, digest, "IN_FLIGHT"))
@@ -80,6 +104,7 @@ class OperationJournal:
         digest = hashlib.sha256(canonical({"hold": hold, "capture": capture, "currency": "USD"}).encode()).hexdigest()
         with self.connect() as db:
             db.execute("BEGIN IMMEDIATE")
+            self._active(db, scope)
             row = db.execute("SELECT digest FROM operations WHERE scope=? AND action='terms'", (scope,)).fetchone()
             if row and row["digest"] != digest:
                 raise ValueError("Existing operation is bound to different terms; refusing a changed retry")
@@ -91,6 +116,7 @@ class OperationJournal:
         digest = hashlib.sha256(canonical({"hold": hold, "currency": "USD"}).encode()).hexdigest()
         with self.connect() as db:
             db.execute('BEGIN IMMEDIATE')
+            self._active(db, scope)
             row = db.execute("SELECT digest FROM operations WHERE scope=? AND action='authorization_terms'", (scope,)).fetchone()
             if row and row[0] != digest:
                 raise ValueError("Authorization scope is bound to a different hold")
@@ -100,6 +126,8 @@ class OperationJournal:
 
     def observe(self, scope, action, response):
         with self.connect() as db:
+            db.execute('BEGIN IMMEDIATE')
+            self._active(db, scope)
             db.execute("UPDATE operations SET state='OBSERVED',response=? WHERE scope=? AND action=?",
                        (canonical(public_intent(response)), scope, action))
 
@@ -115,6 +143,69 @@ class OperationJournal:
     def errors(self, scope):
         with self.connect() as db:
             return [dict(r) for r in db.execute('SELECT action,status,code FROM operation_errors WHERE scope=?', (scope,))]
+
+    def claim_create_retry(self, scope, prior):
+        with self.connect() as db:
+            db.execute('BEGIN IMMEDIATE')
+            self._active(db, scope)
+            row = db.execute("SELECT * FROM operations WHERE scope=? AND action='create'", (scope,)).fetchone()
+            if not row or row['state'] != prior['state'] or row['request_id'] != prior['request_id']:
+                raise OutcomeUnknown("Create state changed; no replay sent")
+            if row['state'] not in {'UNKNOWN', 'IN_FLIGHT'}:
+                raise OutcomeUnknown("Create is not eligible for same-request recovery")
+            db.execute("UPDATE operations SET state='IN_FLIGHT' WHERE scope=? AND action='create'", (scope,))
+
+    def classify_create_error(self, scope, action, error):
+        self.error(scope, action, error)
+        state = "UNKNOWN"
+        if action == "create" and isinstance(error, AirwallexHTTPError) and 400 <= error.status < 500:
+            if error.code == "configuration_error":
+                state = "REJECTED_NO_OBJECT"
+            elif error.code == "duplicate_request":
+                state = "REQUEST_ID_CONSUMED"
+        with self.connect() as db:
+            db.execute('UPDATE operations SET state=? WHERE scope=? AND action=?', (state, scope, action))
+        return state
+
+    def retire(self, scope, replacement, evidence, client):
+        """Local tombstone, not cancellation. Empty lookup alone cannot retire uncertainty."""
+        if any(not isinstance(s, str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,48}', s) for s in (scope, replacement)) or scope == replacement:
+            raise ValueError("Retirement requires distinct valid old and fresh replacement scopes")
+        required = {"scope", "request_id", "kind", "reference", "no_object_created"}
+        if not isinstance(evidence, dict) or set(evidence) != required:
+            raise ValueError("Provide only scope, request_id, kind, reference and no_object_created evidence fields")
+        if (evidence["scope"] != scope or evidence["no_object_created"] is not True
+            or evidence["kind"] not in {"RECORDED_CONFIGURATION_ERROR", "AIRWALLEX_SUPPORT"}
+            or not isinstance(evidence["reference"], str)
+            or not re.fullmatch(r'[A-Za-z0-9_-]{1,100}', evidence["reference"])):
+            raise ValueError("Retirement needs a recorded rejection or support reference affirming no object was created")
+        prior = self.get(scope, 'create')
+        if not prior or prior['request_id'] != evidence['request_id'] or prior['state'] not in {'UNKNOWN', 'REQUEST_ID_CONSUMED', 'REJECTED_NO_OBJECT'}:
+            raise ValueError("Evidence does not match a stuck or rejected create request")
+        if evidence['kind'] == 'RECORDED_CONFIGURATION_ERROR':
+            errors = self.errors(scope)
+            if not any(e['action'] == 'create' and e['code'] == 'configuration_error' and 400 <= e['status'] < 500 for e in errors):
+                raise ValueError("No persisted configuration rejection matches this request; support evidence is required")
+        result = client.request('GET', '/api/v1/pa/payment_intents?' + urlencode({'merchant_order_id': scope, 'page_size': 100}))
+        if not isinstance(result, dict) or result.get('items') != [] or result.get('has_more') is not False:
+            raise OutcomeUnknown("Retirement blocked: read-back is nonempty or incomplete")
+        with self.connect() as db:
+            db.execute('BEGIN IMMEDIATE')
+            self._active(db, scope)
+            self._active(db, replacement)
+            current = db.execute("SELECT * FROM operations WHERE scope=? AND action='create'", (scope,)).fetchone()
+            if not current or current['state'] != prior['state'] or current['request_id'] != prior['request_id']:
+                raise OutcomeUnknown("Operation changed during retirement; review again")
+            if db.execute('SELECT 1 FROM operations WHERE scope=?', (replacement,)).fetchone():
+                raise ValueError("Replacement scope has already been used")
+            if db.execute("SELECT 1 FROM operations WHERE scope=? AND action NOT IN ('create','terms','authorization_terms')", (scope,)).fetchone():
+                raise ValueError("Scope has other financial operations; retirement cannot clear them")
+            db.execute('INSERT INTO retired_scopes VALUES(?,?,?,?)', (scope, replacement, canonical(evidence), time.time()))
+            db.execute("UPDATE operations SET state='RETIRED' WHERE scope=? AND action='create'", (scope,))
+        return {"label": getattr(client, 'evidence_label', 'MOCK'), "scope": scope, "replacement_scope": replacement, "state": "RETIRED",
+                "request_id_consumed": True, "evidence_kind": evidence['kind'], "evidence_reference": evidence['reference'],
+                "remote_writes_performed": False, "money_moved": False,
+                "caveat": "Support evidence is an operator attestation; retirement does not cancel a remote object"}
 
 
 class SandboxHoldWorkflow:
@@ -137,11 +228,16 @@ class SandboxHoldWorkflow:
             self.journal.observe(scope, action, raw)
             return public_intent(raw)
         except Exception as error:
-            self.journal.error(scope, action, error)
-            self.journal.uncertain(scope, action)
+            state = self.journal.classify_create_error(scope, action, error)
+            if state == 'REJECTED_NO_OBJECT':
+                raise CreateRejected("PaymentIntent create rejected by merchant configuration; no object created, request ID consumed") from None
             raise OutcomeUnknown(f"{action} outcome requires reconciliation; rerun the same scope with --recover") from None
 
     def _recover_create(self, scope, hold):
+        self.journal.assert_active(scope)
+        prior = self.journal.get(scope, 'create')
+        if prior and prior['state'] == 'REJECTED_NO_OBJECT':
+            raise CreateRejected("Create was definitively rejected; consumed request ID cannot be retried")
         result = self.client.request('GET', '/api/v1/pa/payment_intents?' + urlencode({'merchant_order_id':scope, 'page_size':100}))
         matches = [x for x in result.get('items', []) if x.get('merchant_order_id') == scope]
         if len(matches) == 1 and not result.get('has_more'):
@@ -154,16 +250,20 @@ class SandboxHoldWorkflow:
         # for the SAME request_id. Reuse the exact persisted UUID and body,
         # after checking reads; never generate another create request ID.
         # https://www.airwallex.com/docs/payments/get-started/using-payments-intent-api
-        prior = self.journal.get(scope, 'create')
+        if prior['state'] == 'REQUEST_ID_CONSUMED' or any(e['action'] == 'create' and e['code'] == 'duplicate_request' for e in self.journal.errors(scope)):
+            raise OutcomeUnknown("Request ID consumed; no replay allowed. Retire with evidence and use a fresh scope")
         body = {'amount':api_usd(hold), 'currency':'USD', 'merchant_order_id':scope}
         if prior['digest'] != hashlib.sha256(canonical(body).encode()).hexdigest():
             raise ValueError('Create recovery terms changed')
+        self.journal.claim_create_retry(scope, prior)
         try:
             intent = self.client.request('POST', prior['path'], {**body, 'request_id':prior['request_id']})
             self._validate(intent, scope, hold)
             self.journal.observe(scope, 'create', intent)
         except Exception as error:
-            self.journal.error(scope, 'create', error)
+            state = self.journal.classify_create_error(scope, 'create', error)
+            if state == 'REJECTED_NO_OBJECT':
+                raise CreateRejected("Create rejected without an object; original request ID is consumed") from None
             raise OutcomeUnknown('Original create request remains unresolved; no new request ID used') from None
 
     @staticmethod

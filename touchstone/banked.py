@@ -13,7 +13,7 @@ import sqlite3
 import time
 from urllib.parse import urlparse
 
-from .holds import OutcomeUnknown
+from .holds import OutcomeUnknown, CreateRejected, ScopeRetired
 from .ledger import Ledger, PolicyError, canonical
 from .metal import MetalQuote, PaymentPending
 from .verifier import check
@@ -95,7 +95,8 @@ class BankedWorkflow:
     def __init__(self, store, treasury, rail_factory):
         self.store, self.treasury, self.rail_factory = store, treasury, rail_factory
 
-    def run(self, scope, task, origin, hold=1000000, allocation=100000, price_cap=50000, recover=False, integration_probe=False):
+    def run(self, scope, task, origin, hold=1000000, allocation=100000, price_cap=50000, recover=False, integration_probe=False,
+            treasury_request_id=None):
         if not integration_probe:
             raise ValueError("This command requires --integration-probe; no model is approved for autonomous paid procurement")
         if not re.fullmatch(r'[A-Za-z0-9_-]{1,48}', scope):
@@ -108,8 +109,18 @@ class BankedWorkflow:
         mandate = {"task": task.public(), "provider_url": url, "hold": hold, "allocation": allocation,
                    "price_cap": price_cap, "purpose": "INTEGRATION_PROBE", "checking_fee": 0,
                    "fractional_cent_policy": "merchant absorbs; capture rounds down", "network": 63825}
+        from .treasury_job import read_treasury_jobs
+        funding = next((job for job in read_treasury_jobs(self.store.ledger) if job['scope'] == scope), None)
+        if funding and not treasury_request_id:
+            raise ValueError("This scope has treasury funding; bind it with --treasury-request-id")
+        if treasury_request_id:
+            if not funding or funding['request_id'] != treasury_request_id or funding['phase'] != 'RECONCILED':
+                raise ValueError("Job treasury funding must match a reconciled FX request")
+            mandate['treasury_request_id'] = treasury_request_id
         with self.store.owner():
             state = self.store.bind(scope, mandate)
+            if funding and 'treasury_funding' not in state:
+                state = self.store.update(scope, state, treasury_funding=funding)
             if state['phase'] == 'COMPLETED':
                 return state
             rail = self.rail_factory(scope, url, price_cap, allocation)
@@ -223,6 +234,9 @@ class BankedWorkflow:
                     reconciliation={"receipt_matches_quote": True, "provider_spend_micro_usd": state['spent_micro_usd'],
                         "customer_capture_micro_usd": state['captured_micro_usd'], "bridge_or_fx_executed": False,
                         "bank_and_token_balances_separate": True})
+            except (CreateRejected, ScopeRetired):
+                return self.store.update(scope, state, phase='BLOCKED_CONFIGURATION', recovery_required=False,
+                                         bank_errors=self.treasury.journal.errors(scope))
             except (OutcomeUnknown, PaymentPending):
                 # Keep the exact phase, quote and original reservation. A later
                 # --recover reads authoritative state before another effect.

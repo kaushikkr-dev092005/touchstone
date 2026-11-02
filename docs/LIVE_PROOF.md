@@ -1,5 +1,7 @@
 # Live integration evidence — 30 October 2026
 
+M1 update, 2 November: **no new live financial evidence**. The environment-only doctor could not see the required Airwallex variables in the agent process and made no API requests. The user reports local setup in another terminal. A new treasury job lifecycle and scope-retirement path passed controlled-adapter tests; their saved proof is **MOCK**. No private historical scope was read or retired. See [M1 report](M1_REPORT.md) and [support draft](AIRWALLEX_SUPPORT_REQUEST.md).
+
 ## Metal testnet: executed
 
 The dedicated EVM wallet was created locally; its private key is in ignored `data/metal/funding-wallet.json`. The user funded its public address using the Metal console faucet. Read-only RPC verification observed chain **63825**, with 100 testnet USDZ before the probe. Authenticated RPC URLs and API keys are excluded from this report.

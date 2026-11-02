@@ -58,6 +58,7 @@ Labels: **MEASURED** = execution with saved evidence (scope stated); **SIMULATED
 | Airwallex holds/capture | BLOCKED | Integrated adapter implemented; external blocker | PaymentIntent creation returns merchant `configuration_error`; no completed authorization/capture |
 | Airwallex connectivity | MEASURED | Verified sandbox authentication and reads | Balance and Global Account reads passed after scope update |
 | Airwallex Treasury FX | BLOCKED | Implemented, not exercised | Saved readiness lacks account context; conversion write scope and approval remain unverified; no FX quote or conversion was created |
+| Treasury job accounting | MOCK | Controlled adapter proof | Budget/quote/conversion/history linked to append-only Airwallex entries; separate SIMULATED USDZ demo entry cannot fund Metal |
 | Metal and x402 | MEASURED | Real funded testnet proof | 0.10 USDZ deposit, one 0.01 USDZ paid inference, signed receipt and original-delivery replay |
 | Unified Metal engine | BLOCKED (quote-only MEASURED) | Live quote-only preflight passed; paid engine not run | Local GPU seller returned a capped quote with no payment; live run still needs explicit testnet budget authorization |
 | Hosted Claude tier | BLOCKED | Adapter and real-policy routing implemented; not exercised | Direct Messages API structured output, reported token usage and conservative no-repeat behavior after uncertain paid delivery; no API call or matched trial recorded |
@@ -143,7 +144,7 @@ Profiles use three paired seeds, discard one warm-up per model, and record actua
 
 Set sandbox keys **in your shell**, never in chat or tracked files. `.env.example` is documentation and is not auto-loaded.
 
-Every money-moving action requires both an explicit execute-style flag and written approval in chat with a stated cap. Existing legacy hold, banked-job and withdrawal examples below are reference material, not authorization: some commands still lack that flag and must not be executed until guarded. M0 runs offline tests only. See [M0 evidence and human gates](docs/M0_REPORT.md).
+Every money-moving action requires both an explicit execute-style flag and written approval in chat with a stated cap. M1 adds guards to hold, checkout, banked-job and FX commands; standalone Metal withdrawal commands still need the M2 guard review before execution. Run the environment-only `python -m touchstone airwallex-doctor --probe-reads` first. See [M1 evidence](docs/M1_REPORT.md) and [exact capped FX runbook](docs/M1_RUNBOOK.md).
 
 The CLI also loads ignored `data/local-config.json` and an optional locally generated `data/metal/funding-wallet.json`. Process environment takes precedence. Local Airwallex credentials are configured, but `AIRWALLEX_ACCOUNT_ID` is currently unset. Restart long-running processes after changing configuration values.
 
@@ -171,7 +172,7 @@ Read-only wallet/conversion reports require `AIRWALLEX_ACCOUNT_ID`, **Core Resou
 python -m touchstone airwallex-fx balances
 python -m touchstone airwallex-fx quote --sell-currency USD --buy-currency EUR --sell-amount 10.00
 python -m touchstone airwallex-fx convert --request-id unique-fx-2026-11-01
-python -m touchstone airwallex-fx convert --request-id unique-fx-2026-11-01 --execute
+python -m touchstone airwallex-fx convert --request-id unique-fx-2026-11-01 --sell-currency USD --max-sell-amount 10.00 --execute
 python -m touchstone airwallex-fx report --request-id unique-fx-2026-11-01
 ```
 
@@ -181,7 +182,7 @@ macOS / Linux / Git Bash equivalent:
 python -m touchstone airwallex-fx balances
 python -m touchstone airwallex-fx quote --sell-currency USD --buy-currency EUR --sell-amount 10.00
 python -m touchstone airwallex-fx convert --request-id unique-fx-2026-11-01
-python -m touchstone airwallex-fx convert --request-id unique-fx-2026-11-01 --execute
+python -m touchstone airwallex-fx convert --request-id unique-fx-2026-11-01 --sell-currency USD --max-sell-amount 10.00 --execute
 python -m touchstone airwallex-fx report --request-id unique-fx-2026-11-01
 ```
 

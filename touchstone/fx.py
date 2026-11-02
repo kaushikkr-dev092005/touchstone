@@ -149,6 +149,9 @@ def spend_report(client, journal, request_id):
         report["reconciliation"] = "MISMATCH_MULTIPLE_CONVERSIONS"
         return report
     conversion = conversions[0]
+    if conversion.get('request_id') != request_id:
+        report['reconciliation'] = 'MISMATCH_REQUEST_ID'
+        return report
     report["conversion"] = {key: conversion.get(key) for key in
         ("conversion_id", "request_id", "status", "buy_currency", "buy_amount", "sell_currency", "sell_amount", "client_rate", "quote_id")}
     related = [row for row in history if row.get("source_type") == "CONVERSION"
@@ -195,11 +198,14 @@ def _sign(value):
         number = Decimal(str(value))
     except (InvalidOperation, TypeError, ValueError):
         return 0
+    if not number.is_finite():
+        return 0
     return (number > 0) - (number < 0)
 
 
 def _equal_amount(first, second):
     try:
-        return abs(Decimal(str(first))) == abs(Decimal(str(second)))
+        left, right = Decimal(str(first)), Decimal(str(second))
+        return left.is_finite() and right.is_finite() and abs(left) == abs(right)
     except (InvalidOperation, TypeError, ValueError):
         return False

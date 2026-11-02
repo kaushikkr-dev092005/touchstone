@@ -1,0 +1,33 @@
+{
+  "label": "BLOCKED",
+  "observed_at": 1793641813.494666,
+  "host": "https://api.sandbox.airwallex.com",
+  "configuration_source": "PROCESS_ENVIRONMENT_ONLY",
+  "configured": {
+    "AIRWALLEX_CLIENT_ID": false,
+    "AIRWALLEX_API_KEY": false,
+    "AIRWALLEX_ACCOUNT_ID": false
+  },
+  "account_context_valid": false,
+  "authenticated": false,
+  "reads": {},
+  "writes_performed": false,
+  "money_moved": false,
+  "conversion_write": {
+    "label": "BLOCKED",
+    "status": "UNVERIFIED",
+    "reason": "Read access cannot prove write scope; an approved quote/conversion is required"
+  },
+  "required_scopes": [
+    "Core Resources / Balances / Read",
+    "Transactional FX / Conversion / Write"
+  ],
+  "scope_reference": "https://www.airwallex.com/docs/developer-tools/api/api-key-scopes",
+  "blockers": [
+    "AIRWALLEX_CLIENT_ID",
+    "AIRWALLEX_API_KEY",
+    "AIRWALLEX_ACCOUNT_ID",
+    "VALID_ACCOUNT_CONTEXT_REQUIRED"
+  ],
+  "read_probe": "BLOCKED_CONFIGURATION"
+}

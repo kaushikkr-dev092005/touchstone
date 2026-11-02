@@ -1,0 +1,104 @@
+{
+  "label": "MOCK",
+  "remote_requests": 0,
+  "money_moved": false,
+  "phases": [
+    "QUOTED",
+    "RECONCILED"
+  ],
+  "mock_conversion_creates_after_repeat": 1,
+  "treasury": {
+    "accounts": [
+      {
+        "account": "AIRWALLEX_SELL",
+        "amount_microunits": -1000000,
+        "currency": "USD",
+        "label": "MOCK"
+      },
+      {
+        "account": "AIRWALLEX_TREASURY_FLOAT",
+        "amount_microunits": 920000,
+        "currency": "EUR",
+        "label": "MOCK"
+      },
+      {
+        "account": "METAL_DEMO_FLOAT",
+        "amount_microunits": 920000,
+        "currency": "USDZ",
+        "label": "SIMULATED"
+      }
+    ],
+    "bank_and_token_balances_separate": true,
+    "conversion_id": "conversion-1",
+    "customer_authorization_verified": false,
+    "customer_budget_label": "SIMULATED",
+    "demo_rate_label": "SIMULATED",
+    "label": "MOCK",
+    "metal_funded": false,
+    "note": "Demo rate is accounting only; actual Metal spend requires a separately funded wallet",
+    "phase": "RECONCILED",
+    "reconciliation": "MATCHED_WALLET_HISTORY",
+    "request_id": "mock-fx-001",
+    "scope": "mock-m1",
+    "wallet_history": [
+      {
+        "amount": -1.0,
+        "balance": null,
+        "currency": "USD",
+        "id": null,
+        "posted_at": null,
+        "source": "conversion-1",
+        "source_type": "CONVERSION",
+        "transaction_type": "CONVERSION_SELL"
+      },
+      {
+        "amount": 0.92,
+        "balance": null,
+        "currency": "EUR",
+        "id": null,
+        "posted_at": null,
+        "source": "conversion-1",
+        "source_type": "CONVERSION",
+        "transaction_type": "CONVERSION_BUY"
+      }
+    ],
+    "terms": {
+      "customer_budget_currency": "USD",
+      "customer_budget_microunits": 1000000,
+      "demo_usdz_per_unit": "1",
+      "quote": {
+        "buy_amount": 0.92,
+        "buy_currency": "EUR",
+        "client_rate": 0.92,
+        "conversion_date": "2026-11-01",
+        "dealt_currency": "USD",
+        "quote_id": "quote-1",
+        "sell_amount": 1.0,
+        "sell_currency": "USD"
+      }
+    },
+    "audit": {
+      "valid": true,
+      "events": 3,
+      "head": "712bf299c355482369d50ef25aa8c062d662f9bbd6d2db93b202a766e6443d9a"
+    }
+  },
+  "retirement": {
+    "label": "MOCK",
+    "scope": "mock-old",
+    "replacement_scope": "mock-fresh",
+    "state": "RETIRED",
+    "request_id_consumed": true,
+    "evidence_kind": "RECORDED_CONFIGURATION_ERROR",
+    "evidence_reference": "mock-rejection",
+    "remote_writes_performed": false,
+    "money_moved": false,
+    "caveat": "Support evidence is an operator attestation; retirement does not cancel a remote object"
+  },
+  "audit_chain_head": {
+    "valid": true,
+    "events": 3,
+    "head": "712bf299c355482369d50ef25aa8c062d662f9bbd6d2db93b202a766e6443d9a"
+  },
+  "claim": "Controlled adapter execution only; no live Airwallex conversion or retirement"
+}

@@ -12,6 +12,9 @@ def main():
     parser = argparse.ArgumentParser(description="Touchstone inference procurement prototype")
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("doctor", help="Show local integration readiness without revealing credentials")
+    aw_doctor = commands.add_parser("airwallex-doctor", help="Environment-only account/scope check; no private files")
+    aw_doctor.add_argument("--probe-reads", action="store_true", help="Authenticate and probe balances/history/conversion reads only")
+    aw_doctor.add_argument("--output", help="Save redacted readiness JSON")
     commands.add_parser("rpc-smoke", help="Read Metal chain ID and current block; no transactions")
     commands.add_parser("metal-funding", help="Read testnet wallet gas and USDZ balances; no transactions")
     commands.add_parser("banked-status", help="Read integrated sandbox/testnet job journal")
@@ -26,6 +29,8 @@ def main():
     banked.add_argument("--price-cap-usd", default="0.05")
     banked.add_argument("--recover", action="store_true")
     banked.add_argument("--integration-probe", action="store_true", help="Explicitly test payments; does not claim model eligibility")
+    banked.add_argument("--execute", action="store_true", help="Allow sandbox/testnet money movement within the stated limits")
+    banked.add_argument("--treasury-request-id", help="Require reconciled FX funding for this job scope; Metal funds stay separate")
     evidence = commands.add_parser("procurement-evidence", help="Screen measured profiles and evaluate bounded tools; no payments")
     evidence.add_argument("--profiles", default="bench/results")
     evidence.add_argument("--output", default="bench/results")
@@ -64,13 +69,21 @@ def main():
     holds.add_argument("--hold-usd", default="1.00")
     holds.add_argument("--capture-usd", default="0.50")
     holds.add_argument("--recover", action="store_true")
+    holds.add_argument("--execute", action="store_true", help="Allow sandbox authorization/capture/cancel, including recovery writes")
     holds.add_argument("--journal", default="data/airwallex-operations.sqlite")
     checkout = commands.add_parser("airwallex-checkout", help="Start or inspect a hosted sandbox card authorization")
     checkout.add_argument("--scope", required=True, help="Stable unique order ID; reuse after interruption")
     checkout.add_argument("--hold-usd", default="1.00")
     checkout.add_argument("--status", action="store_true", help="Retrieve the session and verify an uncaptured authorization")
     checkout.add_argument("--recover", action="store_true", help="Reconcile an uncertain create through read-only session lookup")
+    checkout.add_argument("--execute", action="store_true", help="Allow creation of a sandbox checkout session")
     checkout.add_argument("--journal", default="data/airwallex-operations.sqlite")
+    retire = commands.add_parser("airwallex-retire", help="Retire a consumed create scope using evidence and read-back; no remote writes")
+    retire.add_argument("--scope", required=True)
+    retire.add_argument("--replacement-scope", required=True)
+    retire.add_argument("--evidence", required=True, help="Redacted retirement attestation JSON")
+    retire.add_argument("--journal", default="data/airwallex-operations.sqlite")
+    retire.add_argument("--execute", action="store_true", help="Persist a local retirement tombstone")
     fx = commands.add_parser("airwallex-fx", help="Read wallet balances, quote FX, or explicitly create/reconcile a conversion")
     fx_actions = fx.add_subparsers(dest="fx_action", required=True)
     fx_actions.add_parser("balances", help="Read Airwallex wallet balances")
@@ -84,17 +97,50 @@ def main():
     fx_convert.add_argument("--quote", default="data/airwallex-fx-quote.json")
     fx_convert.add_argument("--request-id", required=True)
     fx_convert.add_argument("--execute", action="store_true", help="Explicitly authorize the sandbox wallet conversion")
+    fx_convert.add_argument("--max-sell-amount", help="Written approval cap in the sell currency; mandatory with --execute")
+    fx_convert.add_argument("--sell-currency", help="Approved sell currency; mandatory with --execute")
     fx_convert.add_argument("--journal", default="data/airwallex-fx.sqlite")
     fx_report = fx_actions.add_parser("report", help="Reconcile a conversion request against wallet balance history")
     fx_report.add_argument("--request-id", required=True)
     fx_report.add_argument("--journal", default="data/airwallex-fx.sqlite")
+    treasury_job = commands.add_parser("treasury-job", help="Link FX and separate demo float accounts to a job")
+    treasury_actions = treasury_job.add_subparsers(dest="treasury_action", required=True)
+    for action in ('prepare', 'run', 'reconcile', 'report'):
+        stage = treasury_actions.add_parser(action)
+        stage.add_argument('--scope', required=True)
+        stage.add_argument('--ledger', default='data/banked/ledger.sqlite')
+        stage.add_argument('--fx-journal', default='data/airwallex-fx.sqlite')
+        stage.add_argument('--output', help='Save redacted job evidence')
+        if action == 'prepare':
+            stage.add_argument('--quote', required=True)
+            stage.add_argument('--request-id', required=True)
+            stage.add_argument('--customer-budget-currency', required=True)
+            stage.add_argument('--customer-budget-amount', required=True)
+            stage.add_argument('--demo-usdz-per-unit', required=True, help='SIMULATED accounting rate, not a token transfer')
+        elif action == 'run':
+            stage.add_argument('--execute', action='store_true')
+            stage.add_argument('--sell-currency')
+            stage.add_argument('--max-sell-amount')
     profile = commands.add_parser("profile-local", help="Measure an already-running local model; no payment")
     profile.add_argument("--steps", type=int, default=12)
     profile.add_argument("--output", default="bench/results/local-profile.json")
     args = parser.parse_args()
     try:
+        if args.command == "airwallex-doctor":
+            from .airwallex_doctor import inspect as inspect_airwallex
+            result = inspect_airwallex(args.probe_reads)
+            if args.output:
+                target = Path(args.output)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+            print(json.dumps(result, indent=2))
+            return 0 if result["read_probe"] == "PASS" else 2
+        if (args.command in {'airwallex-hold', 'banked-job'} or
+            args.command == 'airwallex-checkout' and not args.status) and not args.execute:
+            raise ValueError("Money-moving workflow requires --execute and written chat approval with a stated cap")
         from .config import load_local
-        load_local()
+        if args.command not in {'treasury-job', 'airwallex-retire', 'airwallex-fx', 'airwallex-hold', 'airwallex-checkout'}:
+            load_local()
         if args.command == "doctor":
             from .readiness import inspect
             print(json.dumps(inspect(), indent=2))
@@ -135,7 +181,8 @@ def main():
                 treasury = SandboxHoldWorkflow(AirwallexSandbox(), OperationJournal(ROOT / 'data/banked/airwallex.sqlite'))
                 workflow = BankedWorkflow(store, treasury, lambda scope, url, cap, budget: MetalRail(scope, url, cap, budget))
                 result = workflow.run(args.scope, task, args.provider_origin, micro_usd(args.hold_usd),
-                    micro_usd(args.allocation_usd), micro_usd(args.price_cap_usd), args.recover, args.integration_probe)
+                    micro_usd(args.allocation_usd), micro_usd(args.price_cap_usd), args.recover, args.integration_probe,
+                    treasury_request_id=args.treasury_request_id)
                 print(json.dumps(result, indent=2))
                 return 0 if result['phase'] == 'COMPLETED' else 2
         elif args.command == "procurement-evidence":
@@ -337,10 +384,43 @@ def main():
                 workflow.start(args.scope, micro_usd(args.hold_usd), args.recover)
             print(json.dumps(result, indent=2))
             return 0 if result.get("authorization_ready") or result.get("checkout_url") else 2
+        elif args.command == "treasury-job":
+            from .banked import BankedStore
+            from .treasury_job import TreasuryFunding
+            from .fx import FxJournal
+            from .treasury import AirwallexSandbox
+            needs_client = args.treasury_action == 'reconcile' or args.treasury_action == 'run' and args.execute
+            workflow = TreasuryFunding(BankedStore(args.ledger), AirwallexSandbox() if needs_client else None, FxJournal(args.fx_journal))
+            if args.treasury_action == 'prepare':
+                quote = json.loads(Path(args.quote).read_text(encoding='utf-8'))
+                result = workflow.prepare(args.scope, args.request_id, quote, args.customer_budget_currency,
+                                          args.customer_budget_amount, args.demo_usdz_per_unit)
+            elif args.treasury_action == 'run':
+                result = workflow.execute(args.scope, args.execute, args.sell_currency, args.max_sell_amount)
+            elif args.treasury_action == 'reconcile':
+                result = workflow.reconcile(args.scope)
+            else:
+                result = workflow.report(args.scope)
+            if args.output:
+                target = Path(args.output)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
+            print(json.dumps(result, indent=2))
+        elif args.command == "airwallex-retire":
+            from .holds import OperationJournal
+            from .treasury import AirwallexSandbox
+            if not args.execute:
+                print(json.dumps({"label": "BLOCKED", "state": "PREVIEW", "scope": args.scope,
+                                  "replacement_scope": args.replacement_scope, "money_moved": False,
+                                  "next": "Review evidence, then pass --execute to record local retirement"}))
+                return 0
+            evidence = json.loads(Path(args.evidence).read_text(encoding='utf-8'))
+            result = OperationJournal(args.journal).retire(args.scope, args.replacement_scope, evidence, AirwallexSandbox())
+            print(json.dumps(result, indent=2))
         elif args.command == "airwallex-fx":
             from .treasury import AirwallexSandbox
             from .fx import FxJournal, execute_conversion, spend_report
-            client = AirwallexSandbox()
+            client = AirwallexSandbox() if args.fx_action != 'convert' or args.execute else None
             if args.fx_action == "balances":
                 print(json.dumps({"mode": "SANDBOX", "balances": client.current_balances(), "writes_performed": False}, indent=2))
             elif args.fx_action == "quote":
@@ -360,6 +440,8 @@ def main():
                                       "quote_id": quote.get("quote_id"), "conversion_created": False,
                                       "requires_explicit_execute": True}, indent=2))
                     return 0
+                from .treasury_job import validate_cap
+                validate_cap(quote, args.sell_currency, args.max_sell_amount)
                 conversion = execute_conversion(client, FxJournal(args.journal), quote, args.request_id)
                 print(json.dumps({"mode": "SANDBOX", "conversion": conversion,
                                   "note": "Use airwallex-fx report to verify wallet balance-history entries"}, indent=2))

@@ -17,6 +17,7 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 class AirwallexSandbox:
+    evidence_label = "MEASURED"
     def __init__(self):
         if os.environ.get("AIRWALLEX_BASE_URL", BASE_URL).rstrip("/") != BASE_URL:
             raise ValueError("Only the documented Airwallex sandbox host is supported")
