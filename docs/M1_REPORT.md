@@ -31,8 +31,12 @@ Allowed: tested account/scope diagnostics; guarded FX workflow and job accountin
 
 Not allowed: verified Airwallex FX write, successful customer authorization/capture, enabled acquiring or issuing, a retired historical live scope, actual token funding from fiat, or completed M2 live crash recovery. Historical authentication/read evidence remains historical; the current doctor did not authenticate.
 
+## Authorized follow-up
+
+Written approval is now recorded for exactly one sandbox USD→EUR conversion, maximum aggregate USD debit **1.00 including fees**. The [latest redacted doctor recheck](../bench/results/m1/authorized-recheck.json) remains BLOCKED: all three required variables are absent from the execution environment, so no API request or conversion was attempted. Account, balances, quote, minimum amount and fee-inclusive debit must all be verified before execution. If the total debit cannot be bounded at USD 1.00, stop. No automatic uncertain retry and no other transaction is authorized. This supersedes the earlier pending-approval wording below and in the original runbook.
+
 ## What is needed from the user
 
-Run the doctor from the terminal containing all three environment variables; share only its redacted result. Confirm accepted registration and submission schema in the portal. Send the prepared support request through your channel. To perform the proposed FX proof, provide written approval for **one sandbox USD→EUR conversion, maximum and aggregate sell amount USD 1.00, no Metal or customer-payment operations**. This cap has not been approved. Exact preview, execution and read-back commands are in [M1_RUNBOOK.md](M1_RUNBOOK.md).
+Make the replacement scoped credentials and account ID available in the execution environment; share only setup status or redacted doctor output. Confirm accepted registration and submission schema in the portal and send the prepared support request. Spend approval does not need repeating. The runbook commands require a verified fee-inclusive debit within the approved cap, not merely a sell amount of USD 1.00.
 
 The spend approval is required by the user's Money safety rule, which requires both an execute-style flag and written chat approval with a cap. Environment setup or “proceed with M1” does not specify that cap.
