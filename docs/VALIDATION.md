@@ -6,7 +6,25 @@ Updated 2 November 2026. Environment: Windows, Python 3.12.10, portable Node 22.
 
 `python -m unittest discover -s tests -v`
 
-127 Python tests were collected on 2 November 2026 (before the M0 test additions); 124 passed, 2 failed because the saved local profiles are bound to older verifier/provider hashes (the stale-evidence guard is working; regeneration needs the local model), and one test that compared wall-clock quote expiry was flaky and has been fixed. The suite covers accounting, concurrency, process-death recovery, source evidence, planning, invoice checks, wallet FX journaling/reconciliation, Metal engine routing, hosted checkout/banked-job cases, versioned simulated mandate approval, and no-payment quote/unavailable-provider handling. No remote paid operations are part of the suite.
+**MEASURED, local Windows run on 2 November 2026:** 133 Python tests passed. The earlier hosted CI run collected 129 tests and failed two evidence tests because they used historical profiles whose source hashes are now stale. Those tests now construct temporary **MOCK** contract fixtures; duplicate-case, stale-source, changed-code and changed-artifact rejection remain tested. Historical profiles were not changed or relabelled as current measurements. The suite covers accounting, concurrency, process-death recovery, source evidence, planning, invoice checks, wallet FX journaling/reconciliation, Metal engine routing, hosted checkout/banked-job cases, versioned simulated mandate approval, and no-payment quote/unavailable-provider handling. No remote paid operations are part of the suite. See [M0 report](M0_REPORT.md) for logs and hosted CI status.
+
+For credential-isolated verification, use these equivalent commands. The environment setting skips private local configuration and wallet loading; the Node test launcher also skips local configuration independently. It does not turn a live command into a mock or authorize a purchase.
+
+```powershell
+$env:TOUCHSTONE_IGNORE_LOCAL_CONFIG = '1'
+python -m unittest discover -s tests -v
+python tools/metal.py test
+python tools/scan_secrets.py --json
+```
+
+```bash
+export TOUCHSTONE_IGNORE_LOCAL_CONFIG=1
+python -m unittest discover -s tests -v
+python tools/metal.py test
+python tools/scan_secrets.py --json
+```
+
+Unset `TOUCHSTONE_IGNORE_LOCAL_CONFIG` in a separate operator session before intentionally using local account settings. Financial actions still need an execute-style flag and a written capped approval.
 
 Sandbox workflow tests exercise lost create and capture responses, repeated execution without a second write, immutable scope/amounts, pending review refusal, monetary precision, and exclusion of card fields/client secrets from persisted response data. A read-only smoke check can verify Checkout Sessions read access but never verifies write access. The remote API is replaced with controlled fixtures in these tests; no actual hosted checkout or sandbox authorization is claimed.
 

@@ -50,24 +50,24 @@ Benchmark results are saved to [bench/results/RESULTS.md](bench/results/RESULTS.
 
 ## What is simulated, measured, or unfinished
 
-Labels: **MEASURED** = real execution with saved evidence; **SIMULATED** = synthetic local model of a service; **MOCK** = local stand-in rail; **BLOCKED** = external dependency prevents the step. A failed live service must never fall back silently and display as live. Airwallex fiat and Metal testnet tokens are separate systems; nothing here bridges them.
+Labels: **MEASURED** = execution with saved evidence (scope stated); **SIMULATED** = synthetic local model of a service; **MOCK** = controlled stand-in adapter; **BLOCKED** = not demonstrated, with the missing implementation, approval or external dependency stated. A failed live service must never fall back silently and display as live. Airwallex fiat and Metal testnet tokens are separate systems; nothing here bridges them.
 
 | Component | Label | Current mode | Evidence / limit |
 |---|---|---|---|
 | Ledger and control logic | MEASURED (tests) | Real local code | Concurrency and process-death tests |
 | Airwallex holds/capture | BLOCKED | Integrated adapter implemented; external blocker | PaymentIntent creation returns merchant `configuration_error`; no completed authorization/capture |
 | Airwallex connectivity | MEASURED | Verified sandbox authentication and reads | Balance and Global Account reads passed after scope update |
-| Airwallex Treasury FX | NOT RUN | Implemented, not exercised | Account context and conversion write scopes are not configured; no FX quote or conversion was created |
+| Airwallex Treasury FX | BLOCKED | Implemented, not exercised | Saved readiness lacks account context; conversion write scope and approval remain unverified; no FX quote or conversion was created |
 | Metal and x402 | MEASURED | Real funded testnet proof | 0.10 USDZ deposit, one 0.01 USDZ paid inference, signed receipt and original-delivery replay |
-| Unified Metal engine | NOT RUN (quote-only MEASURED) | Live quote-only preflight passed; paid engine not run | Local GPU seller returned a capped quote with no payment; live run still needs explicit testnet budget authorization |
-| Hosted Claude tier | NOT RUN | Adapter and real-policy routing implemented; not exercised | Direct Messages API structured output, reported token usage and conservative no-repeat behavior after uncertain paid delivery; no API call or matched trial recorded |
+| Unified Metal engine | BLOCKED (quote-only MEASURED) | Live quote-only preflight passed; paid engine not run | Local GPU seller returned a capped quote with no payment; live run still needs explicit testnet budget authorization |
+| Hosted Claude tier | BLOCKED | Adapter and real-policy routing implemented; not exercised | Direct Messages API structured output, reported token usage and conservative no-repeat behavior after uncertain paid delivery; no API call or matched trial recorded |
 | Dashboard inference | SIMULATED | Simulator only | Synthetic reliability and latency; no model runs in the dashboard |
 | Local GPU profiling | MEASURED | Measured on RTX 3050 | Two Qwen model sizes, 90 paired calls each; raw results and hardware telemetry saved separately |
 | Benchmark | SIMULATED | Simulator only | Not evidence of model savings or real-world quality |
 | Agent planning | MEASURED (deterministic, synthetic) | Deterministic | No live LLM planner or reference judge |
 | Mandate-limit approval (versioned, human-approved) | SIMULATED | Exists in the simulator only | Audited local mandate version; job stays paused until Resume; uses only existing simulated float |
-| Real Airwallex hold increase | NOT IMPLEMENTED | Does not exist | No external hold, authorization increment or wallet change is made by any approval |
-| Refunds | NOT IMPLEMENTED | Not implemented | Failed calls remain charged |
+| Real Airwallex hold increase | BLOCKED | Not implemented | No external hold, authorization increment or wallet change is made by any approval |
+| Refunds | BLOCKED | Not implemented | Failed calls remain charged |
 
 **The accurate pitch:** spend autonomously within an approved mandate, verify what can be checked, stop or escalate on uncertainty, and account for every paid attempt. Payment precedes verification; this system does not promise payment only for correct output.
 
@@ -142,6 +142,8 @@ Profiles use three paired seeds, discard one warm-up per model, and record actua
 ## Integration commands
 
 Set sandbox keys **in your shell**, never in chat or tracked files. `.env.example` is documentation and is not auto-loaded.
+
+Every money-moving action requires both an explicit execute-style flag and written approval in chat with a stated cap. Existing legacy hold, banked-job and withdrawal examples below are reference material, not authorization: some commands still lack that flag and must not be executed until guarded. M0 runs offline tests only. See [M0 evidence and human gates](docs/M0_REPORT.md).
 
 The CLI also loads ignored `data/local-config.json` and an optional locally generated `data/metal/funding-wallet.json`. Process environment takes precedence. Local Airwallex credentials are configured, but `AIRWALLEX_ACCOUNT_ID` is currently unset. Restart long-running processes after changing configuration values.
 

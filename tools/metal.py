@@ -9,12 +9,13 @@ import os
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from touchstone.config import load_local
-load_local()
+args = sys.argv[1:] or ["inspect"]
+if args[0] not in {"test", "install"}:
+    load_local()
 manifest = ROOT / ".tools/node/manifest.json"
 node = json.loads(manifest.read_text())["executable"] if manifest.exists() else shutil.which("node")
 if not node:
     raise SystemExit("Install portable Node first: python tools/setup_node.py")
-args = sys.argv[1:] or ["inspect"]
 directory = ROOT / "integrations/metal"
 if args[0] == "test":
     command = [node, "--test", *[str(p) for p in sorted(directory.glob("*.test.mjs"))]]

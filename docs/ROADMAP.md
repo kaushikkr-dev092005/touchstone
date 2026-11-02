@@ -1,4 +1,4 @@
-# Build roadmap, rebased 29 October 2026
+# Build roadmap, M0 review 2 November 2026
 
 The official event page (fetched 2 November 2026) lists build completion on **15 November, 18:29 UTC**; earlier notes cited 13 November. **Internal deadline: 13 November 18:29 UTC / 23:59 IST**, submitting well before it. Confirm the personal deadline in the portal. Registration is listed as closed on 25 October; verify accepted participation in the signed-in portal now. No registration or submission has been performed by this agent.
 
@@ -50,11 +50,13 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 - [x] Keep hosted credentials out of the buyer-side Metal bridge; on uncertain delivery, refuse to repeat a potentially billable hosted request.
 - [x] Add three real-only Metal policies: local GPU only, hosted premium only, and local-first with verifier-triggered hosted escalation. Real policies exclude simulator offers and require both named live tiers in a no-payment quote preflight.
 - [x] Persist a redacted per-scope policy report and expose a dashboard table grouped by identical task digest; the panel remains empty until paid real-provider runs are actually recorded.
-- [x] M0 (2 Nov): redacted full-history secret scan (`tools/scan_secrets.py`, clean), README status labels, bash equivalents for PowerShell commands, GitHub Actions CI on Ubuntu and Windows.
+- [x] M0 implementation: README status labels, Bash equivalents and GitHub Actions matrix on Ubuntu/Windows with Python 3.11/3.12. Offline local tests pass; the M0 exit also requires green hosted CI. See [M0 report](M0_REPORT.md).
+- [x] MEASURED history scan: no secret-pattern findings or sensitive committed paths in the reported heuristic scope. Ignored private data is excluded; this is not a guarantee that no secret exists.
 - [x] Repository is public (verified through the GitHub API on 2 November 2026).
 
 ## Not done
 
+- [ ] M0 exit: confirm hosted CI is green for the corrected evidence tests; preserve the run URL in M0_REPORT.md.
 - [ ] Validate a real sandbox authorization/capture: direct PaymentIntent creation returns `configuration_error` (BLOCKED, external merchant configuration); hosted Checkout Sessions access is untested.
 - [ ] Set `AIRWALLEX_ACCOUNT_ID` and the Transactional FX Conversion Write scope, then run one approved sandbox FX conversion and reconcile both wallet-history entries (needs human gate and a stated cap).
 - [ ] Collect representative finance-operations sources and prospective evaluation evidence; qualify an inference provider for that domain. No measured model passes the eligibility screen.
@@ -78,7 +80,25 @@ The deterministic baseline solves 1,000/1,000 generated tasks without a model ca
 See VALIDATION.md and saved results for what was actually executed. A checked foundation item is not a live-service completion claim.
 
 
-## 29–31 October: prove the external integrations
+## Milestone order approved on 2 November
+
+Work stops for a report at each milestone gate. Feature freeze is 11 November; the working submission deadline is **13 November 2026, 18:29 UTC / 23:59 IST**. The signed-in portal remains the human source of confirmation.
+
+| Milestone | Dates | Exit evidence |
+|---|---|---|
+| M0: truth and hygiene | 2 Nov | Reconciled docs, history scan, green Python/Node CI on Ubuntu and Windows |
+| M1: Airwallex action | 2–3 Nov | Approved sandbox FX write/read-back, or documented external blocker and support request draft |
+| M2: Metal engine/recovery | 3–4 Nov | Approved paid engine run and real kill/restart without duplicate charge |
+| M3: useful inference | 4–6 Nov | Template-split invoice evaluation; an eligible model adds value or the gate honestly refuses all models |
+| M4: live comparison | 6–8 Nov | Approved paid policy measurements, raw results, environment manifest and control checks |
+| M5: financial story | 8–9 Nov | Failed-call policy, P&L, short-float scenario and separate-account reconciliation |
+| M6: dashboard | 9–10 Nov | Light polish only after M1–M4 gates; retain session token and evidence badges |
+| M7: packaging/freeze | 10–11 Nov | Clean-checkout setup, truthful evidence index and demo script; no critical bugs |
+| Human recording/submission | 12–13 Nov | Portal-confirmed format, uploaded video and confirmed submission receipt |
+
+All money movement requires an execute-style flag plus written chat approval with a stated cap. See [M0 human gates](M0_REPORT.md). The dated sections below retain the earlier roadmap as historical planning, superseded by this milestone order.
+
+## Historical plan: 29–31 October, external integrations
 
 1. Confirm accepted hackathon registration and exact submission requirements in the portal.
 2. Create or use the Airwallex sandbox. Set scoped Client ID/API key in the local shell. Run `python -m touchstone airwallex-smoke`.

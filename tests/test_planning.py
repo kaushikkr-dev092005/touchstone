@@ -7,8 +7,8 @@ from unittest.mock import patch
 
 from touchstone.eligibility import screen, wilson_lower
 from touchstone.local_tools import plan, solve, MAX_CENTS
-from touchstone.procurement_evidence import ROOT, build, read_profiles, save, summary
-from touchstone.workload import Task
+from touchstone.procurement_evidence import ROOT, PROFILE_SOURCES, build, digest, read_profiles, save, summary
+from touchstone.workload import Task, generate
 
 
 class Planning(unittest.TestCase):
@@ -68,12 +68,27 @@ class Eligibility(unittest.TestCase):
 
 class Evidence(unittest.TestCase):
     def setUp(self):
+        # MOCK contract fixtures, never rewritten historical measurements. This
+        # lets guard tests run after code changes while real profiles stay stale.
         self.temp = tempfile.TemporaryDirectory()
         self.directory = Path(self.temp.name)
         self.addCleanup(self.temp.cleanup)
         for tier in ("economy", "balanced"):
             name = f"local-{tier}.json"
-            (self.directory / name).write_bytes((ROOT / "bench/results" / name).read_bytes())
+            rows = []
+            for seed in (41, 42, 43):
+                tasks, truth = generate(seed, 30)
+                rows.extend({"seed": seed, "step_id": task.id, "kind": task.kind,
+                             "output": truth[task.id]} for task in tasks)
+            profile = {"fixture_label": "MOCK", "mode": "LOCAL_MEASURED",
+                       "provider_tier": tier, "payments": "NONE",
+                       "seeds": [41, 42, 43], "steps_per_seed": 30,
+                       "source_sha256": {name: digest(ROOT / "touchstone" / name)
+                                         for name in PROFILE_SOURCES},
+                       "decoding": {"fixture": True}, "rows": rows,
+                       "environment": {"model_sha256": "mock-model",
+                                       "runtime_archive_sha256": "mock-runtime"}}
+            (self.directory / name).write_text(json.dumps(profile), encoding="utf-8")
 
     def test_profile_duplicates_and_stale_sources_rejected(self):
         path = self.directory / "local-economy.json"
@@ -83,8 +98,15 @@ class Evidence(unittest.TestCase):
             raw = copy.deepcopy(original)
             mutate(raw)
             path.write_text(json.dumps(raw))
-            with self.assertRaises(ValueError):
+            message = "duplicate or missing" if len(raw["rows"]) != 90 else "source hashes are stale"
+            with self.assertRaisesRegex(ValueError, message):
                 read_profiles(self.directory)
+
+    def test_dashboard_rejects_changed_code_provenance(self):
+        report = build(self.directory)
+        report["source_sha256"]["touchstone/providers.py"] = "changed"
+        save(report, self.directory)
+        self.assertEqual(summary(self.directory)["status"], "STALE_OR_INVALID")
 
     def test_evaluation_outputs_cannot_change_calibration(self):
         original = build(self.directory)

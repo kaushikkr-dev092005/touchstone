@@ -4,6 +4,8 @@ on:
   pull_request:
 permissions:
   contents: read
+env:
+  TOUCHSTONE_IGNORE_LOCAL_CONFIG: "1"
 jobs:
   test:
     strategy:

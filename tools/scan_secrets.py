@@ -1,4 +1,4 @@
-"""Scan every blob in git history (and the working tree's tracked/untracked files)
+"""Scan text blobs in git history (and non-ignored working-tree files)
 for secret-shaped strings. Findings are REDACTED: only path, commit, rule and the
 match length are printed, never the matched text.
 
@@ -7,7 +7,8 @@ match length are printed, never the matched text.
 
 Heuristic, not a substitute for a dedicated scanner, but it needs no dependencies.
 Known-public identifiers (transaction hashes, receipts) are not flagged unless they
-sit next to a key-like label.
+sit next to a key-like label. Private data/wallet/config contents are never read;
+their presence in history is reported by path. Coverage exclusions are reported.
 """
 import json
 import re
@@ -33,8 +34,12 @@ RULES = [
     ("url-long-path-token", re.compile(r"https?://[^\s\"'<>]*/(?:v\d+/)?[A-Za-z0-9_\-]{32,}(?=[\s\"'<>?]|$)")),
     ("airwallex-env-assignment", re.compile(r"AIRWALLEX_(?:API_KEY|CLIENT_ID)[ \t]*[=:][ \t]*[\"']?[A-Za-z0-9_\-]{16,}")),
 ]
-# Allow-list: identifiers that are public by design (tx hashes in evidence docs).
-PATH_SKIP = re.compile(r"(?:^|/)(?:package-lock\.json|node_modules/)")
+PATH_SKIP = re.compile(r"(?:^|/)node_modules/")
+PRIVATE_PATH = re.compile(r"(?:^|/)(?:data/|\.env(?!\.example$)|[^/]*wallet[^/]*\.json$|local-config)", re.I)
+
+
+def excluded_path(path):
+    return bool(PATH_SKIP.search(path) or PRIVATE_PATH.search(path))
 
 
 def git(*args, binary=False):
@@ -58,7 +63,7 @@ def scan_text(text):
 
 
 def history_blobs():
-    """Yield (blob_sha, [paths], first_commit) for every blob reachable from any ref."""
+    """Yield (blob_sha, paths, size) for blobs reachable from local refs."""
     seen = {}
     for line in git("rev-list", "--objects", "--all").splitlines():
         parts = line.split(" ", 1)
@@ -68,19 +73,25 @@ def history_blobs():
                            capture_output=True, check=True).stdout.decode().splitlines()
     for row in check:
         sha, kind, size = row.split()
-        if kind == "blob" and int(size) <= MAX_BLOB:
-            yield sha, seen[sha]
+        if kind == "blob":
+            yield sha, seen[sha], int(size)
 
 
 def main():
     findings = []
     scanned = 0
-    for sha, paths in history_blobs():
+    skipped = {"private_or_dependency_path": 0, "oversize": 0, "binary": 0}
+    for sha, paths, size in history_blobs():
         path = paths[0]
-        if PATH_SKIP.search(path):
+        if any(excluded_path(p) for p in paths):
+            skipped["private_or_dependency_path"] += 1
+            continue
+        if size > MAX_BLOB:
+            skipped["oversize"] += 1
             continue
         data = git("cat-file", "-p", sha, binary=True)
         if b"\0" in data[:4096]:
+            skipped["binary"] += 1
             continue
         scanned += 1
         for rule, length in scan_text(data.decode("utf-8", "replace")):
@@ -88,21 +99,33 @@ def main():
             findings.append({"scope": "history", "path": path, "blob": sha[:10], "rule": rule,
                              "match_length": length, "commits": commits[:5]})
     # working tree (includes untracked, excludes ignored)
-    tracked = git("ls-files", "--cached", "--others", "--exclude-standard").splitlines()
+    tracked = set(git("ls-files", "--cached", "--others", "--exclude-standard", "-z").split("\0")) - {""}
     for rel in tracked:
+        if excluded_path(rel):
+            skipped["private_or_dependency_path"] += 1
+            continue
         p = ROOT / rel
-        if PATH_SKIP.search(rel) or not p.is_file() or p.stat().st_size > MAX_BLOB:
+        if not p.is_file():
+            continue
+        if p.stat().st_size > MAX_BLOB:
+            skipped["oversize"] += 1
             continue
         data = p.read_bytes()
         if b"\0" in data[:4096]:
+            skipped["binary"] += 1
             continue
         scanned += 1
         for rule, length in scan_text(data.decode("utf-8", "replace")):
             findings.append({"scope": "working-tree", "path": rel, "rule": rule, "match_length": length})
     # sensitive paths that must never be committed
     sensitive = [p for p in set(git("log", "--all", "--name-only", "--pretty=format:").splitlines())
-                 if re.search(r"(?:^|/)(?:data/|\.env(?!\.example)|.*wallet.*\.json$|local-config)", p)]
-    summary = {"blobs_scanned": scanned, "findings": findings, "sensitive_paths_in_history": sorted(sensitive)}
+                 if PRIVATE_PATH.search(p)]
+    shallow = git("rev-parse", "--is-shallow-repository").strip() == "true"
+    summary = {"label": "MEASURED", "scanner": "heuristic-secret-shapes-v2",
+               "scope": "All reachable local refs and non-ignored working-tree text; not a guarantee of no secrets",
+               "shallow_repository": shallow, "max_blob_bytes": MAX_BLOB,
+               "blobs_scanned": scanned, "skipped": skipped,
+               "findings": findings, "sensitive_paths_in_history": sorted(sensitive)}
     if "--json" in sys.argv:
         print(json.dumps(summary, indent=2))
     else:
@@ -111,8 +134,9 @@ def main():
             print(f"  [{f['scope']}] {f['path']} rule={f['rule']} len={f['match_length']}")
         for p in summary["sensitive_paths_in_history"]:
             print(f"  [sensitive-path] {p}")
-        print("FINDINGS" if findings or sensitive else "clean")
-    return 1 if findings or sensitive else 0
+        print(f"exclusions: {skipped}; shallow repository: {shallow}")
+        print("FINDINGS_OR_INCOMPLETE_HISTORY" if findings or sensitive or shallow else "clean (heuristic scope only)")
+    return 1 if findings or sensitive or shallow else 0
 
 
 if __name__ == "__main__":

@@ -14,6 +14,9 @@ KEYS = {"METAL_RPC_URL", "METAL_PROVIDER_URL", "AGENT_PRIVATE_KEY", "AIRWALLEX_C
 
 
 def load_local():
+    # Explicit isolation for tests/CI: do not even inspect private data paths.
+    if os.environ.get("TOUCHSTONE_IGNORE_LOCAL_CONFIG") == "1":
+        return
     if LOCAL_CONFIG.exists():
         raw = json.loads(LOCAL_CONFIG.read_text(encoding="utf-8"))
         if not isinstance(raw, dict) or any(k not in KEYS or not isinstance(v, str) for k, v in raw.items()):
