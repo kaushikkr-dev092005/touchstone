@@ -1,4 +1,5 @@
 """Durable, request-ID-bound Airwallex sandbox FX conversions."""
+from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 import json
 from pathlib import Path
@@ -11,6 +12,25 @@ from .ledger import ClosingConnection, canonical
 
 class ConversionOutcomeUnknown(RuntimeError):
     pass
+
+
+class ConversionRejected(RuntimeError):
+    """Airwallex definitively refused this request_id; use a fresh quote and request_id."""
+
+
+def quote_is_expired(quote, now=None):
+    """True only for a parseable valid_to_at in the past. Airwallex also enforces
+    expiry server-side, so an absent or unrecognized timestamp is not blocked here."""
+    raw = quote.get("valid_to_at")
+    if not isinstance(raw, str):
+        return False
+    try:
+        expires = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    if expires.tzinfo is None:
+        expires = expires.replace(tzinfo=timezone.utc)
+    return expires <= (now or datetime.now(timezone.utc))
 
 
 class FxJournal:
@@ -62,7 +82,10 @@ def execute_conversion(client, journal, quote, request_id):
     prior = journal.get(request_id)
     if prior:
         journal.dispatch(request_id, quote, json.loads(prior["opening_balances"]))
-        if prior["state"] in {"SCHEDULED", "SETTLED", "CANCELLED", "OVERDUE", "REJECTED"}:
+        if prior["state"] == "REJECTED":
+            raise ConversionRejected("This request_id was rejected by Airwallex; no conversion exists. "
+                                     "Create a fresh quote and use a new request_id.")
+        if prior["state"] in {"SCHEDULED", "SETTLED", "CANCELLED", "OVERDUE"}:
             return json.loads(prior["conversion"]) if prior["conversion"] else {"request_id": request_id, "state": prior["state"]}
         existing = client.conversions_by_request_id(request_id)
         if len(existing) > 1:
@@ -74,6 +97,12 @@ def execute_conversion(client, journal, quote, request_id):
         journal.update(request_id, "UNKNOWN")
         raise ConversionOutcomeUnknown("Conversion may have been submitted; request_id lookup found no record. Do not submit a new conversion.")
 
+    # Validate before the journal row exists: a local refusal must not burn the request_id as UNKNOWN.
+    if quote_is_expired(quote):
+        raise ValueError("The saved FX quote has expired; create a fresh quote")
+    validate = getattr(client, "validate_conversion", None)
+    if validate:
+        validate(quote, request_id)
     opening = client.current_balances()
     _, created = journal.dispatch(request_id, quote, opening)
     if not created:
@@ -148,7 +177,8 @@ def spend_report(client, journal, request_id):
              and sell[0].get("currency") == conversion.get("sell_currency")
              and buy[0].get("currency") == conversion.get("buy_currency")
              and _equal_amount(sell[0].get("amount"), conversion.get("sell_amount"))
-             and _equal_amount(buy[0].get("amount"), conversion.get("buy_amount")))
+             and _equal_amount(buy[0].get("amount"), conversion.get("buy_amount"))
+             and _sign(sell[0].get("amount")) < 0 < _sign(buy[0].get("amount")))
     report["reconciliation"] = "MATCHED_WALLET_HISTORY" if match else "MISMATCH_WALLET_HISTORY"
     return report
 
@@ -157,6 +187,15 @@ def _balance_summary(balances):
     return [{key: row.get(key) for key in
              ("account_type", "currency", "available_amount", "pending_amount", "reserved_amount", "total_amount")}
             for row in balances if row.get("account_type") == "cash"]
+
+
+def _sign(value):
+    """-1, 0 or 1; a non-numeric amount compares as 0 so it can never satisfy a strict sign check."""
+    try:
+        number = Decimal(str(value))
+    except (InvalidOperation, TypeError, ValueError):
+        return 0
+    return (number > 0) - (number < 0)
 
 
 def _equal_amount(first, second):

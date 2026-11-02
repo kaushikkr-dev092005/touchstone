@@ -48,6 +48,14 @@ Live probe checking fees are zero. Customer capture rounds provider spend down t
 
 The three-job dashboard scenario remains a simulator. Its separate real-evidence panel and banked-job journal disclose the state of these integrations.
 
+## 2 November code update (not live evidence)
+
+The provider worker now supports hosted Claude through the Messages API with schema-constrained JSON and records the usage counts returned by that API. The buyer bridge strips Anthropic and Airwallex credentials from its child environment. Hosted delivery is at-most-once after the server durably marks a request running: a crash/timeout will not trigger a second potentially billable model call, but may leave a paid receipt with no recoverable answer.
+
+`engine-metal` now has three live-only policies for the local GPU tier and hosted premium tier. The local-only, hosted-only and local-first/escalate policies require both quote identities to pass a no-payment preflight, and their engine offers exclude every simulator quote. Each run measures Metal testnet spend plus verification charges per verifier-accepted output, stores reported hosted token counts, and writes a local evidence file for the dashboard's separate live-trial panel. This is an implemented path only: no Anthropic API request, matched three-policy paid run, or dashboard live-policy result has been recorded. Hosted API dollar cost is separate and excluded from the USDZ metric; customer capture is zero.
+
+No Airwallex write was attempted. `AIRWALLEX_ACCOUNT_ID` remains unset; Conversion Write scope, a specific approved currency pair/amount, the conversion and reconciliation against both wallet-history entries are outstanding. No AgentOS/CLI/MCP/skills or sponsor Slack connector is available in this workspace.
+
 ## 1 November readiness update
 
 The Qwen2.5 0.5B Q4_K_M economy model runtime was started on the local Vulkan path; the loopback x402 seller reported model health ready on testnet chain 63825. `engine-metal --quote-only` obtained a $0.01 quote for a generated invoice task. Queue depth was zero and no payment was sent. The reported 1,000 ms latency is the provider's cold-start fallback with zero completed-delivery samples, not measured inference latency. This preflight did not produce a model output or paid engine step. Redacted evidence is saved in `bench/results/metal-provider-quote.json`.

@@ -7,6 +7,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
+from touchstone.procurement_evidence import digest
 from touchstone.verifier import check, VERIFY_COST, VERIFIER_VERSION
 from touchstone.workload import generate
 
@@ -15,7 +16,7 @@ def main():
     profiles = {tier: json.loads((ROOT / "bench/results" / f"local-{tier}.json").read_text()) for tier in ("economy", "balanced")}
     if len({p.get("decoding") for p in profiles.values()}) != 1:
         raise ValueError("Cannot compare profiles made with different decoding configurations")
-    sources_hash = {name: hashlib.sha256((ROOT / "touchstone" / name).read_bytes()).hexdigest()
+    sources_hash = {name: digest(ROOT / "touchstone" / name)
                    for name in ("providers.py", "verifier.py", "workload.py")}
     if any(p.get("source_sha256") != sources_hash for p in profiles.values()):
         raise ValueError("Profile source hashes differ from the current workload, verifier or inference client; regenerate or explicitly version the experiment")

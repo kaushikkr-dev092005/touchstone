@@ -41,13 +41,13 @@ export class DeliveryStore {
     if (!row || row.expires_at <= Date.now() || row.offer !== serialized) return null;
     return { offer: JSON.parse(row.offer), queue_depth: row.queue_depth, latency_ms: row.latency_ms };
   }
-  async deliver(paymentId, resource, receiptDigest, perform) {
+  async deliver(paymentId, resource, receiptDigest, perform, { retryRunning = true } = {}) {
     let row = this.db.prepare('SELECT * FROM deliveries WHERE payment_id=?').get(paymentId);
     if (row) {
       if (row.resource !== resource || row.receipt_digest !== receiptDigest) throw Error('Receipt already belongs to another resource');
       if (row.state === 'DELIVERED') return JSON.parse(row.output);
-      // A restart after model execution but before persistence may repeat CPU
-      // inference; it does not charge another payment or duplicate a bank action.
+      if (row.state === 'RUNNING' && !retryRunning) throw Error('Hosted delivery outcome is unknown; refusing a duplicate billable model call');
+      // Local CPU/GPU work may be repeated after a crash; hosted billable calls can opt out.
     } else {
       this.db.prepare("INSERT INTO deliveries VALUES(?,?,?,'RUNNING',NULL)").run(paymentId, resource, receiptDigest);
     }

@@ -4,8 +4,9 @@ import hashlib
 import random
 from .providers import CATALOG
 
-RANKS = {"economy": 0, "balanced": 1, "premium": 2, "metal-provider": 3}
-PRIORS = {"metal-provider": .5}
+RANKS = {"economy": 0, "local-gpu": 0, "balanced": 1,
+         "premium": 2, "hosted-premium": 2, "metal-provider": 3}
+PRIORS = {"metal-provider": .5, "local-gpu": .5, "hosted-premium": .5}
 
 
 class Router:
@@ -29,6 +30,18 @@ class Router:
         if job["policy"] == "metal-probe":
             allowed = [q for q in allowed if q.provider == "metal-provider"]
             return (allowed[0], "Explicit real Metal testnet tier; no simulator fallback") if allowed else (None, "Metal testnet quote unavailable")
+        if job["policy"] == "real-cheapest":
+            allowed = [q for q in allowed if q.provider == "local-gpu"]
+            return (min(allowed, key=lambda q: (q.price, q.latency_ms)), "Measured local GPU only; no simulator fallback") if allowed else (None, "Local GPU quote unavailable")
+        if job["policy"] == "real-premium":
+            allowed = [q for q in allowed if q.provider == "hosted-premium"]
+            return (allowed[0], "Hosted premium only; no simulator fallback") if allowed else (None, "Hosted premium quote unavailable")
+        if job["policy"] == "real-touchstone":
+            allowed = [q for q in allowed if q.provider in {"local-gpu", "hosted-premium"}]
+            if not allowed:
+                return None, "No real inference quote is available; simulator fallback is disabled"
+            selected = min(allowed, key=lambda q: (RANKS[q.provider], q.price, q.latency_ms))
+            return selected, "Measured local GPU first; escalate to hosted premium only after a paid verifier rejection"
         if job["policy"] == "always-premium":
             allowed = [q for q in allowed if q.provider == "premium"]
             return (allowed[0], "Fixed premium baseline") if allowed else (None, "Premium exceeds policy")

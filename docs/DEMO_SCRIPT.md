@@ -2,6 +2,8 @@
 
 Lead with the **real paid GPU failure**, then label the three-job policy run as a simulator. The opening evidence card shows one $0.01 USDZ Metal call: the local GPU returned 1,250 cents for a 2,000-cent total, the verifier rejected it, and buyer/provider replays did not pay again. The $0.01 is an unbilled operator probe outlay; no customer hold or capture exists. The remaining demo is a financial-control regression simulator, not an all-real-provider comparison.
 
+The dashboard now has a separate **Real-provider policy trial** panel that reads only saved paid runs with the same task digest. It has not been populated yet. If all three live policies are not recorded before filming, keep the simulator table explicitly labeled and do not present it as a real-provider comparison. Once populated, substitute that live table for the simulator segment and show its testnet-only P&L separately from the untested Airwallex customer-capture side.
+
 | Time | Show | Explain |
 |---|---|---|
 | 0:00–0:45 | First card: real paid GPU evidence and probe P&L | “The model answered 1,250 cents where the source totals 2,000. It was paid, rejected and not retried for a second charge. Provider outlay was $0.01; no customer hold or capture was made.” Show the preconfirmed receipt status. |

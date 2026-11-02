@@ -67,9 +67,13 @@ class MetalRail:
 
     def _process(self, request):
         try:
+            child_env = os.environ.copy()
+            for name in list(child_env):
+                if name.startswith(("AIRWALLEX_", "ANTHROPIC_")):
+                    child_env.pop(name)
             process = subprocess.run([node_executable(), str(ROOT / 'integrations/metal/bridge.mjs')],
                                      input=json.dumps(request), text=True, capture_output=True, timeout=95,
-                                     cwd=ROOT, env=os.environ.copy())
+                                     cwd=ROOT, env=child_env)
             result = json.loads(process.stdout)
             if process.returncode or not result.get("ok"):
                 raise ValueError("Sidecar refused operation")
@@ -98,7 +102,10 @@ class MetalRail:
         if (type(latency_ms) is not int or latency_ms < 0 or type(queue_depth) is not int or queue_depth < 0
                 or type(latency_samples) is not int or latency_samples < 0):
             raise ValueError("Metal provider load metadata is invalid")
-        return MetalQuote(identity, "metal-provider", price, raw["expires_at"]/1000, raw,
+        provider_id = raw.get("provider_id", "metal-provider")
+        if provider_id not in {"metal-provider", "local-gpu", "hosted-premium"}:
+            raise ValueError("Metal provider identifier is not approved")
+        return MetalQuote(identity, provider_id, price, raw["expires_at"]/1000, raw,
                           latency_ms=latency_ms, queue_depth=queue_depth, latency_samples=latency_samples)
 
     def pay(self, key, quote):

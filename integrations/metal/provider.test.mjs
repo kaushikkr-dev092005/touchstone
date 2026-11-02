@@ -44,6 +44,23 @@ test('worker failure retains its receipt obligation and can retry CPU execution'
   } finally { db.close(); }
 });
 
+test('hosted delivery never repeats a billable call after an uncertain failure', async () => {
+  const db = new DatabaseSync(':memory:');
+  try {
+    const store = new DeliveryStore(db);
+    let calls = 0;
+    await assert.rejects(store.deliver('hosted-receipt', path, 'hosted-digest', async () => {
+      calls++;
+      throw Error('remote result uncertain');
+    }, { retryRunning: false }));
+    await assert.rejects(store.deliver('hosted-receipt', path, 'hosted-digest', async () => {
+      calls++;
+      return { output: { total_cents: 100 } };
+    }, { retryRunning: false }), /refusing a duplicate billable model call/);
+    assert.equal(calls, 1);
+  } finally { db.close(); }
+});
+
 test('provider quotes bind queue-sensitive prices and load metadata', () => {
   const db = new DatabaseSync(':memory:');
   try {

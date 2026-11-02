@@ -79,9 +79,17 @@ python tools/run_local.py --tier balanced
 python tools/metal.py provider
 ```
 
-The model uses NVIDIA Vulkan on loopback port 8080. The x402 seller binds loopback port 8092, binds the public task digest to its resource URL, and verifies real signed receipts against chain and service state. A delivery journal returns the original stored result when that paid proof is replayed. The provider receives no Airwallex credentials or EVM funding key; the model worker receives no RPC credential.
+The model uses NVIDIA Vulkan on loopback port 8080. The x402 seller binds loopback port 8092, binds the public task digest to its resource URL, and verifies real signed receipts against chain and service state. A delivery journal returns the original stored result when that paid proof is replayed. The provider receives no Airwallex credentials or EVM funding key; the model worker receives no RPC credential. In hosted mode, only that worker receives `ANTHROPIC_API_KEY`.
 
-`TOUCHSTONE_PROVIDER_MODE=tool` explicitly selects a bounded tool instead of a model for protocol testing. The saved actual proof used `model`. The seller refuses model quotes while the model health endpoint is unavailable.
+`TOUCHSTONE_PROVIDER_MODE=tool` explicitly selects a bounded tool instead of a model for protocol testing. The saved actual proof used `model`. The seller refuses local-model quotes while the model health endpoint is unavailable.
+
+### Hosted Claude and real-only comparison policies
+
+The hosted tier uses Anthropic's Messages API with a constrained JSON schema and reports API-provided token usage. Set the API key only in the hosted seller's terminal; do not add it to the testnet buyer's environment, commits or chat. The default model is `claude-sonnet-5`. The seller readiness response checks only key/model configuration, not API entitlement or spend limit. The USDZ ledger measures Metal payments and checking charges, not the separate Anthropic API bill.
+
+Run the local seller as `local-gpu` on port 8092 and hosted seller as `hosted-premium` on port 8093. The provider URLs must be passed to `engine-metal` in that order. A hosted call that becomes uncertain after dispatch is not repeated on restart; it can leave a paid receipt with missing output rather than risk duplicate API billing.
+
+The real policies accept no simulator quotes: `real-cheapest` selects only the local GPU, `real-premium` selects only hosted Claude, and `real-touchstone` starts local then escalates to hosted only after a paid verifier rejection. First run `engine-metal --quote-only` with both origins; it performs no model inference and no payment. Then run each policy with the same seed/task set and a distinct scope, using explicit total budgets. The dashboard's live policy table is populated only by saved paid runs; it reports testnet USDZ plus verification costs, verifier-accepted outputs, failed provider spend and receipt reconciliation. Customer capture remains zero and Airwallex stays `NOT_RECONCILED`.
 
 ### Engine Metal route, chaos and restart
 
@@ -109,7 +117,7 @@ python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-us
 python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute
 ```
 
-The stable scope binds tasks, budget, cap and provider URL. Preserve those exact values across restarts. These are operator runbook instructions only; the real provider, chaos, 30-step run and kill/restart have not yet been executed in this checkout.
+The stable scope binds tasks, budget, cap and provider URL(s). Preserve those exact values across restarts. These are operator runbook instructions only; the real provider, chaos, 30-step run and kill/restart have not yet been executed in this checkout.
 
 ## Resume the existing funded proof
 

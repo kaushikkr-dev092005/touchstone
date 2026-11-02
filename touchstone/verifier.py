@@ -1,9 +1,10 @@
 """Online checks receive only source evidence and untrusted provider data."""
 import re
+from .local_tools import solve
 from .workload import Task
 
 VERIFY_COST = 1000  # millionths of a demo USD; explicit internal checking charge
-VERIFIER_VERSION = "source-rules-v3-invoice-consistency"
+VERIFIER_VERSION = "source-rules-v4-source-gating"
 
 # Deliberately bounded source rules, not a general-purpose semantic classifier.
 CLASS_EVIDENCE = {
@@ -17,11 +18,35 @@ def classification_evidence(text):
     if not isinstance(text, str):
         return {}
     # Negation, quotation and adversarial instruction contexts require human/reference review.
-    if re.search(r"\b(?:not|never|no longer)\s+(?:being\s+)?(?:charged|a duplicate|a server|crash)|\b(?:ignore|pretend|classify this as)\b|[\"“”]", text, re.I):
+    if re.search(r"\b(?:not|never|no longer)\s+(?:being\s+)?(?:charged|a duplicate|a server|crash)"
+                 r"|n['’]t\s+(?:been\s+|being\s+)?(?:charged|a duplicate|a server|crash)"
+                 r"|\b(?:ignore|pretend|classify this as)\b|[\"“”]", text, re.I):
         return {}
     return {label: [m.group() for pattern in patterns for m in re.finditer(pattern, text, re.I)]
             for label, patterns in CLASS_EVIDENCE.items()
             if any(re.search(pattern, text, re.I) for pattern in patterns)}
+
+
+def source_rejected(reason="Source is outside the supported contract; no provider can satisfy it. Human review required"):
+    """A defect in the source cannot be fixed by paying another provider."""
+    return {"score": 0.0, "passed": False, "retryable": False, "decision": "review",
+            "method": VERIFIER_VERSION, "reason": reason}
+
+
+def source_supported(task: Task):
+    """Pre-purchase gate: (supported, reason). Uses only the public task source."""
+    if task.kind in {"invoice", "arithmetic"}:
+        return (solve(task) is not None,
+                "Source is outside the bounded invoice/arithmetic contract; review before any purchase")
+    if task.kind == "classification":
+        text = task.source.get("text") if isinstance(task.source, dict) else None
+        return (len(classification_evidence(text)) == 1,
+                "Ticket text has no single supported evidence label; review before any purchase")
+    if task.kind == "invoice_consistency":
+        from .invoice_consistency import source_supported as consistency_supported
+        return (consistency_supported(task),
+                "Invoice text lacks parseable ITEM rows and exactly one stated total; review before any purchase")
+    return False, f"Unsupported task type {task.kind!r}; review before any purchase"
 
 
 def check(task: Task, output):
@@ -33,15 +58,12 @@ def check(task: Task, output):
         if task.kind == "invoice_consistency":
             from .invoice_consistency import check_invoice_consistency
             return check_invoice_consistency(task, output)
-        if task.kind == "invoice":
-            text = task.source["text"]
-            invoice = re.search(r"Invoice (\S+)\.", text)[1]
-            qty = int(re.search(r"Quantity (\d+)", text)[1])
-            unit = int(re.search(r"Unit price (\d+)", text)[1])
-            tax = int(re.search(r"Tax (\d+)", text)[1])
-            expected = {"invoice_id": invoice, "currency": "USD", "total_cents": qty * unit + tax}
-        elif task.kind == "arithmetic":
-            expected = {"total_cents": sum(task.source["amounts_cents"]) - task.source["discount_cents"]}
+        if task.kind in {"invoice", "arithmetic"}:
+            # Same strict contract as the offline tool: a loose regex here would accept
+            # (and bill for) sources the tool abstains on, e.g. a non-USD invoice.
+            expected = solve(task)
+            if expected is None:
+                return source_rejected()
         elif task.kind == "classification":
             valid = set(output) == {"label"} and output["label"] in {"billing", "technical", "shipping"}
             if not valid:
@@ -56,7 +78,7 @@ def check(task: Task, output):
                     "method": VERIFIER_VERSION, "evidence": evidence[expected],
                     "reason": "Label agrees with supported source evidence" if passed else "Label contradicts source evidence"}
         else:
-            return {"score": 0.0, "passed": False, "reason": "Unsupported task type"}
+            return source_rejected("Unsupported task type; no provider can satisfy it")
         passed = (set(output) == set(expected) and output == expected
                   and ("total_cents" not in output or type(output["total_cents"]) is int))
         return {"score": float(passed), "passed": passed,

@@ -4,7 +4,7 @@ The public event page lists build completion on **13 November, 18:29 UTC / 23:59
 
 ## Official kit mapping
 
-The [current Airwallex developer-lab guide](https://airwallexdev.com/guide) maps the three-job, short-float inference sourcing story to **Kit 12**. Its **Kit 11** is x402 Business Agents: separate agent mandates, signed orders, dispute/refund handling and treasury settlement. Do not claim Kit 11 until that distinct workflow is implemented and evidenced.
+The [current Airwallex developer-lab guide](https://airwallexdev.com/guide) maps the three-job, short-float inference sourcing story to **Kit 12**. Its **Kit 11** asks for spending-limit rebalancing when upstream prices rise and a dispute settled from signed orders. This project has a simulated, versioned human approval flow and one real signed x402 receipt, but no end-to-end Kit 11 dispute settlement or live limit rebalance. Do not claim Kit 11 as completed until those behaviors are implemented and evidenced.
 
 ## Completed foundation
 
@@ -68,9 +68,21 @@ See VALIDATION.md and saved results for what was actually executed. A checked fo
 - [x] Run the Airwallex read-only readiness check; authentication/balance/account reads pass, but `AIRWALLEX_ACCOUNT_ID` is still unset.
 - [ ] Set sandbox account context and Conversion Write scope, then execute one approved FX conversion and reconcile the wallet-history entries. This does not require a card-acquiring/merchant configuration change.
 - [ ] Run 30–50 real paid engine steps, a paid quality-drop chaos scenario, and a Metal process-kill/restart demonstration. The zero-payment outage preflight passed; the dedicated Metal wallet's prior balance was withdrawn and no paid run has an approved cap.
-- [ ] Configure a hosted premium endpoint and multiple live provider origins before claiming a three-policy real-provider cost comparison. No hosted-provider credits/key are configured in this checkout.
+- [ ] Configure hosted premium credentials and both provider origins, then run a matched paid comparison. No Anthropic API call or three-policy trial is recorded; the adapter is implemented in the 2 November update.
 - [ ] Use sandbox Developer connectors for sandbox work; AgentOS MCP/skills require a production connector, and the official CLI has no Windows build. Confirm with the sponsor what tooling evidence counts.
 - [ ] Do not claim Kit 11 without implementing its separate signed-order, agent-mandate and dispute/refund flow.
+
+## Progress on 2 November
+
+- [x] Add an optional hosted Claude Messages API provider using schema-constrained JSON, a configurable model ID and provider-reported token usage.
+- [x] Keep hosted credentials out of the buyer-side Metal bridge; on uncertain delivery, refuse to repeat a potentially billable hosted request.
+- [x] Add three real-only Metal policies: local GPU only, hosted premium only, and local-first with verifier-triggered hosted escalation. Real policies exclude simulator offers and require both named live tiers in a no-payment quote preflight.
+- [x] Persist a redacted per-scope policy report and expose a dashboard table grouped by identical task digest; the panel remains empty until paid real-provider runs are actually recorded.
+- [ ] Configure and exercise Anthropic API access, then run the matched three-policy paid trial. The comparison reports testnet USDZ and verifier charges, not the provider's separate API invoice.
+- [ ] Set `AIRWALLEX_ACCOUNT_ID`, grant Transactional FX Conversion Write, approve a currency pair/amount, execute one conversion and reconcile both wallet-history entries. No customer hold/capture is involved.
+- [ ] Run the paid quality-drop and real Metal kill/restart demonstrations after explicit wallet top-up and aggregate spend approval. The existing outage/quote checks used no payments.
+- [ ] Connect the Airwallex AgentOS/CLI/MCP/skills tooling and ask the sponsor which integration evidence qualifies. No Slack or AgentOS connector is available in this workspace.
+- [ ] Implement and evidence Kit 11's price-rise limit rebalance and signed-order dispute settlement before claiming the additional track.
 
 ## 29–31 October: prove the external integrations
 

@@ -15,7 +15,7 @@ from unittest.mock import patch
 from touchstone.engine import Engine, InjectedCrash
 from touchstone.ledger import Ledger, PolicyError, payment_key
 from touchstone.payments import CompositeRail, MockRail, MetalRail
-from touchstone.providers import quotes
+from touchstone.providers import Quote, quotes
 from touchstone.router import Router
 from touchstone.server import usd_to_micros
 from touchstone.treasury import AirwallexSandbox
@@ -289,8 +289,74 @@ e.run(sys.argv[3],kill_at='after_rail')
         job = {"policy": "thompson", "price_cap": 30000, "budget": 40000, "spent": 0}
         first, _ = Router(seed=7).select(quotes(42, 0, chaos=False), self.tasks[0], job, [])
         second, _ = Router(seed=7).select(quotes(42, 0, chaos=False), self.tasks[0], job, [])
-        self.assertEqual(first, second)
+        # Quote.expires_at is wall-clock, so whole-object equality flakes across a clock tick.
+        self.assertEqual((first.id, first.provider, first.price), (second.id, second.provider, second.price))
         self.assertLessEqual(first.price, job["price_cap"])
+
+    def test_real_provider_policies_never_select_simulated_quotes(self):
+        local = Quote("local", "local-gpu", 10000, 100, time.time() + 60, "TESTNET")
+        hosted = Quote("hosted", "hosted-premium", 30000, 200, time.time() + 60, "TESTNET")
+        fake = quotes(42, 0, chaos=False)[0]
+        task = self.tasks[0]
+        router = Router(seed=42)
+        cheapest, _ = router.select([fake, local, hosted], task,
+            {"policy": "real-cheapest", "price_cap": 40000, "budget": 50000, "spent": 0}, [])
+        premium, _ = router.select([fake, local, hosted], task,
+            {"policy": "real-premium", "price_cap": 40000, "budget": 50000, "spent": 0}, [])
+        first, _ = router.select([fake, local, hosted], task,
+            {"policy": "real-touchstone", "price_cap": 40000, "budget": 50000, "spent": 0}, [])
+        escalated, _ = router.select([fake, local, hosted], task,
+            {"policy": "real-touchstone", "price_cap": 40000, "budget": 50000, "spent": 0}, ["local-gpu"])
+        self.assertEqual((cheapest.provider, premium.provider, first.provider, escalated.provider),
+                         ("local-gpu", "hosted-premium", "local-gpu", "hosted-premium"))
+
+    def test_real_touchstone_pays_local_then_hosted_and_persists_usage(self):
+        task = self.tasks[0]
+
+        class LiveProviders:
+            mode = "TESTNET"
+            def __init__(self):
+                self.paid = []
+
+            def quote_for_task(self, candidate):
+                return [Quote("local-live", "local-gpu", 10000, 100, time.time() + 60, "TESTNET"),
+                        Quote("hosted-live", "hosted-premium", 30000, 200, time.time() + 60, "TESTNET")]
+
+            def pay(self, key, quote, output_factory=None):
+                output = {"total_cents": 1} if quote.provider == "local-gpu" else self.truth[task.id]
+                receipt = {"key": key, "id": f"receipt-{len(self.paid)}", "amount": quote.price,
+                           "provider": quote.provider, "quote_id": quote.id, "output": output, "mode": "TESTNET",
+                           "provider_metadata": {"provider_type": "LOCAL_MODEL" if quote.provider == "local-gpu" else "ANTHROPIC_API",
+                             "provider_model": "fixture-model", "latency_ms": 20,
+                             "usage": {"input_tokens": 30, "output_tokens": 5} if quote.provider == "hosted-premium" else {}}}
+                self.paid.append(receipt)
+                return receipt
+
+            def lookup(self, key, quote=None):
+                return next((receipt for receipt in self.paid if receipt["key"] == key),
+                            {"state": "NOT_DISPATCHED", "authoritative": True})
+
+            def recover(self, key, quote=None):
+                return self.lookup(key, quote)
+
+            def receipts(self):
+                return [{key: receipt[key] for key in ("key", "id", "amount", "provider", "quote_id")}
+                        for receipt in self.paid]
+
+        rail = LiveProviders()
+        rail.truth = self.truth
+        run_id = self.ledger.create_run([{"seed": 42, "policy": "real-touchstone", "hold": 50000,
+            "price_cap": 40000, "allocation": 50000, "tasks": [task.public()]}], 50000)
+        report = Engine(self.ledger, rail).run(run_id)
+        attempts = self.ledger.attempts(report["jobs"][0]["id"])
+        self.assertEqual([row["provider"] for row in attempts], ["local-gpu", "hosted-premium"])
+        self.assertEqual(attempts[-1]["provider_metadata"], json.dumps({"provider_type": "ANTHROPIC_API",
+            "provider_model": "fixture-model", "latency_ms": 20, "usage": {"input_tokens": 30, "output_tokens": 5}},
+            sort_keys=True, separators=(",", ":")))
+        self.assertEqual(report["reconciliation"]["ledger_provider_total"], 40000)
+        self.assertTrue(report["reconciliation"]["matched"])
+        paid_event = next(event for event in self.ledger.events() if event["kind"] == "PAID" and event["payload"]["provider"] == "hosted-premium")
+        self.assertEqual(paid_event["payload"]["mode"], "TESTNET")
 
     def test_recovery_at_other_crash_boundaries(self):
         for point in ["after_reserve","after_paid"]:
@@ -352,6 +418,24 @@ e.run(sys.argv[3],kill_at='after_rail')
         self.assertEqual(quote.queue_depth, 2)
         self.assertEqual(quote.latency_ms, 3000)
         self.assertEqual(quote.latency_samples, 4)
+
+    def test_metal_bridge_does_not_receive_hosted_or_airwallex_secrets(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from touchstone import metal
+        with patch.dict("os.environ", {"METAL_RPC_URL": "https://rpc-testnet.metalntwx.com",
+                                        "METAL_PROVIDER_URL": "http://127.0.0.1:8092",
+                                        "ANTHROPIC_API_KEY": "hosted-secret",
+                                        "AIRWALLEX_API_KEY": "bank-secret"}):
+            rail = MetalRail("env-isolation-test", "http://127.0.0.1:8092", 10000, 20000)
+            with patch.object(metal, "node_executable", return_value="node"), \
+                 patch.object(metal.subprocess, "run", return_value=SimpleNamespace(
+                     stdout='{"ok":true,"result":{}}', returncode=0)) as run:
+                rail._process({"command": "balance"})
+        child_env = run.call_args.kwargs["env"]
+        self.assertNotIn("ANTHROPIC_API_KEY", child_env)
+        self.assertNotIn("AIRWALLEX_API_KEY", child_env)
+        self.assertIn("METAL_RPC_URL", child_env)
 
     def test_metal_quote_failure_is_not_reported_as_uncertain_payment(self):
         from types import SimpleNamespace

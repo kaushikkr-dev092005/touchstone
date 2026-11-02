@@ -8,32 +8,32 @@ import hashlib
 ROOT = Path(__file__).resolve().parent.parent
 
 
+def _object(path):
+    """A readiness artifact is advisory: anything but a readable JSON object counts as absent."""
+    try:
+        raw = json.loads(path.read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return {}
+    return raw if isinstance(raw, dict) else {}
+
+
 def inspect():
     from .config import load_local
     load_local()
     profiles = []
     for tier in ("economy", "balanced"):
         path = ROOT / "bench/results" / f"local-{tier}.json"
-        if path.exists():
-            raw = json.loads(path.read_text(encoding="utf-8"))
+        raw = _object(path)
+        if raw:
             profiles.append({"tier": tier, **{k: raw.get(k) for k in ("mode", "gpu_offload_confirmed", "true_success_rate", "latency_p50_ms", "latency_p95_ms")}})
     node = ROOT / ".tools/node/manifest.json"
     package = ROOT / "integrations/metal/package-lock.json"
     rpc, funding, airwallex, hold, proof = {}, {}, {}, {}, {}
-    try:
-        rpc = json.loads((ROOT / 'data/rpc-readiness.json').read_text(encoding='utf-8'))
-        if rpc.get('endpoint_fingerprint') != hashlib.sha256(os.environ.get('METAL_RPC_URL', '').encode()).hexdigest():
-            rpc = {}
-    except (OSError, ValueError):
-        pass
-    try:
-        hold = json.loads((ROOT / 'bench/results/airwallex-hold-proof.json').read_text(encoding='utf-8'))
-    except (OSError, ValueError):
-        pass
-    try:
-        airwallex = json.loads((ROOT / 'data/airwallex-readiness.json').read_text(encoding='utf-8'))
-    except (OSError, ValueError):
-        pass
+    rpc = _object(ROOT / 'data/rpc-readiness.json')
+    if rpc.get('endpoint_fingerprint') != hashlib.sha256(os.environ.get('METAL_RPC_URL', '').encode()).hexdigest():
+        rpc = {}
+    hold = _object(ROOT / 'bench/results/airwallex-hold-proof.json')
+    airwallex = _object(ROOT / 'data/airwallex-readiness.json')
     account_context = bool(os.environ.get('AIRWALLEX_ACCOUNT_ID'))
     checkout_read = bool(airwallex.get('checkout_sessions_read'))
     hosted_checkout_workflow = ('BLOCKED_ACCOUNT_CONTEXT' if not account_context else
@@ -92,5 +92,10 @@ def inspect():
                       "funding_has_tokens": int(funding.get('usdz_balance_base_units', '0')) > 0,
                       "funding_has_gas": int(funding.get('native_balance_base_units', '0')) > 0,
                       "paid_call_verified": bool(proof), "paid_proof": proof, "dashboard_mode": "SIMULATED"},
-            "inference": {"profiles": profiles, "dashboard_mode": "SIMULATED"},
+            "inference": {"profiles": profiles,
+                          "hosted_anthropic": {"credentials_configured": bool(os.environ.get("ANTHROPIC_API_KEY")),
+                                               "model": os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-5"),
+                                               "api_access_verified": False,
+                                               "dashboard_mode": "SIMULATED"},
+                          "dashboard_mode": "SIMULATED"},
             "secrets_disclosed": False}

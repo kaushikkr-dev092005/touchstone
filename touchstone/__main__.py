@@ -5,6 +5,7 @@ from pathlib import Path
 import platform
 import sqlite3
 import sys
+import time
 
 
 def main():
@@ -43,7 +44,9 @@ def main():
     metal_engine.add_argument("--seed", type=int, default=42)
     metal_engine.add_argument("--budget-usd", required=True, help="Hard total job cap, including verification charges")
     metal_engine.add_argument("--price-cap-usd", required=True, help="Maximum Metal provider quote per step")
-    metal_engine.add_argument("--provider-url", help="Approved local test provider origin")
+    metal_engine.add_argument("--provider-url", action="append", help="Approved provider origin; repeat for local and hosted tiers")
+    metal_engine.add_argument("--policy", choices=["metal-probe", "real-cheapest", "real-premium", "real-touchstone"],
+                              default="metal-probe", help="Live-provider policy; real policies never use simulator quotes")
     metal_engine.add_argument("--task-file", help="JSON list of public tasks; otherwise generated test tasks are used")
     metal_engine.add_argument("--execute", action="store_true", help="Explicitly authorize real testnet calls within the supplied cap")
     metal_engine.add_argument("--recover", action="store_true", help="Recover only; do not dispatch new tasks")
@@ -194,28 +197,52 @@ def main():
             budget, cap = micro_usd(args.budget_usd), micro_usd(args.price_cap_usd)
             if budget <= 0 or cap <= 0 or cap > budget:
                 raise ValueError("Require a positive total budget and per-step cap no greater than the budget")
+            provider_urls = args.provider_url or [os.environ.get("METAL_PROVIDER_URL")]
+            if any(not url for url in provider_urls) or len(set(provider_urls)) != len(provider_urls):
+                raise ValueError("Configure distinct provider origins with --provider-url or METAL_PROVIDER_URL")
+            if args.policy.startswith("real-") and len(provider_urls) < 2:
+                raise ValueError("Real policy comparison requires separate local-GPU and hosted-premium provider origins")
             tasks = ([Task(**item) for item in json.loads(Path(args.task_file).read_text(encoding="utf-8"))]
                      if args.task_file else generate(args.seed, args.steps)[0])
             if not tasks or len(tasks) > args.steps or any(task.kind not in {"invoice", "arithmetic", "classification", "invoice_consistency"} for task in tasks):
                 raise ValueError("Supply 1 to --steps supported provider tasks")
             if args.quote_only:
-                live = MetalEngineRail(args.scope, args.provider_url or os.environ.get("METAL_PROVIDER_URL"), cap, budget)
-                quote = live.quote_for_task(tasks[0])
-                print(json.dumps({"mode": "LIVE_QUOTE_ONLY", "payments_sent": 0,
+                expected_provider_ids = ["local-gpu", "hosted-premium"] if args.policy.startswith("real-") else None
+                live = MetalEngineRail(args.scope, provider_urls, cap, budget,
+                                      expected_provider_ids=expected_provider_ids)
+                quoted = live.quote_for_task(tasks[0])
+                quotes = quoted if isinstance(quoted, list) else [quoted]
+                quotes = [quote for quote in quotes if quote is not None]
+                if not quotes:
+                    reasons = ", ".join(sorted({e["error"] for e in getattr(live, "last_quote_errors", [])}))
+                    raise RuntimeError("No live provider quote is available; no purchase was dispatched"
+                                       + (f" ({reasons})" if reasons else ""))
+                if args.policy.startswith("real-") and {quote.provider for quote in quotes} != {"local-gpu", "hosted-premium"}:
+                    raise RuntimeError("Real quote preflight requires both local-gpu and hosted-premium; no payment was dispatched")
+                report = {"mode": "LIVE_QUOTE_ONLY", "policy": args.policy, "payments_sent": 0,
                     "task": {"id": tasks[0].id, "kind": tasks[0].kind},
-                    "quote": {"provider": quote.provider, "price_micro_usd": quote.price,
-                              "latency_ms": quote.latency_ms, "queue_depth": quote.queue_depth,
-                              "latency_samples": quote.latency_samples,
-                              "latency_source": "completed_provider_deliveries" if quote.latency_samples else "default_before_first_delivery",
-                              "expires_at": quote.expires_at, "mode": quote.mode}}, indent=2))
+                    "quotes": [{"provider": quote.provider, "price_micro_usd": quote.price,
+                                "latency_ms": quote.latency_ms, "queue_depth": quote.queue_depth,
+                                "latency_samples": quote.latency_samples,
+                                "latency_source": "completed_provider_deliveries" if quote.latency_samples else "default_before_first_delivery",
+                                "expires_at": quote.expires_at, "mode": quote.mode} for quote in quotes]}
+                if len(quotes) == 1:
+                    report["quote"] = report["quotes"][0]
+                print(json.dumps(report, indent=2))
                 return 0
+            if args.policy.startswith("real-") and not args.recover:
+                preflight = MetalEngineRail(args.scope, provider_urls, cap, budget,
+                    expected_provider_ids=["local-gpu", "hosted-premium"]).quote_for_task(tasks[0])
+                preflight = preflight if isinstance(preflight, list) else [preflight]
+                if {quote.provider for quote in preflight if quote is not None} != {"local-gpu", "hosted-premium"}:
+                    raise RuntimeError("Real payment blocked: both local-gpu and hosted-premium quotes must pass a no-payment preflight")
             data_dir = ROOT / "data/metal-engine"
             data_dir.mkdir(parents=True, exist_ok=True)
             scope_file = data_dir / (args.scope + ".json")
             if args.recover and not scope_file.exists():
                 raise ValueError("Recovery requires an existing scope; it cannot create or dispatch a job")
             mandate = {"seed": args.seed, "steps": len(tasks), "budget": budget, "cap": cap,
-                       "provider_url": args.provider_url or os.environ.get("METAL_PROVIDER_URL"),
+                       "provider_url": provider_urls[0] if len(provider_urls) == 1 else provider_urls,
                        "task_digest": __import__("hashlib").sha256(json.dumps([task.public() for task in tasks], sort_keys=True).encode()).hexdigest()}
             if scope_file.exists():
                 saved = json.loads(scope_file.read_text(encoding="utf-8"))
@@ -224,13 +251,14 @@ def main():
                 run_id = saved["run_id"]
             else:
                 ledger = Ledger(data_dir / "ledger.sqlite")
-                run_id = ledger.create_run([{"seed": args.seed, "policy": "metal-probe", "hold": budget,
+                run_id = ledger.create_run([{"seed": args.seed, "policy": args.policy, "hold": budget,
                     "price_cap": cap, "allocation": budget, "tasks": [task.public() for task in tasks]}], budget)
                 scope_file.write_text(json.dumps({"run_id": run_id, "mandate": mandate}, indent=2) + "\n", encoding="utf-8")
             ledger = Ledger(data_dir / "ledger.sqlite")
             job = ledger.jobs(run_id)[0]
             live = MetalEngineRail(args.scope, mandate["provider_url"], cap, budget,
-                                   client=MetalRail(args.scope, mandate["provider_url"], cap, budget))
+                                   client=MetalRail(args.scope, mandate["provider_url"][0] if isinstance(mandate["provider_url"], list) else mandate["provider_url"], cap, budget),
+                                   expected_provider_ids=["local-gpu", "hosted-premium"] if job["policy"].startswith("real-") else None)
             rail = CompositeRail(MockRail(data_dir / args.scope / "simulated-rail.sqlite"), live)
             engine = Engine(ledger, rail)
             if args.recover:
@@ -243,11 +271,40 @@ def main():
                     print(json.dumps({"mode": "TESTNET", "scope": args.scope, "run_id": run_id,
                                       "crash_injected": str(error), "next": "rerun with --recover"}, indent=2))
                     return 2
-            print(json.dumps({"mode": "TESTNET", "customer_hold": "SIMULATED", "run_id": run_id,
-                              "scope": args.scope, "job": job["id"], "steps": len(tasks),
-                              "paid_steps": sum(attempt["provider"] == "metal-provider" and attempt["receipt"] is not None
-                                                for attempt in ledger.attempts(job["id"])),
-                              "snapshot": result}, indent=2))
+            attempts = ledger.attempts(job["id"])
+            paid_attempts = [attempt for attempt in attempts if attempt["receipt"]]
+            provider_spend = sum(attempt["price"] for attempt in paid_attempts)
+            verification_spend = sum(attempt["verify_cost"] for attempt in attempts if attempt["passed"] is not None)
+            verified_correct = len({attempt["step_id"] for attempt in attempts if attempt["passed"] == 1})
+            hosted_usage = {name: sum((json.loads(attempt["provider_metadata"]) if attempt["provider_metadata"] else {}).get("usage", {}).get(name, 0)
+                                      for attempt in paid_attempts)
+                            for name in ("input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens")}
+            failed_spend = sum(attempt["price"] for attempt in paid_attempts if attempt["passed"] != 1)
+            failed_spend += sum(attempt["verify_cost"] for attempt in attempts if attempt["passed"] == 0)
+            report = {"mode": "TESTNET", "policy": job["policy"], "customer_hold": "SIMULATED",
+                      "customer_captured_micro_usd": 0, "run_id": run_id, "scope": args.scope,
+                      "job": job["id"], "seed": args.seed, "steps": len(tasks),
+                      "task_digest": mandate["task_digest"], "observed_at": time.time(),
+                      "paid_steps": len(paid_attempts), "simulator_fallbacks": 0,
+                      "measured_cost": {"asset": "testnet USDZ, micro-USD accounting units",
+                        "provider_spend_micro_usd": provider_spend,
+                        "verification_spend_micro_usd": verification_spend,
+                        "total_micro_usd": provider_spend + verification_spend,
+                        "verified_correct_steps": verified_correct,
+                        "cost_per_verified_correct_micro_usd": (provider_spend + verification_spend) / verified_correct if verified_correct else None,
+                        "merchant_absorbed_failure_micro_usd": failed_spend,
+                        "hosted_token_usage": hosted_usage,
+                        "hosted_api_dollar_cost_included": False},
+                      "snapshot": result}
+            if job["policy"].startswith("real-"):
+                results_dir = data_dir / "results"
+                results_dir.mkdir(parents=True, exist_ok=True)
+                target = results_dir / (args.scope + ".json")
+                temporary = target.with_suffix(".tmp")
+                temporary.write_text(json.dumps(report, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+                temporary.replace(target)
+                report["evidence_file"] = str(target.relative_to(ROOT))
+            print(json.dumps(report, indent=2, allow_nan=False))
             return 0 if result["jobs"][0]["status"] == "COMPLETED" else 2
         elif args.command == "benchmark":
             from .benchmark import run_benchmark

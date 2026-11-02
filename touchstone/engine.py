@@ -6,7 +6,7 @@ from .ledger import PolicyError
 from .metal import PaymentPending
 from .providers import Quote, quotes, simulate
 from .router import Router
-from .verifier import VERIFY_COST, VERIFIER_VERSION, check
+from .verifier import VERIFY_COST, VERIFIER_VERSION, check, source_supported
 from .workload import Task, generate
 
 
@@ -84,35 +84,46 @@ class Engine:
                 router = routers[job["id"]]
                 attempts = self.ledger.attempts(job["id"])
                 tasks = [Task(**t) for t in json.loads(job["tasks"])]
-                max_attempts = 3 if job["policy"] == "touchstone" else 1
+                max_attempts = 2 if job["policy"] == "real-touchstone" else 3 if job["policy"] == "touchstone" else 1
                 task = None
                 for index, candidate in enumerate(tasks):
                     past = [a for a in attempts if a["step_id"] == candidate.id]
-                    exhausted = any(a["provider"] == "premium" and a["state"] == "VERIFIED_FAIL" for a in past)
-                    if not exhausted and not any(a["passed"] == 1 for a in past) and len(past) < max_attempts:
+                    # A voided reservation (rail authoritatively confirmed no payment) bought
+                    # nothing: it must not count toward the attempt limit or tier escalation.
+                    live = [a for a in past if a["state"] != "VOID"]
+                    exhausted = any(a["provider"] == "premium" and a["state"] == "VERIFIED_FAIL" for a in live)
+                    if not exhausted and not any(a["passed"] == 1 for a in live) and len(live) < max_attempts:
                         task = candidate
                         break
                 if task is None:
                     self.ledger.settle_job(job["id"])
                     progressed = True
                     continue
-                attempt = len(past)
+                supported, why = source_supported(task)
+                if not supported:
+                    # Never buy inference for a source that no provider answer could verify.
+                    self.ledger.status(job["id"], "PAUSED_REVIEW", why)
+                    continue
+                attempt = 1 + max(a["attempt"] for a in past) if past else 0  # keys stay unique across voids
                 # Demo job 2 grows 4x halfway through; identical index events in benchmark policies.
                 inflated = job["policy"] == "touchstone" and job["id"].endswith("-2") and index >= len(tasks) // 2 and len(tasks) < 100
                 scenario_index = int(index * 100 / len(tasks)) if len(tasks) < 100 else index
                 previous_index = int((index - 1) * 100 / len(tasks)) if len(tasks) < 100 else index - 1
-                offers = quotes(job["seed"], scenario_index, inflated)
+                real_policy = job["policy"] in {"real-cheapest", "real-premium", "real-touchstone"}
+                offers = [] if real_policy else quotes(job["seed"], scenario_index, inflated)
                 if hasattr(self.rail, "quote_for_task"):
                     live_offer = self.rail.quote_for_task(task)
-                    if live_offer is not None:
+                    if isinstance(live_offer, list):
+                        offers.extend(live_offer)
+                    elif live_offer is not None:
                         offers.append(live_offer)
-                if attempt == 0:
+                if attempt == 0 and not real_policy:
                     for threshold, label in {20: "Economy latency spike", 35: "Balanced price spike", 50: "Balanced quality drop"}.items():
                         if previous_index < threshold <= scenario_index:
                             self.ledger.event("CHAOS", {"job_id": job["id"], "index": index, "event": label})
                     if inflated and index == len(tasks) // 2:
                         self.ledger.event("CHAOS", {"job_id": job["id"], "index": index, "event": "4x prompt expansion"})
-                offer, reason = router.select(offers, task, job, [a["provider"] for a in past])
+                offer, reason = router.select(offers, task, job, [a["provider"] for a in live])
                 if offer is None:
                     self.ledger.status(job["id"], "PAUSED_POLICY", reason)
                     continue
@@ -186,7 +197,9 @@ class Engine:
             runs = [dict(r) for r in db.execute("SELECT * FROM runs ORDER BY rowid DESC")]
             halted = bool(db.execute("SELECT halted FROM control").fetchone()[0])
         return {"jobs": jobs, "runs": runs, "halted": halted,
-                "attempts": [{k: a[k] for k in ("job_id", "step_id", "attempt", "state", "provider", "price", "verify_cost", "score", "reason", "receipt")} for a in attempts[-80:]],
+                "attempts": [{**{k: a[k] for k in ("job_id", "step_id", "attempt", "state", "provider", "price", "verify_cost", "score", "reason", "receipt")},
+                              "provider_metadata": json.loads(a["provider_metadata"]) if a.get("provider_metadata") else None}
+                             for a in attempts[-80:]],
                 "reconciliation": self.reconcile(run_id), "audit": self.ledger.audit(),
                 "verifier_version": VERIFIER_VERSION,
                 "modes": {"airwallex": "SIMULATED", "metal": self.rail.mode, "inference": self.rail.mode}}

@@ -5,7 +5,7 @@ import re
 from .workload import Task
 
 ITEM_RE = re.compile(r"(?im)^ITEM-[A-Z0-9-]+\b.*$")
-QTY_RE = re.compile(r"\bQty\s*:\s*([0-9]{1,6})\b", re.I)
+QTY_RE = re.compile(r"\bQty\s*:\s*([0-9]{1,6})(?!\.?[0-9])\b", re.I)
 UNIT_RE = re.compile(r"\bunit price\s*:\s*(USD\s*[0-9,]+\.[0-9]{2})\b", re.I)
 LINE_TOTAL_RE = re.compile(r"\bline extension\s*:\s*(USD\s*[0-9,]+\.[0-9]{2})\b", re.I)
 TOTAL_RE = re.compile(r"\b(?:Grand total due|Balance due after credit)\s*:\s*(USD\s*[0-9,]+\.[0-9]{2})\b", re.I)
@@ -70,8 +70,11 @@ def check_invoice_consistency(task, output):
         if parsed is None:
             return _failure("A cited line item cannot be independently checked", retryable=False)
         quantity, unit_cents, line_cents = parsed
-        if (row["quantity"] != quantity or row["unit_price_cents"] != unit_cents
-                or row["line_total_cents"] != line_cents or quantity * unit_cents != line_cents):
+        if (row["quantity"], row["unit_price_cents"], row["line_total_cents"]) != (quantity, unit_cents, line_cents):
+            # Extraction must reproduce the cited source exactly. Otherwise a garbled
+            # extraction answered "INCONSISTENT" would be accepted as a correct finding.
+            return _failure("Extracted values differ from the cited source line", retryable=True)
+        if quantity * unit_cents != line_cents:
             consistent = False
     consistent = consistent and sum(row["line_total_cents"] for row in rows) == total_cents
     expected = "CONSISTENT" if consistent else "INCONSISTENT"
@@ -79,6 +82,13 @@ def check_invoice_consistency(task, output):
     return {"score": float(passed), "passed": passed, "retryable": True,
             "method": "cited-invoice-arithmetic-v1",
             "reason": "Cited invoice arithmetic is consistent" if passed else "Finding contradicts cited invoice arithmetic"}
+
+
+def source_supported(task):
+    """Cheap pre-purchase check on the public source: ITEM rows and one stated total."""
+    text = task.source.get("text") if isinstance(task.source, dict) else None
+    return (isinstance(text, str) and set(task.source) == {"text"}
+            and bool(ITEM_RE.search(text)) and len(TOTAL_RE.findall(text)) == 1)
 
 
 def noisy_invoice_check(task, output, seed, sample_size=1):

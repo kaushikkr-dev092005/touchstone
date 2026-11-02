@@ -129,9 +129,22 @@ class AirwallexSandbox:
             raise ValueError("Airwallex returned an invalid FX quote")
         if result.get("sell_currency") != sell_currency or result.get("buy_currency") != buy_currency:
             raise ValueError("Airwallex quote currencies differ from the request")
+        try:
+            quoted_sell = Decimal(str(result.get("sell_amount")))
+        except InvalidOperation:
+            raise ValueError("Airwallex quote has no valid sell amount") from None
+        if quoted_sell != amount:
+            raise ValueError("Airwallex quote sell amount differs from the request")
         return result
 
     def create_conversion(self, quote, request_id):
+        return self.request("POST", "/api/v1/fx/conversions/create", self._conversion_payload(quote, request_id))
+
+    def validate_conversion(self, quote, request_id):
+        """Run every local check create_conversion would, without any network call."""
+        self._conversion_payload(quote, request_id)
+
+    def _conversion_payload(self, quote, request_id):
         self._require_account_context()
         if not isinstance(quote, dict) or not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", request_id or ""):
             raise ValueError("Conversion requires a valid quote and unique request_id")
@@ -151,7 +164,7 @@ class AirwallexSandbox:
                    amount_field: format(_amount(amount), "f")}
         if quote.get("conversion_date"):
             payload["conversion_date"] = quote["conversion_date"]
-        return self.request("POST", "/api/v1/fx/conversions/create", payload)
+        return payload
 
     def conversions_by_request_id(self, request_id):
         self._require_account_context()

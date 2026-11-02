@@ -22,10 +22,58 @@ def usd_to_micros(value):
         amount = Decimal(value)
     except InvalidOperation:
         raise ValueError("Limit amounts must be valid decimal USD strings") from None
-    micros = amount * 1_000_000
-    if not amount.is_finite() or amount <= 0 or micros != micros.to_integral_value():
-        raise ValueError("Limit amounts must be positive and precise to at most six decimals")
-    return int(micros)
+    try:
+        micros = amount * 1_000_000
+        if not amount.is_finite() or amount <= 0 or micros != micros.to_integral_value():
+            raise ValueError("Limit amounts must be positive and precise to at most six decimals")
+        return int(micros)
+    except ArithmeticError:  # e.g. "1e999999" overflows Decimal context limits
+        raise ValueError("Limit amounts must be positive and precise to at most six decimals") from None
+
+
+def _count(value):
+    if type(value) is not int or value < 0:
+        raise ValueError("Evidence counters must be nonnegative integers")
+    return value
+
+
+def read_live_policy_runs(directory):
+    rows = []
+    directory = Path(directory)
+    if not directory.exists():
+        return {"mode": "LIVE_TESTNET_PROVIDER_POLICIES", "runs": rows}
+    for evidence in sorted(directory.glob("*.json"), key=lambda item: item.stat().st_mtime, reverse=True)[:30]:
+        try:
+            report = json.loads(evidence.read_text(encoding="utf-8"))
+            job = report["snapshot"]["jobs"][0]
+            cost = report["measured_cost"]
+            if report.get("mode") != "TESTNET" or job["policy"] not in {"real-cheapest", "real-premium", "real-touchstone"}:
+                continue
+            fallbacks, captured = _count(report["simulator_fallbacks"]), _count(report["customer_captured_micro_usd"])
+            per_correct = cost["cost_per_verified_correct_micro_usd"]
+            if per_correct is not None and (isinstance(per_correct, bool) or not isinstance(per_correct, (int, float))):
+                raise ValueError("Cost per verified-correct step must be numeric")
+            rows.append({"policy": job["policy"], "scope": str(report["scope"]), "seed": _count(report["seed"]),
+                "steps": _count(report["steps"]), "task_digest": str(report["task_digest"]),
+                "observed_at": float(report["observed_at"]), "status": str(job["status"]),
+                "paid_steps": _count(report["paid_steps"]),
+                "provider_spend_micro_usd": _count(cost["provider_spend_micro_usd"]),
+                "verification_spend_micro_usd": _count(cost["verification_spend_micro_usd"]),
+                "total_micro_usd": _count(cost["total_micro_usd"]),
+                "verified_correct_steps": _count(cost["verified_correct_steps"]),
+                "cost_per_verified_correct_micro_usd": per_correct,
+                "merchant_absorbed_failure_micro_usd": _count(cost["merchant_absorbed_failure_micro_usd"]),
+                "hosted_token_usage": cost["hosted_token_usage"],
+                "hosted_api_dollar_cost_included": bool(cost["hosted_api_dollar_cost_included"]),
+                "customer_captured_micro_usd": captured,
+                "customer_hold": str(report["customer_hold"]), "simulator_fallbacks": fallbacks,
+                # A run that used simulator quotes or captured customer funds is not evidence of
+                # real-provider purchasing; the UI must label it rather than average it in.
+                "valid_live_evidence": fallbacks == 0 and captured == 0,
+                "reconciled": report["snapshot"]["reconciliation"]["matched"] is True})
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+    return {"mode": "LIVE_TESTNET_PROVIDER_POLICIES", "runs": rows}
 
 
 def serve(port=8088, data_dir="data"):
@@ -88,6 +136,8 @@ def serve(port=8088, data_dir="data"):
             if path == "/api/benchmark":
                 p = ROOT / "bench/results/simulated.json"
                 return self.respond(200, json.loads(p.read_text()) if p.exists() else {"summary": [], "mode": "NOT_RUN"})
+            if path == "/api/real-provider-runs":
+                return self.respond(200, read_live_policy_runs(ROOT / "data/metal-engine/results"))
             if path == "/api/noisy-verification-chart":
                 chart = ROOT / "bench/results/noisy-verification.svg"
                 if not chart.exists():

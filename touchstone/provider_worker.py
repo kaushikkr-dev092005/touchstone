@@ -1,9 +1,10 @@
 """One provider inference call over stdin/stdout; sources are data only."""
 import json
+import os
 import sys
 
 from .local_tools import solve
-from .providers import local_inference
+from .providers import anthropic_inference, local_inference
 from .workload import Task
 
 
@@ -17,9 +18,16 @@ def main():
                 raise ValueError("Unsupported tool input")
         elif raw["mode"] == "model":
             output, latency = local_inference(task)
+            metadata = {"provider_type": "LOCAL_MODEL", "provider_model": os.environ.get("LOCAL_MODEL", "local-model"),
+                        "latency_ms": latency}
+        elif raw["mode"] == "anthropic":
+            output, latency, metadata = anthropic_inference(task)
         else:
             raise ValueError("Invalid worker mode")
-        print(json.dumps({"output": output, "latency_ms": latency, "provider_type": raw["mode"], "mode": "LOCAL_EXECUTION"}, allow_nan=False))
+        if raw["mode"] == "tool":
+            metadata = {"provider_type": "LOCAL_TOOL"}
+        print(json.dumps({"output": output, "latency_ms": latency, "provider_type": metadata["provider_type"],
+                          "provider_metadata": metadata, "mode": "LOCAL_EXECUTION"}, allow_nan=False))
         return 0
     except Exception:
         print(json.dumps({"error": "PROVIDER_EXECUTION_FAILED"}))

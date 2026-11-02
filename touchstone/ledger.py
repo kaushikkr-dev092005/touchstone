@@ -51,7 +51,7 @@ class Ledger:
               key TEXT PRIMARY KEY, job_id TEXT NOT NULL REFERENCES jobs(id), step_id TEXT NOT NULL,
               attempt INTEGER NOT NULL, state TEXT NOT NULL, quote TEXT NOT NULL,
               provider TEXT NOT NULL, price INTEGER NOT NULL CHECK(price>0), verify_cost INTEGER NOT NULL,
-              output TEXT, score REAL, passed INTEGER, reason TEXT, receipt TEXT,
+              output TEXT, score REAL, passed INTEGER, reason TEXT, receipt TEXT, provider_metadata TEXT,
               UNIQUE(job_id,step_id,attempt));
             CREATE TABLE IF NOT EXISTS payments(
               key TEXT PRIMARY KEY REFERENCES attempts(key), receipt TEXT UNIQUE NOT NULL,
@@ -67,6 +67,8 @@ class Ledger:
             columns = {r["name"] for r in db.execute("PRAGMA table_info(attempts)")}
             if "verdict" not in columns:
                 db.execute("ALTER TABLE attempts ADD COLUMN verdict TEXT")
+            if "provider_metadata" not in columns:
+                db.execute("ALTER TABLE attempts ADD COLUMN provider_metadata TEXT")
             job_columns = {r["name"] for r in db.execute("PRAGMA table_info(jobs)")}
             if "mandate_version" not in job_columns:
                 db.execute("ALTER TABLE jobs ADD COLUMN mandate_version INTEGER NOT NULL DEFAULT 1")
@@ -196,7 +198,7 @@ class Ledger:
                 raise PolicyError("Payments are halted or job is not running")
             if time.time() >= job["expires_at"] or time.time() >= quote.expires_at:
                 raise PolicyError("Mandate or quote expired")
-            if quote.provider not in {"economy", "balanced", "premium", "metal-provider"} or not 0 <= attempt < 3:
+            if quote.provider not in {"economy", "balanced", "premium", "metal-provider", "local-gpu", "hosted-premium"} or not 0 <= attempt < 3:
                 raise PolicyError("Provider or attempt is outside mandate")
             if type(quote.price) is not int or type(verify_cost) is not int or quote.price <= 0 or verify_cost < 0:
                 raise PolicyError("Money must be integer micro-USD")
@@ -239,17 +241,46 @@ class Ledger:
             row = db.execute("SELECT * FROM attempts WHERE key=?", (key,)).fetchone()
             if not row or receipt["key"] != key or receipt["amount"] != row["price"] or receipt["quote_id"] != json.loads(row["quote"])["id"] or receipt["provider"] != row["provider"]:
                 raise PolicyError("Receipt does not match reserved purchase")
+            metadata = receipt.get("provider_metadata")
+            metadata_json = None
+            if metadata is not None:
+                allowed_fields = {"provider_type", "provider_model", "usage", "latency_ms", "chaos_mode"}
+                allowed_usage = {"input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens"}
+                usage = metadata.get("usage", {}) if isinstance(metadata, dict) else None
+                valid = (isinstance(metadata, dict) and not set(metadata) - allowed_fields
+                         and metadata.get("provider_type") in {"LOCAL_MODEL", "ANTHROPIC_API", "LOCAL_TOOL"}
+                         and (metadata.get("provider_model") is None or
+                              isinstance(metadata.get("provider_model"), str) and len(metadata["provider_model"]) <= 128)
+                         and isinstance(usage, dict) and not set(usage) - allowed_usage
+                         and all(type(value) is int and value >= 0 for value in usage.values())
+                         and (metadata.get("latency_ms") is None or
+                              type(metadata["latency_ms"]) is int and metadata["latency_ms"] >= 0)
+                         and metadata.get("chaos_mode") in {None, "quality-drop"})
+                if valid:
+                    metadata_json = canonical(metadata)
+                else:
+                    metadata = None
             existing = db.execute("SELECT receipt FROM payments WHERE key=?", (key,)).fetchone()
             if existing:
                 if existing[0] != receipt["id"]:
                     raise PolicyError("Conflicting receipt")
+                if row["provider_metadata"] is None and metadata_json:
+                    db.execute("UPDATE attempts SET provider_metadata=? WHERE key=?", (metadata_json, key))
+                    self._event(db, "PROVIDER_MEASUREMENT", {"job_id": row["job_id"], "key": key,
+                        "provider": row["provider"], "metadata": metadata, "mode": receipt.get("mode", "UNKNOWN")})
                 return
             if row["state"] != "RESERVED":
                 raise PolicyError("No active reservation")
             db.execute("INSERT INTO payments VALUES(?,?,?)", (key, receipt["id"], receipt["amount"]))
-            db.execute("UPDATE attempts SET state='PAID',receipt=? WHERE key=?", (receipt["id"], key))
+            db.execute("UPDATE attempts SET state='PAID',receipt=?,provider_metadata=? WHERE key=?",
+                       (receipt["id"], metadata_json, key))
             db.execute("UPDATE jobs SET rail_spent=rail_spent+? WHERE id=?", (receipt["amount"], row["job_id"]))
-            self._event(db, "PAID", {"job_id": row["job_id"], "key": key, "receipt": receipt["id"], "amount": receipt["amount"], "mode": "SIMULATED"})
+            payload = {"job_id": row["job_id"], "key": key, "receipt": receipt["id"],
+                       "amount": receipt["amount"], "provider": row["provider"],
+                       "mode": receipt.get("mode", "SIMULATED")}
+            if metadata:
+                payload["provider_metadata"] = metadata
+            self._event(db, "PAID", payload)
 
     def finish_attempt(self, key, output, verdict):
         with self.tx() as db:

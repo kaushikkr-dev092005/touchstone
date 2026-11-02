@@ -32,6 +32,7 @@ Benchmark results are saved to [bench/results/RESULTS.md](bench/results/RESULTS.
 - Simulated authorization, capture once, release unused hold, partial closure, kill switch and operator resume.
 - Append-only audit events with hash chaining; responsive dashboard with mode disclosures.
 - A recoverable Airwallex sandbox hold/capture workflow, an opt-in wallet FX quote/conversion and reconciliation path, a unified simulated/Metal rail, and reproducible local-model setup/profiling tools.
+- A real-only Metal engine path for local-GPU only, hosted-Claude only, or local-first verifier escalation; the dashboard's separate live-trial table fills only from saved paid runs.
 
 ## What is simulated, measured, or unfinished
 
@@ -43,6 +44,7 @@ Benchmark results are saved to [bench/results/RESULTS.md](bench/results/RESULTS.
 | Airwallex Treasury FX | Implemented, not exercised | Account context and conversion write scopes are not configured; no FX quote or conversion was created |
 | Metal and x402 | Real funded testnet proof | 0.10 USDZ deposit, one 0.01 USDZ paid inference, signed receipt and original-delivery replay |
 | Unified Metal engine | Live quote-only preflight passed; paid engine not run | Local GPU seller returned a capped quote with no payment; live run still needs explicit testnet budget authorization |
+| Hosted Claude tier | Adapter and real-policy routing implemented; not exercised | Direct Messages API structured output, reported token usage and conservative no-repeat behavior after uncertain paid delivery; no API call or matched trial recorded |
 | Inference | SIMULATED | Synthetic reliability and latency; no model runs in the dashboard |
 | Local GPU profiling | Measured on RTX 3050 | Two Qwen model sizes, 90 paired calls each; raw results and hardware telemetry saved separately |
 | Benchmark | Simulator only | Not evidence of model savings or real-world quality |
@@ -101,7 +103,7 @@ python tools/profile_local.py --tier balanced
 python tools/replay_profiles.py
 ```
 
-Profiles use three paired seeds, discard one warm-up per model, and record actual HTTP call latency, model hashes, runtime version and GPU telemetry. Replay costs are assumed procurement prices; no financial payment is made. The main dashboard still uses simulated inference.
+Profiles use three paired seeds, discard one warm-up per model, and record actual HTTP call latency, model hashes, runtime version and GPU telemetry. Replay costs are assumed procurement prices; no financial payment is made. The three-job dashboard runner remains simulated; its separate live-trial table reads only paid engine runs.
 
 ## Integration commands
 
@@ -140,6 +142,41 @@ python -m touchstone profile-local --steps 30
 ```
 
 The profiler discards one warm-up and records measured latency and offline correctness, with no payments. The detected GPU is an RTX 3050 Laptop, 4096 MiB VRAM, driver 610.62. Start with one small quantized model, limited context and at least 20% VRAM headroom; profile model sizes before assuming quantization creates a useful quality difference.
+
+## Hosted Claude and real-provider policies
+
+The optional hosted tier calls Anthropic's Messages API with structured JSON output. Set `ANTHROPIC_API_KEY` in the provider terminal only; do not put it in chat, commits, or testnet buyer configuration. `ANTHROPIC_MODEL` defaults to `claude-sonnet-5`. Readiness checks verify only that the key/model are configured, not API entitlement or billing. The worker records provider-reported token usage, but the USDZ comparison does not include Anthropic's separate API bill. Hosted delivery is at-most-once after an uncertain response: a restart will not repeat a potentially billable API request, but may leave a paid receipt without recoverable output.
+
+Configure the local GPU endpoint as `local-gpu` on port 8092 and the hosted endpoint as `hosted-premium` on port 8093. Start the local model first (`python tools/run_local.py --tier economy`), then run one seller per terminal:
+
+```powershell
+$env:TOUCHSTONE_PROVIDER_ID = 'local-gpu'
+$env:TOUCHSTONE_PROVIDER_PORT = '8092'
+$env:TOUCHSTONE_PROVIDER_MODE = 'model'
+$env:TOUCHSTONE_PROVIDER_PRICE_USD = '0.01'
+python tools/metal.py provider
+```
+
+```powershell
+$env:ANTHROPIC_API_KEY = '<your-api-key>'
+$env:ANTHROPIC_MODEL = 'claude-sonnet-5'
+$env:TOUCHSTONE_PROVIDER_ID = 'hosted-premium'
+$env:TOUCHSTONE_PROVIDER_PORT = '8093'
+$env:TOUCHSTONE_PROVIDER_MODE = 'anthropic'
+$env:TOUCHSTONE_PROVIDER_PRICE_USD = '0.05'
+python tools/metal.py provider
+```
+
+Run a no-payment preflight first, then use three different scope IDs with identical task count, seed, provider order and price cap. Only the last three commands dispatch paid testnet calls. The `real-touchstone` ceiling allows two paid attempts per task; a 30-step cap of USD 0.05 therefore needs up to USD 3.06 testnet budget, excluding the hosted API bill.
+
+```powershell
+python -m touchstone engine-metal --scope policy-preflight --steps 30 --seed 42 --budget-usd 0.05 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --provider-url http://127.0.0.1:8093 --policy real-touchstone --quote-only
+python -m touchstone engine-metal --scope trial-cheapest-001 --steps 30 --seed 42 --budget-usd 1.53 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --provider-url http://127.0.0.1:8093 --policy real-cheapest --execute
+python -m touchstone engine-metal --scope trial-premium-001 --steps 30 --seed 42 --budget-usd 1.53 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --provider-url http://127.0.0.1:8093 --policy real-premium --execute
+python -m touchstone engine-metal --scope trial-touchstone-001 --steps 30 --seed 42 --budget-usd 3.06 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --provider-url http://127.0.0.1:8093 --policy real-touchstone --execute
+```
+
+`real-cheapest` accepts only the local GPU tier; `real-premium` accepts only hosted Claude; `real-touchstone` tries local first and escalates to hosted only after a paid verifier rejection. All reject simulator quotes. The dashboard stores a local projection by task digest, and reports USDZ provider/checking spend per verifier-accepted output, failed spend absorbed by the operator, token counts and receipt reconciliation. Customer capture is zero; no Airwallex hold is implied. Do not run these commands until the provider/API and testnet budgets are explicitly approved.
 
 ## Evidence and next milestones
 

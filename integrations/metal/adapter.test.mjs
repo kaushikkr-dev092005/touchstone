@@ -42,13 +42,15 @@ test('quote guards reject wrong price, token, chain and deployment', () => {
 
 test('live quote records queue depth and completed latency sample count', async () => {
   const values = { 'PAYMENT-REQUIRED': header(offer), 'X-Touchstone-Queue-Depth': '2',
-    'X-Touchstone-Latency-Ms': '3000', 'X-Touchstone-Latency-Samples': '0' };
+    'X-Touchstone-Latency-Ms': '3000', 'X-Touchstone-Latency-Samples': '0',
+    'X-Touchstone-Provider': 'hosted-premium' };
   const result = await quote(url, deployment, amount('0.02'), async () => ({
     status: 402, headers: { get: name => values[name] ?? null },
   }));
   assert.equal(result.queue_depth, 2);
   assert.equal(result.latency_ms, 3000);
   assert.equal(result.latency_samples, 0);
+  assert.equal(result.provider_id, 'hosted-premium');
 });
 
 test('SDK store and exclusive owner lock persist across reopen', () => {

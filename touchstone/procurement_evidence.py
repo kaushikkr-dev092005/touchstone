@@ -17,7 +17,13 @@ EVALUATION_SEEDS = (43,)
 
 
 def digest(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    """SHA-256 of a text artifact with CRLF normalized to LF.
+
+    Windows checkouts with core.autocrlf rewrite line endings; hashing raw bytes
+    would then reject genuine evidence from an identical commit. LF-only files
+    hash exactly as before, so existing recorded digests stay valid.
+    """
+    return hashlib.sha256(Path(path).read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def strict_equal(actual, expected):

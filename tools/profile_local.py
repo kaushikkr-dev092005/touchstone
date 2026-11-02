@@ -15,6 +15,7 @@ import urllib.request
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
+from touchstone.procurement_evidence import digest
 from touchstone.providers import local_inference
 from touchstone.verifier import check, VERIFIER_VERSION
 from touchstone.workload import generate
@@ -92,7 +93,7 @@ def run(tier, steps, repetitions, port):
                       "gpu_confirmation": {"selected_device": selected[0], "n_gpu_layers_requested": 99,
                                            "exclusive_device_selection": True, "nvidia_vram_allocation_observed": allocation_confirmed},
                       "decoding": "json-schema-v1",
-                      "source_sha256": {name: hashlib.sha256((ROOT / "touchstone" / name).read_bytes()).hexdigest()
+                      "source_sha256": {name: digest(ROOT / "touchstone" / name)
                                         for name in ("providers.py", "verifier.py", "workload.py")},
                       "warmups_discarded": 1, "steps_per_seed": steps, "seeds": list(range(41, 41 + repetitions)),
                       "verifier_version": VERIFIER_VERSION, "environment": {k: v for k, v in manifest.items() if k not in {"executable", "model_path"}},

@@ -23,7 +23,7 @@ def micro_usd(value):
         if not amount.is_finite() or micros != micros.to_integral_value() or amount < 0:
             raise ValueError("Amount must be nonnegative USD with at most six decimal places")
         return int(micros)
-    except (InvalidOperation, TypeError):
+    except (ArithmeticError, TypeError):  # InvalidOperation and Overflow (e.g. "1e999999")
         raise ValueError("Invalid USD amount") from None
 
 

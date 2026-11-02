@@ -61,13 +61,42 @@ class MetalEngineRail:
     """Metal adapter implementing the engine's quote/pay/lookup/recover contract."""
     mode = "TESTNET"
 
-    def __init__(self, job, provider_url=None, price_cap=50000, budget=500000, client=None):
-        self.provider_url = provider_url
-        self.client = client or MetalRail(job, provider_url, price_cap, budget)
+    def __init__(self, job, provider_url=None, price_cap=50000, budget=500000, client=None, expected_provider_ids=None):
+        if isinstance(provider_url, str):
+            provider_urls = [provider_url]
+        else:
+            provider_urls = list(provider_url or [])
+        if not provider_urls:
+            provider_urls = [None]
+        self.provider_urls = provider_urls
+        self.expected_provider_ids = list(expected_provider_ids) if expected_provider_ids else None
+        if self.expected_provider_ids and len(self.expected_provider_ids) != len(provider_urls):
+            raise ValueError("Expected provider identities must match the configured provider origins")
+        self.provider_url = provider_urls[0]
+        self.last_quote_errors = []
+        self.client = client or MetalRail(job, self.provider_url, price_cap, budget)
 
     def quote_for_task(self, task):
-        origin = self.provider_url or self.client.provider_url
-        return self.client.quote(task_resource_url(origin, task))
+        """Return every usable live quote; an unusable origin is skipped, never paid.
+
+        An expired, over-cap, malformed or identity-mismatched quote makes only
+        that provider unavailable. No payment is dispatched on any of these
+        paths, so they must not abort the other tier or the whole engine run.
+        The reasons are kept (class name and message only) for operator review.
+        """
+        offers = []
+        self.last_quote_errors = []
+        for index, provider_url in enumerate(self.provider_urls):
+            origin = provider_url or self.client.provider_url
+            try:
+                offer = self.client.quote(task_resource_url(origin, task))
+                if self.expected_provider_ids and offer.provider != self.expected_provider_ids[index]:
+                    raise PolicyError("Provider identity does not match its configured origin")
+                offers.append(offer)
+            except (RuntimeError, ValueError, KeyError, TypeError, PolicyError) as error:
+                self.last_quote_errors.append({"origin_index": index, "error": type(error).__name__,
+                                               "detail": str(error)[:200]})
+        return offers
 
     def pay(self, key, quote, output_factory=None):
         result = self.client.pay(key, quote)
@@ -98,7 +127,7 @@ class MetalEngineRail:
                 raise PolicyError("Metal receipt is not exact micro-USD")
             quote_id = hashlib.sha256(json.dumps(row["terms"], sort_keys=True).encode()).hexdigest()
             result.append({"key": row["key"], "id": receipt["id"], "amount": amount // 10**12,
-                           "provider": "metal-provider", "quote_id": quote_id})
+                           "provider": row["terms"].get("provider_id", "metal-provider"), "quote_id": quote_id})
         return result
 
     @staticmethod
@@ -128,9 +157,13 @@ class MetalEngineRail:
         body = (result.get("output") or {}).get("body")
         if isinstance(body, dict):
             output = body.get("output")
+        provider = quote.get("provider") if isinstance(quote, dict) else getattr(quote, "provider", None)
+        if provider not in {"metal-provider", "local-gpu", "hosted-premium"}:
+            raise PolicyError("Metal receipt has no approved provider identity")
+        metadata = body.get("provider_metadata") if isinstance(body, dict) else None
         return {"state": "PAID" if state == "DELIVERED" and output is not None else "PAID_OUTPUT_MISSING",
-                "key": key, "id": receipt["id"], "amount": amount, "provider": "metal-provider",
-                "quote_id": quote_id, "output": output, "mode": "TESTNET"}
+                "key": key, "id": receipt["id"], "amount": amount, "provider": provider,
+                "quote_id": quote_id, "output": output, "provider_metadata": metadata, "mode": "TESTNET"}
 
 
 class CompositeRail:
@@ -145,7 +178,7 @@ class CompositeRail:
 
     def _rail(self, quote):
         provider = quote.get("provider") if isinstance(quote, dict) else getattr(quote, "provider", None)
-        if provider == "metal-provider":
+        if provider in {"metal-provider", "local-gpu", "hosted-premium"}:
             if not self.metal:
                 raise PolicyError("Metal provider is not enabled")
             return self.metal
