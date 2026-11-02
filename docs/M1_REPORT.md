@@ -23,7 +23,7 @@ Exit: **documented blocker path**. The authorized implementation is complete and
 
 The saved MOCK audit-chain head is `712bf299c355482369d50ef25aa8c062d662f9bbd6d2db93b202a766e6443d9a` (three events). Reproduction generates a new head because timestamps differ. No live financial audit head is claimed.
 
-Hosted CI status is available on the milestone commit; a passing local run is not a claim of hosted success until that run completes.
+**MEASURED hosted CI:** all four Ubuntu/Windows × Python 3.11/3.12 jobs passed on implementation commit `7dcd212c867527ea71fef9be3e17937f03be9d1d`, including Python tests, pinned Node installation/tests and the full-history heuristic secret scan. [CI run](https://github.com/kaushikkr-dev092005/touchstone/actions/runs/41498024314) · [saved CI metadata](../bench/results/m1/ci.json). Hosted success covers controlled tests, not live financial execution.
 
 ## Claims now allowed and not allowed
 

@@ -1,0 +1,283 @@
+{
+  "label": "MEASURED",
+  "scope": "M1 implementation commit; controlled tests only, no live financial execution",
+  "conclusion": "success",
+  "databaseId": 41498024314,
+  "headSha": "7dcd212c867527ea71fef9be3e17937f03be9d1d",
+  "jobs": [
+    {
+      "name": "test (ubuntu-latest, 3.12)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kaushikkr-dev092005/touchstone/actions/runs/41498024314/job/125457975626",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Python tests (no runtime dependencies)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install pinned Node dependencies",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Node tests",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Secret scan (redacted output)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "test (windows-latest, 3.11)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kaushikkr-dev092005/touchstone/actions/runs/41498024314/job/125457976095",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Python tests (no runtime dependencies)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install pinned Node dependencies",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Node tests",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Secret scan (redacted output)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "test (windows-latest, 3.12)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kaushikkr-dev092005/touchstone/actions/runs/41498024314/job/125457976189",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Python tests (no runtime dependencies)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install pinned Node dependencies",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Node tests",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Secret scan (redacted output)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "test (ubuntu-latest, 3.11)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kaushikkr-dev092005/touchstone/actions/runs/41498024314/job/125457976491",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Python tests (no runtime dependencies)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install pinned Node dependencies",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Node tests",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Secret scan (redacted output)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/kaushikkr-dev092005/touchstone/actions/runs/41498024314"
+}
