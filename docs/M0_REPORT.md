@@ -1,6 +1,6 @@
 # M0 — truth and hygiene, 2 November 2026
 
-Status: local checks **MEASURED / PASS**; hosted CI **BLOCKED / pending corrected commit run**. No money-moving action was executed. The scope of this work ends at M0.
+Status: **MEASURED / PASS**. Local suites and all four hosted CI jobs passed for implementation commit `b8819d703709cbda52b5f87d259bdbe78ce7b0de`. No money-moving action was executed. M0 is complete; work stops at this milestone gate.
 
 ## What changed
 
@@ -20,20 +20,20 @@ Status: local checks **MEASURED / PASS**; hosted CI **BLOCKED / pending correcte
 | MEASURED | Local Node 22.23.4 | 21 passed; no failures | [Node log](../bench/results/m0/node-tests.txt) |
 | MEASURED | History and working-tree heuristic scan before evidence packaging | 349 text blobs/files; no findings or sensitive committed paths; non-shallow history; zero reported exclusions | [Redacted scan](../bench/results/m0/secret-scan.json) |
 | MEASURED | Previous hosted CI diagnosis | Two evidence tests failed on stale profile hashes; Node and scan passed | [Previous CI run](https://github.com/kaushikkr-dev092005/touchstone/actions/runs/41481693908) |
-| BLOCKED | Hosted CI for the corrected commit | Pending | Run URL will be recorded after completion |
+| MEASURED | Hosted CI for implementation commit `b8819d7` | All four Ubuntu/Windows × Python 3.11/3.12 jobs passed, including Python tests, locked Node install/tests and history scan | [Successful CI run](https://github.com/kaushikkr-dev092005/touchstone/actions/runs/41493457882), [saved job metadata](../bench/results/m0/ci.json) |
 
 The scan covers text reachable from all locally available Git refs and non-ignored working files, with a 2,000,000-byte limit and documented heuristic patterns. Private `data/`, wallet/config contents, ignored files and dependency directories are excluded by policy; sensitive paths in history are checked separately. It is not proof that arbitrary secrets cannot exist. The saved count predates this report and its logs; subsequent CI scans include them. Raw local test output is evidence of code execution against MOCK adapters and SIMULATED workloads, not a new live financial proof.
 
 ## Claims now allowed
 
-- MEASURED: local offline suites pass, repository visibility is PUBLIC, and the redacted heuristic scan found no matches within its stated scope.
+- MEASURED: local offline suites and hosted CI pass, repository visibility is PUBLIC, and the redacted heuristic scan found no matches within its stated scope.
 - MOCK: adapter recovery and financial-control behavior covered by tests.
 - SIMULATED: versioned human mandate approval and the three-job short-float scenario.
 - Historical MEASURED claims remain bounded by LIVE_PROOF.md: one paid-and-rejected Metal call with receipt replay and Airwallex authentication/reads.
 
 ## Claims not allowed
 
-No new Airwallex write, real hold increase, live paid engine/restart run, qualified inference model, live policy comparison, fiat-to-token bridge, refreshed GPU profile, or hackathon submission. Hosted CI is not green until the corrected run passes. Legacy financial commands that lack an execute-style guard remain unavailable under the current rules; M1/M2 must close those command gaps before execution.
+No new Airwallex write, real hold increase, live paid engine/restart run, qualified inference model, live policy comparison, fiat-to-token bridge, refreshed GPU profile, or hackathon submission. Legacy financial commands that lack an execute-style guard remain unavailable under the current rules; M1/M2 must close those command gaps before execution.
 
 ## Human gates — pending, no approval inferred
 

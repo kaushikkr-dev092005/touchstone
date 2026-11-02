@@ -50,13 +50,12 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 - [x] Keep hosted credentials out of the buyer-side Metal bridge; on uncertain delivery, refuse to repeat a potentially billable hosted request.
 - [x] Add three real-only Metal policies: local GPU only, hosted premium only, and local-first with verifier-triggered hosted escalation. Real policies exclude simulator offers and require both named live tiers in a no-payment quote preflight.
 - [x] Persist a redacted per-scope policy report and expose a dashboard table grouped by identical task digest; the panel remains empty until paid real-provider runs are actually recorded.
-- [x] M0 implementation: README status labels, Bash equivalents and GitHub Actions matrix on Ubuntu/Windows with Python 3.11/3.12. Offline local tests pass; the M0 exit also requires green hosted CI. See [M0 report](M0_REPORT.md).
+- [x] M0 complete: README status labels, Bash equivalents, 133 local Python tests and 21 Node tests pass; all four GitHub Actions jobs on Ubuntu/Windows with Python 3.11/3.12 pass for `b8819d7`. See [M0 report](M0_REPORT.md).
 - [x] MEASURED history scan: no secret-pattern findings or sensitive committed paths in the reported heuristic scope. Ignored private data is excluded; this is not a guarantee that no secret exists.
 - [x] Repository is public (verified through the GitHub API on 2 November 2026).
 
 ## Not done
 
-- [ ] M0 exit: confirm hosted CI is green for the corrected evidence tests; preserve the run URL in M0_REPORT.md.
 - [ ] Validate a real sandbox authorization/capture: direct PaymentIntent creation returns `configuration_error` (BLOCKED, external merchant configuration); hosted Checkout Sessions access is untested.
 - [ ] Set `AIRWALLEX_ACCOUNT_ID` and the Transactional FX Conversion Write scope, then run one approved sandbox FX conversion and reconcile both wallet-history entries (needs human gate and a stated cap).
 - [ ] Collect representative finance-operations sources and prospective evaluation evidence; qualify an inference provider for that domain. No measured model passes the eligibility screen.
