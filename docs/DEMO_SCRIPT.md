@@ -24,6 +24,15 @@ python -m unittest discover -s tests -p test_controls.py -v
 python -m touchstone serve --data-dir data/rehearsal
 ```
 
+macOS / Linux / Git Bash equivalent:
+
+```bash
+python -m touchstone benchmark
+python -m touchstone procurement-evidence
+python -m unittest discover -s tests -p test_controls.py -v
+python -m touchstone serve --data-dir data/rehearsal
+```
+
 A live three-policy comparison still requires multiple qualified real model endpoints, a configured provider URL, funded testnet wallets and an operator-approved aggregate cap. Clearing payments and withdrawals can take longer than the video window. Record finality separately and never claim a queued withdrawal was returned immediately.
 
 Feature freeze is scheduled for 11 November, recording for 12 November, and submission for 13 November. These are planned milestones, not actions completed by this code change. The integrated engine, live-provider chaos and kill/restart path still need a configured provider, testnet funds and an operator-authorized budget before they can be demonstrated on the real rail.

@@ -13,6 +13,15 @@ python -m touchstone metal-funding
 python -m touchstone airwallex-smoke
 ```
 
+macOS / Linux / Git Bash equivalent:
+
+```bash
+python -m touchstone doctor
+python -m touchstone rpc-smoke
+python -m touchstone metal-funding
+python -m touchstone airwallex-smoke
+```
+
 These checks do not send a financial transaction. Doctor reports configuration presence and saved observations, not secret values. RPC must identify chain 63825. `metal-funding` reads gas and USDZ balances of the dedicated public address.
 
 ## Airwallex permissions and merchant setup
@@ -28,9 +37,23 @@ python -m touchstone airwallex-checkout --scope hpp-smoke-001 --hold-usd 1.00
 python -m touchstone airwallex-checkout --scope hpp-smoke-001 --hold-usd 1.00 --status
 ```
 
+macOS / Linux / Git Bash equivalent:
+
+```bash
+python -m touchstone airwallex-checkout --scope hpp-smoke-001 --hold-usd 1.00
+python -m touchstone airwallex-checkout --scope hpp-smoke-001 --hold-usd 1.00 --status
+```
+
 The second command must report `authorization_ready: true` and an intent in `REQUIRES_CAPTURE` before a job may dispatch. To test a standalone partial capture and remainder cancellation, pass the same scope to the existing command:
 
 ```powershell
+python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50
+python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50 --recover
+```
+
+macOS / Linux / Git Bash equivalent:
+
+```bash
 python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50
 python -m touchstone airwallex-hold --scope hpp-smoke-001 --hold-usd 1.00 --capture-usd 0.50 --recover
 ```
@@ -44,6 +67,16 @@ Recovery reads existing intents. For unresolved create only, it may replay the i
 Set `AIRWALLEX_ACCOUNT_ID` from the sandbox payment account and verify read access with `python -m touchstone airwallex-smoke`. The key needs **Core Resources > Balances > Read** for wallet balances/history and **Transactional FX > Conversion > Read** for conversion/quote reads. **Transactional FX > Conversion > Write** covers both `POST /api/v1/fx/quotes/create` and `POST /api/v1/fx/conversions/create`; do not infer write permission from a successful read. Check current [API key scopes](https://www.airwallex.com/docs/developer-tools/api/api-key-scopes), [conversion API](https://www.airwallex.com/docs/api/transactional_fx/conversion), [quote API](https://www.airwallex.com/docs/api/transactional_fx/quotes), and [balances API](https://www.airwallex.com/docs/api/core_resources/balances/current) before enabling writes.
 
 ```powershell
+python -m touchstone airwallex-fx balances
+python -m touchstone airwallex-fx quote --sell-currency USD --buy-currency EUR --sell-amount 10.00
+python -m touchstone airwallex-fx convert --request-id fx-demo-unique-001
+python -m touchstone airwallex-fx convert --request-id fx-demo-unique-001 --execute
+python -m touchstone airwallex-fx report --request-id fx-demo-unique-001
+```
+
+macOS / Linux / Git Bash equivalent:
+
+```bash
 python -m touchstone airwallex-fx balances
 python -m touchstone airwallex-fx quote --sell-currency USD --buy-currency EUR --sell-amount 10.00
 python -m touchstone airwallex-fx convert --request-id fx-demo-unique-001
@@ -65,6 +98,16 @@ python tools/metal.py inspect
 python tools/metal.py wallet
 ```
 
+macOS / Linux / Git Bash equivalent:
+
+```bash
+python tools/setup_node.py
+python tools/metal.py install
+python tools/metal.py test
+python tools/metal.py inspect
+python tools/metal.py wallet
+```
+
 `wallet` generates or reads a dedicated local funding key and prints only its public address. It never overwrites an existing wallet. Use the console faucet at https://console-testnet.metalntwx.com to fund that address with test USDZ. Configure the full RPC URL, not a token with an added `0x`. Use only a dedicated testnet wallet.
 
 The SDK uses a distinct persisted clearing wallet per job under ignored `data/metal/`. It verifies network, asset, deployment, seller and caps. Exact-payment fallback is disabled. Unknown payments retain their original invoice and URL; do not erase wallet state or create replacement purchases.
@@ -74,6 +117,14 @@ The SDK uses a distinct persisted clearing wallet per job under ignored `data/me
 The installed runtime and model can be started in one terminal, then the seller in another:
 
 ```powershell
+python tools/run_local.py --tier balanced
+# Another terminal:
+python tools/metal.py provider
+```
+
+macOS / Linux / Git Bash equivalent:
+
+```bash
 python tools/run_local.py --tier balanced
 # Another terminal:
 python tools/metal.py provider
@@ -101,9 +152,21 @@ Before authorizing a paid run, fetch a live quote for one generated public task.
 python -m touchstone engine-metal --scope quote-check --steps 1 --budget-usd 0.05 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --quote-only
 ```
 
+macOS / Linux / Git Bash equivalent:
+
+```bash
+python -m touchstone engine-metal --scope quote-check --steps 1 --budget-usd 0.05 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --quote-only
+```
+
 The report says `LIVE_QUOTE_ONLY` and `payments_sent: 0`. It also reports `latency_samples`: zero means the displayed 1,000 ms is an explicit cold-start fallback, not an observed service-time measurement. Do not use customer data in quote probes.
 
 ```powershell
+python -m touchstone engine-metal --scope engine-30-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute
+```
+
+macOS / Linux / Git Bash equivalent:
+
+```bash
 python -m touchstone engine-metal --scope engine-30-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute
 ```
 
@@ -117,11 +180,25 @@ python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-us
 python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute
 ```
 
+macOS / Linux / Git Bash equivalent:
+
+```bash
+python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute --kill-at after_rail
+python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --recover
+python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute
+```
+
 The stable scope binds tasks, budget, cap and provider URL(s). Preserve those exact values across restarts. These are operator runbook instructions only; the real provider, chaos, 30-step run and kill/restart have not yet been executed in this checkout.
 
 ## Resume the existing funded proof
 
 ```powershell
+python tools/prove_metal.py --withdraw-only
+```
+
+macOS / Linux / Git Bash equivalent:
+
+```bash
 python tools/prove_metal.py --withdraw-only
 ```
 
@@ -136,6 +213,14 @@ Withdrawals expose `empty`, `waiting`, queued and non-deferred claims separately
 After merchant configuration is enabled, a new test job can run:
 
 ```powershell
+python -m touchstone banked-job --scope banked-proof-002 --integration-probe
+python -m touchstone banked-job --scope banked-proof-002 --integration-probe --recover
+python -m touchstone banked-status
+```
+
+macOS / Linux / Git Bash equivalent:
+
+```bash
 python -m touchstone banked-job --scope banked-proof-002 --integration-probe
 python -m touchstone banked-job --scope banked-proof-002 --integration-probe --recover
 python -m touchstone banked-status

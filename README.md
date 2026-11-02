@@ -12,9 +12,23 @@ Python 3.11+; no runtime dependencies. Tested on Windows with Python 3.12.
 python -m touchstone serve
 ```
 
+macOS / Linux / Git Bash equivalent:
+
+```bash
+python -m touchstone serve
+```
+
 Open **http://127.0.0.1:8088**. The first card presents the recorded real $0.01 USDZ GPU call, incorrect answer, verifier rejection, and no-customer-capture disclosure. Then select **Run three-job demo** for the separate simulated scenario: $2.50 in synthetic customer holds against $1.50 in operator float. Watch prices, latency and quality change, a prompt expand, and jobs pause within policy. A human can approve a versioned limit increase for a policy-paused simulator job using only its existing float; this does not change a real hold or wallet.
 
 ```powershell
+python -m unittest discover -s tests -v
+python -m touchstone benchmark
+python -m touchstone demo --data-dir data/cli-demo
+```
+
+macOS / Linux / Git Bash equivalent:
+
+```bash
 python -m unittest discover -s tests -v
 python -m touchstone benchmark
 python -m touchstone demo --data-dir data/cli-demo
@@ -36,21 +50,24 @@ Benchmark results are saved to [bench/results/RESULTS.md](bench/results/RESULTS.
 
 ## What is simulated, measured, or unfinished
 
-| Component | Current mode | Evidence / limit |
-|---|---|---|
-| Ledger and control logic | Real local code | Concurrency and process-death tests |
-| Airwallex holds/capture | Integrated adapter implemented; external blocker | PaymentIntent creation returns merchant `configuration_error`; no completed authorization/capture |
-| Airwallex connectivity | Verified sandbox authentication and reads | Balance and Global Account reads passed after scope update |
-| Airwallex Treasury FX | Implemented, not exercised | Account context and conversion write scopes are not configured; no FX quote or conversion was created |
-| Metal and x402 | Real funded testnet proof | 0.10 USDZ deposit, one 0.01 USDZ paid inference, signed receipt and original-delivery replay |
-| Unified Metal engine | Live quote-only preflight passed; paid engine not run | Local GPU seller returned a capped quote with no payment; live run still needs explicit testnet budget authorization |
-| Hosted Claude tier | Adapter and real-policy routing implemented; not exercised | Direct Messages API structured output, reported token usage and conservative no-repeat behavior after uncertain paid delivery; no API call or matched trial recorded |
-| Inference | SIMULATED | Synthetic reliability and latency; no model runs in the dashboard |
-| Local GPU profiling | Measured on RTX 3050 | Two Qwen model sizes, 90 paired calls each; raw results and hardware telemetry saved separately |
-| Benchmark | Simulator only | Not evidence of model savings or real-world quality |
-| Agent planning | Deterministic | No live LLM planner or reference judge |
-| Approval increases | Simulated only | Audited mandate version; stays paused until Resume; no external hold or wallet changes |
-| Refunds | Not implemented | Failed calls remain charged |
+Labels: **MEASURED** = real execution with saved evidence; **SIMULATED** = synthetic local model of a service; **MOCK** = local stand-in rail; **BLOCKED** = external dependency prevents the step. A failed live service must never fall back silently and display as live. Airwallex fiat and Metal testnet tokens are separate systems; nothing here bridges them.
+
+| Component | Label | Current mode | Evidence / limit |
+|---|---|---|---|
+| Ledger and control logic | MEASURED (tests) | Real local code | Concurrency and process-death tests |
+| Airwallex holds/capture | BLOCKED | Integrated adapter implemented; external blocker | PaymentIntent creation returns merchant `configuration_error`; no completed authorization/capture |
+| Airwallex connectivity | MEASURED | Verified sandbox authentication and reads | Balance and Global Account reads passed after scope update |
+| Airwallex Treasury FX | NOT RUN | Implemented, not exercised | Account context and conversion write scopes are not configured; no FX quote or conversion was created |
+| Metal and x402 | MEASURED | Real funded testnet proof | 0.10 USDZ deposit, one 0.01 USDZ paid inference, signed receipt and original-delivery replay |
+| Unified Metal engine | NOT RUN (quote-only MEASURED) | Live quote-only preflight passed; paid engine not run | Local GPU seller returned a capped quote with no payment; live run still needs explicit testnet budget authorization |
+| Hosted Claude tier | NOT RUN | Adapter and real-policy routing implemented; not exercised | Direct Messages API structured output, reported token usage and conservative no-repeat behavior after uncertain paid delivery; no API call or matched trial recorded |
+| Dashboard inference | SIMULATED | Simulator only | Synthetic reliability and latency; no model runs in the dashboard |
+| Local GPU profiling | MEASURED | Measured on RTX 3050 | Two Qwen model sizes, 90 paired calls each; raw results and hardware telemetry saved separately |
+| Benchmark | SIMULATED | Simulator only | Not evidence of model savings or real-world quality |
+| Agent planning | MEASURED (deterministic, synthetic) | Deterministic | No live LLM planner or reference judge |
+| Mandate-limit approval (versioned, human-approved) | SIMULATED | Exists in the simulator only | Audited local mandate version; job stays paused until Resume; uses only existing simulated float |
+| Real Airwallex hold increase | NOT IMPLEMENTED | Does not exist | No external hold, authorization increment or wallet change is made by any approval |
+| Refunds | NOT IMPLEMENTED | Not implemented | Failed calls remain charged |
 
 **The accurate pitch:** spend autonomously within an approved mandate, verify what can be checked, stop or escalate on uncertainty, and account for every paid attempt. Payment precedes verification; this system does not promise payment only for correct output.
 
@@ -87,6 +104,13 @@ python -m touchstone doctor
 python tools/metal.py inspect
 ```
 
+macOS / Linux / Git Bash equivalent:
+
+```bash
+python -m touchstone doctor
+python tools/metal.py inspect
+```
+
 The first prints configuration flags only. The second reads public testnet deployment metadata and sends no payment. Once your sandbox credentials are set, `airwallex-hold` tests one authorization/capture cycle using a fixed test card and an immutable operation scope. `--recover` retrieves an interrupted operation before allowing another write.
 
 The updated `source-rules-v3` simulator benchmark reports policy outcomes on bounded synthetic templates plus an invoice fault-injection sweep. The prior source-derived calibration score was circular and has been removed; noisy-checker rates are not population estimates or live payment gates. These results are not general semantic accuracy or measured GPU savings. The original membership-only baseline remains in `bench/results/baseline-v1/`.
@@ -96,6 +120,16 @@ Two real local tiers have also been profiled on the RTX 3050 using schema-constr
 Reproduce the local experiment:
 
 ```powershell
+python tools/setup_local.py --tier economy
+python tools/setup_local.py --tier balanced
+python tools/profile_local.py --tier economy
+python tools/profile_local.py --tier balanced
+python tools/replay_profiles.py
+```
+
+macOS / Linux / Git Bash equivalent:
+
+```bash
 python tools/setup_local.py --tier economy
 python tools/setup_local.py --tier balanced
 python tools/profile_local.py --tier economy
@@ -117,6 +151,14 @@ $env:AIRWALLEX_API_KEY = '<sandbox-api-key>'
 python -m touchstone airwallex-smoke
 ```
 
+macOS / Linux / Git Bash equivalent:
+
+```bash
+export AIRWALLEX_CLIENT_ID='<sandbox-client-id>'
+export AIRWALLEX_API_KEY='<sandbox-api-key>'
+python -m touchstone airwallex-smoke
+```
+
 This authenticates and reads balances/accounts without printing tokens, secrets or bank details. It does not alter dashboard mode or perform funding, FX, holds or captures.
 
 ### Airwallex Treasury FX
@@ -131,6 +173,16 @@ python -m touchstone airwallex-fx convert --request-id unique-fx-2026-11-01 --ex
 python -m touchstone airwallex-fx report --request-id unique-fx-2026-11-01
 ```
 
+macOS / Linux / Git Bash equivalent:
+
+```bash
+python -m touchstone airwallex-fx balances
+python -m touchstone airwallex-fx quote --sell-currency USD --buy-currency EUR --sell-amount 10.00
+python -m touchstone airwallex-fx convert --request-id unique-fx-2026-11-01
+python -m touchstone airwallex-fx convert --request-id unique-fx-2026-11-01 --execute
+python -m touchstone airwallex-fx report --request-id unique-fx-2026-11-01
+```
+
 `report` compares a settled conversion with both wallet balance-history entries and reports current wallet balances. FX does not fund the Metal wallet or bridge fiat and tokens. No sandbox FX write has been run in this checkout.
 
 For an already-running llama.cpp/OpenAI-compatible server on loopback:
@@ -138,6 +190,14 @@ For an already-running llama.cpp/OpenAI-compatible server on loopback:
 ```powershell
 $env:LOCAL_INFERENCE_URL = 'http://127.0.0.1:8080/v1/chat/completions'
 $env:LOCAL_MODEL = '<actual-loaded-model>'
+python -m touchstone profile-local --steps 30
+```
+
+macOS / Linux / Git Bash equivalent:
+
+```bash
+export LOCAL_INFERENCE_URL='http://127.0.0.1:8080/v1/chat/completions'
+export LOCAL_MODEL='<actual-loaded-model>'
 python -m touchstone profile-local --steps 30
 ```
 
@@ -157,6 +217,16 @@ $env:TOUCHSTONE_PROVIDER_PRICE_USD = '0.01'
 python tools/metal.py provider
 ```
 
+macOS / Linux / Git Bash equivalent:
+
+```bash
+export TOUCHSTONE_PROVIDER_ID='local-gpu'
+export TOUCHSTONE_PROVIDER_PORT='8092'
+export TOUCHSTONE_PROVIDER_MODE='model'
+export TOUCHSTONE_PROVIDER_PRICE_USD='0.01'
+python tools/metal.py provider
+```
+
 ```powershell
 $env:ANTHROPIC_API_KEY = '<your-api-key>'
 $env:ANTHROPIC_MODEL = 'claude-sonnet-5'
@@ -167,9 +237,30 @@ $env:TOUCHSTONE_PROVIDER_PRICE_USD = '0.05'
 python tools/metal.py provider
 ```
 
+macOS / Linux / Git Bash equivalent:
+
+```bash
+export ANTHROPIC_API_KEY='<your-api-key>'
+export ANTHROPIC_MODEL='claude-sonnet-5'
+export TOUCHSTONE_PROVIDER_ID='hosted-premium'
+export TOUCHSTONE_PROVIDER_PORT='8093'
+export TOUCHSTONE_PROVIDER_MODE='anthropic'
+export TOUCHSTONE_PROVIDER_PRICE_USD='0.05'
+python tools/metal.py provider
+```
+
 Run a no-payment preflight first, then use three different scope IDs with identical task count, seed, provider order and price cap. Only the last three commands dispatch paid testnet calls. The `real-touchstone` ceiling allows two paid attempts per task; a 30-step cap of USD 0.05 therefore needs up to USD 3.06 testnet budget, excluding the hosted API bill.
 
 ```powershell
+python -m touchstone engine-metal --scope policy-preflight --steps 30 --seed 42 --budget-usd 0.05 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --provider-url http://127.0.0.1:8093 --policy real-touchstone --quote-only
+python -m touchstone engine-metal --scope trial-cheapest-001 --steps 30 --seed 42 --budget-usd 1.53 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --provider-url http://127.0.0.1:8093 --policy real-cheapest --execute
+python -m touchstone engine-metal --scope trial-premium-001 --steps 30 --seed 42 --budget-usd 1.53 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --provider-url http://127.0.0.1:8093 --policy real-premium --execute
+python -m touchstone engine-metal --scope trial-touchstone-001 --steps 30 --seed 42 --budget-usd 3.06 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --provider-url http://127.0.0.1:8093 --policy real-touchstone --execute
+```
+
+macOS / Linux / Git Bash equivalent:
+
+```bash
 python -m touchstone engine-metal --scope policy-preflight --steps 30 --seed 42 --budget-usd 0.05 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --provider-url http://127.0.0.1:8093 --policy real-touchstone --quote-only
 python -m touchstone engine-metal --scope trial-cheapest-001 --steps 30 --seed 42 --budget-usd 1.53 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --provider-url http://127.0.0.1:8093 --policy real-cheapest --execute
 python -m touchstone engine-metal --scope trial-premium-001 --steps 30 --seed 42 --budget-usd 1.53 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --provider-url http://127.0.0.1:8093 --policy real-premium --execute
@@ -188,6 +279,14 @@ python tools/metal.py provider
 python tools/prove_metal.py --withdraw-only
 ```
 
+macOS / Linux / Git Bash equivalent:
+
+```bash
+python tools/run_local.py --tier balanced
+python tools/metal.py provider
+python tools/prove_metal.py --withdraw-only
+```
+
 `prove_metal.py` uses one persistent protocol-probe reservation and a USD 0.01 cap; reruns preserve its original payment. The old `banked-proof-001` scope has an unresolved direct-create outcome and is for recovery only. Use a fresh scope for hosted checkout; that fallback needs a sandbox account ID, Checkout Sessions API access and an explicit customer action. `banked-job --integration-probe` then makes a separate testnet purchase and should only be run when that expense is intended. Live checking fees are zero, fractional cents are absorbed by the merchant, and gas is merchant expense. No fiat-to-token bridge is implied. See [account/integration setup](docs/ACCOUNT_SETUP.md).
 
 The unified engine's real Metal route requires a configured local provider, RPC and funded job wallet. `--execute` is mandatory to dispatch; `--recover` requires an existing scope and can run without it. `--kill-at after_rail` deliberately terminates the process after a real paid response (exit 86); rerun the exact scope/mandate with `--recover` and reconcile one receipt. This kill/restart path has only been exercised against the mock rail so far. The local provider supports `TOUCHSTONE_PROVIDER_CHAOS=outage` (503 before quote/payment) and `quality-drop` (an intentionally incorrect paid delivery). The outage mode has passed one live quote-only check with no payment; paid quality-drop and kill/restart are still unrun. Live quotes add 20% per queued request, capped by the 5-cent provider ceiling, and report latency sample count so fallback estimates are not mistaken for measured timing.
@@ -195,6 +294,14 @@ The unified engine's real Metal route requires a configured local provider, RPC 
 The new local planner resolves bounded inputs before any model purchase. It solved **1,000/1,000 generated tasks with zero inference calls**, and handled 24 authored boundary cases as expected (6 resolved, 18 deferred for review). This demonstrates why these templates are accounting fixtures rather than evidence that paid inference is necessary. Neither measured model meets the offline eligibility screen; repeated classification messages count only once.
 
 ```powershell
+python -m touchstone procurement-evidence
+python -m touchstone plan
+python -m touchstone plan --input path/to/tasks.json
+```
+
+macOS / Linux / Git Bash equivalent:
+
+```bash
 python -m touchstone procurement-evidence
 python -m touchstone plan
 python -m touchstone plan --input path/to/tasks.json
@@ -212,6 +319,6 @@ The dashboard's **Planning** section lets you explore local-tool and review deci
 - [Actual integration evidence](docs/LIVE_PROOF.md)
 - [Submission draft](docs/SUBMISSION.md)
 
-The official event page currently lists the build phase ending **13 November 2026, 18:29 UTC / 23:59 IST** and registration ending 25 October. This repository uses the MIT License. Confirm accepted registration, judging criteria, award eligibility and submission assets in the signed-in portal. The planned recording date is 12 November; feature freeze is 11 November.
+The official event page, fetched 2 November 2026, lists the build phase ending **15 November 2026, 18:29 UTC** and the registration phase ending 25 October; earlier project notes cited 13 November. This project treats **13 November (18:29 UTC / 23:59 IST) as its internal deadline** and the portal's personal deadline as authoritative once confirmed. This repository uses the MIT License. Confirm accepted registration, judging criteria, award eligibility and submission assets in the signed-in portal. The planned recording date is 12 November; feature freeze is 11 November.
 
 Sources: [event page](https://www.hackerearth.com/community/challenges/hackathon/agentic-banking-hackathon/), [builder guide linked by the event](https://airwallexdev.com/guide), [Airwallex sandbox documentation](https://www.airwallex.com/docs/developer-tools/sandbox-environment), [Metal clearing documentation](https://docs.metalntwx.com/agents/clearing). Reviewed 29 October 2026.

@@ -1,12 +1,14 @@
 # Build roadmap, rebased 29 October 2026
 
-The public event page lists build completion on **13 November, 18:29 UTC / 23:59 IST**. Target submission by 18:00 IST. Registration is listed as closed on 25 October; verify accepted participation in the signed-in portal now. No registration or submission has been performed by this agent.
+The official event page (fetched 2 November 2026) lists build completion on **15 November, 18:29 UTC**; earlier notes cited 13 November. **Internal deadline: 13 November 18:29 UTC / 23:59 IST**, submitting well before it. Confirm the personal deadline in the portal. Registration is listed as closed on 25 October; verify accepted participation in the signed-in portal now. No registration or submission has been performed by this agent.
 
 ## Official kit mapping
 
 The [current Airwallex developer-lab guide](https://airwallexdev.com/guide) maps the three-job, short-float inference sourcing story to **Kit 12**. Its **Kit 11** asks for spending-limit rebalancing when upstream prices rise and a dispute settled from signed orders. This project has a simulated, versioned human approval flow and one real signed x402 receipt, but no end-to-end Kit 11 dispute settlement or live limit rebalance. Do not claim Kit 11 as completed until those behaviors are implemented and evidenced.
 
-## Completed foundation
+## Done (as of 2 November 2026)
+
+A checked item is not a live-service completion claim; see VALIDATION.md and LIVE_PROOF.md for exactly what ran.
 
 - [x] Read and review all 17 proposal pages and inspect rendered architecture/tables.
 - [x] Check the current Kit 12 recipe and official sandbox/clearing documentation.
@@ -17,9 +19,6 @@ The [current Airwallex developer-lab guide](https://airwallexdev.com/guide) maps
 - [x] Source-based checks, classification blind-spot disclosure and independent truth scorer.
 - [x] Seeded three-policy simulator benchmark command.
 - [x] Read-only Airwallex smoke adapter and opt-in local inference profiler.
-
-## Progress on 30 October
-
 - [x] Replace classification membership checks with bounded source evidence and explicit review pauses.
 - [x] Preserve the original simulator baseline; regenerate all three policies over five seeds using verifier v2.
 - [x] Implement standalone sandbox pre-authorization/capture/cancel with immutable terms and read-based recovery.
@@ -31,30 +30,11 @@ The [current Airwallex developer-lab guide](https://airwallexdev.com/guide) maps
 - [x] Configure supplied credentials locally, verify RPC chain 63825 and Airwallex authentication/read scopes.
 - [x] Fund a dedicated testnet wallet, deposit 0.10 USDZ, purchase one 0.01 USDZ GPU inference call and replay its original receipt/delivery.
 - [x] Return the remaining 0.09 testnet USDZ through a finalized non-deferred withdrawal claim; record queue and claim transactions.
-- [ ] Validate a real sandbox authorization/capture: direct PaymentIntent creation returns `configuration_error`; hosted Checkout Sessions access and account setup are not yet verified.
 - [x] Measure two model sizes on the RTX 3050; preserve raw outputs and paired replay results.
 - [x] Add task-specific offline eligibility screening with deduplicated sources and a separate retrospective evaluation partition.
 - [x] Execute a deterministic-tool baseline on 1,000 new-seed tasks and 24 authored boundary cases; expose tool/review decisions in the dashboard.
-- [ ] Collect representative finance-operations sources and prospective evaluation evidence; qualify an inference provider for that domain.
 - [x] Implement the integrated `banked-job` workflow, real SDK process bridge, local x402 provider and original-delivery recovery.
-- [ ] Qualify useful paid inference and prove the complete external sandbox banking loop after merchant configuration is enabled.
-
-## Progress on 31 October
-
 - [x] Add a no-payment invoice-exception preflight with exact source citations, integer-total recomputation, purchase-order/payment checks and mandatory human review.
-
-The real paid proof rejected an incorrect answer (1250 cents instead of 2000), retained the failed-call charge and demonstrated both cached and provider-side replay without another payment. The remaining 0.09 testnet USDZ has now returned through a non-deferred claim; the receipt assurance remains preconfirmed. Actual Airwallex authentication, balance reads and Global Account reads pass. PaymentIntent creation fails before authorization. See LIVE_PROOF.md for the precise evidence and blocker.
-
-The updated simulator has 100% median true success for Touchstone at $6.162 versus premium's 99.5% at $10.200 on supported synthetic templates. This is a bounded-rule regression result; general semantic accuracy and real model savings remain unproven.
-
-The real model profiles are materially weaker: 22.2% strict correctness for 0.5B and 48.9% for 1.5B on 90 paired calls each. A replay of cheap-first escalation reaches 50.0% at a higher assumed cost per correct result than balanced-first. Keep these results as evidence against blind cheap-first routing. Choose appropriate models/tools and require measured eligibility before enabling autonomous paid calls.
-
-The deterministic baseline solves 1,000/1,000 generated tasks without a model call. All six measured provider/task combinations fail the offline eligibility screen. The three classification templates count as only three unique sources. The planning preview resolves supported calculations locally and defers unsupported sources for review. See PROCUREMENT_POLICY.md for the next invoice-exception experiment and the limits of the retrospective split.
-
-See VALIDATION.md and saved results for what was actually executed. A checked foundation item is not a live-service completion claim.
-
-## Progress on 1 November
-
 - [x] Add Airwallex wallet-balance reads, FX quote/conversion writes guarded by an explicit execute flag, durable request-ID journaling, and wallet-history reconciliation.
 - [x] Add an invoice-consistency task whose checker verifies cited source spans and arithmetic without recomputing from a hidden answer map.
 - [x] Measure a deliberately noisy invoice checker against offsetting line-item errors; remove the circular verifier calibration MAE from current benchmark output.
@@ -66,23 +46,37 @@ See VALIDATION.md and saved results for what was actually executed. A checked fo
 - [x] Add a guarded live quote-only engine preflight; exercise the local Vulkan model seller and Metal testnet quote with zero payments.
 - [x] Run the live seller's outage chaos mode through quote-only; verify HTTP 503 before quote and zero payment dispatch.
 - [x] Run the Airwallex read-only readiness check; authentication/balance/account reads pass, but `AIRWALLEX_ACCOUNT_ID` is still unset.
-- [ ] Set sandbox account context and Conversion Write scope, then execute one approved FX conversion and reconcile the wallet-history entries. This does not require a card-acquiring/merchant configuration change.
-- [ ] Run 30–50 real paid engine steps, a paid quality-drop chaos scenario, and a Metal process-kill/restart demonstration. The zero-payment outage preflight passed; the dedicated Metal wallet's prior balance was withdrawn and no paid run has an approved cap.
-- [ ] Configure hosted premium credentials and both provider origins, then run a matched paid comparison. No Anthropic API call or three-policy trial is recorded; the adapter is implemented in the 2 November update.
-- [ ] Use sandbox Developer connectors for sandbox work; AgentOS MCP/skills require a production connector, and the official CLI has no Windows build. Confirm with the sponsor what tooling evidence counts.
-- [ ] Do not claim Kit 11 without implementing its separate signed-order, agent-mandate and dispute/refund flow.
-
-## Progress on 2 November
-
 - [x] Add an optional hosted Claude Messages API provider using schema-constrained JSON, a configurable model ID and provider-reported token usage.
 - [x] Keep hosted credentials out of the buyer-side Metal bridge; on uncertain delivery, refuse to repeat a potentially billable hosted request.
 - [x] Add three real-only Metal policies: local GPU only, hosted premium only, and local-first with verifier-triggered hosted escalation. Real policies exclude simulator offers and require both named live tiers in a no-payment quote preflight.
 - [x] Persist a redacted per-scope policy report and expose a dashboard table grouped by identical task digest; the panel remains empty until paid real-provider runs are actually recorded.
-- [ ] Configure and exercise Anthropic API access, then run the matched three-policy paid trial. The comparison reports testnet USDZ and verifier charges, not the provider's separate API invoice.
-- [ ] Set `AIRWALLEX_ACCOUNT_ID`, grant Transactional FX Conversion Write, approve a currency pair/amount, execute one conversion and reconcile both wallet-history entries. No customer hold/capture is involved.
-- [ ] Run the paid quality-drop and real Metal kill/restart demonstrations after explicit wallet top-up and aggregate spend approval. The existing outage/quote checks used no payments.
-- [ ] Connect the Airwallex AgentOS/CLI/MCP/skills tooling and ask the sponsor which integration evidence qualifies. No Slack or AgentOS connector is available in this workspace.
-- [ ] Implement and evidence Kit 11's price-rise limit rebalance and signed-order dispute settlement before claiming the additional track.
+- [x] M0 (2 Nov): redacted full-history secret scan (`tools/scan_secrets.py`, clean), README status labels, bash equivalents for PowerShell commands, GitHub Actions CI on Ubuntu and Windows.
+- [x] Repository is public (verified through the GitHub API on 2 November 2026).
+
+## Not done
+
+- [ ] Validate a real sandbox authorization/capture: direct PaymentIntent creation returns `configuration_error` (BLOCKED, external merchant configuration); hosted Checkout Sessions access is untested.
+- [ ] Set `AIRWALLEX_ACCOUNT_ID` and the Transactional FX Conversion Write scope, then run one approved sandbox FX conversion and reconcile both wallet-history entries (needs human gate and a stated cap).
+- [ ] Collect representative finance-operations sources and prospective evaluation evidence; qualify an inference provider for that domain. No measured model passes the eligibility screen.
+- [ ] Run 30–50 real paid engine steps, a paid quality-drop scenario and a real Metal process-kill/restart after explicit wallet funding and an approved aggregate cap. Only zero-payment quote and outage preflights have run.
+- [ ] Configure hosted premium credentials and both provider origins, then run the matched three-policy paid trial (hosted API invoice is separate from the USDZ metric).
+- [ ] Ask the sponsor whether sandbox Developer MCP/CLI counts as Airwallex tooling; AgentOS MCP/skills need a production connector and the official CLI has no Windows build.
+- [ ] Kit 11 (price-rise limit rebalance, signed-order dispute settlement) is not implemented; do not claim it.
+- [ ] Replace dashboard simulated inference with real inference (the simulator remains labelled SIMULATED).
+- [ ] Real Airwallex hold increase for mandate-limit approval does not exist; the approval is a simulated, versioned local mandate only.
+
+## Evidence summary
+
+The real paid proof rejected an incorrect answer (1250 cents instead of 2000), retained the failed-call charge and demonstrated both cached and provider-side replay without another payment. The remaining 0.09 testnet USDZ has now returned through a non-deferred claim; the receipt assurance remains preconfirmed. Actual Airwallex authentication, balance reads and Global Account reads pass. PaymentIntent creation fails before authorization. See LIVE_PROOF.md for the precise evidence and blocker.
+
+The updated simulator has 100% median true success for Touchstone at $6.162 versus premium's 99.5% at $10.200 on supported synthetic templates. This is a bounded-rule regression result; general semantic accuracy and real model savings remain unproven.
+
+The real model profiles are materially weaker: 22.2% strict correctness for 0.5B and 48.9% for 1.5B on 90 paired calls each. A replay of cheap-first escalation reaches 50.0% at a higher assumed cost per correct result than balanced-first. Keep these results as evidence against blind cheap-first routing. Choose appropriate models/tools and require measured eligibility before enabling autonomous paid calls.
+
+The deterministic baseline solves 1,000/1,000 generated tasks without a model call. All six measured provider/task combinations fail the offline eligibility screen. The three classification templates count as only three unique sources. The planning preview resolves supported calculations locally and defers unsupported sources for review. See PROCUREMENT_POLICY.md for the next invoice-exception experiment and the limits of the retrospective split.
+
+See VALIDATION.md and saved results for what was actually executed. A checked foundation item is not a live-service completion claim.
+
 
 ## 29–31 October: prove the external integrations
 
@@ -134,7 +128,7 @@ The archived membership-only simulator baseline was 86% median true success. The
 
 ## 12–13 November: submit
 
-Record the final video on 12 November. Submit the repository, working demonstration and requested materials on 13 November with several hours to spare. Confirm receipt in the portal. The private repository was pushed on 30 October 2026; public publication and hackathon submission remain pending.
+Record the final video on 12 November. Submit the repository, working demonstration and requested materials on 13 November with several hours to spare. Confirm receipt in the portal. The repository is public; hackathon submission remains pending.
 
 ## Cut order
 
