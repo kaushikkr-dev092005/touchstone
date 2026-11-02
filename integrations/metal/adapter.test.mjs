@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { amount, approvedOffer, executePurchase, recoverPurchase, resourceUrl, discover } from './adapter.mjs';
+import { amount, approvedOffer, executePurchase, recoverPurchase, resourceUrl, discover, quote } from './adapter.mjs';
 import { openWallet } from './wallet.mjs';
 import { clearingRequirements, clearingInvoice, createClearingSigner, USDZ } from '@metalntwx/metal-pay';
 
@@ -38,6 +38,17 @@ test('quote guards reject wrong price, token, chain and deployment', () => {
     { ...offer, asset: '0x' + '00'.repeat(20) }, { ...offer, extra: { ...offer.extra, settlement: '0x' + '56'.repeat(20) } } ]) {
     assert.throws(() => approvedOffer(header(bad), deployment, amount('0.02')));
   }
+});
+
+test('live quote records queue depth and completed latency sample count', async () => {
+  const values = { 'PAYMENT-REQUIRED': header(offer), 'X-Touchstone-Queue-Depth': '2',
+    'X-Touchstone-Latency-Ms': '3000', 'X-Touchstone-Latency-Samples': '0' };
+  const result = await quote(url, deployment, amount('0.02'), async () => ({
+    status: 402, headers: { get: name => values[name] ?? null },
+  }));
+  assert.equal(result.queue_depth, 2);
+  assert.equal(result.latency_ms, 3000);
+  assert.equal(result.latency_samples, 0);
 });
 
 test('SDK store and exclusive owner lock persist across reopen', () => {

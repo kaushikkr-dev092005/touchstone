@@ -1,5 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import redirect_stdout
 from dataclasses import replace
+import io
 import json
 from pathlib import Path
 import sqlite3
@@ -8,6 +10,7 @@ import sys
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
 
 from touchstone.engine import Engine, InjectedCrash
 from touchstone.ledger import Ledger, PolicyError, payment_key
@@ -257,6 +260,31 @@ e.run(sys.argv[3],kill_at='after_rail')
         self.assertTrue(snapshot["reconciliation"]["matched"])
         self.assertEqual(snapshot["jobs"][0]["status"], "COMPLETED")
 
+    def test_engine_metal_quote_only_does_not_dispatch_or_create_a_run(self):
+        from types import SimpleNamespace
+        from touchstone import __main__ as cli
+
+        class QuoteOnlyRail:
+            def __init__(self, *args, **kwargs):
+                self.quoted_task = None
+
+            def quote_for_task(self, task):
+                self.quoted_task = task
+                return SimpleNamespace(provider="metal-provider", price=10000, latency_ms=250,
+                                       queue_depth=1, latency_samples=0,
+                                       expires_at=time.time() + 30, mode="TESTNET")
+
+        argv = ["touchstone", "engine-metal", "--scope", "quote-check", "--steps", "1",
+                "--budget-usd", "0.05", "--price-cap-usd", "0.05", "--provider-url",
+                "http://127.0.0.1:8092", "--quote-only"]
+        output = io.StringIO()
+        with patch.object(sys, "argv", argv), patch("touchstone.payments.MetalEngineRail", QuoteOnlyRail), redirect_stdout(output):
+            self.assertEqual(cli.main(), 0)
+        report = json.loads(output.getvalue())
+        self.assertEqual(report["mode"], "LIVE_QUOTE_ONLY")
+        self.assertEqual(report["payments_sent"], 0)
+        self.assertEqual(report["quote"]["price_micro_usd"], 10000)
+
     def test_thompson_policy_is_seeded_and_respects_hard_caps(self):
         job = {"policy": "thompson", "price_cap": 30000, "budget": 40000, "spent": 0}
         first, _ = Router(seed=7).select(quotes(42, 0, chaos=False), self.tasks[0], job, [])
@@ -317,11 +345,26 @@ e.run(sys.argv[3],kill_at='after_rail')
         with patch.dict('os.environ', {'METAL_PROVIDER_URL': 'http://127.0.0.1:8092', 'METAL_RPC_URL': 'http://127.0.0.1:8545'}):
             rail = MetalRail('queue-metadata-test', 'http://127.0.0.1:8092', transport=lambda request: {
                 'url': 'http://127.0.0.1:8092/inference/task', 'expires_at': (time.time() + 30) * 1000,
-                'offer': {'amount': str(12000 * 10**12)}, 'queue_depth': 2, 'latency_ms': 3000})
+                'offer': {'amount': str(12000 * 10**12)}, 'queue_depth': 2, 'latency_ms': 3000,
+                'latency_samples': 4})
         quote = rail.quote('http://127.0.0.1:8092/inference/task')
         self.assertEqual(quote.price, 12000)
         self.assertEqual(quote.queue_depth, 2)
         self.assertEqual(quote.latency_ms, 3000)
+        self.assertEqual(quote.latency_samples, 4)
+
+    def test_metal_quote_failure_is_not_reported_as_uncertain_payment(self):
+        from types import SimpleNamespace
+        from touchstone.metal import PaymentPending
+        with patch.dict('os.environ', {'METAL_PROVIDER_URL': 'http://127.0.0.1:8092',
+                                       'METAL_RPC_URL': 'http://127.0.0.1:8545'}), \
+             patch('touchstone.metal.node_executable', return_value='node'), \
+             patch('touchstone.metal.subprocess.run', return_value=SimpleNamespace(
+                 stdout='{"ok":false,"error":"provider unavailable"}', returncode=1)):
+            rail = MetalRail('quote-error-test', 'http://127.0.0.1:8092')
+            with self.assertRaisesRegex(RuntimeError, 'no purchase was dispatched') as error:
+                rail.quote('http://127.0.0.1:8092/inference/task')
+        self.assertNotIsInstance(error.exception, PaymentPending)
 
 
 if __name__ == "__main__":

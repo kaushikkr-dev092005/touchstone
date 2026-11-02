@@ -1,6 +1,6 @@
 # Integration contracts and verified sources
 
-Updated 1 November 2026. Credentials are local, one funded SDK inference purchase is verified, and Airwallex authentication/read access passes. Direct PaymentIntent creation is blocked by `configuration_error`; hosted checkout remains untested. The FX API path, engine Metal route, queue pricing, and chaos modes are implemented but have not been exercised against their live services. See [actual proof](LIVE_PROOF.md) and [commands](ACCOUNT_SETUP.md).
+Updated 1 November 2026. Credentials are local, one funded SDK inference purchase is verified, and Airwallex authentication/read access passes. Direct PaymentIntent creation is blocked by `configuration_error`; hosted checkout remains untested. The engine Metal route has returned a live quote from the loopback GPU seller without paying; no integrated live inference output was produced. The seller's outage mode returned 503 before quote/payment; paid engine and quality-drop/kill-restart runs remain unexercised. FX operations remain untested. See [actual proof](LIVE_PROOF.md) and [commands](ACCOUNT_SETUP.md).
 
 ## Airwallex transport and authorization
 
@@ -38,7 +38,7 @@ The bridge discovers the supported clearing deployment and verifies RPC chain ID
 |---|---|
 | Wallet | Persisted signer/store; never print private key; refuse simultaneous owners |
 | Funding | Exact capped deposit; broadcast and spendability are separate; duplicate deposit blocked |
-| Quote | Bind resource, seller, chain, asset, deployment, amount and expiry; apply live queue-depth pricing and report observed service latency |
+| Quote | Bind resource, seller, chain, asset, deployment, amount and expiry; apply live queue-depth pricing and report service-time sample count beside its estimate |
 | Purchase | Persist reservation before SDK payment; enforce cap and total wallet budget |
 | Recovery | Replay the held SDK invoice or retrieve the original paid delivery |
 | Definitive refusal | `UNPAID_CONFIRMED` permits only identical reservation terms to retry |
@@ -46,9 +46,9 @@ The bridge discovers the supported clearing deployment and verifies RPC chain ID
 
 SDK pending state is durably stored before send and cleared only after verified receipt or authoritative refusal. Recovery uses that protocol state, not an empty remote lookup, to distinguish an unpaid retry from an uncertain payment. Held invoices retain their original URL and price. The exact fallback is disabled and its ephemeral EVM account is unfunded.
 
-The included loopback seller issues real x402 requirements, validates task-digest resource binding, verifies SDK signatures against chain/service state, and caches delivery by payment ID. Queue depth is measured from pending deliveries; each queued task adds 20% to the current quote, capped at the configured USD 0.05 seller maximum. The exact offer is durably recorded and matched on paid delivery, and the quote includes observed worker latency for routing. A plain receipt replay cannot create a replacement payment. The provider receives no funding or Airwallex keys, and its model worker receives no RPC credential. It runs one task at a time and refuses quotes when the local model is unavailable.
+The included loopback seller issues real x402 requirements, validates task-digest resource binding, verifies SDK signatures against chain/service state, and caches delivery by payment ID. Queue depth is measured from pending deliveries; each queued task adds 20% to the current quote, capped at the configured USD 0.05 seller maximum. The exact offer is durably recorded and matched on paid delivery. Quotes report the completed-delivery sample count so the default pre-first-delivery latency estimate is not mistaken for measured timing. A plain receipt replay cannot create a replacement payment. The provider receives no funding or Airwallex keys, and its model worker receives no RPC credential. It runs one task at a time and refuses quotes when the local model is unavailable.
 
-Explicit local chaos controls are `TOUCHSTONE_PROVIDER_CHAOS=outage` (503 before an offer, so no call is paid) and `quality-drop` (a paid, deliberately corrupted delivery). The latter keeps aggregate invoice totals balanced while corrupting line arithmetic. The engine also supports `--kill-at after_rail`, which terminates the Python process after the rail returns a paid receipt, plus `--recover` against the same durable scope. These are test capabilities only; no real-provider chaos/kill run has yet been performed. A single historical Metal payment is not the requested 30–50-step integrated run.
+Explicit local chaos controls are `TOUCHSTONE_PROVIDER_CHAOS=outage` (503 before an offer, so no call is paid) and `quality-drop` (a paid, deliberately corrupted delivery). The latter keeps aggregate invoice totals balanced while corrupting line arithmetic. The engine also supports `--kill-at after_rail`, which terminates the Python process after the rail returns a paid receipt, plus `--recover` against the same durable scope. The outage mode has been exercised once through a live quote-only request; paid quality-drop and kill/restart remain unrun. A single historical Metal payment is not the requested 30–50-step integrated run.
 
 The Node tests cover wallets, price/unit caps, immutable retries, pending invoice replay, unpaid refusal handling, durable delivery and source binding, queue-aware pricing and injected quality loss. A separate actual proof records a 0.10 USDZ deposit, one 0.01 USDZ GPU inference purchase, identical buyer/provider replays, and a non-deferred return of the remaining 0.09 USDZ. The purchased output failed source verification; the charge remains recorded. Receipt assurance remains preconfirmed.
 

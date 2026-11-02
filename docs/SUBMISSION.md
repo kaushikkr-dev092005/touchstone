@@ -19,11 +19,11 @@ The financial stress scenario uses three customer holds totaling $2.50 with only
 - Airwallex sandbox authentication and balance/Global Account reads.
 - Two local model profiles, an honest negative cheap-first cost result, a 1,000-case bounded-tool baseline, and a source-deduplicated eligibility screen.
 - Local failure tests for lost payment/capture responses, changed mandates, receipt mismatches, uncertain outcomes and unavailable withdrawal float.
-- A unified engine-facing Metal tier, queue-priced signed quotes, provider outage/quality chaos switches, and an abrupt process-kill recovery command; these have local fixture tests but no live engine run.
+- A unified engine-facing Metal tier, queue-priced signed quotes, provider outage/quality chaos switches, and an abrupt process-kill recovery command. A quote-only live preflight and no-payment outage were exercised; there is still no paid engine run, quality-drop run or live kill/restart.
 - A separate Airwallex treasury path for wallet balances, FX quotes/conversions with unique request IDs, and wallet-history spend reconciliation; no live quote or conversion has been attempted.
 - An invoice consistency verifier using cited line arithmetic and a measured synthetic false-accept curve for a deliberately noisy checker.
 
-The actual Airwallex hold/capture is blocked by a merchant `configuration_error`. The latest read-only smoke has `account_context_configured=false`; hosted Checkout Sessions and FX access remain untested. The integrated workflow is implemented and tested with controlled adapters, but the full external banking loop is not yet demonstrated. No 30–50-step paid engine run, real-provider chaos run or real Metal kill/restart has been executed. The unused 0.09 testnet USDZ was returned through a finalized non-deferred claim; the paid receipt remains preconfirmed. Keep these limits visible in the final submission unless later evidence supersedes them.
+The actual Airwallex hold/capture is blocked by a merchant `configuration_error`. The latest read-only smoke has `account_context_configured=false`; hosted Checkout Sessions and FX access remain untested. The integrated workflow is implemented and tested with controlled adapters, but the full external banking loop is not yet demonstrated. No 30–50-step paid engine run, paid quality-drop run or real Metal kill/restart has been executed; the live outage check spent nothing. The unused 0.09 testnet USDZ was returned through a finalized non-deferred claim; the paid receipt remains preconfirmed. Keep these limits visible in the final submission unless later evidence supersedes them.
 
 ## Differentiation
 

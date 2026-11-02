@@ -59,13 +59,15 @@ See VALIDATION.md and saved results for what was actually executed. A checked fo
 - [x] Add an invoice-consistency task whose checker verifies cited source spans and arithmetic without recomputing from a hidden answer map.
 - [x] Measure a deliberately noisy invoice checker against offsetting line-item errors; remove the circular verifier calibration MAE from current benchmark output.
 - [x] Unify the simulated and Metal payment rails in the engine, route an explicit Metal tier, and retain reservations when the live rail cannot prove non-payment.
-- [x] Add queue-aware signed quote pricing, measured service-latency metadata, opt-in provider outage/quality chaos, and a hard process-kill recovery switch.
+- [x] Add queue-aware signed quote pricing, service-latency estimates with sample counts, opt-in provider outage/quality chaos, and a hard process-kill recovery switch.
 - [x] Add MIT `LICENSE` with the requested 2026 Kaushik Kumar copyright.
 - [x] Put the one real paid GPU failure and its unbilled probe outlay before the simulator on the dashboard; remove the deleted calibration metric and expose the noisy-checker chart.
 - [x] Add audited versioned approvals for simulated limit increases; the job remains paused until a separate Resume, and no real hold or wallet is affected.
+- [x] Add a guarded live quote-only engine preflight; exercise the local Vulkan model seller and Metal testnet quote with zero payments.
+- [x] Run the live seller's outage chaos mode through quote-only; verify HTTP 503 before quote and zero payment dispatch.
 - [x] Run the Airwallex read-only readiness check; authentication/balance/account reads pass, but `AIRWALLEX_ACCOUNT_ID` is still unset.
 - [ ] Set sandbox account context and Conversion Write scope, then execute one approved FX conversion and reconcile the wallet-history entries. This does not require a card-acquiring/merchant configuration change.
-- [ ] Run 30–50 real paid engine steps, a real-provider chaos scenario, and a Metal process-kill/restart demonstration. The provider URL is unset and the dedicated Metal wallet's prior balance was withdrawn, so no new charge is authorized or possible from this checkout as configured.
+- [ ] Run 30–50 real paid engine steps, a paid quality-drop chaos scenario, and a Metal process-kill/restart demonstration. The zero-payment outage preflight passed; the dedicated Metal wallet's prior balance was withdrawn and no paid run has an approved cap.
 - [ ] Configure a hosted premium endpoint and multiple live provider origins before claiming a three-policy real-provider cost comparison. No hosted-provider credits/key are configured in this checkout.
 - [ ] Use sandbox Developer connectors for sandbox work; AgentOS MCP/skills require a production connector, and the official CLI has no Windows build. Confirm with the sponsor what tooling evidence counts.
 - [ ] Do not claim Kit 11 without implementing its separate signed-order, agent-mandate and dispute/refund flow.

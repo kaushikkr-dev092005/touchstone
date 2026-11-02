@@ -87,7 +87,9 @@ const server = createServer({ maxHeaderSize: 65536 }, async (request, response) 
   if (chaos === 'outage') return send(response, 503, { error: 'Injected provider outage; no quote is available' });
   if (request.url === '/health') return send(response, 200, { mode: 'TESTNET_PROVIDER', provider_type: mode,
     inference_ready: await modelReady(), chain: 63825, paid_delivery: 'UNVERIFIED', chaos,
-    queue_depth: queueDepth, queue_capacity: 1, seller_public_key: wallet.signer.publicKey,
+    queue_depth: queueDepth, queue_capacity: 1, latency_samples: serviceSamples.length,
+    latency_source: serviceSamples.length ? 'completed_provider_deliveries' : 'default_before_first_delivery',
+    seller_public_key: wallet.signer.publicKey,
     base_price_micro_usd: basePriceMicroUsd.toString(),
     current_quote_base_units: priceForQueue(basePriceMicroUsd, queueDepth, maxPriceMicroUsd).toString() });
   try {
@@ -104,7 +106,8 @@ const server = createServer({ maxHeaderSize: 65536 }, async (request, response) 
       const packet = { x402Version: 2, resource: { url: resource, mimeType: 'application/json' }, accepts: [offer] };
       return send(response, 402, { error: 'Payment required', provider_type: mode, queue_depth: quotedQueueDepth },
         { 'PAYMENT-REQUIRED': encodePaymentRequiredHeader(packet), 'X-Touchstone-Queue-Depth': String(quotedQueueDepth),
-          'X-Touchstone-Latency-Ms': String(latencyMs) });
+          'X-Touchstone-Latency-Ms': String(latencyMs),
+          'X-Touchstone-Latency-Samples': String(serviceSamples.length) });
     }
     const paymentPacket = decodePaymentSignatureHeader(request.headers['payment-signature']);
     const quote = store.findQuote(resource, paymentPacket.accepted);

@@ -1,0 +1,23 @@
+{
+  "mode": "LIVE_OUTAGE_PREFLIGHT",
+  "observed_at": "2026-11-01T18:22:51Z",
+  "provider_service": "loopback x402 seller using the Metal testnet deployment",
+  "chaos": "outage",
+  "task": {
+    "id": "step-0000",
+    "kind": "invoice",
+    "source": "generated synthetic task"
+  },
+  "observed_result": {
+    "http_status": 503,
+    "stage": "before_quote",
+    "engine_message": "Metal quote unavailable; no purchase was dispatched",
+    "payments_sent": 0
+  },
+  "direct_health_check": {
+    "observed_at": "2026-11-02T06:15:55Z",
+    "http_status": 503,
+    "payments_sent": 0
+  },
+  "note": "The engine quote-only request reported no purchase dispatched; a separate direct health GET confirmed HTTP 503 while outage chaos was enabled. This is not a paid quality-drop run, paid engine run, or kill/restart proof."
+}

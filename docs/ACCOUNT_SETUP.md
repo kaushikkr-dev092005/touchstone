@@ -87,6 +87,14 @@ The model uses NVIDIA Vulkan on loopback port 8080. The x402 seller binds loopba
 
 The unified engine requires RPC credentials, the local provider URL, a funded dedicated Metal wallet, a total budget and per-step cap. The testnet route uses only the Metal tier and never falls back to MockRail. Do not treat the probe as model eligibility evidence. A 30-step run with the 5-cent per-step ceiling needs up to USD 1.53 including the internal verification charges; a 50-step ceiling is USD 2.55.
 
+Before authorizing a paid run, fetch a live quote for one generated public task. This checks the loopback model health, provider offer, Metal deployment and quote cap without creating a ledger run or sending payment or model inference:
+
+```powershell
+python -m touchstone engine-metal --scope quote-check --steps 1 --budget-usd 0.05 --price-cap-usd 0.05 --provider-url http://127.0.0.1:8092 --quote-only
+```
+
+The report says `LIVE_QUOTE_ONLY` and `payments_sent: 0`. It also reports `latency_samples`: zero means the displayed 1,000 ms is an explicit cold-start fallback, not an observed service-time measurement. Do not use customer data in quote probes.
+
 ```powershell
 python -m touchstone engine-metal --scope engine-30-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute
 ```

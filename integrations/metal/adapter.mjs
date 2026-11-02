@@ -65,8 +65,11 @@ export async function quote(url, deployment, maximum, fetcher = fetch) {
   const offer = approvedOffer(response.headers.get('PAYMENT-REQUIRED'), deployment, maximum);
   const queueDepth = Number(response.headers.get('X-Touchstone-Queue-Depth') || 0);
   const latencyMs = Number(response.headers.get('X-Touchstone-Latency-Ms') || 0);
-  if (!Number.isSafeInteger(queueDepth) || queueDepth < 0 || !Number.isSafeInteger(latencyMs) || latencyMs < 0) throw Error('Invalid provider load metadata');
-  return { url, offer, expires_at: Date.now() + 30000, queue_depth: queueDepth, latency_ms: latencyMs };
+  const latencySamples = Number(response.headers.get('X-Touchstone-Latency-Samples') || 0);
+  if (!Number.isSafeInteger(queueDepth) || queueDepth < 0 || !Number.isSafeInteger(latencyMs) || latencyMs < 0 ||
+      !Number.isSafeInteger(latencySamples) || latencySamples < 0) throw Error('Invalid provider load metadata');
+  return { url, offer, expires_at: Date.now() + 30000, queue_depth: queueDepth,
+    latency_ms: latencyMs, latency_samples: latencySamples };
 }
 
 function purchase(wallet, id) {

@@ -47,6 +47,7 @@ def main():
     metal_engine.add_argument("--task-file", help="JSON list of public tasks; otherwise generated test tasks are used")
     metal_engine.add_argument("--execute", action="store_true", help="Explicitly authorize real testnet calls within the supplied cap")
     metal_engine.add_argument("--recover", action="store_true", help="Recover only; do not dispatch new tasks")
+    metal_engine.add_argument("--quote-only", action="store_true", help="Fetch one live provider quote and send no payment")
     metal_engine.add_argument("--crash-at", choices=["after_reserve", "after_rail", "after_paid"],
                                help="Test a recovery boundary; after_rail performs a real paid request")
     metal_engine.add_argument("--kill-at", choices=["after_reserve", "after_rail", "after_paid"],
@@ -182,7 +183,9 @@ def main():
             from .payments import CompositeRail, MetalEngineRail, MockRail
             from .workload import generate, Task
             import re
-            if not args.execute and not args.recover:
+            if args.quote_only and (args.execute or args.recover):
+                raise ValueError("--quote-only cannot be combined with payment execution or recovery")
+            if not args.execute and not args.recover and not args.quote_only:
                 raise ValueError("No provider payment is sent unless --execute is supplied")
             if not 1 <= args.steps <= 50:
                 parser.error("Use 1 to 50 engine tasks; 30-50 is the recommended live test range")
@@ -195,6 +198,17 @@ def main():
                      if args.task_file else generate(args.seed, args.steps)[0])
             if not tasks or len(tasks) > args.steps or any(task.kind not in {"invoice", "arithmetic", "classification", "invoice_consistency"} for task in tasks):
                 raise ValueError("Supply 1 to --steps supported provider tasks")
+            if args.quote_only:
+                live = MetalEngineRail(args.scope, args.provider_url or os.environ.get("METAL_PROVIDER_URL"), cap, budget)
+                quote = live.quote_for_task(tasks[0])
+                print(json.dumps({"mode": "LIVE_QUOTE_ONLY", "payments_sent": 0,
+                    "task": {"id": tasks[0].id, "kind": tasks[0].kind},
+                    "quote": {"provider": quote.provider, "price_micro_usd": quote.price,
+                              "latency_ms": quote.latency_ms, "queue_depth": quote.queue_depth,
+                              "latency_samples": quote.latency_samples,
+                              "latency_source": "completed_provider_deliveries" if quote.latency_samples else "default_before_first_delivery",
+                              "expires_at": quote.expires_at, "mode": quote.mode}}, indent=2))
+                return 0
             data_dir = ROOT / "data/metal-engine"
             data_dir.mkdir(parents=True, exist_ok=True)
             scope_file = data_dir / (args.scope + ".json")

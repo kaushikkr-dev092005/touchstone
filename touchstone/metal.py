@@ -43,6 +43,7 @@ class MetalQuote:
     latency_ms: int = 0
     mode: str = "TESTNET"
     queue_depth: int = 0
+    latency_samples: int = 0
 
     def public(self):
         return asdict(self)
@@ -74,6 +75,8 @@ class MetalRail:
                 raise ValueError("Sidecar refused operation")
             return result["result"]
         except (OSError, ValueError, subprocess.SubprocessError):
+            if request.get("command") == "quote":
+                raise RuntimeError("Metal quote unavailable; no purchase was dispatched") from None
             raise PaymentPending("Metal operation is unresolved; preserve the job and recover before sending another purchase") from None
 
     def invoke(self, command, **fields):
@@ -91,10 +94,12 @@ class MetalRail:
             raise ValueError("Metal quote exceeds the mandate or is expired")
         identity = hashlib.sha256(json.dumps(raw, sort_keys=True).encode()).hexdigest()
         latency_ms, queue_depth = raw.get("latency_ms", 0), raw.get("queue_depth", 0)
-        if type(latency_ms) is not int or latency_ms < 0 or type(queue_depth) is not int or queue_depth < 0:
+        latency_samples = raw.get("latency_samples", 0)
+        if (type(latency_ms) is not int or latency_ms < 0 or type(queue_depth) is not int or queue_depth < 0
+                or type(latency_samples) is not int or latency_samples < 0):
             raise ValueError("Metal provider load metadata is invalid")
         return MetalQuote(identity, "metal-provider", price, raw["expires_at"]/1000, raw,
-                          latency_ms=latency_ms, queue_depth=queue_depth)
+                          latency_ms=latency_ms, queue_depth=queue_depth, latency_samples=latency_samples)
 
     def pay(self, key, quote):
         if quote.price > self.price_cap or not quote.terms.get("url"):

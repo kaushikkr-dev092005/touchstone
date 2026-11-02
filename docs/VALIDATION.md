@@ -6,13 +6,15 @@ Updated 1 November 2026. Environment: Windows, Python 3.12.10, portable Node 22.
 
 `python -m unittest discover -s tests -v`
 
-80 Python tests pass, covering accounting, concurrency, process-death recovery, source evidence, planning, invoice checks, wallet FX journaling/reconciliation, Metal engine routing, hosted checkout/banked-job cases, and versioned simulated mandate approval. No remote paid operations are part of the suite.
+82 Python tests pass, covering accounting, concurrency, process-death recovery, source evidence, planning, invoice checks, wallet FX journaling/reconciliation, Metal engine routing, hosted checkout/banked-job cases, versioned simulated mandate approval, and no-payment quote/unavailable-provider handling. No remote paid operations are part of the suite.
 
 Sandbox workflow tests exercise lost create and capture responses, repeated execution without a second write, immutable scope/amounts, pending review refusal, monetary precision, and exclusion of card fields/client secrets from persisted response data. A read-only smoke check can verify Checkout Sessions read access but never verifies write access. The remote API is replaced with controlled fixtures in these tests; no actual hosted checkout or sandbox authorization is claimed.
 
-`python tools/metal.py test`: 19 Node tests pass. They cover SDK store ownership, quote units/caps, exact pending-invoice replay, authoritative unpaid refusals, refusal to change seller/URL, uncertain payment retention, original paid delivery replay, durable provider output, task-digest binding, queue-aware quote persistence/pricing, quality-drop injection and funding-key preservation.
+`python tools/metal.py test`: 20 Node tests pass. They cover SDK store ownership, quote units/caps and sample-count metadata, exact pending-invoice replay, authoritative unpaid refusals, refusal to change seller/URL, uncertain payment retention, original paid delivery replay, durable provider output, task-digest binding, queue-aware quote persistence/pricing, quality-drop injection and funding-key preservation.
 
 `python tools/metal.py inspect` succeeded against the public testnet facilitator and sent zero payments. Evidence is saved in `bench/results/metal-discovery.json`. SDK 0.3.3 and viem 2.57.13 are locked; npm reported zero known vulnerabilities on installation. A local preparation wallet was initialized under ignored data/metal/; no private key was printed or funded.
+
+`python -m touchstone engine-metal --quote-only` was exercised against the loopback Qwen2.5 0.5B Vulkan seller and Metal testnet deployment. It returned a $0.01 quote at queue depth zero and sent zero payments. The provider reported zero completed-delivery latency samples, so the displayed 1,000 ms remains a fallback estimate. It did not create a ledger run or execute inference; see `bench/results/metal-provider-quote.json`.
 
 The recovery test starts a subprocess, commits one receipt to the independent mock rail, then terminates via the engine's `kill_at='after_rail'` path (exit 86) before recording local payment. The parent reopens the stores, recovers the original receipt, repeats recovery without another effect and finishes the run. Additional tests cover interruption after reservation and after local payment commit. These simulated process-kill tests are distinct from a real Metal kill/restart, which has not been run.
 
@@ -69,4 +71,4 @@ Airwallex smoke rerun on 1 November confirms authentication, balance reads and G
 
 ## Not executed
 
-Actual hosted Checkout Session or sandbox hold/capture; a Treasury FX quote/conversion; 30–50 paid engine steps; provider outage/quality chaos and a real Metal kill/restart; three concurrent external customer holds; finality for the paid inference receipt; representative finance-document evaluation and qualified autonomous model procurement; production security assessment; public repository publication and hackathon submission. The private repository was pushed on 30 October 2026. The real x402 round trip above uses test assets and is separate from the multi-job simulator.
+Actual hosted Checkout Session or sandbox hold/capture; a Treasury FX quote/conversion; 30–50 paid engine steps; paid quality-drop chaos and a real Metal kill/restart; three concurrent external customer holds; finality for the paid inference receipt; representative finance-document evaluation and qualified autonomous model procurement; production security assessment; public repository publication and hackathon submission. A zero-payment provider-outage preflight is recorded separately. The private repository was pushed on 1 November 2026. The real x402 round trip above uses test assets and is separate from the multi-job simulator.
