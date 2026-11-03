@@ -1,0 +1,23 @@
+{
+  "label": "BLOCKED",
+  "date": "2026-11-03",
+  "checks": [
+    {
+      "tier": "economy",
+      "label": "BLOCKED",
+      "failure_type": "URLError",
+      "model_identity_verified": false
+    },
+    {
+      "tier": "balanced",
+      "label": "BLOCKED",
+      "failure_type": "URLError",
+      "model_identity_verified": false
+    }
+  ],
+  "model_inference_calls": 0,
+  "payments_sent": 0,
+  "three_b_fit_proof": "BLOCKED_NOT_ATTEMPTED",
+  "hosted_profile": "BLOCKED_NO_M3_SPEND_APPROVAL_OR_VERIFIED_PARTNER_CREDITS",
+  "note": "Loopback health probes only; no model process started and no credentials inspected"
+}

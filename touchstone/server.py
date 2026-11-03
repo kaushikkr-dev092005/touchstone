@@ -149,6 +149,9 @@ def serve(port=8088, data_dir="data"):
             if path == "/api/procurement-evidence":
                 from .procurement_evidence import summary
                 return self.respond(200, summary())
+            if path == '/api/invoice-study':
+                from .invoice_study import dashboard
+                return self.respond(200, dashboard(ROOT/'bench/results/m3'))
             if path == "/api/banked-jobs":
                 from .banked import BankedStore
                 from .treasury_job import read_treasury_jobs

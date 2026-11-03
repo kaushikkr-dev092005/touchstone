@@ -1,5 +1,7 @@
 # Integration contracts and verified sources
 
+M3 update, 3 November: `invoice_extraction` is supported by the existing local and hosted x402 seller. The hosted health response identifies its configured model and labels upstream partner-credit funding as operator-declared; readiness is configuration only. Paid profiling uses existing funded wallets, quote-bound ledger reservations, shared aggregate caps for optional reference calls, preserved uncertain invoices and no automatic retry. Local profiles bind to the installed model hash and check actual VRAM headroom. No M3 model/API/paid call has been measured; the tool baseline is a separate synthetic-source measurement. [M3 report](M3_REPORT.md) · [runbook](M3_RUNBOOK.md).
+
 Updated 1 November 2026. Credentials are local, one funded SDK inference purchase is verified, and Airwallex authentication/read access passes. Direct PaymentIntent creation is blocked by `configuration_error`; hosted checkout remains untested. The engine Metal route has returned a live quote from the loopback GPU seller without paying; no integrated live inference output was produced. The seller's outage mode returned 503 before quote/payment; paid engine and quality-drop/kill-restart runs remain unexercised. FX operations remain untested. See [actual proof](LIVE_PROOF.md) and [commands](ACCOUNT_SETUP.md).
 
 ## Airwallex transport and authorization

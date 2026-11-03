@@ -9,7 +9,7 @@ export function decodeResource(path) {
   const bytes = Buffer.from(value, 'base64url');
   if (createHash('sha256').update(bytes).digest('hex') !== match[1]) throw Error('Task digest mismatch');
   const task = JSON.parse(bytes.toString('utf8'));
-  if (!task || typeof task.id !== 'string' || task.id.length > 80 || !['invoice','arithmetic','classification','invoice_consistency'].includes(task.kind) ||
+  if (!task || typeof task.id !== 'string' || task.id.length > 80 || !['invoice','arithmetic','classification','invoice_consistency','invoice_extraction'].includes(task.kind) ||
       typeof task.source !== 'object' || task.source === null || Array.isArray(task.source) ||
       Object.keys(task).some(k => !['id','kind','source','min_quality'].includes(k))) throw Error('Invalid task');
   return { key: match[1], task };

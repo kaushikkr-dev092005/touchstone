@@ -1,0 +1,32 @@
+{
+  "label": "SIMULATED",
+  "dataset_version": "invoice-exceptions-180-v1",
+  "sources": 180,
+  "unique_sources": 180,
+  "partition_counts": {
+    "calibration": 120,
+    "holdout": 60
+  },
+  "templates": {
+    "calibration": [
+      "layout-00",
+      "layout-01",
+      "layout-02",
+      "layout-03",
+      "layout-04",
+      "layout-05",
+      "layout-06",
+      "layout-07"
+    ],
+    "holdout": [
+      "layout-08",
+      "layout-09",
+      "layout-10",
+      "layout-11"
+    ]
+  },
+  "sources_sha256": "2652d67d2a5772f7d6806dbc27aa3955b229d9620b8f23c42f2abe435bad4be8",
+  "offline_truth_sha256": "81a758fe15a85e3285f62b4b1160b7b5fca979b08e099a9aac963b1aaa61cd7b",
+  "provenance": "Known generated truth; synthetic, not independently human-labelled or representative vendor data",
+  "offline_truth_never_sent_to_models": true
+}

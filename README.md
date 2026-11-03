@@ -4,6 +4,8 @@ Quality-aware inference procurement for autonomous agents. A customer approves a
 
 Built for the Airwallex Agentic Banking Hackathon, extending Kit 12 with quality checks and payment recovery. **One real Metal testnet inference purchase is proven. The unified engine can route the Metal tier, but its 30–50-step live run has not been executed. Airwallex authentication/reads pass; merchant configuration blocks PaymentIntents, hosted checkout is untested, and the new treasury FX path has not been exercised.** The three-job financial scenario remains simulated.
 
+**M3, 3 November — MEASURED on SIMULATED sources:** 180 unique invoice-extraction cases, fixed 120/60 template split; deterministic coverage 24/180 (13.3%), zero observed false accepts. **BLOCKED:** no current M3 model measurements or eligible model; no new paid calls. The Planning panel shows tool/model-review/human-review decisions without buying anything. [Report](docs/M3_REPORT.md) · [Runbook](docs/M3_RUNBOOK.md).
+
 ## Run it
 
 Python 3.11+; no runtime dependencies. Tested on Windows with Python 3.12.
@@ -57,15 +59,16 @@ Labels: **MEASURED** = execution with saved evidence (scope stated); **SIMULATED
 | Ledger and control logic | MEASURED (tests) | Real local code | Concurrency and process-death tests |
 | Airwallex holds/capture | BLOCKED | Integrated adapter implemented; external blocker | PaymentIntent creation returns merchant `configuration_error`; no completed authorization/capture |
 | Airwallex connectivity | MEASURED | Verified sandbox authentication and reads | Balance and Global Account reads passed after scope update |
-| Airwallex Treasury FX | BLOCKED | Implemented, not exercised | Saved readiness lacks account context; conversion write scope and approval remain unverified; no FX quote or conversion was created |
+| Airwallex Treasury FX | BLOCKED | Implemented, not exercised | Saved readiness lacks verified account context/scopes; the approved one-conversion USD 1 cap remains unexecuted |
 | Treasury job accounting | MOCK | Controlled adapter proof | Budget/quote/conversion/history linked to append-only Airwallex entries; separate SIMULATED USDZ demo entry cannot fund Metal |
 | Metal and x402 | MEASURED | Real funded testnet proof | 0.10 USDZ deposit, one 0.01 USDZ paid inference, signed receipt and original-delivery replay |
-| Unified Metal engine | BLOCKED (quote-only MEASURED) | Live quote-only preflight passed; paid engine not run | Local GPU seller returned a capped quote with no payment; live run still needs explicit testnet budget authorization |
+| Unified Metal engine | BLOCKED (historical quote-only MEASURED) | M2 controls implemented; paid engine not run | Latest M2 RPC check returned HTTP 401 and provider origin was unset; one-call approval up to 0.05 USDZ remains unused |
 | Hosted Claude tier | BLOCKED | Adapter and real-policy routing implemented; not exercised | Direct Messages API structured output, reported token usage and conservative no-repeat behavior after uncertain paid delivery; no API call or matched trial recorded |
 | Dashboard inference | SIMULATED | Simulator only | Synthetic reliability and latency; no model runs in the dashboard |
 | Local GPU profiling | MEASURED | Measured on RTX 3050 | Two Qwen model sizes, 90 paired calls each; raw results and hardware telemetry saved separately |
 | Benchmark | SIMULATED | Simulator only | Not evidence of model savings or real-world quality |
 | Agent planning | MEASURED (deterministic, synthetic) | Deterministic | No live LLM planner or reference judge |
+| M3 invoice extraction | BLOCKED (tool baseline MEASURED) | 180 synthetic sources, separate offline truth, qualification and showcase | 24 tool extractions; zero models measured/eligible; no live paid reference check |
 | Mandate-limit approval (versioned, human-approved) | SIMULATED | Exists in the simulator only | Audited local mandate version; job stays paused until Resume; uses only existing simulated float |
 | Real Airwallex hold increase | BLOCKED | Not implemented | No external hold, authorization increment or wallet change is made by any approval |
 | Refunds | BLOCKED | Not implemented | Failed calls remain charged |

@@ -298,7 +298,7 @@ def main():
                 raise ValueError("Real policy comparison requires separate local-GPU and hosted-premium provider origins")
             tasks = ([Task(**item) for item in json.loads(Path(args.task_file).read_text(encoding="utf-8"))]
                      if args.task_file else generate(args.seed, args.steps)[0])
-            if not tasks or len(tasks) > args.steps or any(task.kind not in {"invoice", "arithmetic", "classification", "invoice_consistency"} for task in tasks):
+            if not tasks or len(tasks) > args.steps or any(task.kind not in {"invoice", "arithmetic", "classification", "invoice_consistency", "invoice_extraction"} for task in tasks):
                 raise ValueError("Supply 1 to --steps supported provider tasks")
             if args.quote_only:
                 expected_provider_ids = ["local-gpu", "hosted-premium"] if args.policy.startswith("real-") else None

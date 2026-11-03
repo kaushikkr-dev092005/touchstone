@@ -295,7 +295,7 @@ class Ledger:
             metadata = receipt.get("provider_metadata")
             metadata_json = None
             if metadata is not None:
-                allowed_fields = {"provider_type", "provider_model", "usage", "latency_ms", "chaos_mode"}
+                allowed_fields = {"provider_type", "provider_model", "usage", "latency_ms", "chaos_mode", "funding_source"}
                 allowed_usage = {"input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens"}
                 usage = metadata.get("usage", {}) if isinstance(metadata, dict) else None
                 valid = (isinstance(metadata, dict) and not set(metadata) - allowed_fields
@@ -306,7 +306,8 @@ class Ledger:
                          and all(type(value) is int and value >= 0 for value in usage.values())
                          and (metadata.get("latency_ms") is None or
                               type(metadata["latency_ms"]) is int and metadata["latency_ms"] >= 0)
-                         and metadata.get("chaos_mode") in {None, "quality-drop"})
+                         and metadata.get("chaos_mode") in {None, "quality-drop"}
+                         and metadata.get('funding_source') in {None, 'UNVERIFIED', 'PARTNER_CREDITS_OPERATOR_DECLARED'})
                 if valid:
                     metadata_json = canonical(metadata)
                 else:

@@ -1,5 +1,9 @@
 # Decide whether to buy inference
 
+M3 update, 3 November: the new `invoice_extraction` contract accepts raw text plus typed PO/payment records, with no pre-supplied extraction labels. `python tools/m3.py build` generates 180 synthetic sources and measures tool-only coverage before model calls. The separate offline scorer uses known generated truth; the online checker uses exact spans and integer arithmetic only. Current result: 24/180 tool extractions, zero model measurements and no qualified M3 model. Historical model profiles do not qualify this domain. See [M3 report](M3_REPORT.md) and [runbook](M3_RUNBOOK.md).
+
+M3 retains the existing deduplicated Wilson lower-bound target (95%, at least 20 sources), requires the complete 120-source calibration set and a separate complete 60-source held-out validation with at least 95% exact extraction and zero observed false accepts. Neither MOCK profiles, stale provenance nor an incomplete/stopped profile can qualify. No demo-tier relaxation is enabled. The Planning panel is a no-payment preview. Explicit engine/paid-profiler integration tools remain operator tests requiring their own spend mandate; offline eligibility never grants financial permission.
+
 Touchstone now has an executable preflight planner alongside the financial simulator. It solves a small set of typed tasks locally and pauses on unsupported inputs. Run `python -m touchstone plan` for the authored examples, or pass `--input path/to/tasks.json` for public tasks. Decisions are written to `data/local-plan.json`; no account credentials, network requests or payments are used.
 
 ## Supported contracts
@@ -62,4 +66,4 @@ Use an invoice-exception workflow with independently labeled, de-identified sour
 4. Freeze prompts and tool versions before a new prospective evaluation. Current fixture profiles cannot authorize this new domain.
 5. Connect one eligible provider to the per-job clearing wallet, preserve a receipt across a forced interruption, and link actual spend to sandbox capture. Expand to three concurrent holds only after that single-job proof.
 
-This defines the next experiment; representative documents, independent labeling and a paid end-to-end result have not yet been produced.
+M3 implements a synthetic first experiment with these extraction/checking boundaries, fixed layout split and conservative baseline. Representative documents, independent human labeling and a paid end-to-end result have not yet been produced. Decorative OCR-style noise in generated sources is not a real OCR qualification set.

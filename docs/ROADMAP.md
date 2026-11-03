@@ -6,7 +6,7 @@ The official event page (fetched 2 November 2026) lists build completion on **15
 
 The [current Airwallex developer-lab guide](https://airwallexdev.com/guide) maps the three-job, short-float inference sourcing story to **Kit 12**. Its **Kit 11** asks for spending-limit rebalancing when upstream prices rise and a dispute settled from signed orders. This project has a simulated, versioned human approval flow and one real signed x402 receipt, but no end-to-end Kit 11 dispute settlement or live limit rebalance. Do not claim Kit 11 as completed until those behaviors are implemented and evidenced.
 
-## Done (as of 2 November 2026)
+## Done (as of 3 November 2026)
 
 A checked item is not a live-service completion claim; see VALIDATION.md and LIVE_PROOF.md for exactly what ran.
 
@@ -55,7 +55,12 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 - [x] Repository is public (verified through the GitHub API on 2 November 2026).
 - [x] M1 implementation and documented-blocker exit: environment-only doctor, guarded FX job accounting with separate demo USDZ, definitive create rejection/consumed-ID handling, evidence-based scope retirement, visible treasury stages, controlled tests and support draft. [M1 report](M1_REPORT.md). No live FX or acquiring write is claimed.
 
+- [x] M3 implementation and honest refusal evidence: 180 template-split synthetic sources, measured 13.3% parser coverage, citation/integer checker, local/hosted profilers, paid-reference accounting and three-task panel. Zero current M3 model measurements or eligible models; no useful paid inference claim. [M3 report](M3_REPORT.md).
+- [x] M2 implementation and controlled recovery/invariant evidence are complete; its live gate remains open. [M2 report](M2_REPORT.md).
+
 ## Not done
+
+- [ ] M3 actual model measurements: operator starts the local tiers; hosted credentials/partner credits and a new aggregate paid-study cap remain human gates. Useful inference on representative sources is unproven. The historical profiles cannot qualify this new task/checker.
 
 - [ ] M2 live gate remains BLOCKED: implementation and controlled evidence are complete ([report](M2_REPORT.md)); the authorized single call and live kill/restart have not run because the current RPC check fails and provider URL is unset. MEASURED local suite: 162 Python / 27 Node tests. No additional spend approval is needed for the same one-call cap.
 

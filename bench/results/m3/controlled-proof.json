@@ -1,0 +1,84 @@
+{
+  "label": "MOCK",
+  "live_payments_sent": 0,
+  "real_wallets_accessed": false,
+  "reference_accounting": {
+    "label": "MOCK",
+    "tier": "hosted-premium",
+    "model_id": "MOCK-premium",
+    "dataset_version": "invoice-exceptions-180-v1",
+    "verifier_version": "invoice-extraction-v1",
+    "code_sha256": {
+      "invoice_dataset.py": "f940bd9db9df3472f33f81543bd3eed8a0822ca2d54a768c2142a985c0a00908",
+      "invoice_extraction.py": "57bd93ba3717898e4ecd045c97b8ba81e07641e7252a155b423d843df13fe546",
+      "invoice_study.py": "ccd33e0d0f3e33a0fd48f2a64dedb6974c8663f4fedc894ccf9ff0125ab72e4b",
+      "invoice_profile.py": "1068e7401b02812694a9050b7b23cfd9bd7b0722ddc2568b65cf78c795d12330",
+      "providers.py": "3dec6cca0e44ca400b3fb463c5b436f9f669ee5887734247f66ad87f2dd39ca1",
+      "local_tools.py": "ed1b617ab702c7a7773e615c8fd77b850103d895392ca66ec83d32c2e5928052",
+      "eligibility.py": "6c026a6a0d0ca50f904e0c191498892b7904a855fcf38767f500815d5ec37033",
+      "verifier.py": "5e31d7e313f566bc4411ff2f0217c24a55766a98d50a0a927b22516738ea3e7a"
+    },
+    "rows": [
+      {
+        "task_id": "IX-00-000-20261103",
+        "output": {
+          "total_cents": -1
+        },
+        "receipt": "mock_3269f58970b139d33443aa65",
+        "run_id": "9c0344697213",
+        "provider_metadata": {},
+        "reservation_key": "ca6d4bd010559d8bcb2781094127d03ca278d042ebfdb31fc9a69b5f0832f7b2",
+        "provider_cost_micro_usd": 10000,
+        "verification_cost_micro_usd": 2000,
+        "latency_ms": null,
+        "reference_output": {
+          "total_cents": -1
+        },
+        "reference_receipt": "mock_7fa169e0942b9147f65f3f89",
+        "reference_cost_micro_usd": 10000,
+        "reference_provider_metadata": {}
+      }
+    ],
+    "run_id": "9c0344697213",
+    "runs": [
+      {
+        "run_id": "9c0344697213",
+        "scope": "primary",
+        "partition": "calibration",
+        "stop_reason": "PolicyError",
+        "pending_attempts": 0,
+        "confirmed_provider_spend_including_failed_calls_micro_usd": 20000,
+        "verification_cost_micro_usd": 2000,
+        "audit": {
+          "valid": true,
+          "events": 14,
+          "head": "5a18b16f876e8ed300b2dcad6764cec53dbf901cd28c62dc5390522640d232c9"
+        }
+      }
+    ],
+    "upstream_funding": "PARTNER_CREDITS_OPERATOR_DECLARED",
+    "upstream_dollar_cost": "UNMEASURED",
+    "verification_cost_label": "SIMULATED",
+    "latency_source": "PROVIDER_REPORTED_INFERENCE_ONLY",
+    "stop_reason": "PolicyError",
+    "audit": {
+      "valid": true,
+      "events": 14,
+      "head": "5a18b16f876e8ed300b2dcad6764cec53dbf901cd28c62dc5390522640d232c9"
+    },
+    "pending_attempts": 0,
+    "confirmed_provider_spend_including_failed_calls_micro_usd": 20000,
+    "verification_cost_micro_usd": 2000
+  },
+  "uncertain_purchase": {
+    "label": "MOCK",
+    "remote_payments": 1,
+    "retained_pending_attempts": 1,
+    "automatic_retry_refused": true,
+    "audit": {
+      "valid": true,
+      "events": 5,
+      "head": "81f6049b3846b4532084fe67c24f1e2fc5233806ddb9058a9beddb255d90ed3a"
+    }
+  }
+}

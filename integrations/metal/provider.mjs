@@ -92,9 +92,11 @@ const server = createServer({ maxHeaderSize: 65536 }, async (request, response) 
   if (request.headers.host !== `127.0.0.1:${port}` || request.method !== 'GET') return send(response, 403, { error: 'Loopback GET required' });
   if (chaos === 'outage') return send(response, 503, { error: 'Injected provider outage; no quote is available' });
   if (request.url === '/health') return send(response, 200, { mode: 'TESTNET_PROVIDER', provider_type: mode,
+    upstream_funding: mode === 'anthropic' && process.env.TOUCHSTONE_HOSTED_FUNDING_SOURCE === 'PARTNER_CREDITS' ? 'PARTNER_CREDITS_OPERATOR_DECLARED' : 'UNVERIFIED',
     inference_ready: await modelReady(), chain: 63825, paid_delivery: 'UNVERIFIED', chaos,
     readiness_basis: mode === 'anthropic' ? 'api_key_and_model_configured_only' : 'local_health_check_or_tool_mode',
     provider_id: providerId,
+    provider_model: mode === 'anthropic' ? (process.env.ANTHROPIC_MODEL || 'claude-sonnet-5') : null,
     queue_depth: queueDepth, queue_capacity: 1, latency_samples: serviceSamples.length,
     latency_source: serviceSamples.length ? 'completed_provider_deliveries' : 'default_before_first_delivery',
     seller_public_key: wallet.signer.publicKey,

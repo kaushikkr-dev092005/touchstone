@@ -35,6 +35,9 @@ def source_rejected(reason="Source is outside the supported contract; no provide
 
 def source_supported(task: Task):
     """Pre-purchase gate: (supported, reason). Uses only the public task source."""
+    if task.kind == 'invoice_extraction':
+        from .invoice_extraction import supported
+        return supported(task), 'Invoice extraction source is malformed; review before purchasing'
     if task.kind in {"invoice", "arithmetic"}:
         return (solve(task) is not None,
                 "Source is outside the bounded invoice/arithmetic contract; review before any purchase")
@@ -55,6 +58,9 @@ def check(task: Task, output):
     if not isinstance(output, dict):
         return {"score": 0.0, "passed": False, "reason": "Response is not a JSON object"}
     try:
+        if task.kind == 'invoice_extraction':
+            from .invoice_extraction import verify
+            return verify(task, output)
         if task.kind == "invoice_consistency":
             from .invoice_consistency import check_invoice_consistency
             return check_invoice_consistency(task, output)

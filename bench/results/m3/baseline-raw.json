@@ -1,0 +1,4898 @@
+[
+  {
+    "task_id": "IX-00-000-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-00-000-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 00 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-00-000",
+          "start": 111,
+          "end": 120
+        },
+        "currency": {
+          "value": "USD",
+          "start": 131,
+          "end": 134
+        },
+        "subtotal_cents": {
+          "value": "USD 77.34",
+          "start": 145,
+          "end": 154
+        },
+        "tax_cents": {
+          "value": "USD 1.98",
+          "start": 160,
+          "end": 168
+        },
+        "total_cents": {
+          "value": "USD 79.32",
+          "start": 180,
+          "end": 189
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=2 | unit=USD 24.52 | amount=USD 49.04",
+            "start": 190,
+            "end": 246
+          },
+          "quantity": {
+            "value": "2",
+            "start": 209,
+            "end": 210
+          },
+          "unit_price_cents": {
+            "value": "USD 24.52",
+            "start": 218,
+            "end": 227
+          },
+          "line_total_cents": {
+            "value": "USD 49.04",
+            "start": 237,
+            "end": 246
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=2 | unit=USD 14.15 | amount=USD 28.30",
+            "start": 247,
+            "end": 303
+          },
+          "quantity": {
+            "value": "2",
+            "start": 266,
+            "end": 267
+          },
+          "unit_price_cents": {
+            "value": "USD 14.15",
+            "start": 275,
+            "end": 284
+          },
+          "line_total_cents": {
+            "value": "USD 28.30",
+            "start": 294,
+            "end": 303
+          }
+        }
+      ]
+    },
+    "latency_ms": 1,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "3f7444e80388624a14e0ba37b902fe45e6fb20b0580e93d4db8a86725c121c96",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "candidate",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-001-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-00-001-20261103",
+          "start": 101,
+          "end": 119
+        },
+        "supplier_name": {
+          "value": "Vendor 00 Supply",
+          "start": 130,
+          "end": 146
+        },
+        "purchase_order_id": {
+          "value": "PO-00-001",
+          "start": 163,
+          "end": 172
+        },
+        "currency": {
+          "value": "USD",
+          "start": 183,
+          "end": 186
+        },
+        "subtotal_cents": {
+          "value": "USD 340.59",
+          "start": 197,
+          "end": 207
+        },
+        "tax_cents": {
+          "value": "USD 6.05",
+          "start": 213,
+          "end": 221
+        },
+        "total_cents": {
+          "value": "USD 346.64",
+          "start": 233,
+          "end": 243
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=4 | unit=USD 53.91 | amount=USD 215.64",
+            "start": 244,
+            "end": 301
+          },
+          "quantity": {
+            "value": "4",
+            "start": 263,
+            "end": 264
+          },
+          "unit_price_cents": {
+            "value": "USD 53.91",
+            "start": 272,
+            "end": 281
+          },
+          "line_total_cents": {
+            "value": "USD 215.64",
+            "start": 291,
+            "end": 301
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=3 | unit=USD 41.65 | amount=USD 124.95",
+            "start": 302,
+            "end": 359
+          },
+          "quantity": {
+            "value": "3",
+            "start": 321,
+            "end": 322
+          },
+          "unit_price_cents": {
+            "value": "USD 41.65",
+            "start": 330,
+            "end": 339
+          },
+          "line_total_cents": {
+            "value": "USD 124.95",
+            "start": 349,
+            "end": 359
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "442aece60399463574528cd50725e36d50e1430b7acc3c8dd9ce6f10e4016933",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "candidate",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-002-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "648faa44d4806e4360c18b82477b9f612f1a8c6f17a3c9ea016be8b29cb7365d",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-003-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-00-003-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 00 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-00-003",
+          "start": 111,
+          "end": 120
+        },
+        "currency": {
+          "value": "USD",
+          "start": 131,
+          "end": 134
+        },
+        "subtotal_cents": {
+          "value": "USD 55.57",
+          "start": 145,
+          "end": 154
+        },
+        "tax_cents": {
+          "value": "USD 0.07",
+          "start": 160,
+          "end": 168
+        },
+        "total_cents": {
+          "value": "USD 55.64",
+          "start": 180,
+          "end": 189
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=1 | unit=USD 15.47 | amount=USD 15.47",
+            "start": 190,
+            "end": 246
+          },
+          "quantity": {
+            "value": "1",
+            "start": 209,
+            "end": 210
+          },
+          "unit_price_cents": {
+            "value": "USD 15.47",
+            "start": 218,
+            "end": 227
+          },
+          "line_total_cents": {
+            "value": "USD 15.47",
+            "start": 237,
+            "end": 246
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=2 | unit=USD 20.05 | amount=USD 40.10",
+            "start": 247,
+            "end": 303
+          },
+          "quantity": {
+            "value": "2",
+            "start": 266,
+            "end": 267
+          },
+          "unit_price_cents": {
+            "value": "USD 20.05",
+            "start": 275,
+            "end": 284
+          },
+          "line_total_cents": {
+            "value": "USD 40.10",
+            "start": 294,
+            "end": 303
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "0568583c714e80b3e9e0b7c0fbc44436e8b301d1c7acdfd92eef97f58a5d2d46",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-004-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-00-004-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 00 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-00-004-OTHER",
+          "start": 111,
+          "end": 126
+        },
+        "currency": {
+          "value": "USD",
+          "start": 137,
+          "end": 140
+        },
+        "subtotal_cents": {
+          "value": "USD 526.38",
+          "start": 151,
+          "end": 161
+        },
+        "tax_cents": {
+          "value": "USD 7.49",
+          "start": 167,
+          "end": 175
+        },
+        "total_cents": {
+          "value": "USD 533.87",
+          "start": 187,
+          "end": 197
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=7 | unit=USD 73.33 | amount=USD 513.31",
+            "start": 198,
+            "end": 255
+          },
+          "quantity": {
+            "value": "7",
+            "start": 217,
+            "end": 218
+          },
+          "unit_price_cents": {
+            "value": "USD 73.33",
+            "start": 226,
+            "end": 235
+          },
+          "line_total_cents": {
+            "value": "USD 513.31",
+            "start": 245,
+            "end": 255
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=1 | unit=USD 13.07 | amount=USD 13.07",
+            "start": 256,
+            "end": 312
+          },
+          "quantity": {
+            "value": "1",
+            "start": 275,
+            "end": 276
+          },
+          "unit_price_cents": {
+            "value": "USD 13.07",
+            "start": 284,
+            "end": 293
+          },
+          "line_total_cents": {
+            "value": "USD 13.07",
+            "start": 303,
+            "end": 312
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "04699d33b44d49d44bbcaf8532229c7130ca8c895be282d98d5524d0d1d2cb56",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-005-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-00-005-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 00 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-00-005",
+          "start": 111,
+          "end": 120
+        },
+        "currency": {
+          "value": "USD",
+          "start": 131,
+          "end": 134
+        },
+        "subtotal_cents": {
+          "value": "USD 499.36",
+          "start": 145,
+          "end": 155
+        },
+        "tax_cents": {
+          "value": "USD 3.94",
+          "start": 161,
+          "end": 169
+        },
+        "total_cents": {
+          "value": "USD 503.30",
+          "start": 181,
+          "end": 191
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=6 | unit=USD 74.82 | amount=USD 448.92",
+            "start": 192,
+            "end": 249
+          },
+          "quantity": {
+            "value": "6",
+            "start": 211,
+            "end": 212
+          },
+          "unit_price_cents": {
+            "value": "USD 74.82",
+            "start": 220,
+            "end": 229
+          },
+          "line_total_cents": {
+            "value": "USD 448.92",
+            "start": 239,
+            "end": 249
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=2 | unit=USD 25.22 | amount=USD 50.44",
+            "start": 250,
+            "end": 306
+          },
+          "quantity": {
+            "value": "2",
+            "start": 269,
+            "end": 270
+          },
+          "unit_price_cents": {
+            "value": "USD 25.22",
+            "start": 278,
+            "end": 287
+          },
+          "line_total_cents": {
+            "value": "USD 50.44",
+            "start": 297,
+            "end": 306
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "cef6dedd98f631bbea4762559ae31934caaea84153311ebe29ba198df9ed24d8",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "candidate",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-006-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-00-006-20261103",
+          "start": 101,
+          "end": 119
+        },
+        "supplier_name": {
+          "value": "Vendor 00 Supply",
+          "start": 130,
+          "end": 146
+        },
+        "purchase_order_id": {
+          "value": "PO-00-006",
+          "start": 163,
+          "end": 172
+        },
+        "currency": {
+          "value": "USD",
+          "start": 183,
+          "end": 186
+        },
+        "subtotal_cents": {
+          "value": "USD 124.61",
+          "start": 197,
+          "end": 207
+        },
+        "tax_cents": {
+          "value": "USD 6.33",
+          "start": 213,
+          "end": 221
+        },
+        "total_cents": {
+          "value": "USD 130.94",
+          "start": 233,
+          "end": 243
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=3 | unit=USD 8.79 | amount=USD 26.37",
+            "start": 244,
+            "end": 299
+          },
+          "quantity": {
+            "value": "3",
+            "start": 263,
+            "end": 264
+          },
+          "unit_price_cents": {
+            "value": "USD 8.79",
+            "start": 272,
+            "end": 280
+          },
+          "line_total_cents": {
+            "value": "USD 26.37",
+            "start": 290,
+            "end": 299
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=4 | unit=USD 24.56 | amount=USD 98.24",
+            "start": 300,
+            "end": 356
+          },
+          "quantity": {
+            "value": "4",
+            "start": 319,
+            "end": 320
+          },
+          "unit_price_cents": {
+            "value": "USD 24.56",
+            "start": 328,
+            "end": 337
+          },
+          "line_total_cents": {
+            "value": "USD 98.24",
+            "start": 347,
+            "end": 356
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "3f04cd4d00a485165bcd099c6006b2e7ec59f3ccf24408b8812ea6399e11592b",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "candidate",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-007-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "392770dc53f47e84701c0883a6a91b0c240f3ba8fd482d5f5794f1b8d0ccbf9d",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-008-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-00-008-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 00 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-00-008",
+          "start": 111,
+          "end": 120
+        },
+        "currency": {
+          "value": "USD",
+          "start": 131,
+          "end": 134
+        },
+        "subtotal_cents": {
+          "value": "USD 399.90",
+          "start": 145,
+          "end": 155
+        },
+        "tax_cents": {
+          "value": "USD 4.69",
+          "start": 161,
+          "end": 169
+        },
+        "total_cents": {
+          "value": "USD 404.59",
+          "start": 181,
+          "end": 191
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=8 | unit=USD 44.88 | amount=USD 359.04",
+            "start": 192,
+            "end": 249
+          },
+          "quantity": {
+            "value": "8",
+            "start": 211,
+            "end": 212
+          },
+          "unit_price_cents": {
+            "value": "USD 44.88",
+            "start": 220,
+            "end": 229
+          },
+          "line_total_cents": {
+            "value": "USD 359.04",
+            "start": 239,
+            "end": 249
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=3 | unit=USD 13.62 | amount=USD 40.86",
+            "start": 250,
+            "end": 306
+          },
+          "quantity": {
+            "value": "3",
+            "start": 269,
+            "end": 270
+          },
+          "unit_price_cents": {
+            "value": "USD 13.62",
+            "start": 278,
+            "end": 287
+          },
+          "line_total_cents": {
+            "value": "USD 40.86",
+            "start": 297,
+            "end": 306
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "479626afda30887d457adf063fcd80e31b791e589729b5370aa7298b986b4e25",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-009-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-00-009-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 00 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-00-009-OTHER",
+          "start": 111,
+          "end": 126
+        },
+        "currency": {
+          "value": "USD",
+          "start": 137,
+          "end": 140
+        },
+        "subtotal_cents": {
+          "value": "USD 399.38",
+          "start": 151,
+          "end": 161
+        },
+        "tax_cents": {
+          "value": "USD 7.51",
+          "start": 167,
+          "end": 175
+        },
+        "total_cents": {
+          "value": "USD 406.89",
+          "start": 187,
+          "end": 197
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=4 | unit=USD 83.78 | amount=USD 335.12",
+            "start": 198,
+            "end": 255
+          },
+          "quantity": {
+            "value": "4",
+            "start": 217,
+            "end": 218
+          },
+          "unit_price_cents": {
+            "value": "USD 83.78",
+            "start": 226,
+            "end": 235
+          },
+          "line_total_cents": {
+            "value": "USD 335.12",
+            "start": 245,
+            "end": 255
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=2 | unit=USD 32.13 | amount=USD 64.26",
+            "start": 256,
+            "end": 312
+          },
+          "quantity": {
+            "value": "2",
+            "start": 275,
+            "end": 276
+          },
+          "unit_price_cents": {
+            "value": "USD 32.13",
+            "start": 284,
+            "end": 293
+          },
+          "line_total_cents": {
+            "value": "USD 64.26",
+            "start": 303,
+            "end": 312
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "b41ee7907c6367f2732529a47031b998b099e0dc0dced872ee9596b9a06c4275",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-010-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-00-010-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 00 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-00-010",
+          "start": 111,
+          "end": 120
+        },
+        "currency": {
+          "value": "USD",
+          "start": 131,
+          "end": 134
+        },
+        "subtotal_cents": {
+          "value": "USD 73.18",
+          "start": 145,
+          "end": 154
+        },
+        "tax_cents": {
+          "value": "USD 6.52",
+          "start": 160,
+          "end": 168
+        },
+        "total_cents": {
+          "value": "USD 79.70",
+          "start": 180,
+          "end": 189
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=3 | unit=USD 3.98 | amount=USD 11.94",
+            "start": 190,
+            "end": 245
+          },
+          "quantity": {
+            "value": "3",
+            "start": 209,
+            "end": 210
+          },
+          "unit_price_cents": {
+            "value": "USD 3.98",
+            "start": 218,
+            "end": 226
+          },
+          "line_total_cents": {
+            "value": "USD 11.94",
+            "start": 236,
+            "end": 245
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=2 | unit=USD 30.62 | amount=USD 61.24",
+            "start": 246,
+            "end": 302
+          },
+          "quantity": {
+            "value": "2",
+            "start": 265,
+            "end": 266
+          },
+          "unit_price_cents": {
+            "value": "USD 30.62",
+            "start": 274,
+            "end": 283
+          },
+          "line_total_cents": {
+            "value": "USD 61.24",
+            "start": 293,
+            "end": 302
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "e20eeaff6ca3ff685a111b4ca61fea16a8a89e48165c4f6095fc55cb311cca58",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "candidate",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-011-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-00-011-20261103",
+          "start": 101,
+          "end": 119
+        },
+        "supplier_name": {
+          "value": "Vendor 00 Supply",
+          "start": 130,
+          "end": 146
+        },
+        "purchase_order_id": {
+          "value": "PO-00-011",
+          "start": 163,
+          "end": 172
+        },
+        "currency": {
+          "value": "USD",
+          "start": 183,
+          "end": 186
+        },
+        "subtotal_cents": {
+          "value": "USD 325.34",
+          "start": 197,
+          "end": 207
+        },
+        "tax_cents": {
+          "value": "USD 4.95",
+          "start": 213,
+          "end": 221
+        },
+        "total_cents": {
+          "value": "USD 330.29",
+          "start": 233,
+          "end": 243
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=2 | unit=USD 40.47 | amount=USD 80.94",
+            "start": 244,
+            "end": 300
+          },
+          "quantity": {
+            "value": "2",
+            "start": 263,
+            "end": 264
+          },
+          "unit_price_cents": {
+            "value": "USD 40.47",
+            "start": 272,
+            "end": 281
+          },
+          "line_total_cents": {
+            "value": "USD 80.94",
+            "start": 291,
+            "end": 300
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=5 | unit=USD 48.88 | amount=USD 244.40",
+            "start": 301,
+            "end": 358
+          },
+          "quantity": {
+            "value": "5",
+            "start": 320,
+            "end": 321
+          },
+          "unit_price_cents": {
+            "value": "USD 48.88",
+            "start": 329,
+            "end": 338
+          },
+          "line_total_cents": {
+            "value": "USD 244.40",
+            "start": 348,
+            "end": 358
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "07f15f5cc018fa4e4a5f4663df1da170f2c32fb09bb786863ba20a1fffb48e39",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "candidate",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-012-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "a8c508f215f5ce46e3cca39a4e80601ad620ca7beb8856a5e25c8d422a7482b2",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-013-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-00-013-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 00 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-00-013",
+          "start": 111,
+          "end": 120
+        },
+        "currency": {
+          "value": "USD",
+          "start": 131,
+          "end": 134
+        },
+        "subtotal_cents": {
+          "value": "USD 347.78",
+          "start": 145,
+          "end": 155
+        },
+        "tax_cents": {
+          "value": "USD 3.45",
+          "start": 161,
+          "end": 169
+        },
+        "total_cents": {
+          "value": "USD 351.23",
+          "start": 181,
+          "end": 191
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=4 | unit=USD 36.05 | amount=USD 144.20",
+            "start": 192,
+            "end": 249
+          },
+          "quantity": {
+            "value": "4",
+            "start": 211,
+            "end": 212
+          },
+          "unit_price_cents": {
+            "value": "USD 36.05",
+            "start": 220,
+            "end": 229
+          },
+          "line_total_cents": {
+            "value": "USD 144.20",
+            "start": 239,
+            "end": 249
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=6 | unit=USD 33.93 | amount=USD 203.58",
+            "start": 250,
+            "end": 307
+          },
+          "quantity": {
+            "value": "6",
+            "start": 269,
+            "end": 270
+          },
+          "unit_price_cents": {
+            "value": "USD 33.93",
+            "start": 278,
+            "end": 287
+          },
+          "line_total_cents": {
+            "value": "USD 203.58",
+            "start": 297,
+            "end": 307
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "d702eddec9c0b132178e875a293904b9851e9fbda75ef5049da8fb1097d45619",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-00-014-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-00-014-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 00 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-00-014-OTHER",
+          "start": 111,
+          "end": 126
+        },
+        "currency": {
+          "value": "USD",
+          "start": 137,
+          "end": 140
+        },
+        "subtotal_cents": {
+          "value": "USD 49.71",
+          "start": 151,
+          "end": 160
+        },
+        "tax_cents": {
+          "value": "USD 2.20",
+          "start": 166,
+          "end": 174
+        },
+        "total_cents": {
+          "value": "USD 51.91",
+          "start": 186,
+          "end": 195
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=3 | unit=USD 4.99 | amount=USD 14.97",
+            "start": 196,
+            "end": 251
+          },
+          "quantity": {
+            "value": "3",
+            "start": 215,
+            "end": 216
+          },
+          "unit_price_cents": {
+            "value": "USD 4.99",
+            "start": 224,
+            "end": 232
+          },
+          "line_total_cents": {
+            "value": "USD 14.97",
+            "start": 242,
+            "end": 251
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=2 | unit=USD 17.37 | amount=USD 34.74",
+            "start": 252,
+            "end": 308
+          },
+          "quantity": {
+            "value": "2",
+            "start": 271,
+            "end": 272
+          },
+          "unit_price_cents": {
+            "value": "USD 17.37",
+            "start": 280,
+            "end": 289
+          },
+          "line_total_cents": {
+            "value": "USD 34.74",
+            "start": 299,
+            "end": 308
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-00",
+    "source_key": "2435db2179a81ba6c2375605495e02477c7e104db0c297da2edc45648307a98e",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-000-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-01-000-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 01 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-01-000",
+          "start": 111,
+          "end": 120
+        },
+        "currency": {
+          "value": "USD",
+          "start": 131,
+          "end": 134
+        },
+        "subtotal_cents": {
+          "value": "USD 77.38",
+          "start": 145,
+          "end": 154
+        },
+        "tax_cents": {
+          "value": "USD 2.77",
+          "start": 160,
+          "end": 168
+        },
+        "total_cents": {
+          "value": "USD 80.15",
+          "start": 180,
+          "end": 189
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=3 | unit=USD 8.32 | amount=USD 24.96",
+            "start": 190,
+            "end": 245
+          },
+          "quantity": {
+            "value": "3",
+            "start": 209,
+            "end": 210
+          },
+          "unit_price_cents": {
+            "value": "USD 8.32",
+            "start": 218,
+            "end": 226
+          },
+          "line_total_cents": {
+            "value": "USD 24.96",
+            "start": 236,
+            "end": 245
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=2 | unit=USD 26.21 | amount=USD 52.42",
+            "start": 246,
+            "end": 302
+          },
+          "quantity": {
+            "value": "2",
+            "start": 265,
+            "end": 266
+          },
+          "unit_price_cents": {
+            "value": "USD 26.21",
+            "start": 274,
+            "end": 283
+          },
+          "line_total_cents": {
+            "value": "USD 52.42",
+            "start": 293,
+            "end": 302
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "f014229ca89bd8610485e77b213d40c616ead1fc244fd7dabe2b5891ef47858f",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "candidate",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-001-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-01-001-20261103",
+          "start": 101,
+          "end": 119
+        },
+        "supplier_name": {
+          "value": "Vendor 01 Supply",
+          "start": 130,
+          "end": 146
+        },
+        "purchase_order_id": {
+          "value": "PO-01-001",
+          "start": 163,
+          "end": 172
+        },
+        "currency": {
+          "value": "USD",
+          "start": 183,
+          "end": 186
+        },
+        "subtotal_cents": {
+          "value": "USD 40.98",
+          "start": 197,
+          "end": 206
+        },
+        "tax_cents": {
+          "value": "USD 2.09",
+          "start": 212,
+          "end": 220
+        },
+        "total_cents": {
+          "value": "USD 43.07",
+          "start": 232,
+          "end": 241
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=8 | unit=USD 2.28 | amount=USD 18.24",
+            "start": 242,
+            "end": 297
+          },
+          "quantity": {
+            "value": "8",
+            "start": 261,
+            "end": 262
+          },
+          "unit_price_cents": {
+            "value": "USD 2.28",
+            "start": 270,
+            "end": 278
+          },
+          "line_total_cents": {
+            "value": "USD 18.24",
+            "start": 288,
+            "end": 297
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=3 | unit=USD 7.58 | amount=USD 22.74",
+            "start": 298,
+            "end": 353
+          },
+          "quantity": {
+            "value": "3",
+            "start": 317,
+            "end": 318
+          },
+          "unit_price_cents": {
+            "value": "USD 7.58",
+            "start": 326,
+            "end": 334
+          },
+          "line_total_cents": {
+            "value": "USD 22.74",
+            "start": 344,
+            "end": 353
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "8932d3f7ecbbe7781f211bd3746671742d3322c448a9c529b9a1372ffcfd07bd",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "candidate",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-002-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "46fdf882e18ce523c28cf5265e1e135e81fab47164ea43464771d7f2b3d5f311",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-003-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-01-003-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 01 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-01-003",
+          "start": 111,
+          "end": 120
+        },
+        "currency": {
+          "value": "USD",
+          "start": 131,
+          "end": 134
+        },
+        "subtotal_cents": {
+          "value": "USD 251.96",
+          "start": 145,
+          "end": 155
+        },
+        "tax_cents": {
+          "value": "USD 5.57",
+          "start": 161,
+          "end": 169
+        },
+        "total_cents": {
+          "value": "USD 257.53",
+          "start": 181,
+          "end": 191
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=2 | unit=USD 45.43 | amount=USD 90.86",
+            "start": 192,
+            "end": 248
+          },
+          "quantity": {
+            "value": "2",
+            "start": 211,
+            "end": 212
+          },
+          "unit_price_cents": {
+            "value": "USD 45.43",
+            "start": 220,
+            "end": 229
+          },
+          "line_total_cents": {
+            "value": "USD 90.86",
+            "start": 239,
+            "end": 248
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=6 | unit=USD 26.85 | amount=USD 161.10",
+            "start": 249,
+            "end": 306
+          },
+          "quantity": {
+            "value": "6",
+            "start": 268,
+            "end": 269
+          },
+          "unit_price_cents": {
+            "value": "USD 26.85",
+            "start": 277,
+            "end": 286
+          },
+          "line_total_cents": {
+            "value": "USD 161.10",
+            "start": 296,
+            "end": 306
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "b14a8f8d43395d64ced996f8fe1be18ac3449dc4f2e514178f09262026b4c66d",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-004-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-01-004-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 01 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-01-004-OTHER",
+          "start": 111,
+          "end": 126
+        },
+        "currency": {
+          "value": "USD",
+          "start": 137,
+          "end": 140
+        },
+        "subtotal_cents": {
+          "value": "USD 129.00",
+          "start": 151,
+          "end": 161
+        },
+        "tax_cents": {
+          "value": "USD 1.46",
+          "start": 167,
+          "end": 175
+        },
+        "total_cents": {
+          "value": "USD 130.46",
+          "start": 187,
+          "end": 197
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=3 | unit=USD 17.72 | amount=USD 53.16",
+            "start": 198,
+            "end": 254
+          },
+          "quantity": {
+            "value": "3",
+            "start": 217,
+            "end": 218
+          },
+          "unit_price_cents": {
+            "value": "USD 17.72",
+            "start": 226,
+            "end": 235
+          },
+          "line_total_cents": {
+            "value": "USD 53.16",
+            "start": 245,
+            "end": 254
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=6 | unit=USD 12.64 | amount=USD 75.84",
+            "start": 255,
+            "end": 311
+          },
+          "quantity": {
+            "value": "6",
+            "start": 274,
+            "end": 275
+          },
+          "unit_price_cents": {
+            "value": "USD 12.64",
+            "start": 283,
+            "end": 292
+          },
+          "line_total_cents": {
+            "value": "USD 75.84",
+            "start": 302,
+            "end": 311
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "83a875637ebc873415cee68cb4fce5898f1c165f7eecfe409f38112ff3bc33d9",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-005-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-01-005-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 01 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-01-005",
+          "start": 111,
+          "end": 120
+        },
+        "currency": {
+          "value": "USD",
+          "start": 131,
+          "end": 134
+        },
+        "subtotal_cents": {
+          "value": "USD 275.64",
+          "start": 145,
+          "end": 155
+        },
+        "tax_cents": {
+          "value": "USD 5.48",
+          "start": 161,
+          "end": 169
+        },
+        "total_cents": {
+          "value": "USD 281.12",
+          "start": 181,
+          "end": 191
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=9 | unit=USD 28.38 | amount=USD 255.42",
+            "start": 192,
+            "end": 249
+          },
+          "quantity": {
+            "value": "9",
+            "start": 211,
+            "end": 212
+          },
+          "unit_price_cents": {
+            "value": "USD 28.38",
+            "start": 220,
+            "end": 229
+          },
+          "line_total_cents": {
+            "value": "USD 255.42",
+            "start": 239,
+            "end": 249
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=6 | unit=USD 3.37 | amount=USD 20.22",
+            "start": 250,
+            "end": 305
+          },
+          "quantity": {
+            "value": "6",
+            "start": 269,
+            "end": 270
+          },
+          "unit_price_cents": {
+            "value": "USD 3.37",
+            "start": 278,
+            "end": 286
+          },
+          "line_total_cents": {
+            "value": "USD 20.22",
+            "start": 296,
+            "end": 305
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "eae9216f3092c1bbb987d6b2b44c82c27786bf39af23fb07ed101148d626a61e",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "candidate",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-006-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-01-006-20261103",
+          "start": 101,
+          "end": 119
+        },
+        "supplier_name": {
+          "value": "Vendor 01 Supply",
+          "start": 130,
+          "end": 146
+        },
+        "purchase_order_id": {
+          "value": "PO-01-006",
+          "start": 163,
+          "end": 172
+        },
+        "currency": {
+          "value": "USD",
+          "start": 183,
+          "end": 186
+        },
+        "subtotal_cents": {
+          "value": "USD 492.76",
+          "start": 197,
+          "end": 207
+        },
+        "tax_cents": {
+          "value": "USD 7.59",
+          "start": 213,
+          "end": 221
+        },
+        "total_cents": {
+          "value": "USD 500.35",
+          "start": 233,
+          "end": 243
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=5 | unit=USD 62.36 | amount=USD 311.80",
+            "start": 244,
+            "end": 301
+          },
+          "quantity": {
+            "value": "5",
+            "start": 263,
+            "end": 264
+          },
+          "unit_price_cents": {
+            "value": "USD 62.36",
+            "start": 272,
+            "end": 281
+          },
+          "line_total_cents": {
+            "value": "USD 311.80",
+            "start": 291,
+            "end": 301
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=4 | unit=USD 45.24 | amount=USD 180.96",
+            "start": 302,
+            "end": 359
+          },
+          "quantity": {
+            "value": "4",
+            "start": 321,
+            "end": 322
+          },
+          "unit_price_cents": {
+            "value": "USD 45.24",
+            "start": 330,
+            "end": 339
+          },
+          "line_total_cents": {
+            "value": "USD 180.96",
+            "start": 349,
+            "end": 359
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "3723866db8ac4fd1ad345cab2f9996a86dd5072dac32833d27f24ccc4c24b37c",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "candidate",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-007-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "8af9e101ac5177cbcc0713f467a2afc4536829acc25af7c5145e26932921e006",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-008-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-01-008-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 01 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-01-008",
+          "start": 111,
+          "end": 120
+        },
+        "currency": {
+          "value": "USD",
+          "start": 131,
+          "end": 134
+        },
+        "subtotal_cents": {
+          "value": "USD 225.30",
+          "start": 145,
+          "end": 155
+        },
+        "tax_cents": {
+          "value": "USD 2.98",
+          "start": 161,
+          "end": 169
+        },
+        "total_cents": {
+          "value": "USD 228.28",
+          "start": 181,
+          "end": 191
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=8 | unit=USD 25.10 | amount=USD 200.80",
+            "start": 192,
+            "end": 249
+          },
+          "quantity": {
+            "value": "8",
+            "start": 211,
+            "end": 212
+          },
+          "unit_price_cents": {
+            "value": "USD 25.10",
+            "start": 220,
+            "end": 229
+          },
+          "line_total_cents": {
+            "value": "USD 200.80",
+            "start": 239,
+            "end": 249
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=1 | unit=USD 24.50 | amount=USD 24.50",
+            "start": 250,
+            "end": 306
+          },
+          "quantity": {
+            "value": "1",
+            "start": 269,
+            "end": 270
+          },
+          "unit_price_cents": {
+            "value": "USD 24.50",
+            "start": 278,
+            "end": 287
+          },
+          "line_total_cents": {
+            "value": "USD 24.50",
+            "start": 297,
+            "end": 306
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "5accb30bfa5b6210fefbf2a90f39ca99ed86709dbd601f78b8238f512d21bab1",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-009-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-01-009-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 01 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-01-009-OTHER",
+          "start": 111,
+          "end": 126
+        },
+        "currency": {
+          "value": "USD",
+          "start": 137,
+          "end": 140
+        },
+        "subtotal_cents": {
+          "value": "USD 280.94",
+          "start": 151,
+          "end": 161
+        },
+        "tax_cents": {
+          "value": "USD 1.61",
+          "start": 167,
+          "end": 175
+        },
+        "total_cents": {
+          "value": "USD 282.55",
+          "start": 187,
+          "end": 197
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=5 | unit=USD 50.83 | amount=USD 254.15",
+            "start": 198,
+            "end": 255
+          },
+          "quantity": {
+            "value": "5",
+            "start": 217,
+            "end": 218
+          },
+          "unit_price_cents": {
+            "value": "USD 50.83",
+            "start": 226,
+            "end": 235
+          },
+          "line_total_cents": {
+            "value": "USD 254.15",
+            "start": 245,
+            "end": 255
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=3 | unit=USD 8.93 | amount=USD 26.79",
+            "start": 256,
+            "end": 311
+          },
+          "quantity": {
+            "value": "3",
+            "start": 275,
+            "end": 276
+          },
+          "unit_price_cents": {
+            "value": "USD 8.93",
+            "start": 284,
+            "end": 292
+          },
+          "line_total_cents": {
+            "value": "USD 26.79",
+            "start": 302,
+            "end": 311
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "66800fc99a2bad110b634d38b53b5c154bc06a8d5af4f6cf84a48695df12b168",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-010-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-01-010-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 01 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-01-010",
+          "start": 111,
+          "end": 120
+        },
+        "currency": {
+          "value": "USD",
+          "start": 131,
+          "end": 134
+        },
+        "subtotal_cents": {
+          "value": "USD 426.80",
+          "start": 145,
+          "end": 155
+        },
+        "tax_cents": {
+          "value": "USD 4.81",
+          "start": 161,
+          "end": 169
+        },
+        "total_cents": {
+          "value": "USD 431.61",
+          "start": 181,
+          "end": 191
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=5 | unit=USD 59.08 | amount=USD 295.40",
+            "start": 192,
+            "end": 249
+          },
+          "quantity": {
+            "value": "5",
+            "start": 211,
+            "end": 212
+          },
+          "unit_price_cents": {
+            "value": "USD 59.08",
+            "start": 220,
+            "end": 229
+          },
+          "line_total_cents": {
+            "value": "USD 295.40",
+            "start": 239,
+            "end": 249
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=3 | unit=USD 43.80 | amount=USD 131.40",
+            "start": 250,
+            "end": 307
+          },
+          "quantity": {
+            "value": "3",
+            "start": 269,
+            "end": 270
+          },
+          "unit_price_cents": {
+            "value": "USD 43.80",
+            "start": 278,
+            "end": 287
+          },
+          "line_total_cents": {
+            "value": "USD 131.40",
+            "start": 297,
+            "end": 307
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "692e376a01a9f222c38a0e2f6524fa36b97731d542e75ea851d4be57bd82c962",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "candidate",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-011-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-01-011-20261103",
+          "start": 101,
+          "end": 119
+        },
+        "supplier_name": {
+          "value": "Vendor 01 Supply",
+          "start": 130,
+          "end": 146
+        },
+        "purchase_order_id": {
+          "value": "PO-01-011",
+          "start": 163,
+          "end": 172
+        },
+        "currency": {
+          "value": "USD",
+          "start": 183,
+          "end": 186
+        },
+        "subtotal_cents": {
+          "value": "USD 122.00",
+          "start": 197,
+          "end": 207
+        },
+        "tax_cents": {
+          "value": "USD 0.38",
+          "start": 213,
+          "end": 221
+        },
+        "total_cents": {
+          "value": "USD 122.38",
+          "start": 233,
+          "end": 243
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=2 | unit=USD 50.92 | amount=USD 101.84",
+            "start": 244,
+            "end": 301
+          },
+          "quantity": {
+            "value": "2",
+            "start": 263,
+            "end": 264
+          },
+          "unit_price_cents": {
+            "value": "USD 50.92",
+            "start": 272,
+            "end": 281
+          },
+          "line_total_cents": {
+            "value": "USD 101.84",
+            "start": 291,
+            "end": 301
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=3 | unit=USD 6.72 | amount=USD 20.16",
+            "start": 302,
+            "end": 357
+          },
+          "quantity": {
+            "value": "3",
+            "start": 321,
+            "end": 322
+          },
+          "unit_price_cents": {
+            "value": "USD 6.72",
+            "start": 330,
+            "end": 338
+          },
+          "line_total_cents": {
+            "value": "USD 20.16",
+            "start": 348,
+            "end": 357
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "df8e105279e88b9c927d15ecc7f2a4e2f8ffa4bebf3b9f014488fc493941e52d",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "candidate",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-012-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "cad3eae78f568221509b48627fa249648d25aabe724c75245d5225fe559a2b03",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-013-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-01-013-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 01 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-01-013",
+          "start": 111,
+          "end": 120
+        },
+        "currency": {
+          "value": "USD",
+          "start": 131,
+          "end": 134
+        },
+        "subtotal_cents": {
+          "value": "USD 270.58",
+          "start": 145,
+          "end": 155
+        },
+        "tax_cents": {
+          "value": "USD 5.64",
+          "start": 161,
+          "end": 169
+        },
+        "total_cents": {
+          "value": "USD 276.22",
+          "start": 181,
+          "end": 191
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=2 | unit=USD 72.99 | amount=USD 145.98",
+            "start": 192,
+            "end": 249
+          },
+          "quantity": {
+            "value": "2",
+            "start": 211,
+            "end": 212
+          },
+          "unit_price_cents": {
+            "value": "USD 72.99",
+            "start": 220,
+            "end": 229
+          },
+          "line_total_cents": {
+            "value": "USD 145.98",
+            "start": 239,
+            "end": 249
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=2 | unit=USD 62.30 | amount=USD 124.60",
+            "start": 250,
+            "end": 307
+          },
+          "quantity": {
+            "value": "2",
+            "start": 269,
+            "end": 270
+          },
+          "unit_price_cents": {
+            "value": "USD 62.30",
+            "start": 278,
+            "end": 287
+          },
+          "line_total_cents": {
+            "value": "USD 124.60",
+            "start": 297,
+            "end": 307
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "0bce21753e487d51b84b732df6866da9991696b6e07d7f1459ef8022a97c7d9f",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-01-014-20261103",
+    "output": {
+      "fields": {
+        "invoice_id": {
+          "value": "IX-01-014-20261103",
+          "start": 49,
+          "end": 67
+        },
+        "supplier_name": {
+          "value": "Vendor 01 Supply",
+          "start": 78,
+          "end": 94
+        },
+        "purchase_order_id": {
+          "value": "PO-01-014-OTHER",
+          "start": 111,
+          "end": 126
+        },
+        "currency": {
+          "value": "USD",
+          "start": 137,
+          "end": 140
+        },
+        "subtotal_cents": {
+          "value": "USD 130.74",
+          "start": 151,
+          "end": 161
+        },
+        "tax_cents": {
+          "value": "USD 2.94",
+          "start": 167,
+          "end": 175
+        },
+        "total_cents": {
+          "value": "USD 133.68",
+          "start": 187,
+          "end": 197
+        }
+      },
+      "items": [
+        {
+          "line": {
+            "value": "ITEM-01 | quantity=2 | unit=USD 55.03 | amount=USD 110.06",
+            "start": 198,
+            "end": 255
+          },
+          "quantity": {
+            "value": "2",
+            "start": 217,
+            "end": 218
+          },
+          "unit_price_cents": {
+            "value": "USD 55.03",
+            "start": 226,
+            "end": 235
+          },
+          "line_total_cents": {
+            "value": "USD 110.06",
+            "start": 245,
+            "end": 255
+          }
+        },
+        {
+          "line": {
+            "value": "ITEM-02 | quantity=4 | unit=USD 5.17 | amount=USD 20.68",
+            "start": 256,
+            "end": 311
+          },
+          "quantity": {
+            "value": "4",
+            "start": 275,
+            "end": 276
+          },
+          "unit_price_cents": {
+            "value": "USD 5.17",
+            "start": 284,
+            "end": 292
+          },
+          "line_total_cents": {
+            "value": "USD 20.68",
+            "start": 302,
+            "end": 311
+          }
+        }
+      ]
+    },
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-01",
+    "source_key": "7dbcb06d9ed25cbb55f7ec48171d24c84a1681f7804c7a8703b36f4192618d1e",
+    "strict_correct": true,
+    "verifier_passed": true,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": true,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-000-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "24890a08eedf3a5901f4a7c33380ec3b121281e992411242596b3c9b63a5f2ee",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-001-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "63e15b82aacc17c3ace3dc7ea1b3a01b6ef1e85b1c284480d42a202b79218459",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-002-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "2a493c6592aca6cd434165fd2715aa2c6553fce7a1f08ec357dff3ea9827e2c5",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-003-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "a789d68f480946d86cbdb223e195187e2ed04f30f4fa80a8773943a41747e505",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-004-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "efd599988b96e016d8da05fbc90c048c9cc96b724063cb1559f0a5cf876aea17",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-005-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "5fcd3bd2494f9e47a861fc8871bea651800de64301c888dcab78463088243c27",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-006-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "a962a8f56cbb428fa802c2f75711f238d8db81613acf74b2cbb46f08743aa528",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-007-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "317c464a1e4166c7b269b9f2aa071525d0aa1fd2dff20b478ea934674105cdf4",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-008-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "566eec4e1d210f1d68eda72b43e6d138095928333374944f112c395399f0c5fa",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-009-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "704cfe194a3d05aa760447b62a2643a52366ee9894658656c90c0d25690f44fd",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-010-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "16514e2fd424983688956c27da59f1237ff645477cc7962efea0d099c732bad4",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-011-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "14357445357a5e26b86e400e27a62e3549984cd3a6e665ad7b235894b2e0b3ca",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-012-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "af363de511254859ecb55b5c5822ec0440d7e90a147f94e23a7005ce9f06c128",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-013-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "e0750a0ed055a344681e32f5ad3a533b3bb0f1603d3562a39b3be2d115221c44",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-02-014-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-02",
+    "source_key": "5d5b3c27868d4f72cbbb9b41a457b6749390f272779043809f4c0b4ce2696296",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-000-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "f3cdeac80aef48ebf4810fcb9f24d90cfd61dee234cc7212e7a4bcb4865cb34b",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-001-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "cfec432c79a7f10c2be14a7fb77005f7633a035fc626789984f541cece86d48a",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-002-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "8357b071e914aa1c7f71a6f6fc7df7d08dc414b33eebd1c7d01ddc4828ca4200",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-003-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "d4afb022e64b3b4aaf2614c1e1ff129005f172ed4497f639e8d7dfff36286575",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-004-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "19d9e773a3781dacfa67c06bd9d97245b0247b76f5f7ad4a492da477d53d2b63",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-005-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "1ddb9815b58799b5405cb0a6037410ac33bad38ef0706b4cdfb0fc3c2efb8c8e",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-006-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "5bf60698394526280fb95f0b1e1a1bb0a9e1ac6d2149ec3535ab8d38c83da9cd",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-007-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "a950d0f735b77289c2d55360e239ef4182c3b4565637df9bb0a831470bb1d709",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-008-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "334dcd71ad2cb1a2a3dffd9cf3b1b78c420cad0c3847d79b62b7fe1dcc6c2f25",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-009-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "90b6620ebc5ff9ff4afddabfa23aa5c8b5c5f27dac81efcdd8fff8d7cc77d84a",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-010-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "53b8365449ce792c44075f1b3d7c997933b482d5f0e45d1334fd6d9b1d9f514e",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-011-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "9acce7f3d4ed64639e41f1319743a4321a0e9f01f6f7ec06359a372ef9c4c8ef",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-012-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "cdfef1f9888ce54dbcf1e65d523a239eb3a802d063b1090c7b2b62c54aec6167",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-013-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "04326b2e91ce61fce2873be3188aafca472ea0f5a6edb23aff08ec97d38ff396",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-03-014-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-03",
+    "source_key": "d7d0c43d99143504042cc35d613b54684578376a6cb1fbde0cde489b868b15e4",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-000-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "003ab1123a312bfe001da43ee095a312e8b9d82b8ae18d22749178620562d76d",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-001-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "cfec02c5ca1e40bdffbec473fc329fe5ab63574cf16ee5ac4b5fc07641d5883c",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-002-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "8fe1ea1d7b9f3b2da4c5366ae4d10ab3abc9d3b8e8f3750abced0822853fb861",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-003-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "b2c746edde9e5819ecbfb9e792d5164803fd0ab6add48ad84b35598e8dab4f59",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-004-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "2330ab48f5d977d265fd6dc4e517c498bd9758b591b30c43403164be00f56f58",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-005-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "e059f03ea9732ebc96057e952e539e57aedc98928ebc60e58451043688c38623",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-006-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "ed56769bba7b82d134484e940b1890e04d39f829a341dc81240c5dbbd3ccec1e",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-007-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "0dee68df0322b8bf18a60f067cb7632adece321b202d8fc2593e23b611b012ef",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-008-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "405b0766c4aedda0cd43ffb2a81d1302ed2dae554a5815f6c917bc083bb2bd20",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-009-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "c9ff10c5c7cf30cd20beacbd1e3d3d88d33f0961c0c97c78a3c9e68a99b0206e",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-010-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "8d36da0a9fa0c8e919925b09df682144b892fb13a4c0f961c637a8361d6c970e",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-011-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "f853a8ad9ba8587f8b67f21e7280e95f922ce70100621db5bcd871800923a471",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-012-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "f46894795487761e39529181d81b095633f3b5f117fe393dc895a833f3fb3554",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-013-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "65ccbedee41126c20df56f6a81149223949db8cb8d8f4f6fcd44fc1e6868f2cf",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-04-014-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-04",
+    "source_key": "be3e1f96b10b85c14363450e6b43fbdad2decec8a3962ca55136c5b8c7d1ce53",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-000-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "d9b72d4f1b31f090cdd7563c5497eb3a98445485e2140808ace38c83c4055891",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-001-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "15740dc142462dff952f03f2d05ac9627e78233019331487e49ac373222e2b46",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-002-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "0cdaac85dab0c2f9df18a10402d2c97eb6c8ed1bd99df4941c7f99ea8f2b25a2",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-003-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "b9497dfc43598ab0867e8e4a13f8d78c4a4bb0a2e562b295f0cdc4d1c12c8886",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-004-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "fb16fd5598cba7a325923865859846e4b613c2782e258a6cdce0ffae6605ce7a",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-005-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "fd8e5d212e9afce90f86a426163ea4e104168c313b4dffe3eb1e784684bc1d14",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-006-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "ab0e50030d9af9a4ebd98ada9d5bdd427cfd31390e1d1d341e357d40c36da8d5",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-007-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "41a5deb9c68554700f47ad5bcb41d68fe0bca3cdb6d8678d5546753c09c803a3",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-008-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "ed9037792909a646b6d4d13a999598cac9b5694b574bfa7ceacfdaf8e1fd0f2c",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-009-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "652f63d0b5503584fd20db8f0e16e5fd6960348c2ca89083ad1a681779b33feb",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-010-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "05c4fe506351f44647765b85e4881399ad43b07d650f828f6c0fa15967bd892d",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-011-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "1b3f2a21f6a98d14518380e60d87e1386afd4fb1ff09b905756a109acabc640e",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-012-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "6768562c2dfb15dd8abfd44e248d5d58bc40a3b2e3e06b4742529ced6b90ca8d",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-013-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "81f19528b995fc283c64eafa84bfd9c305b4a2bbe0ecf68368c0e81af722fb07",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-05-014-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-05",
+    "source_key": "cb38c55fc4fbc1c3b827e0900d931733b62575c1542112b8a3f944acae122ef2",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-000-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "40984a76eca5309fc4f52d72e2c2d744c88aeecf84ff618611f38599288739e5",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-001-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "d1e2fcba125a7d5ee13a0afdb82a4bd44be84a66a1f3df8d07a2eeb43cc0f254",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-002-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "85540292e02fb2bad2e52e50b59bb0e77dd891d6cba30a939efeb31602f77de3",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-003-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "f08d364284379a8abc3d0b776d1d1ad250e98706ece513cfb9c93b01df4f4491",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-004-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "7ca5577e5ff6601fe2de854fe63af2811f5869c71f3e94fc95e7dbdb254cb5db",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-005-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "59630a56072377112045c40efbe5774ffea84ef4897437c3e1d1ac9b57bbf154",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-006-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "41d88a7b953f7011b10ea582adbbac74cc60686617fbda71f6ea1755ab827f65",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-007-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "15c0cbfc3ceb74248ab87eec4b1142028b1b953b1986ee5a83a85dd3582c8a22",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-008-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "9f742d9a7f18d7e7937bd769158927acb75596b4fd9176f26db01e1fc76e7002",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-009-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "306978d5c3ddec4164d03364c6282ddebfd1529c23c24073eb58981091098318",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-010-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "7734ad422dabe9197ee89c6495545bc1c1facc4d6f89e91daccf3a0df3259e5b",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-011-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "ed1064fc0934f5df26cdbf0899920fb041b4c3cb6a319d15d87cd3e5f4de8796",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-012-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "7cfd9dcf57feb47aecf03cbf4ded488d0b843ff208466817b2393a14bc8896f0",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-013-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "aedfec3747731f99ecca364355b7c7ee70a9d543d21345442ffddb01705bd0b8",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-06-014-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-06",
+    "source_key": "fc6de2a7e59f59adc06fb83fc2b48234b08e12c1f3c9477bbfd9b9546e4ccbf1",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-000-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "e930733dd901e099dc7675815a69034c2149b91e50cdc752cfff8f4190305ca7",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-001-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "1d21da123bbb680e5b7db9dec72e3e55b68b289f3d362e859b35b5bc5a4842af",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-002-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "03a1384bad8abd9559dff645d6d899d11f023da342acc350bac3734c73a6fbf7",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-003-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "b56ab2a0dc933f74c5d9e67dd3a90cae2f2a39117b22d488468d81b1a0400a87",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-004-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "c654f43044914389a1e565dc26376f2e3b606be20f6b9f27bf75e069cc1f1724",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-005-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "23891c09852baaee54a40a151d5c251516ab8927265766297f214f1672074f90",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-006-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "3d0e90cb4ee4787074eca65a4c21dab7b4ee8f5d011513ac772f3315d276edd1",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-007-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "e54e51c55df4685b09054f7198abcf4b422dce1e45d70577a726187960a9158f",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-008-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "36af67f7d3852377f13b57f5ebc9346b3a87bd44af542d7847c55a12fded01e9",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-009-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "fbab0eaf1cc5d13b204ebcb1eebfa3182458a7484e992463257f50ecf9e4cc90",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-010-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "3af2a4cb38745767a6fa3b2e51308d5b57462ab8c38c50b572dd66f93b58f0e1",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-011-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "17f39684df8c9b3b290e7179a5d25a48eb56ceace0bb47e8bb4667b9bf99b040",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-012-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "1d6d1fdf80abc23d169ea53fae071a2ad87cbf585d981c497510728983b867f0",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-013-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "37e2725dfc01e066522d19fddf66f5aa039fa047a7ed847344d70ca186f693d8",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-07-014-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "calibration",
+    "template_id": "layout-07",
+    "source_key": "74fe7543557d7c70fa18df60f9298100ab2546c44cc533600b1174885df236e9",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-000-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "a1219710fe9bec92818140ff4aec1601abe5d88b73e0d43a32b978b015a6021f",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-001-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "63e8345b20dbb626790b5f24b0c35ef39eec539f27299f3f24a9705dec806ed8",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-002-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "c8ccd57593a8caf31e5b2ee7ee6dd317b43074458e9dc03b6e9c5242e4390bc1",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-003-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "121e52789bcc9cd3516b6b6d35570cff14cc1e2bd77b427ca7e8d8c1a7cae9d5",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-004-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "da2c01eaa54008b3e803397aff3e37e92ba016a96f16de5f201fa8b64d0bd752",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-005-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "be311f2b9e5580ed3146ffaba3819fb18bce3483547f605acbe9d1d424df10fd",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-006-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "0973e2473eec9b39ae6c1091631ffbd9030cedc15f0e16c8141eb460dd99d975",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-007-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "4d6c062c0d79ac77a74030f87158f3d84fc5f54d301bbffff66569d4a4cb6456",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-008-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "6d634299c1f72252585b6649721751a2ff0e864cfb8c72a526dd47b6c63290cf",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-009-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "0a3c924d7258d5729ab5e9570e354a5051fd436436895dcb755310a0d02052b9",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-010-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "69b0ee50c4bd42c6350700b319fb16516dec14ecdeec2f4e1f7c0036aacf0615",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-011-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "1c273bf348ac62546e41f81fa096b5b52153ddcd4dfeacb725cabc72d75f5616",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-012-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "ce9302f9b107e45117dbf39e282df37a6c6552c89bd4764b8261247defb91287",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-013-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "d1673773b492c4b8c41f061de68f7d0e004e4ad39bcec31e028b9f5ed8fd9b94",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-08-014-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-08",
+    "source_key": "0c98287d721d460a9df0b7232b2ae7d927a8065fb36926d01c2c29ed3d440650",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-000-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "c10bcd03ee51ffa6ad58dc6885a8228111741d9e4767133ef67e4b070e0fc5a8",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-001-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "42965115ad21eacd0c0167dff9514ebfe5c88bba234abdf17c6a17eb7aeef3ca",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-002-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "42b5dcf3a09499247b152e7f34456f0541b4778416b7575e9c86f682d6c4d6f5",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-003-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "df71b7e859c472b7885b41cd86561909aaacd952f7d669ad33b044b92b636c20",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-004-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "fb56c788a425018614cbf41e3f3bd644809d95b6ac4db69fc77acef9ae36f003",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-005-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "b4560589393bbc5250e63b42292e24e0345b60ed46b64d8248b96e598457a034",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-006-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "a372bf3eec5965243f7b820a6d333ba6c9d80a3a9a6c268f09eb7552e44915fc",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-007-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "9146cfe54875afd46f35b6e72ed5f8c40880b6d090d4fef64243acf99c647004",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-008-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "fb0c5726a64d654a5f48aa9aa4d8c07e5741152b23a1b3723d833c6c5db4e43d",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-009-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "dd6c0329c2f936946a80fdafea1b972734b042ae20e6e84202a935a6e6747b8d",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-010-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "e7ccb8db5b27b5b2e6231255915dbd5d654aee74150440e8763b8cc29342a828",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-011-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "3d7c95d2569b70efade6b9a7b868431a75d6ba12ef634bca48504a90f13c50c8",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-012-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "3d5919d73f294a9cb7176320a952106e6cdf1a316df6c4a77d22373eb3c9ef06",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-013-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "6460588033cf469b5cb05f08d30e5b107f1b4e09fc12319539ef33c93e0e647b",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-09-014-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-09",
+    "source_key": "fc838b00bc79e68fce5acdf8fba3c50b1bf0fe6273eeea4aa544846278b7716a",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-000-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "5305ae2c7c350a337afe7860642b60595eb919b2619cb288f0de5d127571eb53",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-001-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "d21d87d729595577eff2d4f5346770f13246ef1cdfdf97c0acf29b31ea089c19",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-002-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "e2516310ecad26b4860ff77a26d9689bfc4baf62dd1243482a363c0231fd5954",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-003-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "b41600222ed047ea9c26a6f649912854002eda8ca1ed559a63bfefbba5239000",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-004-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "266a94ef6fb73fa45a609f41c2698de30833ac2fe066f529462d5cfaa14a69a6",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-005-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "b6ad13b20a0891c31281d4bc49e817a425819245fdf6909383b4c372b6f3c855",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-006-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "f5b44a98097210acd19c7152553262c9497648df8f5725bc5373b8d468baaaec",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-007-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "af17d977c016bfc577e99b3c0f0abffe4177d862fe5867ef68b436e264c8799c",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-008-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "84e9216efbba82658e195e4533e371ae6320c682291a57596bd616178d34c934",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-009-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "124f05e7bb511008d6d5ec6be417fed94dbb36b4b1f9397223da320914d62714",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-010-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "162a5e0fa9b05fb2d35bf8f9f74677318c13afa239add51db864d2218c67b7c9",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-011-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "4a9963221b343e7aeceaa8d1cfc4c32907b77b93ec2de080775d3289f7723df0",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-012-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "d47f10e4ec2e565a5ab65d5cbee5b741e873b1a679fd3ebf49fbf34aa7209da4",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-013-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "515f07e54c692c14eb7c008a07d53bd6c12660149d6610434b2fe4f0e5e20a2a",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-10-014-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-10",
+    "source_key": "a7b009bb9b15334d789a0e392e4ccc1bca60728febea891543ae3ca5ee4bf7d0",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-000-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "c6da8fa5167f3c433529758153eefdda1383c26253ddbd4ef8c3480b66f23c7b",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-001-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "61b5d16d5f71faf98233741d165507cd4f6b12e65d1f45a00d1ac08273f69600",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-002-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "641f4ca6e8d3433b8f34265aed40a6b23eadbbd551463c62cf18a97a7c67cba2",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-003-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "d8f7c6d2f7379dbd1e8e61a5a770727e3525313c77cf199b94bd7f8bf892afec",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-004-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "62c16dbc97e86194a26aec5561fa3a51b57a7eaa38f34f5391d19158bdb5a0ed",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-005-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "f7fa4e443a594a72005bac25ff0d476d98a37f7561031945d5bed4050bd035ed",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-006-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "74234903c106b129bf5c2424d9fb6ffde44b511001977c2cc481ee49ef68ad9f",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-007-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "da91656146e013776c429f359b26b2a2b25d8a95650c4a03e03510312076920c",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-008-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "e02f2a29b9049686b3f2fd54232d71668fe1ad86ce83131594e8a54030bc32ba",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-009-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "b33ae85555655ccda23ac90b4fafdce3350c3e9cec6d1f5bfddf448e6e981f6a",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-010-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "515a21788bdde5be65ab665319b9afaaf9298d99d57c8b0d039614068f9a499e",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-011-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "ce928093a4f1c489a571dc2b49285493199f68d63116ca8be1fa71cab452c596",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-012-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "4fa18510b804056675f02246ce6691862d60828a2db1c8da7e7566fc6c1a6c8c",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-013-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "6b4b27faf5ac95862c5f3dbb6e4a91809529ca897cb334b259d9e4267fa21195",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  },
+  {
+    "task_id": "IX-11-014-20261103",
+    "output": null,
+    "latency_ms": 0,
+    "provider_cost_micro_usd": 0,
+    "partition": "holdout",
+    "template_id": "layout-11",
+    "source_key": "2641af50527b2b02e9bb211e0c521e38ef427442a201ade27e05792f1ba23509",
+    "strict_correct": false,
+    "verifier_passed": false,
+    "decision": "review",
+    "false_accept": false,
+    "tool_resolved": false,
+    "adds_value_over_tool": false,
+    "reference_cost_micro_usd": 0
+  }
+]
