@@ -1,0 +1,72 @@
+{
+  "label": "MEASURED browser checks / MOCK financial workflow",
+  "viewport_sizes": [
+    [
+      1440,
+      900
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "html_bytes": 77638,
+  "python_runtime_dependencies_added": 0,
+  "html_sha256": "1b65e5c7c51c009aec8bed1d3c79af7e90d1415574d290051486c00261f169f4",
+  "computed_text_contrast": {
+    "light": {
+      "ledger text": 15.72,
+      "ledger secondary": 5.57,
+      "gold figure": 5.06,
+      "rejection": 6.13,
+      "primary button": 15.72,
+      "secondary button": 17.25
+    },
+    "dark": {
+      "ledger text": 17.25,
+      "ledger secondary": 9,
+      "gold figure": 10.16,
+      "rejection": 7.17,
+      "primary button": 15.72,
+      "secondary button": 17.25
+    }
+  },
+  "browser": "153.0.8010.12",
+  "browser_errors": [],
+  "external_requests": [],
+  "saved_planning_evidence": "STALE_OR_INVALID",
+  "checks": [
+    "empty metric gating",
+    "responsive overflow",
+    "theme persistence",
+    "reduced motion",
+    "token Origin Host rejection",
+    "three-job demo",
+    "halt and resume",
+    "capture and release",
+    "reconciliation",
+    "audit chain",
+    "evidence drawer keyboard dismissal",
+    "SSE reconnect and deduplication",
+    "offline controls",
+    "simulated mandate approval and stale-version error",
+    "drawer focus return",
+    "intro animation shutdown",
+    "off-screen animation suspension"
+  ],
+  "screenshots": [
+    "desktop-ignition-0ms.png",
+    "desktop-ignition-1000ms.png",
+    "desktop-ignition-3000ms.png",
+    "desktop-ledger.png",
+    "mobile-ignition-0ms.png",
+    "mobile-ignition-1000ms.png",
+    "mobile-ignition-3000ms.png",
+    "mobile-ledger.png",
+    "desktop-ledger-dark.png",
+    "desktop-ignition-reduced-motion.png",
+    "desktop-halted.png",
+    "mobile-purchases.png"
+  ],
+  "fps": "NOT MEASURED; headless Chromium is not an RTX 3050 performance qualification"
+}
