@@ -119,3 +119,10 @@ At each phase, perform the squint test (one focal point and one primary action),
 Acceptance after each implemented phase: full `python -m unittest discover -s tests -v` plus existing Node tests; isolated mock-demo browser checks for run, SSE reconnect without duplicate effects, approval/resume, kill/error paths and session-token rejection. Use temporary test data, no financial service or wallet. Exercise keyboard, focus return, reduced motion on/off, hidden-tab suspension and no external requests. Keep the HTML below about 250KB, with inline CSS/JS and no new runtime dependencies or security changes.
 
 Capture implemented scenes at **1440×900 and 390×844**, with Scene 1 at **t=0, 1s and 3s**; include reduced-motion final states, empty evidence, rejection and confirmed halt. Reserve art/chart/table dimensions to avoid layout shift. Measure Chrome rendering performance before claiming 60fps. Final phase reports list changes, removals, test/screenshot evidence, unresolved data sources and limits. No screenshot, test or performance claim is made by this brief.
+
+
+## Reference revision — 2026-11-03
+
+The user withdrew the Metal screenshot reference and supplied a screen recording of upright discs moving over a metallic track with a circular inspection light. This recording now guides the background effect. Do not use the withdrawn image or its glyph ring. Recreate the motion and depth with original inline SVG/CSS, assay marks and the existing gold palette; do not embed the recording, its currency marks, pointer or promotional text.
+
+The hero horizon is replaced by an inspection track. Its introductory movement is explicitly DEMO and stops after ignition; subsequent scanning pulses follow received payment events. These decorative discs are not ledger records or currency transfers. Reduced motion is static, off-screen/hidden animation pauses, and confirmed halt turns the light off. The earlier proposed Metal-inspired orbit is superseded; any later receipt composition should use this track direction and remain bound to real event records. Existing evidence labels, account separation and financial controls remain unchanged.

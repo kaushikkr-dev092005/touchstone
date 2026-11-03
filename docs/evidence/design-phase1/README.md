@@ -4,8 +4,8 @@
 
 ## Changed
 
-- One inline design system: ink, bone, assay gold; three system font families; no font downloads. The self-contained HTML is under 80 KB.
-- Asymmetric ignition scene, original stone-streak mark, warm horizon, finite star reveal, pill navigation, keyboard replay (`L`) and explicit demo disclosure.
+- One inline design system: ink, bone, assay gold; three system font families; no font downloads. The self-contained HTML is under 85 KB.
+- Asymmetric ignition scene, original stone-streak mark, metallic inspection track inspired by the supplied recording, finite star reveal, pill navigation, keyboard replay (`L`) and explicit demo disclosure.
 - A ruled Ledger with a 12-column desktop grid, light/dark paper, a gated cost-per-correct figure, flat evidence sections and a receipt-like decision tape. All existing operational panels and controls remain.
 - No startup balances, task counts or provider quotes are invented. The main cost figure requires a reconciled qualifying paid report; mixed measured payments and simulated check fees stay disclosed.
 - Confirmed halt overrides every lamp effect. Reconnect/initial history does not replay payment pulses. Reduced motion is static; the star loop ends after ignition and pauses off-screen. Hidden-tab handlers cancel its frame request and pause CSS animation.
@@ -68,3 +68,9 @@ Additional inspection: [dark paper](desktop-ledger-dark.png), [reduced motion](d
 - Airwallex fiat and Metal testnet accounts remain separate; no bridge is implied.
 - Hidden-tab handling is implemented; a hardware rendering/hidden-window profile and broader assistive-technology review remain manual checks. No 60fps claim is made.
 - Phase 2 (mandate, stone, loop and event-linked receipt slabs) and Phase 3 (guardrail scene) await their review gates. Phase 1 stops here.
+
+## Background revision
+
+The subsequent user instruction withdrew the Metal screenshot and supplied a 10.67-second screen recording. The background now recreates its upright discs, metallic conveyor and circular scan light with original inline SVG/CSS and gold assay marks. The source recording is not bundled, and its currency symbols, copy and cursor are not reproduced. The Metal-style glyph ring is no longer the design direction.
+
+The 2.5-second introductory feed is labelled DEMO; it creates no ledger records. Later scan/feed pulses use received payment events. Static reduced motion and confirmed-halt blackout remain. The desktop track fades before the headline; the mobile track is positioned below the copy. Updated screenshots and browser JSON describe this revision.

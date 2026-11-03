@@ -103,8 +103,8 @@ def main():
                     # Pause and seek the actual CSS animation for reproducible timeline captures.
                     # Screenshots are design inspection, not frame-rate evidence.
                     for ms in [0,1000,3000]:
-                        page.evaluate('''ms=>{const a=document.querySelector('.horizon').getAnimations()[0];
-                          if(a){a.pause();a.currentTime=Math.min(ms,2500);}starProgress=ms;paintStars();}''',ms)
+                        page.evaluate('''ms=>{for(const a of document.querySelector('.horizon').getAnimations({subtree:true})){
+                          a.pause();a.currentTime=Math.min(ms,2500);}starProgress=ms;paintStars();}''',ms)
                         if ms >= 2500:
                             page.evaluate('finishIntro()')
                             page.wait_for_timeout(350)
