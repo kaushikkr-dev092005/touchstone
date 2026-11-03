@@ -27,6 +27,8 @@ Twelve of the 24 extracted cases still have PO/payment exceptions and require re
 
 Saved MOCK reference-run audit head: `5a18b16f876e8ed300b2dcad6764cec53dbf901cd28c62dc5390522640d232c9` (14 events). Reproduction changes hashes because IDs/timestamps differ. No runtime Python dependency or Node dependency changed.
 
+**MEASURED hosted CI:** all four Ubuntu/Windows × Python 3.11/3.12 jobs passed on implementation commit `7b4c61687a92683cbf1f7ac64317086403257aea`, including Python tests, pinned Node installation/tests and the full-history heuristic secret scan. The clean checkout excludes the local credential edit. [CI run](https://github.com/kaushikkr-dev092005/touchstone/actions/runs/41609109102) · [saved metadata](../bench/results/m3/ci.json). This is controlled implementation evidence, not a live model/payment result.
+
 ## Claims now allowed and not allowed
 
 Allowed: reproducible synthetic corpus, conservative tool baseline, source-citation/integer checks, unchanged statistical gate, blocked-model showcase, and controlled paid-reference/uncertainty accounting.
