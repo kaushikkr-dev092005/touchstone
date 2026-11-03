@@ -27,6 +27,8 @@ The controlled proof contains its audit-chain head and per-seed heads. Reproduct
 
 Saved MOCK audit head: `fc97d27d58c5050f95f3d3cb32a7e1639a895e164a1dc2b42f3e0751b4a2ccda` (73 events).
 
+**MEASURED hosted CI:** all four Ubuntu/Windows × Python 3.11/3.12 jobs passed on implementation commit `2b38bdcf2624e921a1587e08521bfc0d6c722ede`, including Python tests, pinned Node installation/tests and the full-history heuristic secret scan. [CI run](https://github.com/kaushikkr-dev092005/touchstone/actions/runs/41595526137) · [saved CI metadata](../bench/results/m2/ci.json). This proves controlled checks, not a live financial operation.
+
 ## Claims now allowed and not allowed
 
 Allowed: the dispatch barrier, local worker ownership, separate wallet orchestration, sub-cent release and the observed controlled recovery/invariant results. All saved controlled receipts reconcile to their ledger reservation.
