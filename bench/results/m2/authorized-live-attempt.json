@@ -1,0 +1,43 @@
+{
+  "label": "BLOCKED",
+  "configuration_source": "PROCESS_ENVIRONMENT_ONLY",
+  "configured": {
+    "METAL_RPC_URL": false,
+    "AGENT_PRIVATE_KEY": false,
+    "METAL_PROVIDER_URL": false
+  },
+  "expected_chain_id": 63825,
+  "purchases_sent": 0,
+  "money_moved": false,
+  "authorization": {
+    "environment": "METAL_TESTNET",
+    "chain_id": 63825,
+    "purchase_count": 1,
+    "aggregate_expenditure_cap_usdz": "0.05",
+    "includes_protocol_and_verification_charges": true,
+    "automatic_uncertain_retry": false
+  },
+  "verification": {
+    "configuration": "FAILED_MISSING_ENVIRONMENT",
+    "rpc_chain": "NOT_RUN",
+    "wallet_identity": "NOT_RUN",
+    "usdz_balance": "NOT_RUN",
+    "provider_health": "NOT_RUN",
+    "quote": "NOT_RUN",
+    "fee_inclusive_total": "NOT_RUN",
+    "invoice": "NOT_CREATED",
+    "signed_receipt": "NOT_CREATED",
+    "delivery": "NOT_REQUESTED",
+    "output": "NOT_VERIFIED",
+    "payment_accounting": "NO_PAYMENT_DISPATCHED"
+  },
+  "single_call_live_gate": "NOT_PASSED",
+  "live_network_requests": 0,
+  "airwallex_operations": 0,
+  "remaining_for_full_m2": [
+    "Configure RPC, signer and provider privately; verify testnet chain 63825, funded wallet, provider health and a capped quote",
+    "Execute the authorized single paid engine call and preserve its original invoice, signed receipt and delivery",
+    "Demonstrate approved live kill/restart recovery without a duplicate charge; retain controlled-test evidence separately"
+  ],
+  "note": "Stopped at the configuration check under authorization condition 9. No financial safety controls were changed for this attempt."
+}
