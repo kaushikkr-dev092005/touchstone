@@ -1,4 +1,5 @@
 import argparse
+from contextlib import ExitStack
 import json
 import os
 from pathlib import Path
@@ -60,6 +61,22 @@ def main():
                                help="Test a recovery boundary; after_rail performs a real paid request")
     metal_engine.add_argument("--kill-at", choices=["after_reserve", "after_rail", "after_paid"],
                                help="Abruptly terminate this process at a recovery boundary; after_rail spends testnet funds")
+    metal_engine.add_argument('--output', help='Save redacted engine evidence for every policy')
+    batch = commands.add_parser('metal-batch', help='Serially fund distinct wallets, then run concurrent integration probes')
+    batch.add_argument('action', choices=['prepare', 'fund', 'run', 'recover', 'report'])
+    batch.add_argument('--scope', required=True)
+    batch.add_argument('--integration-probe', action='store_true')
+    batch.add_argument('--execute', action='store_true')
+    batch.add_argument('--recover', action='store_true', help='With run: reconcile only, without purchasing another task')
+    batch.add_argument('--provider-origin', default='http://127.0.0.1:8092')
+    batch.add_argument('--jobs', type=int, default=3)
+    batch.add_argument('--steps', type=int, default=2)
+    batch.add_argument('--wallet-budget-usd')
+    batch.add_argument('--price-cap-usd')
+    batch.add_argument('--aggregate-cap-usd')
+    batch.add_argument('--state-dir', default='data/metal-batch')
+    batch.add_argument('--kill-at', choices=['after_reserve', 'after_rail', 'after_paid'])
+    batch.add_argument('--output')
     bench = commands.add_parser("benchmark", help="Three paired policies, five seeds, simulator only")
     bench.add_argument("--steps", type=int, default=200)
     bench.add_argument("--output", default="bench/results")
@@ -125,7 +142,17 @@ def main():
     profile.add_argument("--steps", type=int, default=12)
     profile.add_argument("--output", default="bench/results/local-profile.json")
     args = parser.parse_args()
+    owners = ExitStack()
     try:
+        if args.command == 'metal-batch':
+            if args.recover and args.action != 'run':
+                raise ValueError('--recover is valid only with metal-batch run')
+            if not args.integration_probe:
+                raise ValueError('An explicit --integration-probe purpose is required; no model is qualified')
+            if args.action in {'fund', 'run', 'recover'} and not args.execute:
+                raise ValueError('Metal batch writes/recovery require --execute and a written testnet cap')
+        if args.command == 'engine-metal' and not args.quote_only and not args.execute:
+            raise ValueError('Metal execution/recovery requires --execute and a written testnet cap')
         if args.command == "airwallex-doctor":
             from .airwallex_doctor import inspect as inspect_airwallex
             result = inspect_airwallex(args.probe_reads)
@@ -139,7 +166,7 @@ def main():
             args.command == 'airwallex-checkout' and not args.status) and not args.execute:
             raise ValueError("Money-moving workflow requires --execute and written chat approval with a stated cap")
         from .config import load_local
-        if args.command not in {'treasury-job', 'airwallex-retire', 'airwallex-fx', 'airwallex-hold', 'airwallex-checkout'}:
+        if args.command not in {'metal-batch', 'treasury-job', 'airwallex-retire', 'airwallex-fx', 'airwallex-hold', 'airwallex-checkout'}:
             load_local()
         if args.command == "doctor":
             from .readiness import inspect
@@ -179,7 +206,7 @@ def main():
                 task = Task(**json.loads(Path(args.task_file).read_text(encoding='utf-8'))) if args.task_file else Task(
                     'protocol-probe', 'arithmetic', {"amounts_cents": [1250,275,499], "discount_cents": 24})
                 treasury = SandboxHoldWorkflow(AirwallexSandbox(), OperationJournal(ROOT / 'data/banked/airwallex.sqlite'))
-                workflow = BankedWorkflow(store, treasury, lambda scope, url, cap, budget: MetalRail(scope, url, cap, budget))
+                workflow = BankedWorkflow(store, treasury, lambda scope, url, cap, budget: MetalRail(scope, url, cap, budget, execute=args.execute))
                 result = workflow.run(args.scope, task, args.provider_origin, micro_usd(args.hold_usd),
                     micro_usd(args.allocation_usd), micro_usd(args.price_cap_usd), args.recover, args.integration_probe,
                     treasury_request_id=args.treasury_request_id)
@@ -224,6 +251,26 @@ def main():
             from .payments import MockRail
             engine = Engine(Ledger(Path(args.data_dir) / "ledger.sqlite"), MockRail(Path(args.data_dir) / "rail.sqlite"))
             print(json.dumps(engine.run(engine.create_demo(args.seed)), indent=2))
+        elif args.command == 'metal-batch':
+            from .metal_batch import MetalBatch
+            from .config import ROOT
+            from .holds import micro_usd
+            workflow = MetalBatch(args.state_dir, funding_lock=ROOT / 'data/metal/funding-owner.sqlite')
+            if args.action == 'prepare':
+                result = workflow.prepare(args.scope, args.provider_origin, args.jobs, args.steps,
+                    micro_usd(args.wallet_budget_usd), micro_usd(args.price_cap_usd), micro_usd(args.aggregate_cap_usd))
+            elif args.action == 'fund':
+                result = workflow.fund(args.scope, execute=args.execute)
+            elif args.action in {'run', 'recover'}:
+                result = workflow.run(args.scope, execute=args.execute, recover=args.action == 'recover' or args.recover, kill_at=args.kill_at)
+            else:
+                result = workflow.report(args.scope)
+            if args.output:
+                target = Path(args.output)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
+            print(json.dumps(result, indent=2))
+            return 0 if args.action in {'prepare', 'report'} or result.get('funded') and (args.action == 'fund' or result.get('receipts_reconciled')) else 2
         elif args.command == "engine-metal":
             from .config import ROOT
             from .engine import Engine, InjectedCrash
@@ -277,6 +324,8 @@ def main():
                     report["quote"] = report["quotes"][0]
                 print(json.dumps(report, indent=2))
                 return 0
+            from .leases import exclusive
+            owners.enter_context(exclusive(ROOT / 'data/metal-engine' / (args.scope + '.owner.sqlite')))
             if args.policy.startswith("real-") and not args.recover:
                 preflight = MetalEngineRail(args.scope, provider_urls, cap, budget,
                     expected_provider_ids=["local-gpu", "hosted-premium"]).quote_for_task(tasks[0])
@@ -289,6 +338,7 @@ def main():
             if args.recover and not scope_file.exists():
                 raise ValueError("Recovery requires an existing scope; it cannot create or dispatch a job")
             mandate = {"seed": args.seed, "steps": len(tasks), "budget": budget, "cap": cap,
+                       "policy": args.policy,
                        "provider_url": provider_urls[0] if len(provider_urls) == 1 else provider_urls,
                        "task_digest": __import__("hashlib").sha256(json.dumps([task.public() for task in tasks], sort_keys=True).encode()).hexdigest()}
             if scope_file.exists():
@@ -299,12 +349,12 @@ def main():
             else:
                 ledger = Ledger(data_dir / "ledger.sqlite")
                 run_id = ledger.create_run([{"seed": args.seed, "policy": args.policy, "hold": budget,
-                    "price_cap": cap, "allocation": budget, "tasks": [task.public() for task in tasks]}], budget)
+                    "price_cap": cap, "allocation": budget, "tasks": [task.public() for task in tasks]}], budget, float_mode='TESTNET')
                 scope_file.write_text(json.dumps({"run_id": run_id, "mandate": mandate}, indent=2) + "\n", encoding="utf-8")
             ledger = Ledger(data_dir / "ledger.sqlite")
             job = ledger.jobs(run_id)[0]
             live = MetalEngineRail(args.scope, mandate["provider_url"], cap, budget,
-                                   client=MetalRail(args.scope, mandate["provider_url"][0] if isinstance(mandate["provider_url"], list) else mandate["provider_url"], cap, budget),
+                                   client=MetalRail(args.scope, mandate["provider_url"][0] if isinstance(mandate["provider_url"], list) else mandate["provider_url"], cap, budget, execute=args.execute),
                                    expected_provider_ids=["local-gpu", "hosted-premium"] if job["policy"].startswith("real-") else None)
             rail = CompositeRail(MockRail(data_dir / args.scope / "simulated-rail.sqlite"), live)
             engine = Engine(ledger, rail)
@@ -328,7 +378,10 @@ def main():
                             for name in ("input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens")}
             failed_spend = sum(attempt["price"] for attempt in paid_attempts if attempt["passed"] != 1)
             failed_spend += sum(attempt["verify_cost"] for attempt in attempts if attempt["passed"] == 0)
-            report = {"mode": "TESTNET", "policy": job["policy"], "customer_hold": "SIMULATED",
+            report = {"label": "MEASURED" if paid_attempts else "BLOCKED", "mode": "TESTNET", "policy": job["policy"], "customer_hold": "SIMULATED",
+                      "verification_fee_label": "SIMULATED",
+                      "receipt_links": [{"key": a['key'], "receipt": a['receipt'], "price": a['price'],
+                                         "mandate_version": a['mandate_version']} for a in paid_attempts],
                       "customer_captured_micro_usd": 0, "run_id": run_id, "scope": args.scope,
                       "job": job["id"], "seed": args.seed, "steps": len(tasks),
                       "task_digest": mandate["task_digest"], "observed_at": time.time(),
@@ -351,6 +404,10 @@ def main():
                 temporary.write_text(json.dumps(report, indent=2, allow_nan=False) + "\n", encoding="utf-8")
                 temporary.replace(target)
                 report["evidence_file"] = str(target.relative_to(ROOT))
+            if args.output:
+                target = Path(args.output)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(json.dumps(report, indent=2, allow_nan=False) + '\n', encoding='utf-8')
             print(json.dumps(report, indent=2, allow_nan=False))
             return 0 if result["jobs"][0]["status"] == "COMPLETED" else 2
         elif args.command == "benchmark":
@@ -474,6 +531,8 @@ def main():
     except (ValueError, RuntimeError, OSError) as error:
         print(f"Touchstone: {error}", file=sys.stderr)
         return 1
+    finally:
+        owners.close()
     return 0
 
 

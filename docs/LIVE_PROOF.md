@@ -1,5 +1,7 @@
 # Live integration evidence — 30 October 2026
 
+M2 update, 3 November: **no new live financial evidence**. [Current local preflight](../bench/results/m2/local-preflight.json) finds the existing signer and RPC through the normal local loader, correcting the earlier environment-only diagnosis. The RPC check fails and provider origin is unset, so execution stops without a purchase. The written one-call cap of 0.05 USDZ remains recorded. New concurrency, dispatch and process-kill recovery results are **MOCK**, not live Metal proof. See [M2 implementation report](M2_REPORT.md).
+
 M1 update, 2 November: **no new live financial evidence**. The environment-only doctor could not see the required Airwallex variables in the agent process and made no API requests. The user reports local setup in another terminal. A new treasury job lifecycle and scope-retirement path passed controlled-adapter tests; their saved proof is **MOCK**. No private historical scope was read or retired. See [M1 report](M1_REPORT.md) and [support draft](AIRWALLEX_SUPPORT_REQUEST.md).
 
 ## Metal testnet: executed
@@ -22,7 +24,7 @@ The probe deposited **0.10 testnet USDZ** into its own persisted clearing wallet
 | Receipt assurance | Preconfirmed; no per-call blockchain transaction hash invented |
 | Unused float | 0.09 testnet USDZ returned in non-deferred claim transaction `0x5e6f4e180c98f5843db3d98c7cc149c19e9f79c0c12b24235901ae3de30b398d`; withdrawal was queued in transaction `0xf5a00b55cdb84d5ffaf9d5a04b8c73aba7238ee858270641c8b05d4af8d73a98` |
 
-The SDK confirmed the withdrawal claim after epoch `93301` finalized. `returned_float_confirmed` is true. Run `python tools/prove_metal.py --withdraw-only` to recheck withdrawal state; it retains the queue and claim transaction history and does not replay the paid inference request.
+The SDK confirmed the withdrawal claim after epoch `93301` finalized. `returned_float_confirmed` is true. Run `python tools/prove_metal.py --withdraw-only --execute` to recheck withdrawal state; it retains the queue and claim transaction history and does not replay the paid inference request.
 
 The initial attempt hit a clearing epoch refusal. Recovery examined the durable SDK state, which stores pending before sending and clears it only for a verified receipt or authoritative refusal. An unpaid reservation could retry only the same URL, seller, deployment and price. Unknown held invoices retain the original SDK invoice and block replacement purchases. This behavior is covered by separate local tests.
 

@@ -1,0 +1,178 @@
+TAP version 13
+# (node:6860) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: amounts and resource URLs reject rounding and unapproved protocols
+ok 1 - amounts and resource URLs reject rounding and unapproved protocols
+  ---
+  duration_ms: 2.807
+  type: 'test'
+  ...
+# Subtest: quote guards reject wrong price, token, chain and deployment
+ok 2 - quote guards reject wrong price, token, chain and deployment
+  ---
+  duration_ms: 0.8408
+  type: 'test'
+  ...
+# Subtest: live quote records queue depth and completed latency sample count
+ok 3 - live quote records queue depth and completed latency sample count
+  ---
+  duration_ms: 0.6325
+  type: 'test'
+  ...
+# Subtest: SDK store and exclusive owner lock persist across reopen
+ok 4 - SDK store and exclusive owner lock persist across reopen
+  ---
+  duration_ms: 46.2217
+  type: 'test'
+  ...
+# Subtest: completed purchase is idempotent and terms cannot change
+ok 5 - completed purchase is idempotent and terms cannot change
+  ---
+  duration_ms: 19.4107
+  type: 'test'
+  ...
+# Subtest: lost delivery recovers paid receipt without a second payment
+ok 6 - lost delivery recovers paid receipt without a second payment
+  ---
+  duration_ms: 21.93
+  type: 'test'
+  ...
+# Subtest: delivery recovery presents the existing paid proof without another purchase
+ok 7 - delivery recovery presents the existing paid proof without another purchase
+  ---
+  duration_ms: 23.6314
+  type: 'test'
+  ...
+# Subtest: unknown payment retains reservation and stops another purchase
+ok 8 - unknown payment retains reservation and stops another purchase
+  ---
+  duration_ms: 21.4549
+  type: 'test'
+  ...
+# Subtest: an authoritative SDK refusal permits only an identical unpaid reservation retry
+ok 9 - an authoritative SDK refusal permits only an identical unpaid reservation retry
+  ---
+  duration_ms: 21.5126
+  type: 'test'
+  ...
+# Subtest: pending payment recovery resends the exact original SDK invoice
+ok 10 - pending payment recovery resends the exact original SDK invoice
+  ---
+  duration_ms: 25.7472
+  type: 'test'
+  ...
+# Subtest: pending invoice for another URL is never replayed
+ok 11 - pending invoice for another URL is never replayed
+  ---
+  duration_ms: 18.9481
+  type: 'test'
+  ...
+# Subtest: pending invoice for another seller is never replayed
+ok 12 - pending invoice for another seller is never replayed
+  ---
+  duration_ms: 24.9148
+  type: 'test'
+  ...
+# Subtest: budget and expiry block dispatch before an effect
+ok 13 - budget and expiry block dispatch before an effect
+  ---
+  duration_ms: 16.7486
+  type: 'test'
+  ...
+# Subtest: discovery uses pinned testnet facilitator and validates response
+ok 14 - discovery uses pinned testnet facilitator and validates response
+  ---
+  duration_ms: 1.5359
+  type: 'test'
+  ...
+# Subtest: dashboard script parses after treasury integration
+ok 15 - dashboard script parses after treasury integration
+  ---
+  duration_ms: 1.7351
+  type: 'test'
+  ...
+# Subtest: treasury evidence renders before a banked purchase and keeps account labels
+ok 16 - treasury evidence renders before a banked purchase and keeps account labels
+  ---
+  duration_ms: 5.0248
+  type: 'test'
+  ...
+# Subtest: absent or failed treasury evidence clears old values and shows BLOCKED
+ok 17 - absent or failed treasury evidence clears old values and shows BLOCKED
+  ---
+  duration_ms: 3.0254
+  type: 'test'
+  ...
+# (node:11636) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shared funding ownership serializes deposits across distinct wallets
+ok 18 - shared funding ownership serializes deposits across distinct wallets
+  ---
+  duration_ms: 140.8824
+  type: 'test'
+  ...
+# Subtest: bridge refuses every monetary command without explicit boolean execute
+ok 19 - bridge refuses every monetary command without explicit boolean execute
+  ---
+  duration_ms: 2099.9661
+  type: 'test'
+  ...
+# Subtest: standalone CLI refuses money movement before network and wallet access
+ok 20 - standalone CLI refuses money movement before network and wallet access
+  ---
+  duration_ms: 1992.7811
+  type: 'test'
+  ...
+# (node:17136) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: resource task digest binds the full input
+ok 21 - resource task digest binds the full input
+  ---
+  duration_ms: 3.2
+  type: 'test'
+  ...
+# Subtest: paid delivery replays stored output without another model call
+ok 22 - paid delivery replays stored output without another model call
+  ---
+  duration_ms: 1.3411
+  type: 'test'
+  ...
+# Subtest: worker failure retains its receipt obligation and can retry CPU execution
+ok 23 - worker failure retains its receipt obligation and can retry CPU execution
+  ---
+  duration_ms: 0.7372
+  type: 'test'
+  ...
+# Subtest: hosted delivery never repeats a billable call after an uncertain failure
+ok 24 - hosted delivery never repeats a billable call after an uncertain failure
+  ---
+  duration_ms: 0.9569
+  type: 'test'
+  ...
+# Subtest: provider quotes bind queue-sensitive prices and load metadata
+ok 25 - provider quotes bind queue-sensitive prices and load metadata
+  ---
+  duration_ms: 1.2447
+  type: 'test'
+  ...
+# Subtest: quality-drop chaos changes a balanced invoice without hiding the aggregate
+ok 26 - quality-drop chaos changes a balanced invoice without hiding the aggregate
+  ---
+  duration_ms: 0.6011
+  type: 'test'
+  ...
+# Subtest: dedicated funding wallet is preserved and never returned as private data
+ok 27 - dedicated funding wallet is preserved and never returned as private data
+  ---
+  duration_ms: 60.387
+  type: 'test'
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4867.1463

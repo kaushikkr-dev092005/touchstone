@@ -4,12 +4,14 @@ import { discover, connectJob, deposit, withdraw } from './adapter.mjs';
 import { openWallet } from './wallet.mjs';
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)));
-const [command = 'inspect', job = 'job-1', requestId] = process.argv.slice(2);
+const args = process.argv.slice(2);
+const [command = 'inspect', job = 'job-1', requestId] = args.filter(a => a !== '--execute');
 if (!/^[A-Za-z0-9_-]{1,48}$/.test(job)) throw Error('Invalid job ID');
 const config = { directory: resolve(root, 'data/metal', job), rpcUrl: process.env.METAL_RPC_URL,
   providerUrl: process.env.METAL_PROVIDER_URL, privateKey: process.env.AGENT_PRIVATE_KEY,
   maxPrice: process.env.METAL_MAX_PRICE_USD || '0.05', budget: process.env.METAL_JOB_BUDGET_USD || '0.50' };
 try {
+  if (['deposit', 'withdraw', 'pay', 'recover'].includes(command) && !args.includes('--execute')) throw Error('Explicit --execute and written spend approval required');
   let result;
   if (command === 'inspect') {
     result = { mode: 'READ_ONLY', sdk: '0.3.3', node: process.version, deployment: await discover(),

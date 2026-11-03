@@ -56,6 +56,9 @@ class Ledger:
             CREATE TABLE IF NOT EXISTS payments(
               key TEXT PRIMARY KEY REFERENCES attempts(key), receipt TEXT UNIQUE NOT NULL,
               amount INTEGER NOT NULL CHECK(amount>0));
+            CREATE TABLE IF NOT EXISTS worker_leases(
+              job_id TEXT PRIMARY KEY REFERENCES jobs(id), token TEXT NOT NULL,
+              acquired_at REAL NOT NULL, active INTEGER NOT NULL);
             CREATE TABLE IF NOT EXISTS events(
               id INTEGER PRIMARY KEY AUTOINCREMENT, ts REAL NOT NULL, kind TEXT NOT NULL,
               payload TEXT NOT NULL, previous_hash TEXT NOT NULL, hash TEXT UNIQUE NOT NULL);
@@ -69,9 +72,18 @@ class Ledger:
                 db.execute("ALTER TABLE attempts ADD COLUMN verdict TEXT")
             if "provider_metadata" not in columns:
                 db.execute("ALTER TABLE attempts ADD COLUMN provider_metadata TEXT")
+            if "mandate_version" not in columns:
+                db.execute("ALTER TABLE attempts ADD COLUMN mandate_version INTEGER NOT NULL DEFAULT 1")
+            if "dispatched_at" not in columns:
+                db.execute("ALTER TABLE attempts ADD COLUMN dispatched_at REAL")
+            if "worker_token" not in columns:
+                db.execute("ALTER TABLE attempts ADD COLUMN worker_token TEXT")
             job_columns = {r["name"] for r in db.execute("PRAGMA table_info(jobs)")}
             if "mandate_version" not in job_columns:
                 db.execute("ALTER TABLE jobs ADD COLUMN mandate_version INTEGER NOT NULL DEFAULT 1")
+            run_columns = {r['name'] for r in db.execute('PRAGMA table_info(runs)')}
+            if 'float_mode' not in run_columns:
+                db.execute("ALTER TABLE runs ADD COLUMN float_mode TEXT NOT NULL DEFAULT 'SIMULATED'")
 
     def connect(self):
         db = sqlite3.connect(self.path, timeout=15, isolation_level=None, factory=ClosingConnection)
@@ -104,14 +116,34 @@ class Ledger:
         with self.tx() as db:
             self._event(db, kind, payload)
 
-    def create_run(self, specs, float_total=1500000):
+    @contextmanager
+    def worker(self, job_id):
+        from .leases import exclusive
+        identity = hashlib.sha256(job_id.encode()).hexdigest()
+        with exclusive(self.path + '.workers/' + identity + '.sqlite'):
+            token = uuid.uuid4().hex
+            with self.tx() as db:
+                if not db.execute('SELECT 1 FROM jobs WHERE id=?', (job_id,)).fetchone():
+                    raise PolicyError('Unknown worker job')
+                db.execute('INSERT OR REPLACE INTO worker_leases VALUES(?,?,?,1)', (job_id, token, time.time()))
+                self._event(db, 'WORKER_ACQUIRED', {'job_id': job_id, 'token': token})
+            try:
+                yield token
+            finally:
+                with self.tx() as db:
+                    db.execute('UPDATE worker_leases SET active=0 WHERE job_id=? AND token=?', (job_id, token))
+                    self._event(db, 'WORKER_RELEASED', {'job_id': job_id, 'token': token})
+
+    def create_run(self, specs, float_total=1500000, float_mode='SIMULATED'):
+        if float_mode not in {'SIMULATED', 'TESTNET'}:
+            raise ValueError('Unsupported float mode')
         if type(float_total) is not int or float_total <= 0:
             raise ValueError("Float must be a positive integer in micro-USD")
         run_id = uuid.uuid4().hex[:12]
         if not specs or sum(s["allocation"] for s in specs) > float_total:
             raise PolicyError("Initial allocations exceed the run's float")
         with self.tx() as db:
-            db.execute("INSERT INTO runs VALUES(?,?)", (run_id, float_total))
+            db.execute("INSERT INTO runs(id,float_total,float_mode) VALUES(?,?,?)", (run_id, float_total, float_mode))
             for i, s in enumerate(specs):
                 hold, cap, allocation = s["hold"], s["price_cap"], s["allocation"]
                 if any(type(v) is not int or v <= 0 for v in (hold, cap, allocation)) or allocation > hold:
@@ -153,7 +185,7 @@ class Ledger:
                 raise PolicyError("A mandate increase can be approved only while the job is policy-paused")
             if expected_version != job["mandate_version"]:
                 raise PolicyError("Mandate version changed; refresh before approving")
-            if db.execute("SELECT 1 FROM attempts WHERE job_id=? AND state IN ('RESERVED','PAID')", (job_id,)).fetchone():
+            if db.execute("SELECT 1 FROM attempts WHERE job_id=? AND state IN ('RESERVED','DISPATCHING','PAID')", (job_id,)).fetchone():
                 raise PolicyError("Cannot revise a mandate while a purchase outcome is unresolved")
             if hold <= job["hold"] or budget <= job["budget"]:
                 raise PolicyError("A new version must increase both the hold and job budget")
@@ -185,7 +217,7 @@ class Ledger:
             rows = db.execute("SELECT * FROM attempts WHERE job_id=? ORDER BY rowid", (job_id,)) if job_id else db.execute("SELECT * FROM attempts ORDER BY rowid")
             return [dict(r) for r in rows]
 
-    def reserve(self, job_id, task, attempt, quote, verify_cost):
+    def reserve(self, job_id, task, attempt, quote, verify_cost, expected_version=None):
         key = payment_key(job_id, task.id, attempt)
         with self.tx() as db:
             previous = db.execute("SELECT * FROM attempts WHERE key=?", (key,)).fetchone()
@@ -196,6 +228,8 @@ class Ledger:
             job = db.execute("SELECT * FROM jobs WHERE id=?", (job_id,)).fetchone()
             if not job or job["status"] != "RUNNING" or db.execute("SELECT halted FROM control").fetchone()[0]:
                 raise PolicyError("Payments are halted or job is not running")
+            if expected_version is not None and job['mandate_version'] != expected_version:
+                raise PolicyError('Mandate version changed before reservation')
             if time.time() >= job["expires_at"] or time.time() >= quote.expires_at:
                 raise PolicyError("Mandate or quote expired")
             if quote.provider not in {"economy", "balanced", "premium", "metal-provider", "local-gpu", "hosted-premium"} or not 0 <= attempt < 3:
@@ -207,15 +241,17 @@ class Ledger:
             public_tasks = json.loads(job["tasks"])
             if task.public() not in public_tasks:
                 raise PolicyError("Task is outside the approved job")
-            if db.execute("SELECT 1 FROM attempts WHERE job_id=? AND step_id=? AND (passed=1 OR state IN ('RESERVED','PAID'))", (job_id, task.id)).fetchone():
+            if db.execute("SELECT 1 FROM attempts WHERE job_id=? AND step_id=? AND (passed=1 OR state IN ('RESERVED','DISPATCHING','PAID'))", (job_id, task.id)).fetchone():
                 raise PolicyError("Step is accepted or has an unresolved purchase")
-            reserved = db.execute("SELECT COALESCE(SUM(price+verify_cost),0) FROM attempts WHERE job_id=? AND state IN ('RESERVED','PAID')", (job_id,)).fetchone()[0]
+            reserved = db.execute("SELECT COALESCE(SUM(price+verify_cost),0) FROM attempts WHERE job_id=? AND state IN ('RESERVED','DISPATCHING','PAID')", (job_id,)).fetchone()[0]
             total = quote.price + verify_cost
             if job["spent"] + reserved + total > min(job["hold"], job["budget"]):
                 raise PolicyError("Customer hold or budget would be exceeded")
-            rail_reserved = db.execute("SELECT COALESCE(SUM(price),0) FROM attempts WHERE job_id=? AND state='RESERVED'", (job_id,)).fetchone()[0]
+            rail_reserved = db.execute("SELECT COALESCE(SUM(price),0) FROM attempts WHERE job_id=? AND state IN ('RESERVED','DISPATCHING')", (job_id,)).fetchone()[0]
             shortfall = job["rail_spent"] + rail_reserved + quote.price - job["allocation"]
             if shortfall > 0:
+                if db.execute('SELECT float_mode FROM runs WHERE id=?', (job['run_id'],)).fetchone()[0] != 'SIMULATED':
+                    raise PolicyError('Real wallet allocation exhausted; no automatic cross-wallet float top-up')
                 run = db.execute("SELECT float_total FROM runs WHERE id=?", (job["run_id"],)).fetchone()[0]
                 allocated = db.execute("SELECT SUM(allocation) FROM jobs WHERE run_id=?", (job["run_id"],)).fetchone()[0]
                 topup = min(max(shortfall, 100000), run - allocated, job["hold"] - job["allocation"])
@@ -223,18 +259,33 @@ class Ledger:
                     raise PolicyError("Operator float exhausted; approval or new float required")
                 db.execute("UPDATE jobs SET allocation=allocation+? WHERE id=?", (topup, job_id))
                 self._event(db, "FLOAT_TOPUP", {"job_id": job_id, "amount": topup, "mode": "SIMULATED"})
-            db.execute("INSERT INTO attempts(key,job_id,step_id,attempt,state,quote,provider,price,verify_cost) VALUES(?,?,?,?,?,?,?,?,?)",
-                       (key, job_id, task.id, attempt, "RESERVED", canonical(quote.public()), quote.provider, quote.price, verify_cost))
+            db.execute("INSERT INTO attempts(key,job_id,step_id,attempt,state,quote,provider,price,verify_cost,mandate_version) VALUES(?,?,?,?,?,?,?,?,?,?)",
+                       (key, job_id, task.id, attempt, "RESERVED", canonical(quote.public()), quote.provider, quote.price, verify_cost, job['mandate_version']))
             self._event(db, "RESERVED", {"job_id": job_id, "step_id": task.id, "key": key, "quote_id": quote.id, "amount": total})
         return key
 
-    def assert_can_pay(self, key):
-        with self.connect() as db:
-            row = db.execute("SELECT a.*,j.status,j.expires_at FROM attempts a JOIN jobs j ON a.job_id=j.id WHERE key=?", (key,)).fetchone()
+    def assert_can_pay(self, key, worker_token=None):
+        """Authorize once: mandate/halt/lease checks and DISPATCHING share a transaction.
+
+        Halt after this commit cannot cancel the already authorized external call.
+        A second worker must reconcile DISPATCHING, never dispatch it again.
+        """
+        with self.tx() as db:
+            row = db.execute("SELECT a.*,j.status,j.expires_at,j.mandate_version AS current_version FROM attempts a JOIN jobs j ON a.job_id=j.id WHERE key=?", (key,)).fetchone()
             if not row or row["state"] != "RESERVED" or row["status"] != "RUNNING" or db.execute("SELECT halted FROM control").fetchone()[0]:
                 raise PolicyError("Payment dispatch is stopped")
+            if row['mandate_version'] != row['current_version']:
+                raise PolicyError('Mandate version changed before dispatch')
+            lease = db.execute('SELECT token,active FROM worker_leases WHERE job_id=?', (row['job_id'],)).fetchone()
+            if (worker_token is not None and (not lease or not lease['active'] or lease['token'] != worker_token)
+                or lease and lease['active'] and lease['token'] != worker_token):
+                raise PolicyError('Worker lease is not owned by this dispatcher')
             if time.time() >= row["expires_at"] or time.time() >= json.loads(row["quote"])["expires_at"]:
                 raise PolicyError("Mandate or quote expired before dispatch")
+            db.execute("UPDATE attempts SET state='DISPATCHING',dispatched_at=?,worker_token=? WHERE key=?",
+                       (time.time(), worker_token, key))
+            self._event(db, 'DISPATCHING', {'key': key, 'job_id': row['job_id'],
+                'mandate_version': row['current_version'], 'worker_token': worker_token})
 
     def record_paid(self, key, receipt):
         with self.tx() as db:
@@ -269,7 +320,7 @@ class Ledger:
                     self._event(db, "PROVIDER_MEASUREMENT", {"job_id": row["job_id"], "key": key,
                         "provider": row["provider"], "metadata": metadata, "mode": receipt.get("mode", "UNKNOWN")})
                 return
-            if row["state"] != "RESERVED":
+            if row["state"] not in {'RESERVED', 'DISPATCHING'}:
                 raise PolicyError("No active reservation")
             db.execute("INSERT INTO payments VALUES(?,?,?)", (key, receipt["id"], receipt["amount"]))
             db.execute("UPDATE attempts SET state='PAID',receipt=?,provider_metadata=? WHERE key=?",
@@ -293,10 +344,12 @@ class Ledger:
             db.execute("UPDATE jobs SET spent=spent+? WHERE id=?", (row["price"] + row["verify_cost"], row["job_id"]))
             self._event(db, state, {"job_id": row["job_id"], "step_id": row["step_id"], "key": key, "provider": row["provider"], "score": verdict["score"], "reason": verdict["reason"], "method": verdict.get("method", "source-numeric"), "retryable": verdict.get("retryable", True)})
 
-    def void(self, key, reason):
+    def void(self, key, reason, authoritative=False):
         with self.tx() as db:
-            row = db.execute("SELECT job_id FROM attempts WHERE key=? AND state='RESERVED'", (key,)).fetchone()
+            row = db.execute("SELECT job_id,state FROM attempts WHERE key=? AND state IN ('RESERVED','DISPATCHING')", (key,)).fetchone()
             if row:
+                if row['state'] == 'DISPATCHING' and not authoritative:
+                    raise PolicyError('Dispatched reservations require authoritative non-payment evidence')
                 db.execute("UPDATE attempts SET state='VOID',reason=? WHERE key=?", (reason, key))
                 self._event(db, "RESERVATION_VOIDED", {"key": key, "reason": reason})
 
@@ -310,10 +363,16 @@ class Ledger:
             row = db.execute("SELECT * FROM jobs WHERE id=?", (job_id,)).fetchone()
             if row["status"] == "COMPLETED":
                 return
-            if db.execute("SELECT 1 FROM attempts WHERE job_id=? AND state IN ('RESERVED','PAID')", (job_id,)).fetchone():
+            if db.execute("SELECT 1 FROM attempts WHERE job_id=? AND state IN ('RESERVED','DISPATCHING','PAID')", (job_id,)).fetchone():
                 raise PolicyError("Cannot capture while payment outcome is unresolved")
-            db.execute("UPDATE jobs SET status='COMPLETED',captured=spent,released=hold-spent,allocation=rail_spent WHERE id=?", (job_id,))
-            self._event(db, "HOLD_CAPTURED", {"job_id": job_id, "captured": row["spent"], "released": row["hold"] - row["spent"], "unused_float_returned": row["allocation"] - row["rail_spent"], "mode": "SIMULATED"})
+            float_mode = db.execute('SELECT float_mode FROM runs WHERE id=?', (row['run_id'],)).fetchone()[0]
+            allocation = row['rail_spent'] if float_mode == 'SIMULATED' else row['allocation']
+            db.execute("UPDATE jobs SET status='COMPLETED',captured=spent,released=hold-spent,allocation=? WHERE id=?", (allocation, job_id))
+            unused = row['allocation'] - row['rail_spent']
+            self._event(db, "HOLD_CAPTURED", {"job_id": job_id, "captured": row["spent"], "released": row["hold"] - row["spent"],
+                "unused_float_returned": unused if float_mode == 'SIMULATED' else 0,
+                "unused_float_pending": unused if float_mode == 'TESTNET' else 0,
+                "mode": "SIMULATED", "float_mode": float_mode})
 
     def halt(self, reason="Operator halted new payment dispatches; in-flight charges require reconciliation"):
         with self.tx() as db:

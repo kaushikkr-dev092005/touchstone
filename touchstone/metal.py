@@ -52,7 +52,7 @@ class MetalQuote:
 class MetalRail:
     mode = "TESTNET"
 
-    def __init__(self, job, provider_url=None, price_cap=50000, budget=500000, transport=None):
+    def __init__(self, job, provider_url=None, price_cap=50000, budget=500000, transport=None, execute=False):
         load_local()
         if not re.fullmatch(r"[A-Za-z0-9_-]{1,48}", job):
             raise ValueError("Invalid wallet job ID")
@@ -64,6 +64,7 @@ class MetalRail:
         if not 0 < price_cap <= budget:
             raise ValueError("Price cap must fit the payment budget")
         self.transport = transport or self._process
+        self.execute = execute
 
     def _process(self, request):
         try:
@@ -84,8 +85,11 @@ class MetalRail:
             raise PaymentPending("Metal operation is unresolved; preserve the job and recover before sending another purchase") from None
 
     def invoke(self, command, **fields):
+        if command in {'pay', 'deposit', 'withdraw', 'recover'} and not self.execute:
+            raise ValueError('Metal money-moving operations require explicit execute authorization')
         return self.transport({"command": command, "job": self.job, "provider_url": self.provider_url,
-                               "max_price": dollars(self.price_cap), "budget": dollars(self.budget), **fields})
+                               "max_price": dollars(self.price_cap), "budget": dollars(self.budget),
+                               **fields, 'execute': self.execute})
 
     def quote(self, provider_url=None):
         provider_url = provider_url or self.provider_url

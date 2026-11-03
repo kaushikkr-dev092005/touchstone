@@ -14,6 +14,7 @@ for await (const chunk of process.stdin) { input += chunk; if (input.length > 25
 let request;
 try {
   request = JSON.parse(input);
+  if (['deposit', 'withdraw', 'pay', 'recover'].includes(request.command) && request.execute !== true) throw Error('Explicit execute required');
   if (!/^[A-Za-z0-9_-]{1,48}$/.test(request.job || '')) throw Error('Invalid job');
   const config = { directory: resolve(root, 'data/metal', request.job), rpcUrl: process.env.METAL_RPC_URL,
     providerUrl: request.provider_url, privateKey: process.env.AGENT_PRIVATE_KEY,

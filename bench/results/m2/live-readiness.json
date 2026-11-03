@@ -1,0 +1,15 @@
+{
+  "label": "BLOCKED",
+  "configured": {
+    "METAL_RPC_URL": false,
+    "AGENT_PRIVATE_KEY": false,
+    "METAL_PROVIDER_URL": false
+  },
+  "live_spend_cap_approved": false,
+  "network_requests": 0,
+  "provider_health": "UNVERIFIED",
+  "faucet_funding": "UNVERIFIED",
+  "live_paid_engine": "NOT_RUN",
+  "live_crash_recovery": "NOT_RUN",
+  "note": "Historical process-environment-only check before approval; superseded by local-preflight.json using the normal local loader."
+}

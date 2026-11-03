@@ -37,7 +37,10 @@ def main():
     parser.add_argument('--recover', action='store_true')
     parser.add_argument('--withdraw', action='store_true')
     parser.add_argument('--withdraw-only', action='store_true')
+    parser.add_argument('--execute', action='store_true')
     args = parser.parse_args()
+    if not args.execute:
+        parser.error('Live proof and recovery require --execute and written approval with a stated cap')
     if not re.fullmatch('[A-Za-z0-9_-]{1,48}', args.scope):
         parser.error('Invalid scope')
     load_local()
@@ -55,7 +58,7 @@ def main():
     if args.withdraw_only:
         if report.get('phase') != 'DELIVERED' or report.get('result', {}).get('state') != 'DELIVERED':
             raise ValueError('Withdrawal recovery requires the existing delivered proof')
-        rail = MetalRail(args.scope, terms['provider_url'], terms['price_cap_micro_usd'], terms['allocation_micro_usd'])
+        rail = MetalRail(args.scope, terms['provider_url'], terms['price_cap_micro_usd'], terms['allocation_micro_usd'], execute=args.execute)
         with owner.owner():
             previous_withdrawal = report.get('withdrawal', {})
             published_path = ROOT / 'bench/results/metal-paid-proof.json'
@@ -89,7 +92,7 @@ def main():
             save(published_path, public)
             print(json.dumps({'scope': args.scope, 'withdrawal': report['withdrawal']}, indent=2))
         return 0
-    rail = MetalRail(args.scope, url, 10000, 100000)
+    rail = MetalRail(args.scope, url, 10000, 100000, execute=args.execute)
     with owner.owner():
         save(path, report)
         if 'result' not in report:

@@ -1,0 +1,8 @@
+{
+  "label": "BLOCKED",
+  "read_only": true,
+  "method": "eth_chainId",
+  "transactions_sent": 0,
+  "url_shape_valid": true,
+  "http_status": 401
+}

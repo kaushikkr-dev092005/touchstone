@@ -1,8 +1,22 @@
 import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync, chmodSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
 import { randomBytes } from 'node:crypto';
 import { createClearingSigner } from '@metalntwx/metal-pay';
+
+// Shared EVM funding signer: serialize deposits/withdrawals across job wallets.
+// Separate from the Python coordinator lock to avoid nested lock acquisition.
+export function openFundingOwner(directory) {
+  mkdirSync(dirname(directory), { recursive: true, mode: 0o700 });
+  const owner = new DatabaseSync(join(dirname(directory), 'sdk-funding-owner.sqlite'));
+  try {
+    owner.exec('PRAGMA locking_mode=EXCLUSIVE; BEGIN EXCLUSIVE; CREATE TABLE IF NOT EXISTS owner(id INTEGER)');
+    return owner;
+  } catch {
+    owner.close();
+    throw Error('Another operation owns the funding account; no transaction dispatched');
+  }
+}
 
 // Implements the SDK's ClearingClientStore with SQLite durability on Windows.
 export function openWallet(directory) {

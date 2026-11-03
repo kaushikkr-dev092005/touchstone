@@ -54,11 +54,11 @@ class MetalProofRecovery(unittest.TestCase):
                  patch.object(prove_metal, 'load_local'), \
                  patch.object(prove_metal, 'BankedStore', return_value=owner), \
                  patch.object(prove_metal, 'MetalRail', return_value=rail) as rail_factory, \
-                 patch('sys.argv', ['prove_metal.py', '--withdraw-only']), \
+                 patch('sys.argv', ['prove_metal.py', '--withdraw-only', '--execute']), \
                  contextlib.redirect_stdout(io.StringIO()):
                 prove_metal.main()
 
-            rail_factory.assert_called_once_with('funded-proof-001', terms['provider_url'], 10000, 100000)
+            rail_factory.assert_called_once_with('funded-proof-001', terms['provider_url'], 10000, 100000, execute=True)
             rail.withdraw.assert_called_once_with()
             rail.pay.assert_not_called()
             rail.recover.assert_not_called()
@@ -113,7 +113,7 @@ class MetalProofRecovery(unittest.TestCase):
                  patch.object(prove_metal, 'load_local'), \
                  patch.object(prove_metal, 'BankedStore', return_value=owner), \
                  patch.object(prove_metal, 'MetalRail', return_value=rail), \
-                 patch('sys.argv', ['prove_metal.py', '--withdraw-only']), \
+                 patch('sys.argv', ['prove_metal.py', '--withdraw-only', '--execute']), \
                  contextlib.redirect_stdout(io.StringIO()):
                 prove_metal.main()
 
@@ -133,7 +133,7 @@ class MetalProofRecovery(unittest.TestCase):
                  patch.object(prove_metal, 'load_local'), \
                  patch.object(prove_metal, 'BankedStore', return_value=owner), \
                  patch.object(prove_metal, 'MetalRail', return_value=rail), \
-                 patch('sys.argv', ['prove_metal.py', '--withdraw-only']), \
+                 patch('sys.argv', ['prove_metal.py', '--withdraw-only', '--execute']), \
                  contextlib.redirect_stdout(io.StringIO()):
                 prove_metal.main()
 

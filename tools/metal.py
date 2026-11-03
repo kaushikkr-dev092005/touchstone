@@ -10,6 +10,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from touchstone.config import load_local
 args = sys.argv[1:] or ["inspect"]
+if args[0] in {'deposit', 'withdraw', 'pay', 'recover'} and '--execute' not in args:
+    raise SystemExit('Money movement requires --execute and written approval with a stated cap')
 if args[0] not in {"test", "install"}:
     load_local()
 manifest = ROOT / ".tools/node/manifest.json"

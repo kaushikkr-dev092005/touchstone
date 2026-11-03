@@ -1,5 +1,7 @@
 # Validation record
 
+M2 update, 3 November: **MEASURED local tests** — 162 Python and 27 Node tests pass. **MOCK** evidence covers an atomic versioned dispatch barrier, worker exclusion across processes, serial funding followed by three concurrent jobs, one receipt recovered after abrupt process death, sub-cent release without capture, retained testnet allocation and 1,280 seeded accounting operations. The latest actual read-only preflight loads the existing local signer and RPC configuration, but the RPC check fails and provider URL is unset; no purchase was attempted. See [M2 report](M2_REPORT.md). Earlier counts and environment-only results are historical.
+
 M1 update, 2 November: **MEASURED local execution** — 148 Python tests and 24 Node tests pass. New M1 tests cover account/scope diagnostics, guarded commands, rejected/consumed IDs, evidence-based retirement, immutable FX caps, uncertain outcomes, separate-account job reconciliation and dashboard rendering. Test financial adapters are **MOCK**; the demo-rate entry is **SIMULATED**. See [M1 report and raw logs](M1_REPORT.md). The earlier M0 counts below remain historical.
 
 Updated 2 November 2026. Environment: Windows, Python 3.12.10, portable Node 22.23.4, NVIDIA RTX 3050 Laptop GPU with 4096 MiB VRAM, driver 610.62. Any measured GPU profiles are stored separately from simulator results.

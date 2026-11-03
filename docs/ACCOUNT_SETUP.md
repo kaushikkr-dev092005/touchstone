@@ -178,7 +178,7 @@ The process-kill demonstration spends a real request at `after_rail`, exits with
 
 ```powershell
 python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute --kill-at after_rail
-python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --recover
+python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute --recover
 python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute
 ```
 
@@ -186,7 +186,7 @@ macOS / Linux / Git Bash equivalent:
 
 ```bash
 python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute --kill-at after_rail
-python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --recover
+python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute --recover
 python -m touchstone engine-metal --scope engine-kill-001 --steps 30 --budget-usd 1.53 --price-cap-usd 0.05 --execute
 ```
 
@@ -195,13 +195,13 @@ The stable scope binds tasks, budget, cap and provider URL(s). Preserve those ex
 ## Resume the existing funded proof
 
 ```powershell
-python tools/prove_metal.py --withdraw-only
+python tools/prove_metal.py --withdraw-only --execute
 ```
 
 macOS / Linux / Git Bash equivalent:
 
 ```bash
-python tools/prove_metal.py --withdraw-only
+python tools/prove_metal.py --withdraw-only --execute
 ```
 
 This resumes the existing withdrawal for `funded-proof-001` without replaying inference. The original proof preserves one reservation, a 0.10 USDZ deposit and a 0.01 USDZ purchase cap. Both cached retry and direct provider receipt replay were verified without another payment. The purchased model answer failed verification; its expense remains recorded. A non-deferred claim has now returned 0.09 testnet USDZ to the funding wallet.

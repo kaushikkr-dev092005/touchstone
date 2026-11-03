@@ -1,0 +1,22 @@
+{
+  "label": "BLOCKED",
+  "observed_at": "2026-11-03T07:15:53.592694+00:00",
+  "read_only": true,
+  "purchases_sent": 0,
+  "money_moved": false,
+  "authorization": {
+    "max_purchases": 1,
+    "total_cap_usdz_including_charges": "0.05",
+    "chain_id": 63825
+  },
+  "checks": {
+    "local_configuration": "PASS"
+  },
+  "configured": {
+    "METAL_RPC_URL": true,
+    "AGENT_PRIVATE_KEY": true,
+    "METAL_PROVIDER_URL": false
+  },
+  "blocker": "PREFLIGHT_FAILED",
+  "failure_type": "RuntimeError"
+}

@@ -57,6 +57,8 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 
 ## Not done
 
+- [ ] M2 live gate remains BLOCKED: implementation and controlled evidence are complete ([report](M2_REPORT.md)); the authorized single call and live kill/restart have not run because the current RPC check fails and provider URL is unset. MEASURED local suite: 162 Python / 27 Node tests. No additional spend approval is needed for the same one-call cap.
+
 - [ ] Validate a real sandbox authorization/capture: direct PaymentIntent creation returns `configuration_error` (BLOCKED, external merchant configuration); hosted Checkout Sessions access is untested.
 - [ ] Set `AIRWALLEX_ACCOUNT_ID` and the Transactional FX Conversion Write scope, then run one approved sandbox FX conversion and reconcile both wallet-history entries (needs human gate and a stated cap).
 - [ ] Collect representative finance-operations sources and prospective evaluation evidence; qualify an inference provider for that domain. No measured model passes the eligibility screen.

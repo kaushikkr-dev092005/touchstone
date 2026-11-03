@@ -1,0 +1,644 @@
+{
+  "label": "MOCK",
+  "network_requests": 0,
+  "live_money_moved": false,
+  "parallel": {
+    "label": "MOCK",
+    "scope": "parallel",
+    "run_id": "53e572838e7e",
+    "terms": {
+      "aggregate": 120000,
+      "budget": 40000,
+      "cap": 10000,
+      "jobs": 3,
+      "origin": "http://127.0.0.1:8092",
+      "purpose": "INTEGRATION_PROBE",
+      "seed": 42,
+      "steps": 2
+    },
+    "wallets": [
+      {
+        "scope": "parallel",
+        "job_id": "53e572838e7e-1",
+        "wallet": "parallel-j1",
+        "phase": "FUNDED",
+        "account": "parallel-j1"
+      },
+      {
+        "scope": "parallel",
+        "job_id": "53e572838e7e-2",
+        "wallet": "parallel-j2",
+        "phase": "FUNDED",
+        "account": "parallel-j2"
+      },
+      {
+        "scope": "parallel",
+        "job_id": "53e572838e7e-3",
+        "wallet": "parallel-j3",
+        "phase": "FUNDED",
+        "account": "parallel-j3"
+      }
+    ],
+    "funded": true,
+    "paid_attempts": [
+      {
+        "key": "615cc5b9b056f57ee42fbb1164004cf14a0a6be488c59bafc87b72f8e4bca45e",
+        "job_id": "53e572838e7e-1",
+        "receipt": "mock_e9a0cf30f22517289e03ac1d",
+        "price": 10000,
+        "state": "VERIFIED_FAIL",
+        "mandate_version": 1
+      },
+      {
+        "key": "7906ced07cbf87f5a4ef3496b77739326a724cfd9da862273365e7e224eaf18e",
+        "job_id": "53e572838e7e-1",
+        "receipt": "mock_a5be1fb4db9d53f0a61a97e6",
+        "price": 10000,
+        "state": "VERIFIED_FAIL",
+        "mandate_version": 1
+      },
+      {
+        "key": "861d38eb8abea742630174845b800f92e6b1847f49e0b2a5df1f99f9101d6dda",
+        "job_id": "53e572838e7e-2",
+        "receipt": "mock_a0c961138523b061b5847854",
+        "price": 10000,
+        "state": "VERIFIED_FAIL",
+        "mandate_version": 1
+      },
+      {
+        "key": "67aa91ec5b26707da336d8db3d777606d944bdf33efb9f10f6276d510604ca09",
+        "job_id": "53e572838e7e-2",
+        "receipt": "mock_2c69ecb694c3dce329d7b755",
+        "price": 10000,
+        "state": "VERIFIED_FAIL",
+        "mandate_version": 1
+      },
+      {
+        "key": "8c0e78c386eafa09479a66f97bf7910cacba0fa74a68f9613f01df6362e89246",
+        "job_id": "53e572838e7e-3",
+        "receipt": "mock_3c7e8adf2d7858c685b964ef",
+        "price": 10000,
+        "state": "VERIFIED_FAIL",
+        "mandate_version": 1
+      },
+      {
+        "key": "9a2272d9c5ff2c76000ddaad6689eb5d6a00f9f77e9d4ef37e64d4bd5d49560d",
+        "job_id": "53e572838e7e-3",
+        "receipt": "mock_3ea035c70d8d4cccc77dadde",
+        "price": 10000,
+        "state": "VERIFIED_FAIL",
+        "mandate_version": 1
+      }
+    ],
+    "pending_attempts": 0,
+    "customer_mandates": "SIMULATED",
+    "customer_captured": 0,
+    "automatic_withdrawals": false,
+    "verification_fees": "SIMULATED internal charge; not a paid external check",
+    "audit": {
+      "valid": true,
+      "events": 58,
+      "head": "6d24257433be86474c51887e764ddfb92c1f06bc6b70cccb1fce46975ee4498d"
+    },
+    "live_gate": "Requires written testnet cap, provider and funded wallets",
+    "jobs": [
+      {
+        "jobs": [
+          {
+            "id": "53e572838e7e-1",
+            "run_id": "53e572838e7e",
+            "seed": 42,
+            "policy": "metal-probe",
+            "status": "COMPLETED",
+            "budget": 40000,
+            "hold": 40000,
+            "price_cap": 10000,
+            "allocation": 40000,
+            "rail_spent": 20000,
+            "spent": 22000,
+            "captured": 22000,
+            "released": 18000,
+            "expires_at": 1793776328.4541216,
+            "mandate_version": 1,
+            "count": 2,
+            "accepted": 0,
+            "failed_attempts": 2,
+            "reserved": 0
+          }
+        ],
+        "runs": [
+          {
+            "id": "53e572838e7e",
+            "float_total": 120000,
+            "float_mode": "TESTNET"
+          }
+        ],
+        "halted": false,
+        "attempts": [
+          {
+            "job_id": "53e572838e7e-1",
+            "step_id": "step-0000",
+            "attempt": 0,
+            "state": "VERIFIED_FAIL",
+            "provider": "metal-provider",
+            "price": 10000,
+            "verify_cost": 1000,
+            "score": 0.0,
+            "reason": "Source evidence or numeric checks failed",
+            "receipt": "mock_e9a0cf30f22517289e03ac1d",
+            "provider_metadata": null
+          },
+          {
+            "job_id": "53e572838e7e-1",
+            "step_id": "step-0001",
+            "attempt": 0,
+            "state": "VERIFIED_FAIL",
+            "provider": "metal-provider",
+            "price": 10000,
+            "verify_cost": 1000,
+            "score": 0.0,
+            "reason": "Source evidence or numeric checks failed",
+            "receipt": "mock_a5be1fb4db9d53f0a61a97e6",
+            "provider_metadata": null
+          }
+        ],
+        "reconciliation": {
+          "matched": true,
+          "ledger_provider_total": 20000,
+          "rail_total": 20000,
+          "verification_total": 2000,
+          "customer_captured": 22000,
+          "pending": 0,
+          "mismatches": [],
+          "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+          "mode": "MOCK"
+        },
+        "audit": {
+          "valid": true,
+          "events": 58,
+          "head": "6d24257433be86474c51887e764ddfb92c1f06bc6b70cccb1fce46975ee4498d"
+        },
+        "verifier_version": "source-rules-v4-source-gating",
+        "modes": {
+          "airwallex": "SIMULATED",
+          "metal": "MOCK",
+          "inference": "MOCK"
+        }
+      },
+      {
+        "jobs": [
+          {
+            "id": "53e572838e7e-2",
+            "run_id": "53e572838e7e",
+            "seed": 43,
+            "policy": "metal-probe",
+            "status": "COMPLETED",
+            "budget": 40000,
+            "hold": 40000,
+            "price_cap": 10000,
+            "allocation": 40000,
+            "rail_spent": 20000,
+            "spent": 22000,
+            "captured": 22000,
+            "released": 18000,
+            "expires_at": 1793776328.4541216,
+            "mandate_version": 1,
+            "count": 2,
+            "accepted": 0,
+            "failed_attempts": 2,
+            "reserved": 0
+          }
+        ],
+        "runs": [
+          {
+            "id": "53e572838e7e",
+            "float_total": 120000,
+            "float_mode": "TESTNET"
+          }
+        ],
+        "halted": false,
+        "attempts": [
+          {
+            "job_id": "53e572838e7e-2",
+            "step_id": "step-0000",
+            "attempt": 0,
+            "state": "VERIFIED_FAIL",
+            "provider": "metal-provider",
+            "price": 10000,
+            "verify_cost": 1000,
+            "score": 0.0,
+            "reason": "Source evidence or numeric checks failed",
+            "receipt": "mock_a0c961138523b061b5847854",
+            "provider_metadata": null
+          },
+          {
+            "job_id": "53e572838e7e-2",
+            "step_id": "step-0001",
+            "attempt": 0,
+            "state": "VERIFIED_FAIL",
+            "provider": "metal-provider",
+            "price": 10000,
+            "verify_cost": 1000,
+            "score": 0.0,
+            "reason": "Source evidence or numeric checks failed",
+            "receipt": "mock_2c69ecb694c3dce329d7b755",
+            "provider_metadata": null
+          }
+        ],
+        "reconciliation": {
+          "matched": true,
+          "ledger_provider_total": 20000,
+          "rail_total": 20000,
+          "verification_total": 2000,
+          "customer_captured": 22000,
+          "pending": 0,
+          "mismatches": [],
+          "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+          "mode": "MOCK"
+        },
+        "audit": {
+          "valid": true,
+          "events": 58,
+          "head": "6d24257433be86474c51887e764ddfb92c1f06bc6b70cccb1fce46975ee4498d"
+        },
+        "verifier_version": "source-rules-v4-source-gating",
+        "modes": {
+          "airwallex": "SIMULATED",
+          "metal": "MOCK",
+          "inference": "MOCK"
+        }
+      },
+      {
+        "jobs": [
+          {
+            "id": "53e572838e7e-3",
+            "run_id": "53e572838e7e",
+            "seed": 44,
+            "policy": "metal-probe",
+            "status": "COMPLETED",
+            "budget": 40000,
+            "hold": 40000,
+            "price_cap": 10000,
+            "allocation": 40000,
+            "rail_spent": 20000,
+            "spent": 22000,
+            "captured": 22000,
+            "released": 18000,
+            "expires_at": 1793776328.4541216,
+            "mandate_version": 1,
+            "count": 2,
+            "accepted": 0,
+            "failed_attempts": 2,
+            "reserved": 0
+          }
+        ],
+        "runs": [
+          {
+            "id": "53e572838e7e",
+            "float_total": 120000,
+            "float_mode": "TESTNET"
+          }
+        ],
+        "halted": false,
+        "attempts": [
+          {
+            "job_id": "53e572838e7e-3",
+            "step_id": "step-0000",
+            "attempt": 0,
+            "state": "VERIFIED_FAIL",
+            "provider": "metal-provider",
+            "price": 10000,
+            "verify_cost": 1000,
+            "score": 0.0,
+            "reason": "Source evidence or numeric checks failed",
+            "receipt": "mock_3c7e8adf2d7858c685b964ef",
+            "provider_metadata": null
+          },
+          {
+            "job_id": "53e572838e7e-3",
+            "step_id": "step-0001",
+            "attempt": 0,
+            "state": "VERIFIED_FAIL",
+            "provider": "metal-provider",
+            "price": 10000,
+            "verify_cost": 1000,
+            "score": 0.0,
+            "reason": "Source evidence or numeric checks failed",
+            "receipt": "mock_3ea035c70d8d4cccc77dadde",
+            "provider_metadata": null
+          }
+        ],
+        "reconciliation": {
+          "matched": true,
+          "ledger_provider_total": 20000,
+          "rail_total": 20000,
+          "verification_total": 2000,
+          "customer_captured": 22000,
+          "pending": 0,
+          "mismatches": [],
+          "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+          "mode": "MOCK"
+        },
+        "audit": {
+          "valid": true,
+          "events": 58,
+          "head": "6d24257433be86474c51887e764ddfb92c1f06bc6b70cccb1fce46975ee4498d"
+        },
+        "verifier_version": "source-rules-v4-source-gating",
+        "modes": {
+          "airwallex": "SIMULATED",
+          "metal": "MOCK",
+          "inference": "MOCK"
+        }
+      }
+    ],
+    "receipts_reconciled": true,
+    "financial_evidence": "MOCK"
+  },
+  "funding_and_purchase_order": [
+    [
+      "deposit",
+      "parallel-j1"
+    ],
+    [
+      "deposit",
+      "parallel-j2"
+    ],
+    [
+      "deposit",
+      "parallel-j3"
+    ],
+    [
+      "pay",
+      "parallel-j3"
+    ],
+    [
+      "pay",
+      "parallel-j1"
+    ],
+    [
+      "pay",
+      "parallel-j2"
+    ],
+    [
+      "pay",
+      "parallel-j2"
+    ],
+    [
+      "pay",
+      "parallel-j3"
+    ],
+    [
+      "pay",
+      "parallel-j1"
+    ],
+    [
+      "deposit",
+      "crash-j1"
+    ]
+  ],
+  "crash": {
+    "label": "MOCK",
+    "process_exit_code": 86,
+    "pending_after_kill": 1,
+    "recovery": {
+      "label": "MOCK",
+      "scope": "crash",
+      "run_id": "df5a192740bd",
+      "terms": {
+        "aggregate": 30000,
+        "budget": 30000,
+        "cap": 10000,
+        "jobs": 1,
+        "origin": "http://127.0.0.1:8092",
+        "purpose": "INTEGRATION_PROBE",
+        "seed": 42,
+        "steps": 1
+      },
+      "wallets": [
+        {
+          "scope": "crash",
+          "job_id": "df5a192740bd-1",
+          "wallet": "crash-j1",
+          "phase": "FUNDED",
+          "account": "crash-j1"
+        }
+      ],
+      "funded": true,
+      "paid_attempts": [
+        {
+          "key": "5c2866ef47b008d5e965d2bda9f4c675acb76f251aff15651e95398d120a161f",
+          "job_id": "df5a192740bd-1",
+          "receipt": "mock_2a27d000e3af63861e783f43",
+          "price": 10000,
+          "state": "VERIFIED_FAIL",
+          "mandate_version": 1
+        }
+      ],
+      "pending_attempts": 0,
+      "customer_mandates": "SIMULATED",
+      "customer_captured": 0,
+      "automatic_withdrawals": false,
+      "verification_fees": "SIMULATED internal charge; not a paid external check",
+      "audit": {
+        "valid": true,
+        "events": 71,
+        "head": "303c3c8101758d565989946fd212b0a5b988c3665fb2bee06f1d2150c2372ffd"
+      },
+      "live_gate": "Requires written testnet cap, provider and funded wallets",
+      "jobs": [
+        {
+          "jobs": [
+            {
+              "id": "df5a192740bd-1",
+              "run_id": "df5a192740bd",
+              "seed": 42,
+              "policy": "metal-probe",
+              "status": "RUNNING",
+              "budget": 30000,
+              "hold": 30000,
+              "price_cap": 10000,
+              "allocation": 30000,
+              "rail_spent": 10000,
+              "spent": 11000,
+              "captured": 0,
+              "released": 0,
+              "expires_at": 1793776329.3509433,
+              "mandate_version": 1,
+              "count": 1,
+              "accepted": 0,
+              "failed_attempts": 1,
+              "reserved": 0
+            }
+          ],
+          "runs": [
+            {
+              "id": "df5a192740bd",
+              "float_total": 30000,
+              "float_mode": "TESTNET"
+            },
+            {
+              "id": "53e572838e7e",
+              "float_total": 120000,
+              "float_mode": "TESTNET"
+            }
+          ],
+          "halted": false,
+          "attempts": [
+            {
+              "job_id": "df5a192740bd-1",
+              "step_id": "step-0000",
+              "attempt": 0,
+              "state": "VERIFIED_FAIL",
+              "provider": "metal-provider",
+              "price": 10000,
+              "verify_cost": 1000,
+              "score": 0.0,
+              "reason": "Source evidence or numeric checks failed",
+              "receipt": "mock_2a27d000e3af63861e783f43",
+              "provider_metadata": null
+            }
+          ],
+          "reconciliation": {
+            "matched": true,
+            "ledger_provider_total": 10000,
+            "rail_total": 10000,
+            "verification_total": 1000,
+            "customer_captured": 0,
+            "pending": 0,
+            "mismatches": [],
+            "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+            "mode": "MOCK"
+          },
+          "audit": {
+            "valid": true,
+            "events": 71,
+            "head": "303c3c8101758d565989946fd212b0a5b988c3665fb2bee06f1d2150c2372ffd"
+          },
+          "verifier_version": "source-rules-v4-source-gating",
+          "modes": {
+            "airwallex": "SIMULATED",
+            "metal": "MOCK",
+            "inference": "MOCK"
+          }
+        }
+      ],
+      "receipts_reconciled": true,
+      "financial_evidence": "MOCK"
+    },
+    "repeat_recovery_receipts_unchanged": true,
+    "duplicate_charges_observed": 0
+  },
+  "fuzz": [
+    {
+      "label": "MOCK",
+      "seed": 100,
+      "operations": 160,
+      "invariant_checks": 161,
+      "receipts": 9,
+      "duplicate_receipts": 0,
+      "audit": {
+        "valid": true,
+        "events": 196,
+        "head": "8518f860b9133f02e72fdedadbc0af8bcaf9bf412c1575bc8322a92c1c2e5b99"
+      }
+    },
+    {
+      "label": "MOCK",
+      "seed": 101,
+      "operations": 160,
+      "invariant_checks": 161,
+      "receipts": 11,
+      "duplicate_receipts": 0,
+      "audit": {
+        "valid": true,
+        "events": 216,
+        "head": "72a14a807445d8c29a4c0e7b56a40cb937aa450aa3d251a4ba942d17fd4947c0"
+      }
+    },
+    {
+      "label": "MOCK",
+      "seed": 102,
+      "operations": 160,
+      "invariant_checks": 161,
+      "receipts": 9,
+      "duplicate_receipts": 0,
+      "audit": {
+        "valid": true,
+        "events": 201,
+        "head": "d8f94ce514e5e683802a021e39c908304effdda4e5251f3bec4c1abfcc075242"
+      }
+    },
+    {
+      "label": "MOCK",
+      "seed": 103,
+      "operations": 160,
+      "invariant_checks": 161,
+      "receipts": 8,
+      "duplicate_receipts": 0,
+      "audit": {
+        "valid": true,
+        "events": 247,
+        "head": "ce446c9d8ab46e5b54370d2dc9e9549a16c94bef79f66c2286761f674ffd6723"
+      }
+    },
+    {
+      "label": "MOCK",
+      "seed": 104,
+      "operations": 160,
+      "invariant_checks": 161,
+      "receipts": 9,
+      "duplicate_receipts": 0,
+      "audit": {
+        "valid": true,
+        "events": 168,
+        "head": "02066bd124e028785744cc20687262b3e1b55298f3805dd132d422c593a1d775"
+      }
+    },
+    {
+      "label": "MOCK",
+      "seed": 105,
+      "operations": 160,
+      "invariant_checks": 161,
+      "receipts": 8,
+      "duplicate_receipts": 0,
+      "audit": {
+        "valid": true,
+        "events": 172,
+        "head": "c49dcdfcf247d980130d1d37873b825603d7f1c148c30e109126c0e5dabb1bb0"
+      }
+    },
+    {
+      "label": "MOCK",
+      "seed": 106,
+      "operations": 160,
+      "invariant_checks": 161,
+      "receipts": 9,
+      "duplicate_receipts": 0,
+      "audit": {
+        "valid": true,
+        "events": 209,
+        "head": "ea7f0478f0b5a14b8eb05a90549c6e9e67efc366dbdaa3840f42256a80e697e8"
+      }
+    },
+    {
+      "label": "MOCK",
+      "seed": 107,
+      "operations": 160,
+      "invariant_checks": 161,
+      "receipts": 11,
+      "duplicate_receipts": 0,
+      "audit": {
+        "valid": true,
+        "events": 162,
+        "head": "ca75f7c2fc932307431ae6f081b91262e146f856fc0e6081039b1644b22acd0d"
+      }
+    }
+  ],
+  "audit": {
+    "valid": true,
+    "events": 73,
+    "head": "fc97d27d58c5050f95f3d3cb32a7e1639a895e164a1dc2b42f3e0751b4a2ccda"
+  },
+  "live_exit_gate": "BLOCKED: the authorized single live call has not executed; live kill/restart remains unproven"
+}

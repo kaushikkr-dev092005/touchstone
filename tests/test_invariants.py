@@ -17,7 +17,7 @@ from touchstone.payments import MockRail
 from touchstone.providers import CATALOG, Quote
 from touchstone.workload import generate
 
-ACTIVE = ("RESERVED", "PAID")
+ACTIVE = ("RESERVED", "DISPATCHING", "PAID")
 
 
 def assert_invariants(test, ledger, rail):
@@ -33,7 +33,7 @@ def assert_invariants(test, ledger, rail):
         in_flight = sum(a["price"] + a["verify_cost"] for a in own if a["state"] in ACTIVE)
         test.assertLessEqual(job["spent"] + in_flight, min(job["hold"], job["budget"]),
                              "spent plus in-flight exceeds the authorized hold")
-        reserved_rail = sum(a["price"] for a in own if a["state"] == "RESERVED")
+        reserved_rail = sum(a["price"] for a in own if a["state"] in {"RESERVED", "DISPATCHING"})
         test.assertLessEqual(job["rail_spent"] + reserved_rail, job["allocation"],
                              "provider spend plus reservations exceeds allocated float")
         test.assertLessEqual(job["captured"], job["hold"])
@@ -145,7 +145,7 @@ class ContentionTests(unittest.TestCase):
 class RandomizedOperationTests(unittest.TestCase):
     """Seeded random interleavings, including crashes between remote and local commit."""
 
-    def run_sequence(self, seed, steps=120):
+    def run_sequence(self, seed, steps=160):
         rng = random.Random(seed)
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -163,7 +163,7 @@ class RandomizedOperationTests(unittest.TestCase):
             by_job = {job: tasks[i] for i, job in enumerate(jobs)}
             quotes_by_key = {}
             for _ in range(steps):
-                op = rng.choice(["reserve"] * 5 + ["pay", "pay_crash", "finish", "void", "recover", "halt_resume"])
+                op = rng.choice(["reserve"] * 5 + ["dispatch_only", "pay", "pay_crash", "finish", "void", "recover", "halt_resume"])
                 state = ledger.attempts()
                 try:
                     if op == "reserve":
@@ -173,11 +173,14 @@ class RandomizedOperationTests(unittest.TestCase):
                         quote = offer(rng.choice(list(CATALOG)))
                         key = ledger.reserve(job, task, len(past), quote, 1000)
                         quotes_by_key[key] = quote
-                    elif op in {"pay", "pay_crash"}:
+                    elif op in {"dispatch_only", "pay", "pay_crash"}:
                         pending = [a for a in state if a["state"] == "RESERVED"]
                         if pending:
                             a = rng.choice(pending)
                             ledger.assert_can_pay(a["key"])
+                            if op == 'dispatch_only':
+                                assert_invariants(self, ledger, rail)
+                                continue  # death after barrier, before any rail call
                             receipt = rail.pay(a["key"], quotes_by_key[a["key"]], lambda: {"total_cents": 1})
                             if op == "pay":  # pay_crash: remote succeeded, local commit never ran
                                 ledger.record_paid(a["key"], receipt)
@@ -189,10 +192,10 @@ class RandomizedOperationTests(unittest.TestCase):
                                                   {"passed": rng.random() < .7, "score": 1.0, "reason": "fixture"})
                     elif op == "void":
                         # Only legitimate if the rail confirms no payment, as Engine.recover enforces.
-                        reserved = [a for a in state if a["state"] == "RESERVED"
+                        reserved = [a for a in state if a["state"] in {'RESERVED', 'DISPATCHING'}
                                     and rail.lookup(a["key"])["state"] == "NOT_DISPATCHED"]
                         if reserved:
-                            ledger.void(rng.choice(reserved)["key"], "fixture: rail confirms no payment")
+                            ledger.void(rng.choice(reserved)["key"], "fixture: rail confirms no payment", authoritative=True)
                     elif op == "recover":
                         engine.recover(run_id)
                     elif op == "halt_resume":
@@ -211,6 +214,8 @@ class RandomizedOperationTests(unittest.TestCase):
                 if a["key"] in after:
                     self.assertIn(a["state"], {"PAID", "VERIFIED_OK", "VERIFIED_FAIL"},
                                   "remote payment exists but local state denies it")
+            return {'label': 'MOCK', 'seed': seed, 'operations': steps, 'invariant_checks': steps+1,
+                    'receipts': len(after), 'duplicate_receipts': 0, 'audit': ledger.audit()}
 
     def test_many_seeded_interleavings_hold_all_invariants(self):
         for seed in range(100, 108):

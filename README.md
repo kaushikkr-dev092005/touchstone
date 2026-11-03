@@ -144,7 +144,7 @@ Profiles use three paired seeds, discard one warm-up per model, and record actua
 
 Set sandbox keys **in your shell**, never in chat or tracked files. `.env.example` is documentation and is not auto-loaded.
 
-Every money-moving action requires both an explicit execute-style flag and written approval in chat with a stated cap. M1 adds guards to hold, checkout, banked-job and FX commands; standalone Metal withdrawal commands still need the M2 guard review before execution. Run the environment-only `python -m touchstone airwallex-doctor --probe-reads` first. See [M1 evidence](docs/M1_REPORT.md) and [exact capped FX runbook](docs/M1_RUNBOOK.md).
+Every money-moving action requires both an explicit execute-style flag and written approval in chat with a stated cap. M1 guards hold, checkout, banked-job and FX commands. M2 adds Metal execution/recovery guards, a versioned dispatch barrier, process-owned workers and separate wallet orchestration. Its controlled proof is MOCK; its live gate remains BLOCKED. See [M1 evidence](docs/M1_REPORT.md), [capped FX runbook](docs/M1_RUNBOOK.md), [M2 report](docs/M2_REPORT.md) and [M2 runbook](docs/M2_RUNBOOK.md).
 
 The CLI also loads ignored `data/local-config.json` and an optional locally generated `data/metal/funding-wallet.json`. Process environment takes precedence. Local Airwallex credentials are configured, but `AIRWALLEX_ACCOUNT_ID` is currently unset. Restart long-running processes after changing configuration values.
 
@@ -279,7 +279,7 @@ Start the local model and testnet provider in separate terminals; these commands
 ```powershell
 python tools/run_local.py --tier balanced
 python tools/metal.py provider
-python tools/prove_metal.py --withdraw-only
+python tools/prove_metal.py --withdraw-only --execute
 ```
 
 macOS / Linux / Git Bash equivalent:
@@ -287,7 +287,7 @@ macOS / Linux / Git Bash equivalent:
 ```bash
 python tools/run_local.py --tier balanced
 python tools/metal.py provider
-python tools/prove_metal.py --withdraw-only
+python tools/prove_metal.py --withdraw-only --execute
 ```
 
 `prove_metal.py` uses one persistent protocol-probe reservation and a USD 0.01 cap; reruns preserve its original payment. The old `banked-proof-001` scope has an unresolved direct-create outcome and is for recovery only. Use a fresh scope for hosted checkout; that fallback needs a sandbox account ID, Checkout Sessions API access and an explicit customer action. `banked-job --integration-probe` then makes a separate testnet purchase and should only be run when that expense is intended. Live checking fees are zero, fractional cents are absorbed by the merchant, and gas is merchant expense. No fiat-to-token bridge is implied. See [account/integration setup](docs/ACCOUNT_SETUP.md).

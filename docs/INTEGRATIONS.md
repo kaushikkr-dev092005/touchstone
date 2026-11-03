@@ -32,6 +32,8 @@ Sources: [authentication](https://www.airwallex.com/docs/api/authentication/api_
 
 ## Metal SDK bridge and seller
 
+M2 update: the engine now binds reservations to a mandate version, marks `DISPATCHING` atomically with authorization checks, and holds a local process-owned worker lease. `metal-batch` serializes funding of distinct wallets before concurrent engine jobs. Unknown deposits are never automatically resubmitted. Testnet allocations stay assigned until actual funds return; simulated settlement cannot top up another wallet. Monetary operations require explicit execute flags in Python and Node, including recovery that may resubmit an original SDK invoice. Dependencies are unchanged. [M2 report](M2_REPORT.md) and [runbook](M2_RUNBOOK.md) distinguish controlled implementation evidence from the still-blocked live gate.
+
 `touchstone.metal.MetalRail` invokes `bridge.mjs` over stdin/stdout. Portable Node 22.23.4, Metal SDK 0.3.3 and viem 2.57.13 are pinned and locked. `CompositeRail` presents a common quote/pay/lookup/recover/reconcile contract to the engine and dispatches by the persisted quote provider; real errors never silently fall back to mocks. The dedicated `metal-probe` policy routes only to Metal.
 
 The bridge discovers the supported clearing deployment and verifies RPC chain ID 63825. The SDK owns cryptography, invoices, receipts and payment state. A SQLite implementation of its supported store interface provides Windows durability and exclusive per-wallet ownership. Each job retains a separate clearing key and purchase history. Funding jobs sharing the EVM account also use a shared owner lock.

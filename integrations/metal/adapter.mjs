@@ -1,7 +1,7 @@
 import * as sdk from '@metalntwx/metal-pay';
 import { createPublicClient, http } from 'viem';
 import { privateKeyToAccount, generatePrivateKey } from 'viem/accounts';
-import { openWallet } from './wallet.mjs';
+import { openWallet, openFundingOwner } from './wallet.mjs';
 import { encodePaymentSignatureHeader, readLimitedText } from '@x402/core/http';
 
 export const NETWORK = 'eip155:63825';
@@ -239,8 +239,10 @@ export async function connectJob(config) {
 }
 
 export async function deposit(config, dollars) {
-  const client = await connectJob(config);
+  const owner = openFundingOwner(config.directory);
+  let client;
   try {
+    client = await connectJob(config);
     if (!/^0x[0-9a-fA-F]{64}$/.test(config.privateKey || '')) throw Error('Set AGENT_PRIVATE_KEY locally to your funded testnet key');
     const value = amount(dollars);
     if (value <= 0n || value > amount(config.budget || '0.50')) throw Error('Deposit must fit the configured job budget');
@@ -253,16 +255,18 @@ export async function deposit(config, dollars) {
       asset: sdk.USDZ.address, account: client.wallet.signer.publicKey, amount: value });
     client.wallet.db.prepare("UPDATE settings SET value=? WHERE key='deposit'").run(json({ state: 'BROADCAST', amount: value, ...result }));
     return { mode: 'TESTNET', ...result, spendable_confirmed: false };
-  } finally { client.close(); }
+  } finally { client?.close(); owner.close(); }
 }
 
 export async function withdraw(config) {
-  const client = await connectJob(config);
+  const owner = openFundingOwner(config.directory);
+  let client;
   try {
+    client = await connectJob(config);
     if (!/^0x[0-9a-fA-F]{64}$/.test(config.privateKey || '')) throw Error('Set AGENT_PRIVATE_KEY locally to your funded testnet key');
     const result = await sdk.withdrawFromClearing({ rpcUrl: config.rpcUrl, chainId: 63825,
       from: privateKeyToAccount(config.privateKey), settlement: client.deployment.settlement,
       signer: client.wallet.signer, serviceUrl: client.deployment.serviceUrl });
     return { mode: 'TESTNET', ...result, returned_float_confirmed: result.status === 'sent' && result.claimed.some(c => !c.deferred) };
-  } finally { client.close(); }
+  } finally { client?.close(); owner.close(); }
 }

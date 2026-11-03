@@ -75,6 +75,7 @@ class MetalEngineRail:
         self.provider_url = provider_urls[0]
         self.last_quote_errors = []
         self.client = client or MetalRail(job, self.provider_url, price_cap, budget)
+        self.mode = getattr(self.client, 'mode', 'MOCK')
 
     def quote_for_task(self, task):
         """Return every usable live quote; an unusable origin is skipped, never paid.
@@ -112,7 +113,7 @@ class MetalEngineRail:
         return self._normalize(result.get("result") or {}, key, quote, result.get("state"))
 
     def recover(self, key, quote=None):
-        result = self.client.recover(key)
+        result = self.client.recover(key, quote)
         return self._normalize(result or {}, key, quote)
 
     def receipts(self):
@@ -130,8 +131,7 @@ class MetalEngineRail:
                            "provider": row["terms"].get("provider_id", "metal-provider"), "quote_id": quote_id})
         return result
 
-    @staticmethod
-    def _normalize(result, key, quote=None, prior_state=None):
+    def _normalize(self, result, key, quote=None, prior_state=None):
         state = prior_state or result.get("state")
         if state == "UNPAID_CONFIRMED":
             return {"state": state, "authoritative": True}
@@ -163,7 +163,7 @@ class MetalEngineRail:
         metadata = body.get("provider_metadata") if isinstance(body, dict) else None
         return {"state": "PAID" if state == "DELIVERED" and output is not None else "PAID_OUTPUT_MISSING",
                 "key": key, "id": receipt["id"], "amount": amount, "provider": provider,
-                "quote_id": quote_id, "output": output, "provider_metadata": metadata, "mode": "TESTNET"}
+                "quote_id": quote_id, "output": output, "provider_metadata": metadata, "mode": self.mode}
 
 
 class CompositeRail:
