@@ -13,6 +13,8 @@ def main():
     parser = argparse.ArgumentParser(description="Touchstone inference procurement prototype")
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("doctor", help="Show local integration readiness without revealing credentials")
+    comparison = commands.add_parser('compare', help='M4 matched four-policy comparison with explicit aggregate caps')
+    comparison.add_argument('comparison_args', nargs=argparse.REMAINDER)
     aw_doctor = commands.add_parser("airwallex-doctor", help="Environment-only account/scope check; no private files")
     aw_doctor.add_argument("--probe-reads", action="store_true", help="Authenticate and probe balances/history/conversion reads only")
     aw_doctor.add_argument("--output", help="Save redacted readiness JSON")
@@ -144,6 +146,9 @@ def main():
     args = parser.parse_args()
     owners = ExitStack()
     try:
+        if args.command == 'compare':
+            from .comparison import main as comparison_main
+            return comparison_main(args.comparison_args)
         if args.command == 'metal-batch':
             if args.recover and args.action != 'run':
                 raise ValueError('--recover is valid only with metal-batch run')

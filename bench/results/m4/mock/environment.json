@@ -1,0 +1,59 @@
+{
+  "label": "MOCK",
+  "python": "3.12.10",
+  "os": "Windows",
+  "architecture": "AMD64",
+  "sqlite": "3.49.1",
+  "node": "UNMEASURED",
+  "buyer_gpu_and_driver": "UNMEASURED",
+  "provider_gpu": "UNMEASURED",
+  "provider_identity": "SELLER_REPORTED",
+  "providers": {
+    "local-gpu": {
+      "chain": 63825,
+      "provider_id": "local-gpu",
+      "provider_type": "model",
+      "provider_model": "MOCK-local-gpu",
+      "provider_model_sha256": null,
+      "inference_ready": true,
+      "upstream_funding": "PARTNER_CREDITS_OPERATOR_DECLARED",
+      "chaos": "none",
+      "chaos_schedule_sha256": "8e746376da2ca8ae9fd12c4808c43cb411f5e7a7db5604385267cf18bdbae32e"
+    },
+    "hosted-premium": {
+      "chain": 63825,
+      "provider_id": "hosted-premium",
+      "provider_type": "anthropic",
+      "provider_model": "MOCK-hosted-premium",
+      "provider_model_sha256": null,
+      "inference_ready": true,
+      "upstream_funding": "PARTNER_CREDITS_OPERATOR_DECLARED",
+      "chaos": "none",
+      "chaos_schedule_sha256": "8e746376da2ca8ae9fd12c4808c43cb411f5e7a7db5604385267cf18bdbae32e"
+    }
+  },
+  "chain_id": 63825,
+  "plan_sha256": "6599a3f65b36ac1bc68dccf29a81cc54e369a104bd2039b2ce6f743eb9d1454c",
+  "code_sha256": {
+    "touchstone/comparison.py": "0352ddcc9a3b90c982b521128b610b443ba86dc00356ca4636662c5c3232cfe9",
+    "touchstone/invoice_dataset.py": "f940bd9db9df3472f33f81543bd3eed8a0822ca2d54a768c2142a985c0a00908",
+    "touchstone/invoice_extraction.py": "57bd93ba3717898e4ecd045c97b8ba81e07641e7252a155b423d843df13fe546",
+    "touchstone/ledger.py": "56e7bfad0c6d295fd9a6ef640de2167296c4d19d3f5ccb549e6b0677e03cb4d7",
+    "touchstone/invoice_study.py": "ccd33e0d0f3e33a0fd48f2a64dedb6974c8663f4fedc894ccf9ff0125ab72e4b",
+    "touchstone/eligibility.py": "6c026a6a0d0ca50f904e0c191498892b7904a855fcf38767f500815d5ec37033",
+    "touchstone/providers.py": "3dec6cca0e44ca400b3fb463c5b436f9f669ee5887734247f66ad87f2dd39ca1",
+    "touchstone/payments.py": "c68631ab35e43bf304e42c805e00fb6912bf4c717f9ef7fe7483c9adb7fd8cb2",
+    "touchstone/metal.py": "7ee72e947811e418f824341842d354cde4932abbc6fda2e49daa7b918a8d7a0b",
+    "integrations/metal/provider.mjs": "6da96f034926b5bb1007e701ccbb1674035064774b83f514607614dff65447b0",
+    "integrations/metal/provider-core.mjs": "730d094d0e370d48f7c18ba95bc5eb5bcb1b4811eec80f8d009bccf9726abc43",
+    "integrations/metal/m4-chaos.mjs": "b265a4233872b1ba6bada22abd51112f422fbcaf06a71de75872e9d89ad40dc2",
+    "integrations/metal/package-lock.json": "a0c473717904a405840816fd9381ea76b54f61fb91c7b1f4bc5ff98130ab5f47"
+  },
+  "seeds": [
+    20261120
+  ],
+  "task_digest": "c0372ea959236113a9f470716e7790d34ecdf17fef89fab1a607f0311bedd645",
+  "discarded_warmups": 0,
+  "decoding": "temperature 0; invoice output max_tokens 2400; see hashed providers.py",
+  "node_lock_sha256": "a0c473717904a405840816fd9381ea76b54f61fb91c7b1f4bc5ff98130ab5f47"
+}

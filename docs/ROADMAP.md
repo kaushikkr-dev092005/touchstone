@@ -58,7 +58,11 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 - [x] M3 implementation and honest refusal evidence: 180 template-split synthetic sources, measured 13.3% parser coverage, citation/integer checker, local/hosted profilers, paid-reference accounting and three-task panel. Zero current M3 model measurements or eligible models; no useful paid inference claim. [M3 report](M3_REPORT.md).
 - [x] M2 implementation and controlled recovery/invariant evidence are complete; its live gate remains open. [M2 report](M2_REPORT.md).
 
+- [x] M4 implementation: matched tools/cheapest/premium/qualified-ladder runner, capped durable dispatch, shared seller fault schedule, raw scoring, cost/latency tables and environment manifest. Controlled evidence is MOCK; no new live purchases. [M4 report](M4_REPORT.md).
+
 ## Not done
+
+- [ ] M4 live gate: ready sellers and a dedicated funded scope, new aggregate purchase/hosted-credit approval, then 30–50 real paid calls and fault/reconciliation evidence. The proposed setup currently fails readiness. [M4 runbook](M4_RUNBOOK.md).
 
 - [ ] M3 actual model measurements: operator starts the local tiers; hosted credentials/partner credits and a new aggregate paid-study cap remain human gates. Useful inference on representative sources is unproven. The historical profiles cannot qualify this new task/checker.
 

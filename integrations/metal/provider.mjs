@@ -3,11 +3,13 @@ import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readFileSync } from 'node:fs';
 import { clearingRequirements, clearingPaymentOf, verifyClearingPayment, clearingPaymentId } from '@metalntwx/metal-pay';
 import { decodePaymentSignatureHeader, encodePaymentRequiredHeader } from '@x402/core/http';
 import { discover, amount } from './adapter.mjs';
 import { openWallet } from './wallet.mjs';
 import { decodeResource, DeliveryStore, priceForQueue, qualityDropOutput } from './provider-core.mjs';
+import { scenario } from './m4-chaos.mjs';
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const port = Number(process.env.TOUCHSTONE_PROVIDER_PORT || '8092');
@@ -15,6 +17,7 @@ const origin = `http://127.0.0.1:${port}`;
 const mode = process.env.TOUCHSTONE_PROVIDER_MODE || 'model';
 const providerId = process.env.TOUCHSTONE_PROVIDER_ID || (mode === 'anthropic' ? 'hosted-premium' : 'metal-provider');
 const chaos = process.env.TOUCHSTONE_PROVIDER_CHAOS || 'none';
+const schedule = process.env.TOUCHSTONE_PROVIDER_SCENARIO_FILE ? scenario(readFileSync(process.env.TOUCHSTONE_PROVIDER_SCENARIO_FILE, 'utf8')) : null;
 if (!Number.isInteger(port) || port < 1024 || port > 65535 || !['model','tool','anthropic'].includes(mode) ||
     !['metal-provider','local-gpu','hosted-premium'].includes(providerId) ||
     !['none','outage','quality-drop'].includes(chaos)) throw Error('Invalid provider settings');
@@ -94,9 +97,11 @@ const server = createServer({ maxHeaderSize: 65536 }, async (request, response) 
   if (request.url === '/health') return send(response, 200, { mode: 'TESTNET_PROVIDER', provider_type: mode,
     upstream_funding: mode === 'anthropic' && process.env.TOUCHSTONE_HOSTED_FUNDING_SOURCE === 'PARTNER_CREDITS' ? 'PARTNER_CREDITS_OPERATOR_DECLARED' : 'UNVERIFIED',
     inference_ready: await modelReady(), chain: 63825, paid_delivery: 'UNVERIFIED', chaos,
+    chaos_schedule_sha256: schedule?.sha256 || null,
     readiness_basis: mode === 'anthropic' ? 'api_key_and_model_configured_only' : 'local_health_check_or_tool_mode',
     provider_id: providerId,
-    provider_model: mode === 'anthropic' ? (process.env.ANTHROPIC_MODEL || 'claude-sonnet-5') : null,
+    provider_model: mode === 'anthropic' ? (process.env.ANTHROPIC_MODEL || 'claude-sonnet-5') : mode === 'model' ? (process.env.LOCAL_MODEL || 'local-model') : null,
+    provider_model_sha256: mode === 'model' ? (process.env.LOCAL_MODEL_SHA256 || null) : null,
     queue_depth: queueDepth, queue_capacity: 1, latency_samples: serviceSamples.length,
     latency_source: serviceSamples.length ? 'completed_provider_deliveries' : 'default_before_first_delivery',
     seller_public_key: wallet.signer.publicKey,
@@ -104,6 +109,10 @@ const server = createServer({ maxHeaderSize: 65536 }, async (request, response) 
     current_quote_base_units: priceForQueue(basePriceMicroUsd, queueDepth, maxPriceMicroUsd).toString() });
   try {
     const { task } = decodeResource(request.url);
+    const taskChaos = schedule?.fault(task.id, providerId) || chaos;
+    if (taskChaos === 'outage' && !request.headers['payment-signature']) return send(response, 503,
+      { error: 'Scheduled provider outage; no quote or payment requested' },
+      { 'X-Touchstone-Fault': 'outage', 'X-Touchstone-Scenario-SHA256': schedule.sha256 });
     const resource = origin + request.url;
     if (!request.headers['payment-signature']) {
       if (!await modelReady()) return send(response, 503, { error: 'Inference provider is not configured or ready; no quote offered' });
@@ -131,8 +140,8 @@ const server = createServer({ maxHeaderSize: 65536 }, async (request, response) 
     const result = await runQueued(() => store.deliver(id, resource, receiptDigest, async () => {
       if (!await modelReady()) throw Error('Inference provider unavailable after payment; retain and recover the original receipt');
       const output = await worker(task);
-      return chaos === 'quality-drop' ? { ...output, output: qualityDropOutput(task, output.output),
-        provider_metadata: { ...output.provider_metadata, chaos_mode: chaos } } : output;
+      return taskChaos === 'quality-drop' ? { ...output, output: qualityDropOutput(task, output.output),
+        provider_metadata: { ...output.provider_metadata, chaos_mode: taskChaos } } : output;
     }), { retryRunning: mode !== 'anthropic' });
     return send(response, 200, result);
   } catch { return send(response, 503, { error: 'Delivery unconfirmed; retain and replay the original receipt without another payment' }); }

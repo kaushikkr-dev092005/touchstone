@@ -1,0 +1,20 @@
+{
+  "label": "MEASURED",
+  "financial_adapters": "MOCK",
+  "python": {
+    "command": "python -m unittest discover -s tests -v",
+    "passed": 189,
+    "failed": 0,
+    "seconds": 94.04
+  },
+  "node": {
+    "command": "python tools/metal.py test",
+    "passed": 34,
+    "failed": 0
+  },
+  "m4_python_cases": 12,
+  "new_node_cases": 2,
+  "cli_without_execute": "BLOCKED_BEFORE_CONFIGURATION_OR_DISPATCH",
+  "live_payments_executed": 0,
+  "dependencies_added": 0
+}

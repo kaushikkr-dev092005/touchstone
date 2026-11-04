@@ -6,6 +6,8 @@ Built for the Airwallex Agentic Banking Hackathon, extending Kit 12 with quality
 
 **M3, 3 November — MEASURED on SIMULATED sources:** 180 unique invoice-extraction cases, fixed 120/60 template split; deterministic coverage 24/180 (13.3%), zero observed false accepts. **BLOCKED:** no current M3 model measurements or eligible model; no new paid calls. The Planning panel shows tool/model-review/human-review decisions without buying anything. [Report](docs/M3_REPORT.md) · [Runbook](docs/M3_RUNBOOK.md).
 
+**M4, 4 November — implementation complete; live gate BLOCKED:** matched four-policy runner, shared fault schedule, independent scoring, aggregate caps and environment manifests. The saved proof contains **32 MOCK purchases**, not live model measurements. Proposed seller/wallet readiness is blocked and a new paid-run approval is required. [Report](docs/M4_REPORT.md) · [Runbook](docs/M4_RUNBOOK.md).
+
 ## Run it
 
 Python 3.11+; no runtime dependencies. Tested on Windows with Python 3.12.

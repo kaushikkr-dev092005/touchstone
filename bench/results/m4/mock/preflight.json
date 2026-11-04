@@ -1,0 +1,45 @@
+{
+  "label": "MOCK",
+  "ready": true,
+  "checks": {
+    "local-gpu": true,
+    "hosted-premium": true,
+    "existing_wallet": true,
+    "rpc_chain_63825": true,
+    "clearing_balance": true,
+    "both_valid_quotes": true
+  },
+  "health": {
+    "local-gpu": {
+      "chain": 63825,
+      "provider_id": "local-gpu",
+      "provider_type": "model",
+      "provider_model": "MOCK-local-gpu",
+      "provider_model_sha256": null,
+      "inference_ready": true,
+      "upstream_funding": "PARTNER_CREDITS_OPERATOR_DECLARED",
+      "chaos": "none",
+      "chaos_schedule_sha256": "8e746376da2ca8ae9fd12c4808c43cb411f5e7a7db5604385267cf18bdbae32e"
+    },
+    "hosted-premium": {
+      "chain": 63825,
+      "provider_id": "hosted-premium",
+      "provider_type": "anthropic",
+      "provider_model": "MOCK-hosted-premium",
+      "provider_model_sha256": null,
+      "inference_ready": true,
+      "upstream_funding": "PARTNER_CREDITS_OPERATOR_DECLARED",
+      "chaos": "none",
+      "chaos_schedule_sha256": "8e746376da2ca8ae9fd12c4808c43cb411f5e7a7db5604385267cf18bdbae32e"
+    }
+  },
+  "payments_sent": 0,
+  "required_chain_id": 63825,
+  "verified_chain_id": 63825,
+  "plan_sha256": "6599a3f65b36ac1bc68dccf29a81cc54e369a104bd2039b2ce6f743eb9d1454c",
+  "wallet_balance_assurance": "OPERATOR_ESTIMATE_NOT_FINALITY",
+  "qualification_status": {
+    "local-gpu": false,
+    "hosted-premium": false
+  }
+}

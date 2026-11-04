@@ -1,0 +1,15 @@
+{
+  "label": "MOCK",
+  "real_payments": 0,
+  "controlled_calls": 32,
+  "completed_policy_steps": 64,
+  "restart_duplicate_calls": 0,
+  "control_violations": [],
+  "audit": {
+    "valid": true,
+    "events": 131,
+    "head": "a25f6eabf11222e1a7d5eda9c8d8dfcdce348fa6d7323630a09e735c159bc821"
+  },
+  "qualification": "NO_QUALIFIED_MODELS; ladder buys nothing",
+  "plan_sha256": "6599a3f65b36ac1bc68dccf29a81cc54e369a104bd2039b2ce6f743eb9d1454c"
+}

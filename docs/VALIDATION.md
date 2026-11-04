@@ -97,4 +97,6 @@ Airwallex smoke rerun on 1 November confirms authentication, balance reads and G
 
 ## Not executed
 
+M4 update, 4 November: the matched four-policy implementation and controlled adapters are validated, with 189 Python / 34 Node tests passing. Saved evidence in `bench/results/m4/mock/` contains 32 MOCK purchases and zero duplicate purchases on completed restart. The read-only proposed M4 setup is BLOCKED; zero new live purchases or model calls were executed. See [M4 report](M4_REPORT.md) for the precise metrics and remaining live gate.
+
 Actual hosted Checkout Session or sandbox hold/capture; a Treasury FX quote/conversion; 30–50 paid engine steps; paid quality-drop chaos and a real Metal kill/restart; three concurrent external customer holds; finality for the paid inference receipt; representative finance-document evaluation and qualified autonomous model procurement; production security assessment; hackathon submission. A zero-payment provider-outage preflight is recorded separately. The repository is public. The real x402 round trip above uses test assets and is separate from the multi-job simulator.
