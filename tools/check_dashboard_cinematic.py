@@ -89,6 +89,19 @@ def main():
                 assert 'SIMULATED / MOCK' in page.locator('#graph-source').inner_text()
                 assert page.locator('#graph-nodes').text_content().strip()
                 assert page.locator('#metal-health').inner_text()==readiness_before
+                inspect({'scene':'specimen','morph':2,'wipe':0})
+                inspect({'scene':'specimen','morph':3,'wipe':0})
+                assert 0<page.evaluate('TouchstoneCinema.stats.oreSweep')<1,'Ore sweep did not play on entry'
+                page.wait_for_timeout(500)
+                assert page.evaluate('TouchstoneCinema.stats.oreSweep')==1,'Ore sweep did not finish'
+                page.locator('#halt').evaluate('el=>el.click()')
+                page.wait_for_function("() => TouchstoneCinema.stats.suspended==='halted'")
+                stopped=page.evaluate('TouchstoneCinema.stats.frames')
+                page.wait_for_timeout(700)
+                assert page.evaluate('TouchstoneCinema.stats.frames')==stopped,'Halt continued rendering'
+                assert not page.locator('#cinema-canvas').evaluate("el=>el.classList.contains('is-rendering')")
+                page.locator('#resume').evaluate('el=>el.click()')
+                page.wait_for_function("() => TouchstoneCinema.stats.suspended===''&&TouchstoneCinema.stats.frames>"+str(stopped))
                 for i,value in enumerate([.16,.36,.49,.68,.9]):
                     inspect({'scene':'specimen','morph':3,'wipe':value});snap(f'wipe-{i}.png')
                 page.evaluate("TouchstoneCinema.inspect({scene:'specimen',morph:3,wipe:.2})")
@@ -117,12 +130,24 @@ def main():
                 assert page.evaluate('TouchstoneCinema.stats.frames')==before,'Reduced motion kept rendering'
                 page.emulate_media(reduced_motion='no-preference')
                 # Force context loss and check that the embedded, pre-rendered still is available.
-                page.evaluate("() => {const gl=document.getElementById('cinema-canvas').getContext('webgl');gl.getExtension('WEBGL_lose_context').loseContext();}")
+                page.evaluate("() => {const gl=document.getElementById('cinema-canvas').getContext('webgl');window.testContextLoss=gl.getExtension('WEBGL_lose_context');window.testContextLoss.loseContext();}")
                 page.wait_for_function("() => document.body.classList.contains('no-webgl')")
                 assert page.locator('#specimen-still').evaluate('el=>el.complete&&el.naturalWidth>0')
                 snap('webgl-fallback.png')
+                page.wait_for_timeout(200)
+                fallback_frames=page.evaluate('TouchstoneCinema.stats.draws')
+                page.wait_for_timeout(500)
+                assert page.evaluate('TouchstoneCinema.stats.draws')==fallback_frames,'Fallback kept drawing to WebGL'
+                page.evaluate("window.testContextLoss.restoreContext()")
+                page.wait_for_function("() => !document.body.classList.contains('no-webgl')&&TouchstoneCinema.stats.draws>"+str(fallback_frames))
+                assert not page.evaluate('TouchstoneCinema.stats.shaderErrors')
                 assert not errors,errors
                 assert not external,external
+                reduced=browser.new_context(viewport={'width':390,'height':844},reduced_motion='reduce')
+                reduced_page=reduced.new_page();reduced_page.goto(BASE+'/?cinematic=1',wait_until='domcontentloaded')
+                reduced_page.wait_for_function('() => typeof TouchstoneCinema!=="undefined"')
+                assert not reduced_page.locator('body').evaluate("el=>el.classList.contains('cinematic-mode')"),'Reduced motion started cinematic playback'
+                reduced.close()
                 main_video=page.video
                 context.close()
                 main_video.save_as(str(OUT/'effects-capture.webm'))
@@ -139,8 +164,9 @@ def main():
                 film_video=film.video;film_context.close();film_video.save_as(str(OUT/'cinematic-capture.webm'));browser.close()
                 result={'label':'MEASURED local browser / SIMULATED financial data','browser':'Microsoft Edge / headless hardware WebGL',
                         'viewport':[1440,900],'device_pixel_ratio':1,'html_sha256':hashlib.sha256((root/'apps/dashboard/index.html').read_bytes()).hexdigest(),
-                        'performance':performance,'page_errors':errors,'external_requests':external,'financial_posts':'only explicitly clicked MOCK demo',
+                        'performance':performance,'page_errors':errors,'external_requests':external,'financial_posts':'only explicitly clicked MOCK demo, halt and resume',
                         'cinematic_posts':film_posts,'screenshots':screenshots,
+                        'lifecycle_checks':['one-time ore sweep','halt suspends render loop','resume wakes renderer','context loss stops GPU draws','context restoration rebuilds renderer','reduced motion disables cinematic autoplay'],
                         'limits':'FPS includes video capture and other local GPU load; Intel integrated GPU, not RTX 3050 with llama.cpp. A 60fps target is not a guarantee.'}
                 (OUT/'browser-checks.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
                 print(json.dumps(result,indent=2))

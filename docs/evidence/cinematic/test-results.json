@@ -4,12 +4,12 @@
     "command": "python -m unittest discover -s tests -v",
     "passed": 177,
     "failed": 0,
-    "seconds": 83.113
+    "seconds": 51.473
   },
   "node": {
     "command": "python tools/metal.py test",
     "passed": 32,
     "failed": 0
   },
-  "scope": "Full suites ran before the final frontend framing and graph-label adjustments. Final cinematic browser checks cover those edits; financial/security backend files are unchanged."
+  "scope": "Full Python and Node suites rerun after rendering completion. Final browser checks cover the same HTML hash. Financial/security backend files unchanged."
 }

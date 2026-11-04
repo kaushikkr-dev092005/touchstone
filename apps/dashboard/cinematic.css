@@ -9,3 +9,4 @@
 @media(prefers-reduced-motion:reduce){.ambient-meteors{display:none}.gateway-ripple i{animation:none}.button-ripple{display:none}.cinematic-mode{cursor:auto}}
 
 .gateway-stage .glass-nav{z-index:3;background:color-mix(in srgb,#090a08 94%,var(--gold));border-color:#ffffff24;backdrop-filter:blur(12px)}
+body[data-event-light="kill"] .ambient-meteors{visibility:hidden}body[data-event-light="kill"] .specimen-fallback{filter:brightness(0)}
