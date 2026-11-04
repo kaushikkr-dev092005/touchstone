@@ -48,11 +48,17 @@ class AirwallexSandbox:
         except urllib.error.URLError:
             raise RuntimeError("Airwallex sandbox could not be reached") from None
 
-    def request(self, method, path, body=None, api_version=None):
+    def authenticate(self):
         if not self.token or time.monotonic() >= self.token_until:
             login = self._request("/api/v1/authentication/login", "POST", self.login_headers())
             self.token = login["token"]
+            if not isinstance(self.token, str) or not self.token:
+                raise ValueError('Airwallex authentication returned no usable token')
             self.token_until = time.monotonic() + 25 * 60
+        return True
+
+    def request(self, method, path, body=None, api_version=None):
+        self.authenticate()
         headers = {"Authorization": "Bearer " + self.token, "Content-Type": "application/json"}
         if api_version is not None:
             if not re.fullmatch(r"20\d{2}-\d{2}-\d{2}", api_version):

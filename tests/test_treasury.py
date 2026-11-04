@@ -4,6 +4,18 @@ from touchstone.treasury import AirwallexSandbox, AirwallexHTTPError
 
 
 class Treasury(unittest.TestCase):
+    def test_explicit_authentication_reuses_token_and_rejects_missing_token(self):
+        with patch.dict('os.environ', {'AIRWALLEX_CLIENT_ID':'fixture-client', 'AIRWALLEX_API_KEY':'fixture-key'}):
+            client = AirwallexSandbox()
+        with patch.object(client, '_request', return_value={'token':'DO_NOT_PRINT'}) as transport:
+            self.assertTrue(client.authenticate())
+            client.authenticate()
+            self.assertEqual(transport.call_count, 1)
+        client.token = None
+        with patch.object(client, '_request', return_value={'token':None}):
+            with self.assertRaises(ValueError):
+                client.authenticate()
+
     def test_scoped_key_read_denial_is_reported_separately_from_valid_login(self):
         with patch.dict('os.environ', {'AIRWALLEX_CLIENT_ID':'fixture-client', 'AIRWALLEX_API_KEY':'fixture-key',
                                      'AIRWALLEX_ACCOUNT_ID':'fixture-account'}):

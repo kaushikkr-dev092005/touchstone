@@ -1,5 +1,43 @@
 # Account setup and integrated test runbook
 
+## Scoped sandbox key repair (5 November 2026)
+
+**MEASURED:** the existing scoped key passed authentication, account-context validation,
+balances, balance history and conversion reads. No financial writes were performed.
+See [redacted evidence](../bench/results/airwallex-scoped-key-read-check.json).
+This supersedes the historical unset-account statement below. Conversion Write and
+Payment Acceptance are still unverified; successful reads do not prove either.
+
+The disabled admin key shown in the portal must be replaced in local configuration
+by the existing scoped key and its matching Client ID. This follows Airwallex's
+[scoped key instructions](https://www.airwallex.com/docs/developer-tools/api/manage-api-keys).
+Client ID and API-key secret are different values. `.env.example` is a template,
+is tracked, and is not loaded by the CLI; keep credentials out of it.
+
+On Windows, open the local masked setup form:
+
+```powershell
+python tools/configure_airwallex.py
+```
+
+Enter the three scoped-key/account fields locally. The form checks the fixed sandbox
+host with authentication and GET requests only, then optionally saves credentials
+in the Windows user's environment. It never writes secrets to project files or logs.
+Close existing processes that need new credentials; their environments cannot be
+updated by another process. To verify saved credentials and open a new dashboard
+with them, without displaying values:
+
+```powershell
+python tools/configure_airwallex.py --check-saved --open-dashboard
+```
+
+An existing server is preserved; restart it to load changed credentials. The dashboard
+demo stays SIMULATED. The doctor accepts account IDs containing internal underscores
+or hyphens, rejects identical Client ID/API-key values before network access, and
+distinguishes rejected authentication from missing read permissions without repeatedly
+attempting a rejected login. Money movement still requires its own execute flag and
+written capped authorization.
+
 M1 update (2 November): use [M1_RUNBOOK.md](M1_RUNBOOK.md) for the environment-only doctor, current execute/cap flags and job-linked FX proof. Airwallex doctor/FX/hold/checkout/retirement/treasury-job commands use process environment only; the older general CLI config behavior below still applies to other commands. Written capped chat approval remains mandatory before money movement. Historical examples below are reference commands, not approval.
 
 Updated 1 November 2026. The user has created both accounts, configured local credentials and funded a dedicated testnet wallet. RPC, Airwallex authentication/account reads, and one actual paid Metal inference call are verified. `AIRWALLEX_ACCOUNT_ID` is currently unset, so account-scoped Checkout Sessions and Treasury FX have not been tested. Airwallex merchant configuration currently blocks PaymentIntent creation. See [live evidence](LIVE_PROOF.md).

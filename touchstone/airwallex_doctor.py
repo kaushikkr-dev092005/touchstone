@@ -9,7 +9,7 @@ from .treasury import AirwallexSandbox, AirwallexHTTPError, BASE_URL
 def inspect(probe_reads=False, client_factory=AirwallexSandbox):
     flags = {name: bool(os.environ.get(name)) for name in
              ("AIRWALLEX_CLIENT_ID", "AIRWALLEX_API_KEY", "AIRWALLEX_ACCOUNT_ID")}
-    account_valid = bool(re.fullmatch(r"acct_[A-Za-z0-9]+", os.environ.get("AIRWALLEX_ACCOUNT_ID", "")))
+    account_valid = bool(re.fullmatch(r"acct_[A-Za-z0-9_-]{1,80}", os.environ.get("AIRWALLEX_ACCOUNT_ID", "")))
     report = {"label": "BLOCKED", "observed_at": time.time(), "host": BASE_URL,
               "configuration_source": "PROCESS_ENVIRONMENT_ONLY", "configured": flags,
               "account_context_valid": account_valid, "authenticated": False,
@@ -20,11 +20,27 @@ def inspect(probe_reads=False, client_factory=AirwallexSandbox):
               "scope_reference": "https://www.airwallex.com/docs/developer-tools/api/api-key-scopes"}
     missing = [name for name, present in flags.items() if not present]
     report["blockers"] = missing + ([] if account_valid else ["VALID_ACCOUNT_CONTEXT_REQUIRED"])
+    if flags['AIRWALLEX_CLIENT_ID'] and os.environ.get('AIRWALLEX_CLIENT_ID') == os.environ.get('AIRWALLEX_API_KEY'):
+        report['blockers'].append('CLIENT_ID_IS_NOT_AN_API_KEY')
     if not probe_reads or report["blockers"]:
         report["read_probe"] = "NOT_REQUESTED" if not probe_reads else "BLOCKED_CONFIGURATION"
         return report
     try:
         client = client_factory()
+        if hasattr(client, 'authenticate'):
+            try:
+                client.authenticate()
+                report['authenticated'] = True
+            except AirwallexHTTPError as error:
+                report['authentication'] = {'label': 'MEASURED', 'status': 'REJECTED',
+                    'http_status': error.status, 'code': error.code}
+                report['blockers'].append('SCOPED_KEY_OR_ACCOUNT_AUTHENTICATION_REJECTED')
+                report['read_probe'] = 'BLOCKED_AUTHENTICATION'
+                return report
+            except (RuntimeError, ValueError, KeyError, TypeError):
+                report['blockers'].append('AUTHENTICATION_UNAVAILABLE')
+                report['read_probe'] = 'BLOCKED_AUTHENTICATION'
+                return report
         # Read only public response shape, never persist account balances or tokens.
         for name, path, shape in (
             ("balances", "/api/v1/balances/current", list),

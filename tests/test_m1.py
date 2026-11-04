@@ -22,6 +22,48 @@ from touchstone.workload import Task
 
 
 class DoctorTests(unittest.TestCase):
+    def test_account_separators_are_valid_but_header_injection_is_not(self):
+        for account in ('acct_part_one', 'acct_part-one', 'acct_invalid\r\nX-Test: value'):
+            with patch.dict(os.environ, {'AIRWALLEX_CLIENT_ID': 'fixture-client', 'AIRWALLEX_API_KEY': 'fixture-key',
+                                         'AIRWALLEX_ACCOUNT_ID': account}, clear=True):
+                result = inspect(False)
+            self.assertEqual(result['account_context_valid'], '\r' not in account)
+
+    def test_duplicate_client_id_and_key_stops_before_authentication(self):
+        with patch.dict(os.environ, {'AIRWALLEX_CLIENT_ID': 'fixture-client', 'AIRWALLEX_API_KEY': 'fixture-client',
+                                     'AIRWALLEX_ACCOUNT_ID': 'acct_fixture'}, clear=True):
+            result = inspect(True, lambda: self.fail('Invalid credentials reached the network'))
+        self.assertIn('CLIENT_ID_IS_NOT_AN_API_KEY', result['blockers'])
+
+    def test_disabled_key_authentication_is_attempted_once_and_redacted(self):
+        class Disabled:
+            calls = 0
+            def authenticate(self):
+                self.calls += 1
+                raise AirwallexHTTPError(401, 'unauthorized')
+            def request(self, *_):
+                raise AssertionError('Rejected login must not trigger repeated API requests')
+        client = Disabled()
+        with patch.dict(os.environ, {'AIRWALLEX_CLIENT_ID': 'fixture-client', 'AIRWALLEX_API_KEY': 'DO_NOT_PRINT',
+                                     'AIRWALLEX_ACCOUNT_ID': 'acct_new_account'}, clear=True):
+            result = inspect(True, lambda: client)
+        self.assertEqual(client.calls, 1)
+        self.assertEqual(result['read_probe'], 'BLOCKED_AUTHENTICATION')
+        self.assertNotIn('DO_NOT_PRINT', json.dumps(result))
+        self.assertEqual(result['reads'], {})
+
+    def test_authenticated_key_with_missing_scopes_is_distinct_from_bad_login(self):
+        class Denied:
+            def authenticate(self):
+                return True
+            def request(self, *_):
+                raise AirwallexHTTPError(403, 'access_denied')
+        with patch.dict(os.environ, {'AIRWALLEX_CLIENT_ID': 'fixture-client', 'AIRWALLEX_API_KEY': 'fixture-key',
+                                     'AIRWALLEX_ACCOUNT_ID': 'acct_fixture'}, clear=True):
+            result = inspect(True, Denied)
+        self.assertTrue(result['authenticated'])
+        self.assertEqual(result['read_probe'], 'BLOCKED')
+
     def test_missing_environment_never_constructs_client_or_reads_files(self):
         with patch.dict(os.environ, {}, clear=True), patch.object(Path, 'read_text', side_effect=AssertionError('Private file read')):
             result = inspect(True, lambda: self.fail('Network client constructed'))
