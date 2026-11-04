@@ -126,3 +126,13 @@ Capture implemented scenes at **1440×900 and 390×844**, with Scene 1 at **t=0,
 The user withdrew the Metal screenshot reference and supplied a screen recording of upright discs moving over a metallic track with a circular inspection light. This recording now guides the background effect. Do not use the withdrawn image or its glyph ring. Recreate the motion and depth with original inline SVG/CSS, assay marks and the existing gold palette; do not embed the recording, its currency marks, pointer or promotional text.
 
 The hero horizon is replaced by an inspection track. Its introductory movement is explicitly DEMO and stops after ignition; subsequent scanning pulses follow received payment events. These decorative discs are not ledger records or currency transfers. Reduced motion is static, off-screen/hidden animation pauses, and confirmed halt turns the light off. The earlier proposed Metal-inspired orbit is superseded; any later receipt composition should use this track direction and remain bound to real event records. Existing evidence labels, account separation and financial controls remain unchanged.
+
+## Cinematic revision — 2026-11-04
+
+The user's subsequent implementation request authorizes the complete cinematic sequence. It replaces the Monei card/ribbon composition with a pinned specimen: twin rings, growing records, clay inspection and faceted verdict. A reversible chrome wipe leads into the dark-to-warm ledger gateway. The earlier phase approval stops and the decorative Metal orbit are superseded by that request.
+
+The existing serif/gold identity, pill dimensions, working Ledger and security contracts remain the foundation. Mint `--assay-glow` denotes the explicitly labelled inspection demonstration; `--specimen-tint` controls warm chrome. Ambient conveyor passes and three passes after a mock-demo start are visual explanations. They never upgrade integration readiness or certify a result. Actual graph observations retain their SIMULATED/MOCK provenance.
+
+Full geometry, materials and resolution are the default. One indexed mesh, shared WebGL canvas, procedural studio environment, reusable buffers and offscreen suspension keep the build and runtime small. Idle rendering is capped at 30fps; interaction targets 60fps. An explicit low mode is available; the watchdog reports missed budgets without automatically dropping detail. Mobile framing fits the complete specimen without simplifying its mesh.
+
+See [CINEMATIC.md](CINEMATIC.md) for tokens, architecture and attribution, and [the cinematic evidence](evidence/cinematic/README.md) for captures, measured performance, critique and remaining reference differences.

@@ -1,0 +1,15 @@
+{
+  "label": "MEASURED local test runs",
+  "python": {
+    "command": "python -m unittest discover -s tests -v",
+    "passed": 177,
+    "failed": 0,
+    "seconds": 83.113
+  },
+  "node": {
+    "command": "python tools/metal.py test",
+    "passed": 32,
+    "failed": 0
+  },
+  "scope": "Full suites ran before the final frontend framing and graph-label adjustments. Final cinematic browser checks cover those edits; financial/security backend files are unchanged."
+}

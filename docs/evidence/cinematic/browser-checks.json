@@ -1,0 +1,74 @@
+{
+  "label": "MEASURED local browser / SIMULATED financial data",
+  "browser": "Microsoft Edge / headless hardware WebGL",
+  "viewport": [
+    1440,
+    900
+  ],
+  "device_pixel_ratio": 1,
+  "html_sha256": "646313f60bdc7f08dcff5fdb76c9397233b52d30f39d73d63a20cd8a0ea255f2",
+  "performance": {
+    "specimen-0": {
+      "frames": 75,
+      "fps": 30.003600269435193,
+      "quality": "high",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x000046A3) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "specimen-1": {
+      "frames": 75,
+      "fps": 30.00360022472098,
+      "quality": "high",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x000046A3) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "specimen-interacting": {
+      "frames": 139,
+      "fps": 58.94326249323515,
+      "quality": "high",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x000046A3) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "specimen-2": {
+      "frames": 76,
+      "fps": 29.998026215200678,
+      "quality": "high",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x000046A3) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "specimen-3": {
+      "frames": 75,
+      "fps": 30.00239996438457,
+      "quality": "high",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x000046A3) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    "gateway": {
+      "frames": 72,
+      "fps": 28.51372222653421,
+      "quality": "high",
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x000046A3) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  },
+  "page_errors": [],
+  "external_requests": [],
+  "financial_posts": "only explicitly clicked MOCK demo",
+  "cinematic_posts": [],
+  "screenshots": [
+    "assay-ambient.png",
+    "assay-three-passes.png",
+    "specimen-0.png",
+    "specimen-1.png",
+    "specimen-2.png",
+    "specimen-3.png",
+    "wipe-0.png",
+    "wipe-1.png",
+    "wipe-2.png",
+    "wipe-3.png",
+    "wipe-4.png",
+    "transition-flash.png",
+    "gateway-0.png",
+    "gateway-0.5.png",
+    "gateway-1.png",
+    "mobile-specimen.png",
+    "mobile-gateway.png",
+    "reduced-motion.png",
+    "webgl-fallback.png"
+  ],
+  "limits": "FPS includes video capture and other local GPU load; Intel integrated GPU, not RTX 3050 with llama.cpp. A 60fps target is not a guarantee."
+}

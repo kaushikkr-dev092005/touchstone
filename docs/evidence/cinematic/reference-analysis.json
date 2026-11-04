@@ -1,0 +1,72 @@
+{
+  "label": "MEASURED local reference analysis",
+  "conveyor": {
+    "duration_seconds": 10.6666666667,
+    "fps": 30,
+    "size": [
+      636,
+      380
+    ],
+    "beam_peak_seconds": [
+      0.267,
+      1.433,
+      2.7,
+      3.9,
+      5.133,
+      6.3,
+      7.533,
+      8.733,
+      9.967
+    ],
+    "median_interval_seconds": 1.2166666667,
+    "half_peak_width_seconds": [
+      0.333,
+      0.333,
+      0.367,
+      0.333,
+      0.333,
+      0.367,
+      0.367,
+      0.4,
+      0.367
+    ],
+    "median_half_peak_width_seconds": 0.3666666667,
+    "method": "ROI x350:455 y24:142; pixels G>175 and R>120; five-frame moving average; local peaks; half-peak width"
+  },
+  "specimen": {
+    "duration_seconds": 38.1333333333,
+    "fps": 30,
+    "size": [
+      1272,
+      688
+    ],
+    "observed_specimen_window": [
+      17.25,
+      26.25
+    ],
+    "observed_edge_wipe_window": [
+      27,
+      31
+    ],
+    "sheet_sampling_seconds": 0.75,
+    "timing_precision_seconds": 0.375
+  },
+  "registry_sources": {
+    "meteors": {
+      "url": "https://magicui.design/r/meteors.json",
+      "sha256": "05b32966cf3c7ed51b76affbd65dee82953c2bef3028a65e5a5a729faa6214d9"
+    },
+    "dia-text-reveal": {
+      "url": "https://magicui.design/r/dia-text-reveal.json",
+      "sha256": "16dee4f46af59ed5c88ec5e0640b12f1a692fc3da9577dd0c40983eb06292125"
+    },
+    "ripple-button": {
+      "url": "https://magicui.design/r/ripple-button.json",
+      "sha256": "37d71693608b8b1bcac883ebac3e574d82d61b0e083fb0a3a405caa4b4129b8a"
+    },
+    "ripple": {
+      "url": "https://magicui.design/r/ripple.json",
+      "sha256": "5ee7566dc43172edc3583f0c3c111f0751f633dc232fa3837760ef290426e9bb"
+    }
+  }
+}
