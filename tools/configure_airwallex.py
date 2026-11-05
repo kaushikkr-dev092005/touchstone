@@ -1,5 +1,6 @@
 """Masked local sandbox setup. Never accepts credentials as command arguments."""
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -55,6 +56,7 @@ def check_saved():
 
 def publish_readiness(report):
     save_status({'mode': 'SANDBOX', 'authenticated': report['authenticated'],
+        'account_fingerprint': hashlib.sha256(os.environ.get('AIRWALLEX_ACCOUNT_ID', '').encode()).hexdigest(),
         'observed_at': report['observed_at'], 'account_context_configured': report['account_context_valid'],
         'balance_read': report['reads'].get('balances', {}).get('allowed', False),
         'fx_conversions_read': report['reads'].get('conversions', {}).get('allowed', False),

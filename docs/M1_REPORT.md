@@ -1,5 +1,38 @@
 # M1 — implementation and external blocker, 2 November 2026
 
+## Current evidence — 5 November 2026
+
+**MEASURED: M1's real write/read-back gate PASSED.** Exactly one sandbox FX
+conversion sold **1.00 USD for 0.89 EUR**, settled, and matched both wallet-history
+entries. Observed USD cash debit: exactly 1.00. Its request-ID index returned 404;
+the report explicitly records a bounded read-only scan matching the conversion ID.
+
+One separately authorized hosted card session completed **1.00 USD authorization**
+and **0.01 USD capture**. The intent is SUCCEEDED; 0.99 was left uncaptured by final
+partial capture. Issuer release/credit timing is **UNMEASURED**. Exactly one session
+create and one capture request occurred; no cancel request was needed. Both
+transaction approvals are consumed. Historical native PaymentIntent errors do not
+establish the current account's hosted entitlement.
+
+Evidence: [FX](../bench/results/m1/live-fx-single-conversion.json),
+[separate treasury accounts](../bench/results/m1/live-treasury-job.json),
+[closed hosted authorization](../bench/results/m1/current-hosted-card-proof.json).
+Airwallex and Metal remain separate; the treasury demo-token entry is SIMULATED.
+Treasury audit head: `1855dc7889c605a2a406bb6cfa2df5a54ec544f7317869178ddbf86cae873e6c`.
+
+Fixes cover supported smoke pagination, token reuse, strict official sandbox-host
+validation, completed-capture read-back, account-bound readiness and exact FX-source
+reconciliation. Controlled regression tests exercise each path. No runtime dependency
+was added. [Current validation](VALIDATION.md).
+
+Allowed: these sandbox writes and their read-backs. Not allowed: issuer refund timing,
+an integrated three-customer banking run, enabled native checkout, a real hold increase,
+or a fiat/token bridge. No further M1 transaction is authorized or needed for this proof.
+
+## Historical report
+
+The dated observations below describe their original runs; the current evidence above supersedes their readiness statements.
+
 Exit: **documented blocker path**. The authorized implementation is complete and locally tested; a real sandbox write/read-back remains **BLOCKED**. No live quote, conversion, hold, capture, release, withdrawal or retirement was performed. M1 stops here for the required report.
 
 ## What changed

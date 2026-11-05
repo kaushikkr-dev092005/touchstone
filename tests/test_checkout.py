@@ -57,6 +57,26 @@ class FakeCheckout:
 
 
 class HostedCheckoutTests(unittest.TestCase):
+    def test_official_sandbox_host_is_valid_but_lookalikes_are_refused(self):
+        session = self.client.request('POST', '/api/v1/checkout/checkout_sessions/create', self.workflow._body('host-check', 1000000))
+        session['url'] = 'https://checkout.sandbox.airwallex.com/pay?s=PRIVATE_FIXTURE'
+        self.workflow._validate_session(session, 'host-check')
+        for url in ('https://checkout.sandbox.airwallex.com.attacker.invalid/pay',
+                    'https://checkout.sandbox.airwallex.com:444/pay',
+                    'https://attacker.invalid@checkout.sandbox.airwallex.com/pay'):
+            session['url'] = url
+            with self.assertRaises(ValueError):
+                self.workflow._validate_session(session, 'host-check')
+
+    def test_account_separators_are_supported_without_allowing_header_injection(self):
+        client = FakeCheckout()
+        for account in ('acct_part_one', 'acct_part-one'):
+            client.account_id = account
+            HostedCheckoutWorkflow(client, None)._validate_scope('fixture', 1000000)
+        client.account_id = 'acct_bad\r\nInjected: header'
+        with self.assertRaises(ValueError):
+            HostedCheckoutWorkflow(client, None)._validate_scope('fixture', 1000000)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.path = Path(self.temp.name) / "operations.sqlite"
@@ -113,6 +133,31 @@ class HostedCheckoutTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "captured funds"):
             self.workflow.status("hosted-4")
         self.assertFalse(any(c[0] == "POST" and c[1].endswith("/capture") for c in self.client.calls))
+
+    def test_completed_operator_capture_can_be_read_without_another_write(self):
+        self.workflow.start('hosted-recorded')
+        self.client.session.update(status='COMPLETED', payment_intent_id='int_fixture')
+        self.client.intent = {'id': 'int_fixture', 'status': 'REQUIRES_CAPTURE', 'amount': 1.0,
+                              'currency': 'USD', 'captured_amount': 0, 'merchant_order_id': 'hosted-recorded'}
+        self.workflow.status('hosted-recorded')
+        SandboxHoldWorkflow(self.client, self.journal).run('hosted-recorded', 1000000, 10000)
+        before = len(self.client.calls)
+        result = self.workflow.status('hosted-recorded')
+        self.assertTrue(result['complete'])
+        self.assertFalse(result['authorization_ready'])
+        self.assertEqual(result['captured_micro_usd'], 10000)
+        self.assertTrue(all(c[0] == 'GET' for c in self.client.calls[before:]))
+
+    def test_changed_captured_amount_is_not_accepted_as_recorded_capture(self):
+        self.workflow.start('hosted-changed')
+        self.client.session.update(status='COMPLETED', payment_intent_id='int_fixture')
+        self.client.intent = {'id': 'int_fixture', 'status': 'REQUIRES_CAPTURE', 'amount': 1.0,
+                              'currency': 'USD', 'captured_amount': 0, 'merchant_order_id': 'hosted-changed'}
+        self.workflow.status('hosted-changed')
+        SandboxHoldWorkflow(self.client, self.journal).run('hosted-changed', 1000000, 10000)
+        self.client.intent['captured_amount'] = 0.02
+        with self.assertRaisesRegex(ValueError, 'captured funds'):
+            self.workflow.status('hosted-changed')
 
     def test_account_id_is_required_before_any_remote_call(self):
         client = FakeCheckout()

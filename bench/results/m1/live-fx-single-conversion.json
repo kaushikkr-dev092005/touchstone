@@ -1,0 +1,72 @@
+{
+  "mode": "AIRWALLEX_SANDBOX",
+  "request_id": "touchstone-m1-approved-20261105",
+  "conversion": {
+    "conversion_id": "a503a7d6-75b0-4366-9682-1167e46d2147",
+    "request_id": "touchstone-m1-approved-20261105",
+    "status": "SETTLED",
+    "buy_currency": "EUR",
+    "buy_amount": 0.89,
+    "sell_currency": "USD",
+    "sell_amount": 1.0,
+    "client_rate": 1.128782,
+    "quote_id": "d4c17594-0cd9-3bbe-995b-5c9562b3f3a0"
+  },
+  "balance_history": [
+    {
+      "id": "01a1a7ff-525b-7f17-b950-56c546835035",
+      "source": "a503a7d6-75b0-4366-9682-1167e46d2147",
+      "source_type": "CONVERSION",
+      "transaction_type": "CONVERSION_SELL",
+      "currency": "USD",
+      "amount": -1.0,
+      "fee": 0,
+      "balance": 9999999.0,
+      "posted_at": "2026-11-05T03:18:10+0800"
+    },
+    {
+      "id": "01a1a7ff-525b-7f17-b950-56c546835034",
+      "source": "a503a7d6-75b0-4366-9682-1167e46d2147",
+      "source_type": "CONVERSION",
+      "transaction_type": "HOLD_RELEASE",
+      "currency": "USD",
+      "amount": -1.0,
+      "fee": 0,
+      "balance": 10000000.0,
+      "posted_at": "2026-11-05T03:18:10+0800"
+    },
+    {
+      "id": "01a1a7ff-525b-7f17-b950-56c546835031",
+      "source": "a503a7d6-75b0-4366-9682-1167e46d2147",
+      "source_type": "CONVERSION",
+      "transaction_type": "HOLD",
+      "currency": "USD",
+      "amount": 1.0,
+      "fee": 0,
+      "balance": 9999999.0,
+      "posted_at": "2026-11-05T03:18:10+0800"
+    },
+    {
+      "id": "01a1a7ff-525b-7f17-b950-56c546835036",
+      "source": "a503a7d6-75b0-4366-9682-1167e46d2147",
+      "source_type": "CONVERSION",
+      "transaction_type": "CONVERSION_BUY",
+      "currency": "EUR",
+      "amount": 0.89,
+      "fee": 0,
+      "balance": 10000000.89,
+      "posted_at": "2026-11-05T03:18:10+0800"
+    }
+  ],
+  "local_state": "SETTLED",
+  "reconciliation": "MATCHED_WALLET_HISTORY",
+  "history_lookup": "SOURCE_MATCH_FROM_PAGINATED_HISTORY_AFTER_REQUEST_ID_404",
+  "label": "MEASURED",
+  "conversion_posts_this_authorization": 1,
+  "money_moved": true,
+  "observed_usd_cash_debit": "1",
+  "within_approved_1_usd_cap": true,
+  "automatic_retries": 0,
+  "metal_operations": 0,
+  "account_fingerprint": "d155423c58483e6d78feb62d489101bf7acc838f2d04223b06401027e3b51a3c"
+}

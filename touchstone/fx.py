@@ -139,6 +139,7 @@ def spend_report(client, journal, request_id):
     history = client.conversion_balance_history(request_id)
     balances = client.current_balances()
     report = {"mode": "AIRWALLEX_SANDBOX", "request_id": request_id,
+              "history_lookup": getattr(client, 'balance_history_lookup', 'REQUEST_ID'),
               "wallet_balances": _balance_summary(balances), "conversion": None,
               "balance_history": [], "local_state": local["state"] if local else "NO_LOCAL_OPERATION",
               "reconciliation": "NOT_RECONCILED"}
@@ -157,7 +158,7 @@ def spend_report(client, journal, request_id):
     related = [row for row in history if row.get("source_type") == "CONVERSION"
                and row.get("source") == conversion.get("conversion_id")]
     report["balance_history"] = [{key: row.get(key) for key in
-        ("id", "source", "source_type", "transaction_type", "currency", "amount", "balance", "posted_at")}
+        ("id", "source", "source_type", "transaction_type", "currency", "amount", "fee", "balance", "posted_at")}
         for row in related]
     if conversion.get("status") != "SETTLED":
         report["reconciliation"] = "PENDING_SETTLEMENT" if conversion.get("status") == "SCHEDULED" else "NOT_SETTLED"

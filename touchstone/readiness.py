@@ -35,10 +35,33 @@ def inspect():
     hold = _object(ROOT / 'bench/results/airwallex-hold-proof.json')
     airwallex = _object(ROOT / 'data/airwallex-readiness.json')
     account_context = bool(os.environ.get('AIRWALLEX_ACCOUNT_ID'))
+    account_fingerprint = hashlib.sha256(os.environ.get('AIRWALLEX_ACCOUNT_ID', '').encode()).hexdigest()
+    observation_matches_account = account_context and airwallex.get('account_fingerprint') == account_fingerprint
+    if not observation_matches_account:
+        airwallex = {}
+    historical_hold_error = hold.get('failure', {}).get('code') == 'configuration_error'
+    hold_matches_account = account_context and hold.get('account_fingerprint') == account_fingerprint
+    hold_workflow = ('BLOCKED_MERCHANT_CONFIGURATION' if historical_hold_error and hold_matches_account else
+                     'HISTORICAL_MERCHANT_CONFIGURATION_ERROR' if historical_hold_error else 'IMPLEMENTED_UNVERIFIED')
+    fx = _object(ROOT/'bench/results/m1/live-fx-single-conversion.json')
+    fx_matches_account = (account_context and fx.get('account_fingerprint') == account_fingerprint
+                          and fx.get('label') == 'MEASURED' and fx.get('reconciliation') == 'MATCHED_WALLET_HISTORY'
+                          and fx.get('conversion', {}).get('status') == 'SETTLED')
+    fx_proof = ({'label': 'MEASURED', 'status': 'RECONCILED',
+                 **{k: fx['conversion'].get(k) for k in ('conversion_id', 'sell_currency', 'sell_amount', 'buy_currency', 'buy_amount')},
+                 'metal_funded': False} if fx_matches_account else {'label': 'BLOCKED', 'status': 'UNVERIFIED'})
+    card = _object(ROOT/'bench/results/m1/current-hosted-card-proof.json')
+    card_result = card.get('result') if isinstance(card.get('result'), dict) else {}
+    card_complete = bool(account_context and card.get('account_fingerprint') == account_fingerprint
+                         and card.get('label') == 'MEASURED' and card_result.get('complete') is True
+                         and card_result.get('operator_capture_recorded') is True
+                         and card_result.get('payment_status') in {'SUCCEEDED', 'CANCELLED'})
+    if card_complete:
+        hold_workflow = 'MEASURED_HOSTED_CAPTURE_COMPLETE'
     checkout_read = bool(airwallex.get('checkout_sessions_read'))
     hosted_checkout_workflow = ('BLOCKED_ACCOUNT_CONTEXT' if not account_context else
                                 'BLOCKED_CHECKOUT_SESSIONS_READ' if not checkout_read else
-                                'WRITE_UNVERIFIED')
+                                'MEASURED_CAPTURE_COMPLETE' if card_complete else 'WRITE_UNVERIFIED')
     try:
         raw = json.loads((ROOT / 'bench/results/metal-paid-proof.json').read_text(encoding='utf-8'))
         result = raw.get('result', {})
@@ -74,11 +97,16 @@ def inspect():
                           "balance_read": airwallex.get('balance_read', False),
                           "global_accounts_read": airwallex.get('global_accounts_read', False),
                           "account_context_configured": account_context,
-                          "hold_workflow": "BLOCKED_MERCHANT_CONFIGURATION" if hold.get('failure', {}).get('code') == 'configuration_error' else "IMPLEMENTED_UNVERIFIED",
-                          "hold_error": hold.get('failure'),
+                          "observation_matches_account": observation_matches_account,
+                          "hold_workflow": hold_workflow,
+                          "hold_error": hold.get('failure') if hold_matches_account else None,
+                          "historical_hold_configuration_error": historical_hold_error,
+                          "fx_proof": fx_proof,
                           "hosted_checkout": {"workflow": hosted_checkout_workflow,
                                                "read_access_verified": checkout_read,
-                                               "write_access_verified": False},
+                                               "write_access_verified": card_complete,
+                                               "authorization_active": False if card_complete else None,
+                                               "captured_micro_usd": card_result.get('captured_micro_usd') if card_complete else None},
                           "dashboard_mode": "SIMULATED"},
             "metal": {"rpc_configured": bool(os.environ.get("METAL_RPC_URL")),
                       "funding_key_configured": bool(os.environ.get("AGENT_PRIVATE_KEY")),

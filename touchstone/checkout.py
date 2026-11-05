@@ -1,9 +1,11 @@
 import json
+import hashlib
 import os
 import re
 from urllib.parse import urlencode, urlsplit
 
 from .holds import OutcomeUnknown, SandboxHoldWorkflow, api_usd, micro_usd, public_intent
+from .ledger import canonical
 
 
 CHECKOUT_API_VERSION = "2026-05-29"
@@ -27,7 +29,7 @@ class HostedCheckoutWorkflow:
         if not re.fullmatch(r"[A-Za-z0-9_-]{1,48}", scope) or type(hold) is not int or not 0 < hold <= 10000000:
             raise ValueError("Invalid hosted-checkout scope or amount; sandbox holds are limited to USD 10")
         api_usd(hold)
-        if not isinstance(self.account_id, str) or not re.fullmatch(r"acct_[A-Za-z0-9]+", self.account_id):
+        if not isinstance(self.account_id, str) or not re.fullmatch(r"acct_[A-Za-z0-9_-]{1,80}", self.account_id):
             raise ValueError("Set AIRWALLEX_ACCOUNT_ID from the sandbox Account details page for hosted checkout")
 
     def _body(self, scope, hold):
@@ -75,8 +77,8 @@ class HostedCheckoutWorkflow:
             raise ValueError("Checkout Session does not match the approved scope or uncaptured-hold terms")
         if session.get("status") == "ACTIVE":
             parsed = urlsplit(session.get("url", ""))
-            if (parsed.scheme != "https" or parsed.hostname != "checkout.airwallex.com" or parsed.username
-                    or parsed.password or parsed.fragment):
+            if (parsed.scheme != "https" or parsed.hostname not in {"checkout.airwallex.com", "checkout.sandbox.airwallex.com"}
+                    or parsed.port not in (None, 443) or parsed.username or parsed.password or parsed.fragment):
                 raise ValueError("Airwallex returned an unexpected hosted-checkout URL")
 
     def _recover_create(self, scope, prior):
@@ -168,6 +170,19 @@ class HostedCheckoutWorkflow:
         intent = public_intent(raw_intent)
         captured = micro_usd(raw_intent.get("captured_amount", 0))
         if raw_intent.get("status") == "SUCCEEDED" or captured:
+            capture = self.journal.get(scope, 'capture')
+            terms = self.journal.get(scope, 'terms')
+            expected_terms = hashlib.sha256(canonical({'hold': hold, 'capture': captured, 'currency': 'USD'}).encode()).hexdigest()
+            stored = json.loads(capture['response']) if capture and capture['state'] == 'OBSERVED' and capture['response'] else {}
+            if (captured > 0 and terms and terms['digest'] == expected_terms
+                    and capture and capture['path'] == f'/api/v1/pa/payment_intents/{intent_id}/capture'
+                    and stored.get('id') == intent_id and micro_usd(stored.get('captured_amount', 0)) == captured):
+                return {**result, 'payment_status': raw_intent['status'], 'intent': intent,
+                    'authorization_ready': False, 'operator_capture_recorded': True,
+                    'complete': raw_intent['status'] in {'SUCCEEDED', 'CANCELLED'},
+                    'approved_micro_usd': hold, 'captured_micro_usd': captured,
+                    'unused_authorization_micro_usd': hold - captured,
+                    'issuer_release_timing': 'Not measured; unused amount is not a confirmed wallet credit'}
             raise ValueError("Hosted checkout captured funds despite the uncaptured-hold mandate; stop for reconciliation")
         if raw_intent.get("status") != "REQUIRES_CAPTURE":
             return {**result, "payment_status": raw_intent.get("status", "UNKNOWN"),

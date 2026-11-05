@@ -1,0 +1,15 @@
+{
+  "label": "MEASURED",
+  "mode": "SANDBOX",
+  "host": "https://api.sandbox.airwallex.com",
+  "authenticated": true,
+  "balance_read": true,
+  "global_accounts_read": true,
+  "checkout_sessions_read": true,
+  "fx_conversions_read": true,
+  "read_errors": {},
+  "account_context_configured": true,
+  "checkout_sessions_write_verified": false,
+  "writes_performed": false,
+  "dashboard_mode_changed": false
+}

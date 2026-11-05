@@ -73,9 +73,8 @@ class AirwallexSandbox:
         return headers
 
     def smoke(self):
-        login = self._request("/api/v1/authentication/login", "POST", self.login_headers())
-        token = login["token"]
-        headers = {"Authorization": "Bearer " + token}
+        self.authenticate()
+        headers = {"Authorization": "Bearer " + self.token}
         reads, errors = {}, {}
         for name, path in (("balance_read", '/api/v1/balances/current'), ("global_accounts_read", '/api/v1/global_accounts')):
             try:
@@ -85,7 +84,7 @@ class AirwallexSandbox:
                 errors[name] = {"http_status": error.status, "reason": "Check account selection and scoped key permissions"}
         if self.account_id:
             checkout_headers = {**headers, "x-api-version": "2026-05-29"}
-            checkout_path = "/api/v1/checkout/checkout_sessions?" + urlencode({"account_id": self.account_id, "page_size": 1})
+            checkout_path = "/api/v1/checkout/checkout_sessions?" + urlencode({"account_id": self.account_id, "page_size": 10})
             try:
                 result = self._request(checkout_path, headers=checkout_headers)
                 reads["checkout_sessions_read"] = isinstance(result, dict) and isinstance(result.get("items"), list)
@@ -94,7 +93,7 @@ class AirwallexSandbox:
                 errors["checkout_sessions_read"] = {"http_status": error.status,
                     "reason": "Check Checkout Sessions read permission and API availability"}
             try:
-                result = self.request("GET", "/api/v1/fx/conversions?" + urlencode({"page_size": 1}))
+                result = self.request("GET", "/api/v1/fx/conversions?" + urlencode({"page_size": 10}))
                 reads["fx_conversions_read"] = isinstance(result, dict) and isinstance(result.get("items"), list)
             except AirwallexHTTPError as error:
                 reads["fx_conversions_read"] = False
@@ -184,9 +183,30 @@ class AirwallexSandbox:
         self._require_account_context()
         if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", request_id or ""):
             raise ValueError("Invalid conversion request_id")
-        result = self.request("GET", "/api/v1/balances/history?" + urlencode({"request_id": request_id, "page_size": 200}))
+        try:
+            result = self.request("GET", "/api/v1/balances/history?" + urlencode({"request_id": request_id, "page_size": 200}))
+        except AirwallexHTTPError as error:
+            if error.status != 404 or error.code != 'not_found':
+                raise
+            # Sandbox can omit the request-ID index while posting actual wallet entries.
+            conversions = self.conversions_by_request_id(request_id)
+            if len(conversions) != 1 or not conversions[0].get('conversion_id'):
+                raise ValueError('Cannot reconcile wallet history without one known conversion') from None
+            source = conversions[0]['conversion_id']
+            rows = []
+            for page in range(10):
+                result = self.request('GET', '/api/v1/balances/history?' + urlencode({'page_size': 200, 'page_num': page}))
+                if not isinstance(result, dict) or not isinstance(result.get('items'), list):
+                    raise ValueError('Airwallex returned invalid paginated wallet history')
+                rows.extend(row for row in result['items'] if isinstance(row, dict)
+                            and row.get('source_type') == 'CONVERSION' and row.get('source') == source)
+                if not result.get('has_more') and not result.get('page_after'):
+                    self.balance_history_lookup = 'SOURCE_MATCH_FROM_PAGINATED_HISTORY_AFTER_REQUEST_ID_404'
+                    return rows
+            raise ValueError('Wallet history exceeds the safe reconciliation page limit')
         if not isinstance(result, dict) or not isinstance(result.get("items"), list):
             raise ValueError("Airwallex returned an invalid balance-history response")
+        self.balance_history_lookup = 'REQUEST_ID'
         return result["items"]
 
     def _require_account_context(self):

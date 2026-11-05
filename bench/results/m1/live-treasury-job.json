@@ -1,0 +1,101 @@
+{
+  "accounts": [
+    {
+      "account": "AIRWALLEX_SELL",
+      "amount_microunits": -1000000,
+      "currency": "USD",
+      "label": "MEASURED"
+    },
+    {
+      "account": "AIRWALLEX_TREASURY_FLOAT",
+      "amount_microunits": 890000,
+      "currency": "EUR",
+      "label": "MEASURED"
+    },
+    {
+      "account": "METAL_DEMO_FLOAT",
+      "amount_microunits": 890000,
+      "currency": "USDZ",
+      "label": "SIMULATED"
+    }
+  ],
+  "bank_and_token_balances_separate": true,
+  "conversion_id": "a503a7d6-75b0-4366-9682-1167e46d2147",
+  "customer_authorization_verified": false,
+  "customer_budget_label": "SIMULATED",
+  "demo_rate_label": "SIMULATED",
+  "label": "MEASURED",
+  "metal_funded": false,
+  "note": "Demo rate is accounting only; actual Metal spend requires a separately funded wallet",
+  "phase": "RECONCILED",
+  "reconciliation": "MATCHED_WALLET_HISTORY",
+  "request_id": "touchstone-m1-approved-20261105",
+  "scope": "m1-live-20261105",
+  "wallet_history": [
+    {
+      "amount": -1.0,
+      "balance": 9999999.0,
+      "currency": "USD",
+      "fee": 0,
+      "id": "01a1a7ff-525b-7f17-b950-56c546835035",
+      "posted_at": "2026-11-05T03:18:10+0800",
+      "source": "a503a7d6-75b0-4366-9682-1167e46d2147",
+      "source_type": "CONVERSION",
+      "transaction_type": "CONVERSION_SELL"
+    },
+    {
+      "amount": -1.0,
+      "balance": 10000000.0,
+      "currency": "USD",
+      "fee": 0,
+      "id": "01a1a7ff-525b-7f17-b950-56c546835034",
+      "posted_at": "2026-11-05T03:18:10+0800",
+      "source": "a503a7d6-75b0-4366-9682-1167e46d2147",
+      "source_type": "CONVERSION",
+      "transaction_type": "HOLD_RELEASE"
+    },
+    {
+      "amount": 1.0,
+      "balance": 9999999.0,
+      "currency": "USD",
+      "fee": 0,
+      "id": "01a1a7ff-525b-7f17-b950-56c546835031",
+      "posted_at": "2026-11-05T03:18:10+0800",
+      "source": "a503a7d6-75b0-4366-9682-1167e46d2147",
+      "source_type": "CONVERSION",
+      "transaction_type": "HOLD"
+    },
+    {
+      "amount": 0.89,
+      "balance": 10000000.89,
+      "currency": "EUR",
+      "fee": 0,
+      "id": "01a1a7ff-525b-7f17-b950-56c546835036",
+      "posted_at": "2026-11-05T03:18:10+0800",
+      "source": "a503a7d6-75b0-4366-9682-1167e46d2147",
+      "source_type": "CONVERSION",
+      "transaction_type": "CONVERSION_BUY"
+    }
+  ],
+  "terms": {
+    "customer_budget_currency": "USD",
+    "customer_budget_microunits": 1000000,
+    "demo_usdz_per_unit": "1",
+    "quote": {
+      "buy_amount": 0.89,
+      "buy_currency": "EUR",
+      "client_rate": 1.128782,
+      "conversion_date": "2026-11-04",
+      "dealt_currency": "USD",
+      "quote_id": "d4c17594-0cd9-3bbe-995b-5c9562b3f3a0",
+      "sell_amount": 1.0,
+      "sell_currency": "USD",
+      "valid_to_at": "2026-11-04T19:27:33+0000"
+    }
+  },
+  "audit": {
+    "valid": true,
+    "events": 6,
+    "head": "1855dc7889c605a2a406bb6cfa2df5a54ec544f7317869178ddbf86cae873e6c"
+  }
+}

@@ -1,5 +1,11 @@
 # Airwallex support request — draft, not sent
 
+**5 November update (draft remains unsent):** current scoped-key reads, one sandbox
+FX conversion, and a separately approved hosted card authorization/capture pass.
+The historical native PaymentIntent error below remains relevant only to native
+checkout entitlement; hosted checkout is no longer blocked. Never include credentials
+or hosted session URLs in a support message.
+
 To: devhelp@airwallex.com
 
 Subject: Agentic Banking Hackathon Kit 12 — sandbox PaymentIntent configuration and tooling eligibility
@@ -21,7 +27,12 @@ Could you confirm:
 3. Whether a `configuration_error` consumes the create request ID without creating an object, and how to obtain authoritative confirmation for the older `duplicate_request` operation. We can supply the account/order/request identifiers through your private support channel; please provide a case reference and explicit outcome before we retire that scope.
 4. Whether sandbox Developer MCP or the Airwallex CLI qualifies as “Airwallex tooling” for the hackathon. Our financial adapter currently uses sandbox REST; we are not connected to production AgentOS.
 
-Separately, we are preparing one capped sandbox FX conversion plus read-back of both wallet-history entries. No FX quote or conversion has been executed. We will verify account context and scope access before requesting the operator's written spend approval.
+Update, 5 November: a separate, explicitly approved sandbox FX conversion has now
+settled (1.00 USD to 0.89 EUR), with both wallet-history sides reconciled. Scoped
+authentication and Checkout Session reads now pass after the operator updated
+permissions. We have not executed a current-account card authorization/capture.
+The native PaymentIntent error described above is historical; please confirm the
+current account's supported checkout capabilities through a private channel.
 
 Evidence: `docs/LIVE_PROOF.md`, `bench/results/airwallex-hold-proof.json`, and `docs/M1_REPORT.md` in the public repository. This draft contains no credentials, tokens, wallet material or raw account identifiers.
 

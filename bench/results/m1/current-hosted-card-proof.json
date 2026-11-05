@@ -1,0 +1,41 @@
+{
+  "label": "MEASURED",
+  "scope": "m1-card-approved-20261105",
+  "authorization_cap_usd": "1.00",
+  "capture_cap_usd": "0.01",
+  "action": "status",
+  "automatic_retries": 0,
+  "result": {
+    "mode": "SANDBOX_HOSTED_CHECKOUT",
+    "scope": "m1-card-approved-20261105",
+    "checkout_session_id": "bco_sgpvngqtkhnven7wuov",
+    "status": "COMPLETED",
+    "expires_at": "2026-12-05T08:05:59+0000",
+    "authorization_ready": false,
+    "payment_created": true,
+    "payment_status": "SUCCEEDED",
+    "intent": {
+      "id": "int_sgpvfn54qhnveq8bqo7",
+      "status": "SUCCEEDED",
+      "amount": 1,
+      "currency": "USD",
+      "captured_amount": 0.01,
+      "merchant_order_id": "m1-card-approved-20261105",
+      "updated_at": "2026-11-05T08:19:11+00:00",
+      "created_at": "2026-11-05T08:09:01+00:00"
+    },
+    "operator_capture_recorded": true,
+    "complete": true,
+    "approved_micro_usd": 1000000,
+    "captured_micro_usd": 10000,
+    "unused_authorization_micro_usd": 990000,
+    "issuer_release_timing": "Not measured; unused amount is not a confirmed wallet credit"
+  },
+  "account_fingerprint": "d155423c58483e6d78feb62d489101bf7acc838f2d04223b06401027e3b51a3c",
+  "financial_operations": {
+    "checkout_sessions_created": 1,
+    "capture_requests": 1,
+    "cancel_requests": 0,
+    "issuer_credit_observed": false
+  }
+}
