@@ -1,5 +1,31 @@
 # M3 implementation report — 3 November 2026
 
+## Current evidence — 5 November 2026
+
+**MEASURED on SIMULATED sources:** both installed local models now have complete
+**180-call** profiles, each with **120 calibration / 60 held-out sources** and at
+least 20% measured GPU-memory headroom. Both produced **0 strict-correct extractions**
+and **0 checker accepts** in each partition. Calls returned structured outputs;
+these are citation/role correctness failures, not missing measurements or service errors.
+
+The unchanged qualification gate correctly refuses both models. **Zero eligible models**;
+useful paid inference and the hosted/reference tier remain BLOCKED. The conservative
+tool baseline remains **24/180 (13.3%)** with zero observed false accepts; twelve of
+those extractions still need exception review. Synthetic truth is offline and is not
+evidence of representative invoice/OCR performance. No paid M3 call was made.
+
+Evidence: [study report](../bench/results/m3/report.json),
+[1.5B raw profile](../bench/results/m3/profiles/balanced.json),
+[0.5B raw profile](../bench/results/m3/profiles/economy.json).
+This satisfies the honest negative-result alternative, not the useful-inference goal.
+No threshold was lowered. Hosted credentials, intended credit source and separate
+aggregate call/spend approval remain human gates. M1/M2 now have their own independent
+live proofs; they do not qualify a model for this workload.
+
+## Historical report
+
+The dated observations below describe their original runs; the current evidence above supersedes their readiness statements.
+
 Implementation is complete. **BLOCKED: useful paid inference has not been demonstrated.** The alternative gate is an honest refusal: **zero current M3 models measured, zero eligible models, zero live purchases**. Models were not rejected on newly measured accuracy; their required measurements are missing. M1's real FX write and M2's live engine/recovery gates remain open.
 
 ## What changed

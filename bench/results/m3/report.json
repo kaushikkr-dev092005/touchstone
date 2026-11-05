@@ -63,8 +63,118 @@
     "coverage": 0.13333333333333333,
     "note": "Synthetic sources; CPU/review costs unpriced, no model calls or payments"
   },
-  "profiles": [],
-  "profile_files_sha256": {},
+  "profiles": [
+    {
+      "label": "MEASURED",
+      "model_id": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+      "tier": "balanced",
+      "calibration": {
+        "sources_scored": 120,
+        "strict_correct": 0,
+        "accepted": 0,
+        "false_accepts": 0,
+        "false_accept_rate_among_accepted": null,
+        "refusals_or_review": 120,
+        "provider_cost_micro_usd": 0,
+        "reference_cost_micro_usd": 0,
+        "verification_cost_micro_usd": 0,
+        "latency_samples": 120,
+        "latency_p50_ms": 4630.5,
+        "latency_p95_ms": 6432,
+        "correct_beyond_tools": 0
+      },
+      "holdout": {
+        "sources_scored": 60,
+        "strict_correct": 0,
+        "accepted": 0,
+        "false_accepts": 0,
+        "false_accept_rate_among_accepted": null,
+        "refusals_or_review": 60,
+        "provider_cost_micro_usd": 0,
+        "reference_cost_micro_usd": 0,
+        "verification_cost_micro_usd": 0,
+        "latency_samples": 60,
+        "latency_p50_ms": 3370.0,
+        "latency_p95_ms": 5280,
+        "correct_beyond_tools": 0
+      },
+      "screen": {
+        "observations": 120,
+        "unique_sources": 120,
+        "consistently_correct_sources": 0,
+        "unique_success_rate": 0.0,
+        "wilson_95_lower": 0.0,
+        "required_success_rate": 0.95,
+        "minimum_unique": 20,
+        "passes_statistical_screen": false,
+        "status": "BELOW_QUALITY_TARGET",
+        "live_purchase_authorized": false
+      },
+      "calibration_complete": true,
+      "heldout_complete": true,
+      "heldout_validation_passed": false,
+      "eligible": false,
+      "live_purchase_authorized": false,
+      "source_profile_sha256": "bbc0ebb33b6739cc307c590b4273e70d7c7aa96cb7578eaedf75b9f9b9a36cca"
+    },
+    {
+      "label": "MEASURED",
+      "model_id": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+      "tier": "economy",
+      "calibration": {
+        "sources_scored": 120,
+        "strict_correct": 0,
+        "accepted": 0,
+        "false_accepts": 0,
+        "false_accept_rate_among_accepted": null,
+        "refusals_or_review": 120,
+        "provider_cost_micro_usd": 0,
+        "reference_cost_micro_usd": 0,
+        "verification_cost_micro_usd": 0,
+        "latency_samples": 120,
+        "latency_p50_ms": 4309.5,
+        "latency_p95_ms": 16779,
+        "correct_beyond_tools": 0
+      },
+      "holdout": {
+        "sources_scored": 60,
+        "strict_correct": 0,
+        "accepted": 0,
+        "false_accepts": 0,
+        "false_accept_rate_among_accepted": null,
+        "refusals_or_review": 60,
+        "provider_cost_micro_usd": 0,
+        "reference_cost_micro_usd": 0,
+        "verification_cost_micro_usd": 0,
+        "latency_samples": 60,
+        "latency_p50_ms": 4646.5,
+        "latency_p95_ms": 16960,
+        "correct_beyond_tools": 0
+      },
+      "screen": {
+        "observations": 120,
+        "unique_sources": 120,
+        "consistently_correct_sources": 0,
+        "unique_success_rate": 0.0,
+        "wilson_95_lower": 0.0,
+        "required_success_rate": 0.95,
+        "minimum_unique": 20,
+        "passes_statistical_screen": false,
+        "status": "BELOW_QUALITY_TARGET",
+        "live_purchase_authorized": false
+      },
+      "calibration_complete": true,
+      "heldout_complete": true,
+      "heldout_validation_passed": false,
+      "eligible": false,
+      "live_purchase_authorized": false,
+      "source_profile_sha256": "2e42c4b25e085197b0b35921c94acd54a3cbc972fda83d401cce441401667426"
+    }
+  ],
+  "profile_files_sha256": {
+    "balanced.json": "a8cf564ce27cc5efd6305165542f802267deb77386ea0d99ae510845348bc0b9",
+    "economy.json": "2f61f4510b309ba62c7501e406ff535a2f27b54b90564e18aa16f668b14edeb1"
+  },
   "rejected_profiles": [],
   "showcase": {
     "label": "SIMULATED",
@@ -94,7 +204,7 @@
   },
   "qualification_status": "BLOCKED_NO_ELIGIBLE_MODEL",
   "threshold_changed": false,
-  "models_measured": 0,
+  "models_measured": 2,
   "hosted_funding_source": "PARTNER_CREDITS_UNVERIFIED_UNTIL_CONFIGURED",
   "live_purchase_authorized": false
 }
