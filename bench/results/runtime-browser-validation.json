@@ -1,0 +1,32 @@
+{
+  "desktop": "passed",
+  "mobile_width": 390,
+  "horizontal_overflow": false,
+  "browser_errors": [],
+  "start_halt_resume_close": "passed",
+  "host_origin_session_controls": "passed",
+  "reconciliation": {
+    "matched": true,
+    "ledger_provider_total": 1390000,
+    "rail_total": 1390000,
+    "verification_total": 64000,
+    "customer_captured": 1454000,
+    "pending": 0,
+    "mismatches": [],
+    "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+    "mode": "SIMULATED"
+  },
+  "planning_tool_and_review_cases": "passed",
+  "provider_evidence_rows": 6,
+  "testnet_proof_disclosure": "passed",
+  "screenshots": [
+    "desktop-ready.png",
+    "desktop-paused.png",
+    "desktop-completed.png",
+    "mobile-completed.png"
+  ],
+  "label": "MEASURED",
+  "financial_mode": "SIMULATED",
+  "live_money_moved": false,
+  "observed_at": 1793868413.3600779
+}

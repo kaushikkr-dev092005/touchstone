@@ -62,13 +62,26 @@ def read_profiles(directory):
 
 def build(directory=ROOT / "bench/results"):
     directory = Path(directory)
-    profiles = read_profiles(directory)
+    try:
+        profiles = read_profiles(directory)
+        profile_status = 'CURRENT'
+    except (OSError, ValueError, KeyError, TypeError):
+        profiles = {}
+        profile_status = 'BLOCKED_STALE_OR_INVALID'
     tasks, truths = {}, {}
     for seed in (*CALIBRATION_SEEDS, *EVALUATION_SEEDS):
         generated, truth = generate(seed, 30)
         tasks.update({(seed, t.id): t for t in generated})
         truths.update({(seed, key): value for key, value in truth.items()})
     gates = []
+    if not profiles:
+        for tier in ('economy', 'balanced'):
+            for kind in ('invoice', 'arithmetic', 'classification'):
+                gates.append({'provider': tier, 'kind': kind, **screen([]),
+                    'status': 'BLOCKED_STALE_OR_INVALID_PROFILE', 'eligible': False,
+                    'evaluation_observations': 0, 'evaluation_correct': 0,
+                    'evaluation_unseen_sources': 0, 'evaluation_unseen_correct': 0,
+                    'deployment_scope': 'no-current-model-measurement'})
     for tier, profile in profiles.items():
         for kind in ("invoice", "arithmetic", "classification"):
             calibration, evaluation = [], []
@@ -110,9 +123,11 @@ def build(directory=ROOT / "bench/results"):
     timings = sorted(r["latency_ms"] for r in baseline)
     source_hashes = {f"touchstone/{name}": digest(ROOT / "touchstone" / name) for name in EVIDENCE_SOURCES}
     source_hashes["bench/planning_cases.json"] = digest(cases_path)
-    inputs = {f"local-{tier}.json": digest(directory / f"local-{tier}.json") for tier in profiles}
+    inputs = {f"local-{tier}.json": (digest(directory / f"local-{tier}.json")
+              if (directory / f"local-{tier}.json").is_file() else None) for tier in ('economy', 'balanced')}
     return {
         "mode": "OFFLINE_PROCUREMENT_EVIDENCE", "payments_sent": 0,
+        "profile_status": profile_status,
         "tool_version": TOOL_VERSION, "source_sha256": source_hashes, "profile_sha256": inputs,
         "required_success_rate": .95, "calibration_seeds": list(CALIBRATION_SEEDS),
         "evaluation_seeds": list(EVALUATION_SEEDS),
@@ -142,6 +157,7 @@ def save(report, directory):
     (directory / "procurement-evidence.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     baseline, challenges = report["baseline"], report["challenge_summary"]
     lines = ["# Procurement evidence", "", "Offline planning and real local tool execution. No payments sent.", "",
+             "Model profile status: " + report.get('profile_status', 'CURRENT') + ". Stale inputs cannot qualify a model; tool measurements are independent.", "",
              f"Bounded tools solved {baseline['true_correct']}/{baseline['steps']} generated tasks over five new seeds with no model calls or provider spend. CPU p50 {baseline['cpu_latency_p50_ms']:.4f} ms; p95 {baseline['cpu_latency_p95_ms']:.4f} ms (single local run).",
              "", baseline["cost_caveat"], "",
              f"Authored boundary cases: {challenges['passed']}/{challenges['cases']} expectations met; {challenges['resolved']} resolved and {challenges['review_required']} deliberately deferred for review. Review is not task completion or measured real-world accuracy.", "",
@@ -170,10 +186,12 @@ def summary(directory=ROOT / "bench/results"):
             raise ValueError("Incomplete profile provenance")
         if any(digest(ROOT / name) != value for name, value in report["source_sha256"].items()):
             raise ValueError("Evidence code or cases changed")
-        if any(digest(directory / name) != value for name, value in report["profile_sha256"].items()):
+        if any((digest(directory / name) if (directory / name).is_file() else None) != value
+               for name, value in report["profile_sha256"].items()):
             raise ValueError("Measured profile changed")
         return {"status": "CURRENT", **{k: report[k] for k in (
             "mode", "provider_gates", "challenge_summary", "planning_examples", "live_purchase_authorized")},
+                'profile_status': report.get('profile_status', 'CURRENT'),
                 "baseline": {k: v for k, v in report["baseline"].items() if k != "rows"}}
     except FileNotFoundError:
         return {"status": "NOT_RUN", "live_purchase_authorized": False}

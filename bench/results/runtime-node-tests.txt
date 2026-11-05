@@ -1,0 +1,246 @@
+TAP version 13
+# (node:17904) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: amounts and resource URLs reject rounding and unapproved protocols
+ok 1 - amounts and resource URLs reject rounding and unapproved protocols
+  ---
+  duration_ms: 1.4738
+  type: 'test'
+  ...
+# Subtest: quote guards reject wrong price, token, chain and deployment
+ok 2 - quote guards reject wrong price, token, chain and deployment
+  ---
+  duration_ms: 1.0301
+  type: 'test'
+  ...
+# Subtest: live quote records queue depth and completed latency sample count
+ok 3 - live quote records queue depth and completed latency sample count
+  ---
+  duration_ms: 0.6535
+  type: 'test'
+  ...
+# Subtest: SDK store and exclusive owner lock persist across reopen
+ok 4 - SDK store and exclusive owner lock persist across reopen
+  ---
+  duration_ms: 56.1091
+  type: 'test'
+  ...
+# Subtest: completed purchase is idempotent and terms cannot change
+ok 5 - completed purchase is idempotent and terms cannot change
+  ---
+  duration_ms: 34.3012
+  type: 'test'
+  ...
+# Subtest: lost delivery recovers paid receipt without a second payment
+ok 6 - lost delivery recovers paid receipt without a second payment
+  ---
+  duration_ms: 22.1378
+  type: 'test'
+  ...
+# Subtest: delivery recovery presents the existing paid proof without another purchase
+ok 7 - delivery recovery presents the existing paid proof without another purchase
+  ---
+  duration_ms: 23.4026
+  type: 'test'
+  ...
+# Subtest: unknown payment retains reservation and stops another purchase
+ok 8 - unknown payment retains reservation and stops another purchase
+  ---
+  duration_ms: 31.4866
+  type: 'test'
+  ...
+# Subtest: an authoritative SDK refusal permits only an identical unpaid reservation retry
+ok 9 - an authoritative SDK refusal permits only an identical unpaid reservation retry
+  ---
+  duration_ms: 25.1638
+  type: 'test'
+  ...
+# Subtest: pending payment recovery resends the exact original SDK invoice
+ok 10 - pending payment recovery resends the exact original SDK invoice
+  ---
+  duration_ms: 19.3771
+  type: 'test'
+  ...
+# Subtest: pending invoice for another URL is never replayed
+ok 11 - pending invoice for another URL is never replayed
+  ---
+  duration_ms: 21.6545
+  type: 'test'
+  ...
+# Subtest: pending invoice for another seller is never replayed
+ok 12 - pending invoice for another seller is never replayed
+  ---
+  duration_ms: 34.377
+  type: 'test'
+  ...
+# Subtest: budget and expiry block dispatch before an effect
+ok 13 - budget and expiry block dispatch before an effect
+  ---
+  duration_ms: 19.0518
+  type: 'test'
+  ...
+# Subtest: discovery uses pinned testnet facilitator and validates response
+ok 14 - discovery uses pinned testnet facilitator and validates response
+  ---
+  duration_ms: 0.5459
+  type: 'test'
+  ...
+# Subtest: hero cost refuses simulated, unreconciled, zero-correct and malformed evidence
+ok 15 - hero cost refuses simulated, unreconciled, zero-correct and malformed evidence
+  ---
+  duration_ms: 8.8225
+  type: 'test'
+  ...
+# Subtest: hero cost selects latest qualifying run and discloses mixed accounting
+ok 16 - hero cost selects latest qualifying run and discloses mixed accounting
+  ---
+  duration_ms: 1.3656
+  type: 'test'
+  ...
+# Subtest: server halt wins over running jobs and unfinished ignition
+ok 17 - server halt wins over running jobs and unfinished ignition
+  ---
+  duration_ms: 1.6117
+  type: 'test'
+  ...
+# Subtest: dashboard script parses after treasury integration
+ok 18 - dashboard script parses after treasury integration
+  ---
+  duration_ms: 2.7697
+  type: 'test'
+  ...
+# Subtest: treasury evidence renders before a banked purchase and keeps account labels
+ok 19 - treasury evidence renders before a banked purchase and keeps account labels
+  ---
+  duration_ms: 10.0296
+  type: 'test'
+  ...
+# Subtest: absent or failed treasury evidence clears old values and shows BLOCKED
+ok 20 - absent or failed treasury evidence clears old values and shows BLOCKED
+  ---
+  duration_ms: 3.6683
+  type: 'test'
+  ...
+# (node:15900) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shared funding ownership serializes deposits across distinct wallets
+ok 21 - shared funding ownership serializes deposits across distinct wallets
+  ---
+  duration_ms: 185.8594
+  type: 'test'
+  ...
+# Subtest: bridge refuses every monetary command without explicit boolean execute
+ok 22 - bridge refuses every monetary command without explicit boolean execute
+  ---
+  duration_ms: 2186.5759
+  type: 'test'
+  ...
+# Subtest: standalone CLI refuses money movement before network and wallet access
+ok 23 - standalone CLI refuses money movement before network and wallet access
+  ---
+  duration_ms: 1937.5604
+  type: 'test'
+  ...
+# Subtest: same x402 resource contract accepts unstructured invoice extraction without labels
+ok 24 - same x402 resource contract accepts unstructured invoice extraction without labels
+  ---
+  duration_ms: 6.4164
+  type: 'test'
+  ...
+# Subtest: three-task panel preserves BLOCKED state and escapes evidence
+ok 25 - three-task panel preserves BLOCKED state and escapes evidence
+  ---
+  duration_ms: 4.2123
+  type: 'test'
+  ...
+# Subtest: M4 faults bind the same source index to a named tier across policies
+ok 26 - M4 faults bind the same source index to a named tier across policies
+  ---
+  duration_ms: 2.5851
+  type: 'test'
+  ...
+# Subtest: invalid M4 fault schedules fail before serving any payment
+ok 27 - invalid M4 fault schedules fail before serving any payment
+  ---
+  duration_ms: 0.5409
+  type: 'test'
+  ...
+# (node:22012) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native fee reservations aggregate across transactions and account reopen
+ok 28 - native fee reservations aggregate across transactions and account reopen
+  ---
+  duration_ms: 2.4757
+  type: 'test'
+  ...
+# Subtest: unbounded fees and nonzero native transfers cannot be signed
+ok 29 - unbounded fees and nonzero native transfers cannot be signed
+  ---
+  duration_ms: 2.8082
+  type: 'test'
+  ...
+# Subtest: signer failure retains the reservation and prevents a replacement signature
+ok 30 - signer failure retains the reservation and prevents a replacement signature
+  ---
+  duration_ms: 1.593
+  type: 'test'
+  ...
+# Subtest: viem uses the guarded signer and refuses excess before producing a raw transaction
+ok 31 - viem uses the guarded signer and refuses excess before producing a raw transaction
+  ---
+  duration_ms: 66.4526
+  type: 'test'
+  ...
+# (node:15780) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: resource task digest binds the full input
+ok 32 - resource task digest binds the full input
+  ---
+  duration_ms: 9.9923
+  type: 'test'
+  ...
+# Subtest: paid delivery replays stored output without another model call
+ok 33 - paid delivery replays stored output without another model call
+  ---
+  duration_ms: 2.9832
+  type: 'test'
+  ...
+# Subtest: worker failure retains its receipt obligation and can retry CPU execution
+ok 34 - worker failure retains its receipt obligation and can retry CPU execution
+  ---
+  duration_ms: 3.4178
+  type: 'test'
+  ...
+# Subtest: hosted delivery never repeats a billable call after an uncertain failure
+ok 35 - hosted delivery never repeats a billable call after an uncertain failure
+  ---
+  duration_ms: 3.9775
+  type: 'test'
+  ...
+# Subtest: provider quotes bind queue-sensitive prices and load metadata
+ok 36 - provider quotes bind queue-sensitive prices and load metadata
+  ---
+  duration_ms: 4.0668
+  type: 'test'
+  ...
+# Subtest: quality-drop chaos changes a balanced invoice without hiding the aggregate
+ok 37 - quality-drop chaos changes a balanced invoice without hiding the aggregate
+  ---
+  duration_ms: 0.69
+  type: 'test'
+  ...
+# Subtest: dedicated funding wallet is preserved and never returned as private data
+ok 38 - dedicated funding wallet is preserved and never returned as private data
+  ---
+  duration_ms: 85.9607
+  type: 'test'
+  ...
+1..38
+# tests 38
+# suites 0
+# pass 38
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5254.5713

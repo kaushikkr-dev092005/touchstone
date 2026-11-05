@@ -108,6 +108,32 @@ class Evidence(unittest.TestCase):
         save(report, self.directory)
         self.assertEqual(summary(self.directory)["status"], "STALE_OR_INVALID")
 
+    def test_stale_profiles_cannot_disable_or_qualify_current_tool_results(self):
+        path = self.directory / 'local-economy.json'
+        profile = json.loads(path.read_text())
+        profile['source_sha256']['providers.py'] = 'stale'
+        path.write_text(json.dumps(profile))
+        report = build(self.directory)
+        self.assertEqual(report['baseline']['true_correct'], 1000)
+        self.assertEqual(report['profile_status'], 'BLOCKED_STALE_OR_INVALID')
+        self.assertEqual(len(report['provider_gates']), 6)
+        self.assertTrue(all(not row['eligible'] for row in report['provider_gates']))
+        save(report, self.directory)
+        self.assertEqual(summary(self.directory)['status'], 'CURRENT')
+
+    def test_missing_model_profile_keeps_tools_and_binds_the_absence(self):
+        path = self.directory / 'local-economy.json'
+        original = path.read_bytes()
+        path.unlink()
+        report = build(self.directory)
+        self.assertEqual(report['baseline']['true_correct'], 1000)
+        self.assertFalse(any(row['eligible'] for row in report['provider_gates']))
+        self.assertIsNone(report['profile_sha256']['local-economy.json'])
+        save(report, self.directory)
+        self.assertEqual(summary(self.directory)['status'], 'CURRENT')
+        path.write_bytes(original)
+        self.assertEqual(summary(self.directory)['status'], 'STALE_OR_INVALID')
+
     def test_evaluation_outputs_cannot_change_calibration(self):
         original = build(self.directory)
         path = self.directory / "local-balanced.json"

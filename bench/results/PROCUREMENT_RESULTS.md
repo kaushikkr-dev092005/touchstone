@@ -2,7 +2,9 @@
 
 Offline planning and real local tool execution. No payments sent.
 
-Bounded tools solved 1000/1000 generated tasks over five new seeds with no model calls or provider spend. CPU p50 0.0015 ms; p95 0.0021 ms (single local run).
+Model profile status: BLOCKED_STALE_OR_INVALID. Stale inputs cannot qualify a model; tool measurements are independent.
+
+Bounded tools solved 1000/1000 generated tasks over five new seeds with no model calls or provider spend. CPU p50 0.0017 ms; p95 0.0035 ms (single local run).
 
 No provider purchase. CPU, development, review and service costs are not priced; this is not a zero-total-cost claim.
 
@@ -10,12 +12,12 @@ Authored boundary cases: 24/24 expectations met; 6 resolved and 18 deliberately 
 
 | Provider | Task | Unique calibration sources | Consistently correct | Wilson lower bound | Screen |
 |---|---|---:|---:|---:|---|
-| economy | invoice | 20 | 4 | 8.1% | BELOW_QUALITY_TARGET |
-| economy | arithmetic | 20 | 0 | 0.0% | BELOW_QUALITY_TARGET |
-| economy | classification | 3 | 1 | 6.1% | INSUFFICIENT_UNIQUE_SOURCES |
-| balanced | invoice | 20 | 10 | 29.9% | BELOW_QUALITY_TARGET |
-| balanced | arithmetic | 20 | 0 | 0.0% | BELOW_QUALITY_TARGET |
-| balanced | classification | 3 | 3 | 43.9% | INSUFFICIENT_UNIQUE_SOURCES |
+| economy | invoice | 0 | 0 | 0.0% | BLOCKED_STALE_OR_INVALID_PROFILE |
+| economy | arithmetic | 0 | 0 | 0.0% | BLOCKED_STALE_OR_INVALID_PROFILE |
+| economy | classification | 0 | 0 | 0.0% | BLOCKED_STALE_OR_INVALID_PROFILE |
+| balanced | invoice | 0 | 0 | 0.0% | BLOCKED_STALE_OR_INVALID_PROFILE |
+| balanced | arithmetic | 0 | 0 | 0.0% | BLOCKED_STALE_OR_INVALID_PROFILE |
+| balanced | classification | 0 | 0 | 0.0% | BLOCKED_STALE_OR_INVALID_PROFILE |
 
 Screen target: 95% success and at least 20 unique calibration sources, separately for each task kind. No model has live purchase authorization.
 

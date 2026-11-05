@@ -19,11 +19,11 @@ The financial stress scenario uses three customer holds totaling $2.50 with only
 - Airwallex sandbox authentication and balance/Global Account reads.
 - Two local model profiles, an honest negative cheap-first cost result, a 1,000-case bounded-tool baseline, and a source-deduplicated eligibility screen.
 - Local failure tests for lost payment/capture responses, changed mandates, receipt mismatches, uncertain outcomes and unavailable withdrawal float.
-- A unified engine-facing Metal tier, queue-priced signed quotes, provider outage/quality chaos switches, and an abrupt process-kill recovery command. A quote-only live preflight and no-payment outage were exercised; there is still no paid engine run, quality-drop run or live kill/restart.
-- A separate Airwallex treasury path for wallet balances, FX quotes/conversions with unique request IDs, and wallet-history spend reconciliation; no live quote or conversion has been attempted.
+- A unified engine-facing Metal tier, queue-priced signed quotes, provider outage/quality chaos switches, and an abrupt process-kill recovery command. One paid engine call now survived hard process death after the rail receipt and repeated recovery without another payment; a live quality-drop comparison remains unrun.
+- A separate Airwallex treasury path for wallet balances, FX quotes/conversions with unique request IDs, and wallet-history spend reconciliation; one authorized 1.00 USD → 0.89 EUR sandbox conversion settled and matched wallet history.
 - An invoice consistency verifier using cited line arithmetic and a measured synthetic false-accept curve for a deliberately noisy checker.
 
-The actual Airwallex hold/capture is blocked by a merchant `configuration_error`. The latest read-only smoke has `account_context_configured=false`; hosted Checkout Sessions and FX access remain untested. The integrated workflow is implemented and tested with controlled adapters, but the full external banking loop is not yet demonstrated. No 30–50-step paid engine run, paid quality-drop run or real Metal kill/restart has been executed; the live outage check spent nothing. The unused 0.09 testnet USDZ was returned through a finalized non-deferred claim; the paid receipt remains preconfirmed. Keep these limits visible in the final submission unless later evidence supersedes them.
+Current independent proofs: sandbox FX write/read-back, hosted 1.00 USD authorization with 0.01 USD capture, and a single 0.01 USDZ engine call with live hard-kill/recovery. Its answer was rejected. The original historical 0.09 USDZ return is separate; the new 0.01 USDZ remainder was not withdrawn. Receipts are preconfirmed, not proven finally settled. No 30–50-step comparison or complete multi-customer external financial loop has run. Both M3 local models failed qualification on 180 synthetic sources each. [Current evidence and limits](RUNNING.md).
 
 ## Differentiation
 

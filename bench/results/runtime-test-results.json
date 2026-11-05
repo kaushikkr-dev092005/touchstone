@@ -1,0 +1,18 @@
+{
+  "label": "MEASURED",
+  "observed_at": 1793868413.3600779,
+  "python": {
+    "passed": true,
+    "tests": 224
+  },
+  "node": {
+    "passed": true,
+    "tests": 38
+  },
+  "financial_adapters": "CONTROLLED_FIXTURES",
+  "real_transactions_sent_by_tests": 0,
+  "log_sha256": {
+    "runtime-python-tests.txt": "a5ff2377ed5d124e9635114e887fbede99a4331a21d60f8b35b090db9db436a1",
+    "runtime-node-tests.txt": "8b0d57d20b69d04da07e8307a2bf0996b5be405c7caaa72efdc9df47e0ea8797"
+  }
+}

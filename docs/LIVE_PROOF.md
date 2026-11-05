@@ -1,5 +1,79 @@
 # Live integration evidence — 30 October 2026
 
+## Current update — 5 November 2026
+
+**MEASURED: M1's real write/read-back gate PASSED.** Exactly one sandbox FX
+conversion sold **1.00 USD for 0.89 EUR**, settled, and matched both wallet-history
+entries. Observed USD cash debit: exactly 1.00. Its request-ID index returned 404;
+the report explicitly records a bounded read-only scan matching the conversion ID.
+
+One separately authorized hosted card session completed **1.00 USD authorization**
+and **0.01 USD capture**. The intent is SUCCEEDED; 0.99 was left uncaptured by final
+partial capture. Issuer release/credit timing is **UNMEASURED**. Exactly one session
+create and one capture request occurred; no cancel request was needed. Both
+transaction approvals are consumed. Historical native PaymentIntent errors do not
+establish the current account's hosted entitlement.
+
+Evidence: [FX](../bench/results/m1/live-fx-single-conversion.json),
+[separate treasury accounts](../bench/results/m1/live-treasury-job.json),
+[closed hosted authorization](../bench/results/m1/current-hosted-card-proof.json).
+Airwallex and Metal remain separate; the treasury demo-token entry is SIMULATED.
+Treasury audit head: `1855dc7889c605a2a406bb6cfa2df5a54ec544f7317869178ddbf86cae873e6c`.
+
+Fixes cover supported smoke pagination, token reuse, strict official sandbox-host
+validation, completed-capture read-back, account-bound readiness and exact FX-source
+reconciliation. Controlled regression tests exercise each path. No runtime dependency
+was added. [Current validation](VALIDATION.md).
+
+Allowed: these sandbox writes and their read-backs. Not allowed: issuer refund timing,
+an integrated three-customer banking run, enabled native checkout, a real hold increase,
+or a fiat/token bridge. No further M1 transaction is authorized or needed for this proof.
+
+**MEASURED: the single-call live integration and live crash/recovery gates PASSED.**
+This is one integration probe, not the full multi-job/30–50-step paid milestone.
+
+- One approved **0.02 USDZ** deposit funded `m2-live-single-20261105-j1`, using the
+  existing EVM funding wallet on chain **63825**. Both funding transactions succeeded.
+  Actual native fees totaled **451,768 wei**, below the **10^15 wei** aggregate cap.
+  The signer reserved gas-limit × max-fee exposure durably before signing; its cap
+  is immutable and survives process death. This optional guard was used for this deposit.
+- A pre-dispatch provider-ID mismatch paused with zero attempts and zero payments.
+  The existing `metal-provider` seller was configured to match the unchanged probe
+  policy. The same scope, task, mandate version, origin and caps were preserved;
+  no financial safety control or eligibility threshold was changed.
+- The unified engine purchased **one 0.01 USDZ inference** and exited **86** at
+  `after_rail`, before its local payment commit. Recovery attached the original
+  receipt to the reservation. Repeating recovery left **one invoice, one receipt,
+  zero pending attempts and zero new payments**.
+- Operator and payer signatures, incremental invoice and the operator's retained
+  receipt journal passed SDK verification. Original invoice, signed receipt and
+  delivery remain in the ignored wallet store; public evidence contains hashes.
+- The answer was **VERIFIED_FAIL**, not useful inference. Provider spend is real;
+  the **0.001 internal checking charge is SIMULATED**. Customer mandates/capture
+  in this probe are SIMULATED, with no Airwallex action and no withdrawal.
+- Remaining operator-estimated clearing spendability: **0.01 USDZ**. Receipt status
+  is **preconfirmed**; final on-chain purchase settlement is **not verified**.
+
+Evidence: [final result](../bench/results/m2/live-single-call-final.json),
+[funding](../bench/results/m2/live-capped-funding.json),
+[before dispatch](../bench/results/m2/live-before-dispatch.json),
+[hard process exit](../bench/results/m2/live-paid-kill-boundary.json),
+[recovery](../bench/results/m2/live-single-call-recovered.json),
+[repeat recovery](../bench/results/m2/live-repeat-recovery.json),
+[receipt verification](../bench/results/m2/live-receipt-verification.json).
+Final printed audit head (19 events):
+`72d6c9f1d1741925a79c239336f863f06a92ecab0fb70e56881020c78748ac53`.
+
+Allowed: one paid engine attempt, verified receipt/accounting and no observed duplicate
+in this live crash/recovery test. Not allowed: universal exactly-once guarantees,
+final settlement, model qualification, concurrent live customers or a paid comparison.
+The single purchase and deposit approvals are consumed. Further funding/purchases,
+hosted usage and withdrawals require separate explicit written caps. Local dashboard,
+balanced model and the `local-gpu` seller were restored after the isolated probe.
+No dependency or pinned SDK version changed. [Validation](VALIDATION.md).
+
+## Historical observations
+
 M2 update, 3 November: **no new live financial evidence**. [Current local preflight](../bench/results/m2/local-preflight.json) finds the existing signer and RPC through the normal local loader, correcting the earlier environment-only diagnosis. The RPC check fails and provider origin is unset, so execution stops without a purchase. The written one-call cap of 0.05 USDZ remains recorded. New concurrency, dispatch and process-kill recovery results are **MOCK**, not live Metal proof. See [M2 implementation report](M2_REPORT.md).
 
 M1 update, 2 November: **no new live financial evidence**. The environment-only doctor could not see the required Airwallex variables in the agent process and made no API requests. The user reports local setup in another terminal. A new treasury job lifecycle and scope-retirement path passed controlled-adapter tests; their saved proof is **MOCK**. No private historical scope was read or retired. See [M1 report](M1_REPORT.md) and [support draft](AIRWALLEX_SUPPORT_REQUEST.md).

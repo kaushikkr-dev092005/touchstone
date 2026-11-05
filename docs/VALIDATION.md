@@ -1,5 +1,38 @@
 # Validation record
 
+## Current validation ? 5 November 2026
+
+**MEASURED local Windows:** 224 Python tests and 38 pinned-Node tests passed.
+[Counts/log hashes](../bench/results/runtime-test-results.json),
+[Python log](../bench/results/runtime-python-tests.txt),
+[Node log](../bench/results/runtime-node-tests.txt).
+Tests use controlled financial adapters and send no real transactions. New regressions
+cover exact official sandbox checkout hosts, completed-capture read-back, account-bound
+readiness, bounded FX-history reconciliation, independent tool results with stale/missing
+model profiles, startup secret isolation and immutable native signing-fee caps.
+
+**MEASURED browser QA / SIMULATED financial run:** desktop and 390px mobile pass;
+start/halt/resume/close, SSE/session/Host/Origin controls and planning decisions pass,
+with no page errors or horizontal overflow.
+[Browser result](../bench/results/runtime-browser-validation.json).
+The restarted dashboard reports the completed sandbox FX/capture; local model and
+seller health pass. Startup itself sends no financial operation or hosted call.
+
+**MEASURED heuristic secret scan:** full local history has zero findings and zero
+sensitive committed paths. Five redacted working-tree findings are confined to the
+user-edited `.env.example`; it remains excluded from these commits and is never loaded
+by the project launcher. Private data is excluded, and this heuristic is not proof of
+absence of every secret. [Redacted scan](../bench/results/runtime-secret-scan.json).
+Concurrent user frontend changes are preserved and excluded from these commits.
+No new Python runtime dependency or Node dependency was added.
+
+Separate authorized live evidence: [M1 sandbox FX/card](M1_REPORT.md),
+[M2 one-call hard-kill/recovery](M2_REPORT.md). These are not test-suite side effects.
+Both local M3 models have 180 measured calls each and fail qualification; their sources
+remain SIMULATED. Hosted CI for these new commits is not claimed.
+
+## Historical validation records
+
 M3 hosted CI: **MEASURED** all four Ubuntu/Windows × Python 3.11/3.12 jobs passed for implementation commit `7b4c616`, including the full-history heuristic secret scan on a clean checkout. [CI run](https://github.com/kaushikkr-dev092005/touchstone/actions/runs/41609109102) · [metadata](../bench/results/m3/ci.json). No external financial operations ran.
 
 M3 update, 3 November: **MEASURED local tests** — 177 Python and 29 Node tests pass. **SIMULATED corpus:** 180 unique invoice sources, fixed 120 calibration/60 held-out split by layout/vendor. **MEASURED parser baseline:** 24 extractions (13.3%), 156 abstentions, zero observed false accepts; 12 extracted cases still require exception review. **BLOCKED:** both local health checks failed, zero current M3 model measurements/eligible models, zero live purchases. **MOCK:** paid-reference accounting and retained uncertain reservations. Wilson thresholds are unchanged. The redacted history scan has no findings; five working-tree findings are confined to the user's `.env.example` edit, excluded from the M3 commit. [M3 report](M3_REPORT.md), [raw evidence](../bench/results/m3/report.json), [runbook](M3_RUNBOOK.md). Earlier model profiles belong to a different task/checker and are historical.

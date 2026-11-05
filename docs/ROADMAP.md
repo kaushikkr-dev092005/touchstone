@@ -6,7 +6,9 @@ The official event page (fetched 2 November 2026) lists build completion on **15
 
 The [current Airwallex developer-lab guide](https://airwallexdev.com/guide) maps the three-job, short-float inference sourcing story to **Kit 12**. Its **Kit 11** asks for spending-limit rebalancing when upstream prices rise and a dispute settled from signed orders. This project has a simulated, versioned human approval flow and one real signed x402 receipt, but no end-to-end Kit 11 dispute settlement or live limit rebalance. Do not claim Kit 11 as completed until those behaviors are implemented and evidenced.
 
-## Done (as of 3 November 2026)
+## Done (updated 5 November 2026)
+
+Current additions: M1 sandbox FX and hosted capture verified; M2 one-call paid engine and hard-kill/recovery verified; both M3 local profiles measured and refused. See [current evidence](RUNNING.md).
 
 A checked item is not a live-service completion claim; see VALIDATION.md and LIVE_PROOF.md for exactly what ran.
 
@@ -53,10 +55,10 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 - [x] M0 complete: README status labels, Bash equivalents, 133 local Python tests and 21 Node tests pass; all four GitHub Actions jobs on Ubuntu/Windows with Python 3.11/3.12 pass for `b8819d7`. See [M0 report](M0_REPORT.md).
 - [x] MEASURED history scan: no secret-pattern findings or sensitive committed paths in the reported heuristic scope. Ignored private data is excluded; this is not a guarantee that no secret exists.
 - [x] Repository is public (verified through the GitHub API on 2 November 2026).
-- [x] M1 implementation and documented-blocker exit: environment-only doctor, guarded FX job accounting with separate demo USDZ, definitive create rejection/consumed-ID handling, evidence-based scope retirement, visible treasury stages, controlled tests and support draft. [M1 report](M1_REPORT.md). No live FX or acquiring write is claimed.
+- [x] M1 implementation and documented-blocker exit: environment-only doctor, guarded FX job accounting with separate demo USDZ, definitive create rejection/consumed-ID handling, evidence-based scope retirement, visible treasury stages, controlled tests and support draft. [M1 report](M1_REPORT.md). One sandbox FX write/read-back and one hosted authorization/capture are now measured; earlier blocker observations are historical.
 
-- [x] M3 implementation and honest refusal evidence: 180 template-split synthetic sources, measured 13.3% parser coverage, citation/integer checker, local/hosted profilers, paid-reference accounting and three-task panel. Zero current M3 model measurements or eligible models; no useful paid inference claim. [M3 report](M3_REPORT.md).
-- [x] M2 implementation and controlled recovery/invariant evidence are complete; its live gate remains open. [M2 report](M2_REPORT.md).
+- [x] M3 implementation and honest refusal evidence: 180 template-split synthetic sources, measured 13.3% parser coverage, citation/integer checker, local/hosted profilers, paid-reference accounting and three-task panel. Both local models measured on 180 sources each; zero eligible models; no useful paid inference claim. [M3 report](M3_REPORT.md).
+- [x] M2 implementation and controlled recovery/invariant evidence are complete; its single-call live integration and hard-kill/recovery gates now pass; concurrent live jobs remain unmeasured. [M2 report](M2_REPORT.md).
 
 - [x] M4 implementation: matched tools/cheapest/premium/qualified-ladder runner, capped durable dispatch, shared seller fault schedule, raw scoring, cost/latency tables and environment manifest. Controlled evidence is MOCK; no new live purchases. [M4 report](M4_REPORT.md).
 
@@ -64,9 +66,9 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 
 - [ ] M4 live gate: ready sellers and a dedicated funded scope, new aggregate purchase/hosted-credit approval, then 30–50 real paid calls and fault/reconciliation evidence. The proposed setup currently fails readiness. [M4 runbook](M4_RUNBOOK.md).
 
-- [ ] M3 actual model measurements: operator starts the local tiers; hosted credentials/partner credits and a new aggregate paid-study cap remain human gates. Useful inference on representative sources is unproven. The historical profiles cannot qualify this new task/checker.
+- [ ] M3 useful inference: both measured local tiers failed the unchanged qualification gate. Hosted credentials/partner credits and a separate paid-study cap remain human gates. The negative-result exit is met; useful inference is unproven.
 
-- [ ] M2 live gate remains BLOCKED: implementation and controlled evidence are complete ([report](M2_REPORT.md)); the authorized single call and live kill/restart have not run because the current RPC check fails and provider URL is unset. MEASURED local suite: 162 Python / 27 Node tests. No additional spend approval is needed for the same one-call cap.
+- [ ] Full M2/M4 live scale: one-call Metal integration/recovery passed; a larger concurrent/30–50-step study needs fresh funding/purchase/upstream approvals and eligible models. Existing one-purchase and deposit approvals are consumed.
 
 - [ ] Validate a real sandbox authorization/capture: direct PaymentIntent creation returns `configuration_error` (BLOCKED, external merchant configuration); hosted Checkout Sessions access is untested.
 - [ ] Set `AIRWALLEX_ACCOUNT_ID` and the Transactional FX Conversion Write scope, then run one approved sandbox FX conversion and reconcile both wallet-history entries (needs human gate and a stated cap).
