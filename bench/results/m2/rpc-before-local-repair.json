@@ -1,0 +1,10 @@
+{
+  "label": "MEASURED",
+  "https": true,
+  "expected_rpc_host": true,
+  "embedded_login": false,
+  "transactions_sent": 0,
+  "http_status": 401,
+  "single_request_passed": false,
+  "observation_stage": "BEFORE_LOCAL_RPC_REPAIR"
+}

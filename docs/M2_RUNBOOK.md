@@ -1,5 +1,22 @@
 # M2 operator runbook
 
+**5 November: the approved single-call proof is complete; do not rerun its funding or purchase.**
+See [M2 current evidence](M2_REPORT.md) and [final redacted result](../bench/results/m2/live-single-call-final.json).
+Both the one-purchase approval and separate deposit approval are consumed.
+Scope `m2-live-single-20261105` retains one rejected paid invoice and 0.01 USDZ of
+operator-estimated spendability. Recovery-only uses the same scope:
+
+```text
+python -m touchstone metal-batch recover --scope m2-live-single-20261105 --integration-probe --execute
+```
+
+This is recovery of the original invoice, not permission for another purchase.
+The dedicated probe policy requires seller ID `metal-provider`; the ordinary
+M3/M4 launcher uses `local-gpu`. Keep the saved provider identity and origin when
+recovering. Do not change policy to overcome an incompatible seller.
+
+## Historical runbook — commands below are not new authorization
+
 The user approved **exactly one** inference purchase on Metal testnet chain **63825**, maximum aggregate expenditure **0.05 USDZ including protocol and verification charges**. This is not approval for deposits, withdrawals, extra calls or a 30–50-step trial. The call can be used for the requested `after_rail` crash/recovery demonstration without buying a second call.
 
 Current state: **BLOCKED**. The existing funding key and RPC configuration load locally, but the RPC check fails and no provider URL is configured. No transaction was executed. Earlier environment-only checks missed the existing wallet fallback; do not generate a replacement funding wallet. See [preflight evidence](../bench/results/m2/local-preflight.json).

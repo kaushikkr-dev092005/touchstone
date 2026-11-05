@@ -1,0 +1,52 @@
+{
+  "label": "MEASURED",
+  "observed_at": 1793867968.4808059,
+  "scope": "m2-live-single-20261105",
+  "single_call_integration_gate": "PASSED",
+  "live_crash_recovery_gate": "PASSED",
+  "paid_calls": 1,
+  "new_payments_on_repeat_recovery": 0,
+  "receipt_unchanged": true,
+  "provider_spend_usdz": "0.01",
+  "internal_check_charge_usd": "0.001",
+  "check_charge_label": "SIMULATED",
+  "remaining_spendable_usdz": "0.01",
+  "balance_assurance": "operator-estimate",
+  "balance_finalized": false,
+  "funding_native_fee_cap_wei": "1000000000000000",
+  "actual_native_fee_wei": "451768",
+  "funding_transactions": [
+    {
+      "tx": "0x887aff0312e4441a34faf1e44ee4db614b438e80e3ffe513b21de10a35e45875",
+      "success": true,
+      "block_number": 16486153,
+      "gas_used": 46377,
+      "effective_gas_price_wei": 1,
+      "fee_wei": 46377
+    },
+    {
+      "tx": "0xb8d789b4fecd024791cdd054e8333febeb3e296a44445c4ce52480ca2d181d45",
+      "success": true,
+      "block_number": 16486263,
+      "gas_used": 405391,
+      "effective_gas_price_wei": 1,
+      "fee_wei": 405391
+    }
+  ],
+  "funding_native_fee_cap_respected": true,
+  "output_verified_correct": false,
+  "verdict": "VERIFIED_FAIL",
+  "customer_mandates": "SIMULATED",
+  "customer_captured": 0,
+  "airwallex_operation_in_this_run": false,
+  "withdrawals": 0,
+  "receipt_status": "preconfirmed",
+  "final_onchain_settlement_verified": false,
+  "receipts_reconciled": true,
+  "repeat_recovery_audit": {
+    "valid": true,
+    "events": 19,
+    "head": "72d6c9f1d1741925a79c239336f863f06a92ecab0fb70e56881020c78748ac53"
+  },
+  "original_artifacts_preserved": true
+}

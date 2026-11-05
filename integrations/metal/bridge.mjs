@@ -18,6 +18,7 @@ try {
   if (!/^[A-Za-z0-9_-]{1,48}$/.test(request.job || '')) throw Error('Invalid job');
   const config = { directory: resolve(root, 'data/metal', request.job), rpcUrl: process.env.METAL_RPC_URL,
     providerUrl: request.provider_url, privateKey: process.env.AGENT_PRIVATE_KEY,
+    nativeGasCapWei: request.native_gas_cap_wei,
     maxPrice: request.max_price, budget: request.budget };
   let result;
   if (request.command === 'funding-status') {

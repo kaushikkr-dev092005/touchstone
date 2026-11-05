@@ -1,0 +1,26 @@
+{
+  "label": "MEASURED",
+  "signatures_and_incremental_invoice_verified": true,
+  "clearing_operator_journal_verified": true,
+  "receipt_status": "preconfirmed",
+  "onchain_purchase_transaction": null,
+  "final_onchain_settlement_verified": false,
+  "reservation_key": "2000411f3bde238310ea6f47c6ed9028f2be82f676fe20acc9b2af4bc6225a1a",
+  "receipt_id": "0xd4a3a90d933956f80d85346f11117ab0f6873933d16370f5c72351f1c62e3dd4:9f28b42c-09dd-42a6-9b58-9382a0562a62",
+  "invoice_amount_base_units": "10000000000000000",
+  "sdk_payments": 1,
+  "pending_invoice": false,
+  "delivery_state": "DELIVERED",
+  "original_invoice_sha256": "08318e3a6e6a5363a05da8d56d57689ae52870cc1cf421e4cb4a100a57584d42",
+  "signed_receipt_sha256": "ad62b00c2378234a697e9d8e4d8b9e593d15d5f4d383043d6178da960c25c5aa",
+  "original_delivery_sha256": "6bdc0cbb7aa302112df7e6fca3f852339f0ff486378d3e6e36d757bb415726c8",
+  "original_invoice_preserved": true,
+  "signed_receipt_preserved": true,
+  "original_delivery_preserved": true,
+  "native_budget": {
+    "maximum_wei": "1000000000000000",
+    "reserved_wei": "1100000"
+  },
+  "private_key_queried": false,
+  "transactions_sent": 0
+}

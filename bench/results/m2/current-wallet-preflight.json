@@ -1,0 +1,30 @@
+{
+  "label": "MEASURED",
+  "scope": "funded-proof-001",
+  "transactions_sent": 0,
+  "payments_sent": 0,
+  "money_moved": false,
+  "rpc": {
+    "mode": "READ_ONLY",
+    "connected": true,
+    "chain_id": 63825,
+    "block_number": 15745215,
+    "client_version": "reth/v2.4.0-VERGEN_/x86_64-unknown-linux-gnu",
+    "endpoint_disclosed": false,
+    "transactions_sent": 0
+  },
+  "funding": {
+    "chain_id": 63825,
+    "expected_wallet_matches": true,
+    "has_gas": true,
+    "has_tokens": true
+  },
+  "clearing": {
+    "spendable_base_units": "0",
+    "historical_payments": 1,
+    "pending_invoice": false,
+    "assurance": "operator-estimate",
+    "finalized": false
+  },
+  "single_call_ready": false
+}

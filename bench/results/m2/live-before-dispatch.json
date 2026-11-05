@@ -1,0 +1,21 @@
+{
+  "label": "MEASURED",
+  "observed_at": 1793867831.1507597,
+  "scope": "m2-live-single-20261105",
+  "chain": 63825,
+  "provider": "metal-provider",
+  "price_micro_usdz": 10000,
+  "spendable_base_units": "20000000000000000",
+  "historical_payments": 0,
+  "pending_invoice": false,
+  "previous_attempts": 0,
+  "mandate_version": 1,
+  "terms_unchanged": true,
+  "policy_unchanged": true,
+  "action": "OPERATOR_RESUME_AFTER_COMPATIBLE_SELLER_CONFIGURATION",
+  "audit": {
+    "valid": true,
+    "events": 8,
+    "head": "83d826a6eb11ba94293ab0388cfa802b446a1ba01e67256c986f7f157fa50aaa"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "label": "MEASURED",
+  "observed_at": 1793867850.5703373,
+  "scope": "m2-live-single-20261105",
+  "kill_at": "after_rail",
+  "exit_code": 86,
+  "expected_exit_code": 86,
+  "hard_process_death_observed": true
+}

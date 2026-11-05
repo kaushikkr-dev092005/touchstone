@@ -1,0 +1,37 @@
+{
+  "label": "BLOCKED",
+  "scope": "m2-live-single-20261105",
+  "run_id": "be79c750a3d8",
+  "terms": {
+    "aggregate": 20000,
+    "budget": 20000,
+    "cap": 10000,
+    "jobs": 1,
+    "origin": "http://127.0.0.1:8092",
+    "purpose": "INTEGRATION_PROBE",
+    "seed": 42,
+    "steps": 1
+  },
+  "wallets": [
+    {
+      "scope": "m2-live-single-20261105",
+      "job_id": "be79c750a3d8-1",
+      "wallet": "m2-live-single-20261105-j1",
+      "phase": "UNFUNDED",
+      "account": null
+    }
+  ],
+  "funded": false,
+  "paid_attempts": [],
+  "pending_attempts": 0,
+  "customer_mandates": "SIMULATED",
+  "customer_captured": 0,
+  "automatic_withdrawals": false,
+  "verification_fees": "SIMULATED internal charge; not a paid external check",
+  "audit": {
+    "valid": true,
+    "events": 2,
+    "head": "eef9bcf35d0caee08fbf9c2a2193999bd4c05e678061da8ccc1d0d64d27a9978"
+  },
+  "live_gate": "Requires written testnet cap, provider and funded wallets"
+}

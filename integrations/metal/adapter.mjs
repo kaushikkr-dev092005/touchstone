@@ -3,6 +3,7 @@ import { createPublicClient, http } from 'viem';
 import { privateKeyToAccount, generatePrivateKey } from 'viem/accounts';
 import { openWallet, openFundingOwner } from './wallet.mjs';
 import { encodePaymentSignatureHeader, readLimitedText } from '@x402/core/http';
+import { gasCappedAccount } from './native-budget.mjs';
 
 export const NETWORK = 'eip155:63825';
 const UNIT = 10n ** 12n;
@@ -250,8 +251,10 @@ export async function deposit(config, dollars) {
     const prior = client.wallet.db.prepare("SELECT value FROM settings WHERE key='deposit'").get();
     if (prior) throw Error('This wallet already has a deposit record; inspect its transaction before any further deposit');
     client.wallet.db.prepare("INSERT INTO settings VALUES('deposit',?)").run(json({ state: 'IN_FLIGHT', amount: value }));
+    const original = privateKeyToAccount(config.privateKey);
+    const from = config.nativeGasCapWei === undefined ? original : gasCappedAccount(original, client.wallet.db, config.nativeGasCapWei);
     const result = await sdk.depositToClearing({ rpcUrl: config.rpcUrl, chainId: 63825,
-      from: privateKeyToAccount(config.privateKey), settlement: client.deployment.settlement,
+      from, settlement: client.deployment.settlement,
       asset: sdk.USDZ.address, account: client.wallet.signer.publicKey, amount: value });
     client.wallet.db.prepare("UPDATE settings SET value=? WHERE key='deposit'").run(json({ state: 'BROADCAST', amount: value, ...result }));
     return { mode: 'TESTNET', ...result, spendable_confirmed: false };

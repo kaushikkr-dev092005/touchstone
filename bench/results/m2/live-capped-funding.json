@@ -1,0 +1,30 @@
+{
+  "label": "MEASURED",
+  "scope": "m2-live-single-20261105",
+  "deposit_cap_usdz": "0.02",
+  "native_fee_cap_wei": "1000000000000000",
+  "deposits_requested": 1,
+  "purchases_sent": 0,
+  "automatic_retries": 0,
+  "deposit": {
+    "mode": "TESTNET",
+    "approveTx": "0x887aff0312e4441a34faf1e44ee4db614b438e80e3ffe513b21de10a35e45875",
+    "depositTx": "0xb8d789b4fecd024791cdd054e8333febeb3e296a44445c4ce52480ca2d181d45",
+    "spendable_confirmed": false
+  },
+  "funded": true,
+  "wallets": [
+    {
+      "scope": "m2-live-single-20261105",
+      "job_id": "be79c750a3d8-1",
+      "wallet": "m2-live-single-20261105-j1",
+      "phase": "FUNDED",
+      "account": "0x0240a959a67536815356c3b11910b79d020bbf25fb5294f965365eb65118ef22ad"
+    }
+  ],
+  "audit": {
+    "valid": true,
+    "events": 4,
+    "head": "e00fbdc98532e5285df25443744708d1c22b26de4b5b1774167f24a16347e771"
+  }
+}
