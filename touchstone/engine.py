@@ -19,14 +19,14 @@ class Engine:
     def __init__(self, ledger, rail):
         self.ledger, self.rail = ledger, rail
 
-    def create_demo(self, seed=42, count=24):
+    def create_demo(self, seed=42, count=24, failed_call_policy='CUSTOMER_PAYS'):
         specs = []
         for offset, hold in enumerate([1000000, 750000, 750000]):
             tasks, _ = generate(seed + offset, count)
             specs.append({"seed": seed + offset, "policy": "touchstone", "hold": hold,
                           "price_cap": 60000, "allocation": 300000,
                           "tasks": [t.public() for t in tasks]})
-        return self.ledger.create_run(specs, 1500000)
+        return self.ledger.create_run(specs, 1500000, failed_call_policy=failed_call_policy)
 
     def _jobs(self, run_id=None, job_id=None):
         jobs = self.ledger.jobs(run_id)
@@ -223,7 +223,9 @@ class Engine:
         with self.ledger.connect() as db:
             runs = [dict(r) for r in db.execute("SELECT * FROM runs ORDER BY rowid DESC")]
             halted = bool(db.execute("SELECT halted FROM control").fetchone()[0])
+        from .financials import summarize
         return {"jobs": jobs, "runs": runs, "halted": halted,
+                "financials":summarize(jobs,attempts,runs,self.rail.mode),
                 "attempts": [{**{k: a[k] for k in ("job_id", "step_id", "attempt", "state", "provider", "price", "verify_cost", "score", "reason", "receipt")},
                               "provider_metadata": json.loads(a["provider_metadata"]) if a.get("provider_metadata") else None}
                              for a in attempts[-80:]],

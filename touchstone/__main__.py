@@ -46,6 +46,7 @@ def main():
     demo = commands.add_parser("demo", help="Run the three-job short-float scenario")
     demo.add_argument("--data-dir", default="data")
     demo.add_argument("--seed", type=int, default=42)
+    demo.add_argument('--failed-call-policy', choices=['CUSTOMER_PAYS','MERCHANT_ABSORBS'], default='CUSTOMER_PAYS')
     metal_engine = commands.add_parser("engine-metal", help="Run the engine with its explicit real Metal testnet provider tier")
     metal_engine.add_argument("--scope", required=True, help="Stable testnet wallet/job scope; reuse after interruption")
     metal_engine.add_argument("--steps", type=int, default=30)
@@ -255,7 +256,7 @@ def main():
             from .ledger import Ledger
             from .payments import MockRail
             engine = Engine(Ledger(Path(args.data_dir) / "ledger.sqlite"), MockRail(Path(args.data_dir) / "rail.sqlite"))
-            print(json.dumps(engine.run(engine.create_demo(args.seed)), indent=2))
+            print(json.dumps(engine.run(engine.create_demo(args.seed, failed_call_policy=args.failed_call_policy)), indent=2))
         elif args.command == 'metal-batch':
             from .metal_batch import MetalBatch
             from .config import ROOT

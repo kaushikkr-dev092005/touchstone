@@ -1,0 +1,95 @@
+{
+  "label": "SIMULATED",
+  "implementation_execution": "MEASURED",
+  "runs": [
+    {
+      "label": "SIMULATED",
+      "policy": "CUSTOMER_PAYS",
+      "hold_total_micro_usd": 2500000,
+      "initial_float_micro_usd": 1500000,
+      "financials": {
+        "run_id": "07d89f6e8ee9",
+        "label": "SIMULATED",
+        "provider_spend_label": "SIMULATED",
+        "failed_call_policy": "CUSTOMER_PAYS",
+        "customer_captured_micro_usd": 1454000,
+        "provider_spend_micro_usd": 1390000,
+        "check_fees_micro_usd": 64000,
+        "absorbed_failures_micro_usd": 0,
+        "billable_completed_work_micro_usd": 1454000,
+        "uncaptured_billable_micro_usd": 0,
+        "modeled_margin_micro_usd": 0,
+        "check_fees_label": "SIMULATED_INTERNAL_COST",
+        "upstream_energy_human_costs_included": false,
+        "refunds_executed": 0,
+        "acknowledged_credit_is_not_a_refund": true
+      },
+      "reconciliation": {
+        "matched": true,
+        "ledger_provider_total": 1390000,
+        "rail_total": 1390000,
+        "verification_total": 64000,
+        "customer_captured": 1454000,
+        "pending": 0,
+        "mismatches": [],
+        "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+        "mode": "SIMULATED"
+      },
+      "audit": {
+        "valid": true,
+        "events": 351,
+        "head": "98a2822cf8769a81ba59b2642cd2bea7a657858b958b8f219ccf0e15fba519cb"
+      },
+      "invariants": {
+        "budget_and_float_limits": "ENFORCED_BY_LEDGER",
+        "all_jobs_closed": true
+      }
+    },
+    {
+      "label": "SIMULATED",
+      "policy": "MERCHANT_ABSORBS",
+      "hold_total_micro_usd": 2500000,
+      "initial_float_micro_usd": 1500000,
+      "financials": {
+        "run_id": "15f848ec90a4",
+        "label": "SIMULATED",
+        "provider_spend_label": "SIMULATED",
+        "failed_call_policy": "MERCHANT_ABSORBS",
+        "customer_captured_micro_usd": 1244000,
+        "provider_spend_micro_usd": 1390000,
+        "check_fees_micro_usd": 64000,
+        "absorbed_failures_micro_usd": 210000,
+        "billable_completed_work_micro_usd": 1244000,
+        "uncaptured_billable_micro_usd": 0,
+        "modeled_margin_micro_usd": -210000,
+        "check_fees_label": "SIMULATED_INTERNAL_COST",
+        "upstream_energy_human_costs_included": false,
+        "refunds_executed": 0,
+        "acknowledged_credit_is_not_a_refund": true
+      },
+      "reconciliation": {
+        "matched": true,
+        "ledger_provider_total": 1390000,
+        "rail_total": 1390000,
+        "verification_total": 64000,
+        "customer_captured": 1244000,
+        "pending": 0,
+        "mismatches": [],
+        "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+        "mode": "SIMULATED"
+      },
+      "audit": {
+        "valid": true,
+        "events": 351,
+        "head": "6c0a0008a19e31c044bcc1f72bc6f4e64ad1ad1d99340990532e356b5b9eebbb"
+      },
+      "invariants": {
+        "budget_and_float_limits": "ENFORCED_BY_LEDGER",
+        "all_jobs_closed": true
+      }
+    }
+  ],
+  "external_transactions": 0,
+  "credit_acknowledgements_netted_against_cash": false,
+  "fiat_token_bridge": false
+}

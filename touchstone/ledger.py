@@ -84,6 +84,11 @@ class Ledger:
             run_columns = {r['name'] for r in db.execute('PRAGMA table_info(runs)')}
             if 'float_mode' not in run_columns:
                 db.execute("ALTER TABLE runs ADD COLUMN float_mode TEXT NOT NULL DEFAULT 'SIMULATED'")
+            if 'failed_call_policy' not in run_columns:
+                db.execute("ALTER TABLE runs ADD COLUMN failed_call_policy TEXT NOT NULL DEFAULT 'CUSTOMER_PAYS'")
+            db.executescript('''CREATE TRIGGER IF NOT EXISTS billing_policy_immutable
+                BEFORE UPDATE OF failed_call_policy ON runs WHEN NEW.failed_call_policy<>OLD.failed_call_policy
+                BEGIN SELECT RAISE(ABORT,'Billing policy is immutable for this run'); END;''')
 
     def connect(self):
         db = sqlite3.connect(self.path, timeout=15, isolation_level=None, factory=ClosingConnection)
@@ -134,7 +139,10 @@ class Ledger:
                     db.execute('UPDATE worker_leases SET active=0 WHERE job_id=? AND token=?', (job_id, token))
                     self._event(db, 'WORKER_RELEASED', {'job_id': job_id, 'token': token})
 
-    def create_run(self, specs, float_total=1500000, float_mode='SIMULATED'):
+    def create_run(self, specs, float_total=1500000, float_mode='SIMULATED', failed_call_policy='CUSTOMER_PAYS'):
+        from .financials import POLICIES
+        if type(failed_call_policy) is not str or failed_call_policy not in POLICIES or (float_mode!='SIMULATED' and failed_call_policy!='CUSTOMER_PAYS'):
+            raise ValueError('Billing policy must be supported; merchant absorption is a simulated customer contract only')
         if float_mode not in {'SIMULATED', 'TESTNET'}:
             raise ValueError('Unsupported float mode')
         if type(float_total) is not int or float_total <= 0:
@@ -143,7 +151,7 @@ class Ledger:
         if not specs or sum(s["allocation"] for s in specs) > float_total:
             raise PolicyError("Initial allocations exceed the run's float")
         with self.tx() as db:
-            db.execute("INSERT INTO runs(id,float_total,float_mode) VALUES(?,?,?)", (run_id, float_total, float_mode))
+            db.execute("INSERT INTO runs(id,float_total,float_mode,failed_call_policy) VALUES(?,?,?,?)", (run_id, float_total, float_mode, failed_call_policy))
             for i, s in enumerate(specs):
                 hold, cap, allocation = s["hold"], s["price_cap"], s["allocation"]
                 if any(type(v) is not int or v <= 0 for v in (hold, cap, allocation)) or allocation > hold:
@@ -154,7 +162,7 @@ class Ledger:
                            (job_id, run_id, s["seed"], s["policy"], "RUNNING", hold, hold, cap, allocation,
                             time.time() + 86400, canonical(s["tasks"])))
                 self._event(db, "HOLD_AUTHORIZED", {"job_id": job_id, "hold": hold, "allocation": allocation,
-                    "mandate_version": 1, "mode": "SIMULATED"})
+                    "mandate_version": 1, "mode": "SIMULATED", "failed_call_policy":failed_call_policy})
         return run_id
 
     def get_job(self, job_id):
@@ -366,11 +374,15 @@ class Ledger:
                 return
             if db.execute("SELECT 1 FROM attempts WHERE job_id=? AND state IN ('RESERVED','DISPATCHING','PAID')", (job_id,)).fetchone():
                 raise PolicyError("Cannot capture while payment outcome is unresolved")
-            float_mode = db.execute('SELECT float_mode FROM runs WHERE id=?', (row['run_id'],)).fetchone()[0]
+            run = db.execute('SELECT float_mode,failed_call_policy FROM runs WHERE id=?', (row['run_id'],)).fetchone()
+            float_mode = run['float_mode']
+            failures = db.execute('SELECT COALESCE(SUM(price+verify_cost),0) FROM attempts WHERE job_id=? AND passed=0', (job_id,)).fetchone()[0]
+            captured = row['spent'] - (failures if run['failed_call_policy']=='MERCHANT_ABSORBS' else 0)
             allocation = row['rail_spent'] if float_mode == 'SIMULATED' else row['allocation']
-            db.execute("UPDATE jobs SET status='COMPLETED',captured=spent,released=hold-spent,allocation=? WHERE id=?", (allocation, job_id))
+            db.execute("UPDATE jobs SET status='COMPLETED',captured=?,released=hold-?,allocation=? WHERE id=?", (captured,captured,allocation,job_id))
             unused = row['allocation'] - row['rail_spent']
-            self._event(db, "HOLD_CAPTURED", {"job_id": job_id, "captured": row["spent"], "released": row["hold"] - row["spent"],
+            self._event(db, "HOLD_CAPTURED", {"job_id": job_id, "captured": captured, "released": row["hold"] - captured,
+                "failed_call_policy":run['failed_call_policy'],
                 "unused_float_returned": unused if float_mode == 'SIMULATED' else 0,
                 "unused_float_pending": unused if float_mode == 'TESTNET' else 0,
                 "mode": "SIMULATED", "float_mode": float_mode})
