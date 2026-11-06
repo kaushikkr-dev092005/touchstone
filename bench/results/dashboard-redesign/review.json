@@ -1,0 +1,87 @@
+{
+  "label": "MEASURED",
+  "scope": "ISOLATED_SIMULATED_DASHBOARD",
+  "desktop": [
+    1440,
+    900
+  ],
+  "mobile": [
+    390,
+    844
+  ],
+  "particle_preview": {
+    "fps": "60.0",
+    "render_ms": "1.44",
+    "quality": "full",
+    "particles": 5200
+  },
+  "fps_environment": "HEADLESS_CHROMIUM_WINDOWS_NOT_A_HARDWARE_GUARANTEE",
+  "pause_replay_offscreen_reduced_motion": "passed",
+  "dark_light_toggle": "passed",
+  "horizontal_overflow": false,
+  "page_errors": [],
+  "external_requests": [],
+  "financial_transactions": 0,
+  "recording": "dashboard-motion.webm",
+  "recording_contact_sheet": "motion-contact-sheet.png",
+  "python_tests": 247,
+  "node_tests": 49,
+  "html_bytes": 99554,
+  "reference": {
+    "fps": 30.0,
+    "frames": 276,
+    "seconds": 9.2,
+    "sampling_interval": 0.5
+  },
+  "cadence": {
+    "horizon_times_seconds": [
+      1.8,
+      4.2,
+      6.567
+    ],
+    "periods_seconds": [
+      2.4,
+      2.367
+    ],
+    "median_cycle_ms": 2383,
+    "method": "Vertical standard deviation of bright-pixel rows, five-frame smoothing, separated minima"
+  },
+  "new_dependencies": 0,
+  "functional_browser": {
+    "desktop": "passed",
+    "mobile_width": 390,
+    "horizontal_overflow": false,
+    "browser_errors": [],
+    "start_halt_resume_close": "passed",
+    "host_origin_session_controls": "passed",
+    "reconciliation": {
+      "matched": true,
+      "ledger_provider_total": 2780000,
+      "rail_total": 2780000,
+      "verification_total": 128000,
+      "customer_captured": 2698000,
+      "pending": 0,
+      "mismatches": [],
+      "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+      "mode": "SIMULATED"
+    },
+    "planning_tool_and_review_cases": "passed",
+    "provider_evidence_rows": 6,
+    "testnet_proof_disclosure": "passed",
+    "fault_fx_telemetry_rail_panels": "passed",
+    "credential_isolation_and_blocked_fx": "passed",
+    "merchant_absorbs_sse_and_capture": "passed",
+    "particle_field_stops_on_confirmed_halt": "passed",
+    "screenshots": [
+      "desktop-ready.png",
+      "desktop-paused.png",
+      "desktop-completed.png",
+      "mobile-completed.png"
+    ]
+  },
+  "log_sha256": {
+    "python": "3c9ff740935198978d07d0fc4a884c672582318cd2f366f8f97c86387a1ba3f9",
+    "node": "9ad20707305d440f90d616951a560f54a608646fe990a19f8a05136f6079cbe4",
+    "browser": "a80c65afa4c174b2652c843cf92ca5160019209e5c9cbb71b821c172ee7a8352"
+  }
+}

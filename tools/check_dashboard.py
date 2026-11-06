@@ -89,6 +89,7 @@ def main():
                 page.wait_for_function("() => document.querySelectorAll('#payment-rows tr').length >= 3")
                 page.click("#halt")
                 page.wait_for_function("() => document.getElementById('notice').textContent.includes('Kill switch active')")
+                page.wait_for_function("() => document.body.dataset.eventLight==='kill' && starFrame===0")
                 wait_state(lambda s: not s["worker_running"])
                 page.click("#resume")
                 wait_state(lambda s: not s["halted"] and not s["worker_running"] and len(s["jobs"]) == 3 and all(j["status"] != "RUNNING" for j in s["jobs"]))
@@ -129,6 +130,7 @@ def main():
                           "fault_fx_telemetry_rail_panels": "passed",
                           "credential_isolation_and_blocked_fx": "passed",
                           "merchant_absorbs_sse_and_capture": "passed",
+                          "particle_field_stops_on_confirmed_halt": "passed",
                           "screenshots": ["desktop-ready.png", "desktop-paused.png", "desktop-completed.png", "mobile-completed.png"]}
                 (ARTIFACTS / "validation.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
                 print(json.dumps(result, indent=2))

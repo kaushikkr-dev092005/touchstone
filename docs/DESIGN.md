@@ -1,5 +1,9 @@
 # Touchstone — the assay bench
 
+> Historical design brief. The current dashboard uses the centered composition
+> and black-and-white particle study documented in [DASHBOARD_REDESIGN.md](DASHBOARD_REDESIGN.md).
+> The review gate and scene descriptions below describe the original 3 November plan.
+
 Design brief · 3 November 2026 · **Review gate: dashboard implementation has not started.**
 
 ## Concept and composition
