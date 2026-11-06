@@ -6,7 +6,7 @@ The official event page (fetched 2 November 2026) lists build completion on **15
 
 The [current Airwallex developer-lab guide](https://airwallexdev.com/guide) maps the three-job, short-float inference sourcing story to **Kit 12**. Its **Kit 11** asks for spending-limit rebalancing when upstream prices rise and a dispute settled from signed orders. This project has a simulated, versioned human approval flow and one real signed x402 receipt, but no end-to-end Kit 11 dispute settlement or live limit rebalance. Do not claim Kit 11 as completed until those behaviors are implemented and evidenced.
 
-## Done (updated 5 November 2026)
+## Done (updated 6 November 2026)
 
 Current additions: M1 sandbox FX and hosted capture verified; M2 one-call paid engine and hard-kill/recovery verified; both M3 local profiles measured and refused. See [current evidence](RUNNING.md).
 
@@ -47,7 +47,7 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 - [x] Add audited versioned approvals for simulated limit increases; the job remains paused until a separate Resume, and no real hold or wallet is affected.
 - [x] Add a guarded live quote-only engine preflight; exercise the local Vulkan model seller and Metal testnet quote with zero payments.
 - [x] Run the live seller's outage chaos mode through quote-only; verify HTTP 503 before quote and zero payment dispatch.
-- [x] Run the Airwallex read-only readiness check; authentication/balance/account reads pass, but `AIRWALLEX_ACCOUNT_ID` is still unset.
+- [x] Run the Airwallex read-only readiness check; authentication/balance/account reads pass, and account context is now configured (historical unset observation superseded).
 - [x] Add an optional hosted Claude Messages API provider using schema-constrained JSON, a configurable model ID and provider-reported token usage.
 - [x] Keep hosted credentials out of the buyer-side Metal bridge; on uncertain delivery, refuse to repeat a potentially billable hosted request.
 - [x] Add three real-only Metal policies: local GPU only, hosted premium only, and local-first with verifier-triggered hosted escalation. Real policies exclude simulator offers and require both named live tiers in a no-payment quote preflight.
@@ -62,6 +62,10 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 
 - [x] M4 implementation: matched tools/cheapest/premium/qualified-ladder runner, capped durable dispatch, shared seller fault schedule, raw scoring, cost/latency tables and environment manifest. Controlled evidence is MOCK; no new live purchases. [M4 report](M4_REPORT.md).
 
+- [x] M5 simulated financial story: immutable failed-call billing, separate provider/check expenses, short-float reconciliation and saved audit heads. [Report](M5_REPORT.md).
+- [x] Signed fault evidence, controlled provider acknowledgements, guarded CardRail, controlled signed intent, FX-aware comparison and real GPU telemetry. [Scope and limitations](FEATURES.md).
+- [x] Packaging implementation: committed-tree source bundle, private-data exclusions and credential-isolated one-command mock launch. Clean-checkout results are recorded separately.
+
 ## Not done
 
 - [ ] M4 live gate: ready sellers and a dedicated funded scope, new aggregate purchase/hosted-credit approval, then 30–50 real paid calls and fault/reconciliation evidence. The proposed setup currently fails readiness. [M4 runbook](M4_RUNBOOK.md).
@@ -70,10 +74,9 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 
 - [ ] Full M2/M4 live scale: one-call Metal integration/recovery passed; a larger concurrent/30–50-step study needs fresh funding/purchase/upstream approvals and eligible models. Existing one-purchase and deposit approvals are consumed.
 
-- [ ] Validate a real sandbox authorization/capture: direct PaymentIntent creation returns `configuration_error` (BLOCKED, external merchant configuration); hosted Checkout Sessions access is untested.
-- [ ] Set `AIRWALLEX_ACCOUNT_ID` and the Transactional FX Conversion Write scope, then run one approved sandbox FX conversion and reconcile both wallet-history entries (needs human gate and a stated cap).
+- [ ] Native acquiring entitlement remains unverified; separate hosted sandbox authorization/capture is complete. Issuing reads return 401 and require separate enablement.
 - [ ] Collect representative finance-operations sources and prospective evaluation evidence; qualify an inference provider for that domain. No measured model passes the eligibility screen.
-- [ ] Run 30–50 real paid engine steps, a paid quality-drop scenario and a real Metal process-kill/restart after explicit wallet funding and an approved aggregate cap. Only zero-payment quote and outage preflights have run.
+- [ ] Larger live paid comparison/quality-chaos remains unrun; the separate one-call hard-kill/recovery proof is complete. Fresh aggregate approvals and eligible providers are required.
 - [ ] Configure hosted premium credentials and both provider origins, then run the matched three-policy paid trial (hosted API invoice is separate from the USDZ metric).
 - [ ] Ask the sponsor whether sandbox Developer MCP/CLI counts as Airwallex tooling; AgentOS MCP/skills need a production connector and the official CLI has no Windows build.
 - [ ] Kit 11 (price-rise limit rebalance, signed-order dispute settlement) is not implemented; do not claim it.
@@ -82,7 +85,7 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 
 ## Evidence summary
 
-The real paid proof rejected an incorrect answer (1250 cents instead of 2000), retained the failed-call charge and demonstrated both cached and provider-side replay without another payment. The remaining 0.09 testnet USDZ has now returned through a non-deferred claim; the receipt assurance remains preconfirmed. Actual Airwallex authentication, balance reads and Global Account reads pass. PaymentIntent creation fails before authorization. See LIVE_PROOF.md for the precise evidence and blocker.
+The real paid proof rejected an incorrect answer (1250 cents instead of 2000), retained the failed-call charge and demonstrated both cached and provider-side replay without another payment. The remaining 0.09 testnet USDZ has now returned through a non-deferred claim; the receipt assurance remains preconfirmed. Actual Airwallex authentication, balance reads and Global Account reads pass. The historical direct-create error is separate from the now-completed hosted sandbox authorization/capture. See LIVE_PROOF.md for the precise evidence and blocker.
 
 The updated simulator has 100% median true success for Touchstone at $6.162 versus premium's 99.5% at $10.200 on supported synthetic templates. This is a bounded-rule regression result; general semantic accuracy and real model savings remain unproven.
 

@@ -1,5 +1,12 @@
 # Running the local project — 5 November 2026
 
+## Offline, credential-isolated demo
+
+Windows, macOS and Linux: `python tools/run_mock.py`. Python 3.11+ only; no Node,
+model or credential is needed. This starts the simulated dashboard on 8088.
+Add `--port 8090` if the installed stack occupies 8088.
+[Feature evidence and remaining gates](FEATURES.md) · [Evidence index](EVIDENCE_INDEX.md).
+
 ## Start
 
 With the already-installed models and Node adapter, run from the repository root.

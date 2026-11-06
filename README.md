@@ -1,6 +1,30 @@
 # Touchstone
 
-Quality-aware inference procurement for autonomous agents. A customer approves a job budget; Touchstone allocates scarce operator float, purchases calls, checks results, and records what every attempt actually cost.
+The financial trust layer for autonomous agents: **pay for proof, not promises**.
+
+Touchstone reserves an approved budget, pays the provider, checks the result and
+accounts for every attempt. Payment precedes verification; rejected work can still
+cost money.
+
+### Three saved proofs
+
+- **MEASURED testnet:** a paid answer was rejected and its original receipt/delivery
+  replayed without another purchase. [Historical proof](bench/results/metal-paid-proof.json).
+- **MEASURED sandbox:** one 1.00 USD → 0.89 EUR conversion settled and matched wallet
+  history. [Airwallex write/read-back](bench/results/m1/live-fx-single-conversion.json).
+- **MEASURED testnet:** one unified-engine purchase survived hard process death and
+  repeated recovery with one receipt and no duplicate observed.
+  [Recovery proof](bench/results/m2/live-single-call-final.json).
+
+Receipts are preconfirmed; final settlement is not independently proven. The
+three-job dashboard remains **SIMULATED**. Airwallex fiat and Metal USDZ are separate.
+
+*Demo GIF placeholder — add the operator-recorded capture after final rehearsal.*
+
+**New extensions:** signed reproducible fault receipts, guarded CardRail, controlled
+signed intent, FX-aware comparison, measured GPU telemetry and immutable simulated
+failed-call billing. [Implementation, evidence and limits](docs/FEATURES.md) ·
+[Evidence index](docs/EVIDENCE_INDEX.md).
 
 Built for the Airwallex Agentic Banking Hackathon, extending Kit 12 with quality checks and payment recovery. **MEASURED: sandbox FX 1.00 USD → 0.89 EUR settled and reconciled; hosted 1.00 USD authorization / 0.01 USD capture completed; one new 0.01 USDZ unified-engine purchase survived hard process death and recovery without a duplicate.** The purchased answer failed verification. Receipts remain preconfirmed, and the three-job dashboard remains SIMULATED. [Current runtime, proofs and blockers](docs/RUNNING.md).
 
@@ -20,16 +44,17 @@ python tools/run_project.py
 
 This performs no financial transaction or hosted inference call. The existing model
 and Node setup must be installed; see [runtime setup and checks](docs/RUNNING.md).
-For the standalone simulated dashboard:
+For the credential-isolated, offline simulated dashboard (Windows, macOS or Linux;
+Python 3.11+ only):
 
 ```powershell
-python -m touchstone serve
+python tools/run_mock.py
 ```
 
 macOS / Linux / Git Bash equivalent:
 
 ```bash
-python -m touchstone serve
+python tools/run_mock.py
 ```
 
 Open **http://127.0.0.1:8088**. The first card presents the recorded real $0.01 USDZ GPU call, incorrect answer, verifier rejection, and no-customer-capture disclosure. Then select **Run three-job demo** for the separate simulated scenario: $2.50 in synthetic customer holds against $1.50 in operator float. Watch prices, latency and quality change, a prompt expand, and jobs pause within policy. A human can approve a versioned limit increase for a policy-paused simulator job using only its existing float; this does not change a real hold or wallet.

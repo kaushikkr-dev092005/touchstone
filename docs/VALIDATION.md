@@ -1,5 +1,18 @@
 # Validation record
 
+## Extension validation — 6 November 2026
+
+**MEASURED Windows:** 247 Python tests and 47 Node tests pass. Extended browser QA
+passes desktop/390px, session/Host/Origin refusal, missing-key FX blocker, feature
+evidence panels, both billing policies, SSE, kill/resume and reconciliation. No
+external financial transaction is sent. [Results and hashes](../bench/results/features/validation.json).
+[Implementation/claim limits](FEATURES.md), [M5](M5_REPORT.md).
+
+The working tree contains concurrent user frontend/configuration changes; they are
+preserved and excluded from the committed source bundle. Clean-checkout evidence
+records the exact packaged revision separately. Earlier entries below are historical.
+
+
 ## Current validation ? 5 November 2026
 
 **MEASURED local Windows:** 224 Python tests and 38 pinned-Node tests passed.

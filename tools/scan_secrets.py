@@ -36,10 +36,13 @@ RULES = [
 ]
 PATH_SKIP = re.compile(r"(?:^|/)node_modules/")
 PRIVATE_PATH = re.compile(r"(?:^|/)(?:data/|\.env(?!\.example$)|[^/]*wallet[^/]*\.json$|local-config)", re.I)
+# This committed readiness report contains public balances/status, never a wallet.
+# It must still receive the full content scan rather than a private-file exclusion.
+PUBLIC_EVIDENCE = {'bench/results/m2/current-wallet-preflight.json'}
 
 
 def excluded_path(path):
-    return bool(PATH_SKIP.search(path) or PRIVATE_PATH.search(path))
+    return bool(PATH_SKIP.search(path) or (PRIVATE_PATH.search(path) and path not in PUBLIC_EVIDENCE))
 
 
 def git(*args, binary=False):
@@ -119,7 +122,7 @@ def main():
             findings.append({"scope": "working-tree", "path": rel, "rule": rule, "match_length": length})
     # sensitive paths that must never be committed
     sensitive = [p for p in set(git("log", "--all", "--name-only", "--pretty=format:").splitlines())
-                 if PRIVATE_PATH.search(p)]
+                 if PRIVATE_PATH.search(p) and p not in PUBLIC_EVIDENCE]
     shallow = git("rev-parse", "--is-shallow-repository").strip() == "true"
     summary = {"label": "MEASURED", "scanner": "heuristic-secret-shapes-v2",
                "scope": "All reachable local refs and non-ignored working-tree text; not a guarantee of no secrets",

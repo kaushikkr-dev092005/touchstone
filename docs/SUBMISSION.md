@@ -1,51 +1,75 @@
-# Touchstone — submission draft
+# Touchstone — submission draft, 6 November 2026
 
 ## One sentence
 
-Touchstone buys inference only when bounded tools cannot resolve a task, verifies the paid result, recovers its receipt and records failed-call cost without charging beyond a mandate.
+The financial trust layer for autonomous agents: pay for proof, not promises.
+Reserve an approved mandate, buy inference when justified, check the result,
+recover uncertain payments and account for every attempt. Payment precedes checking.
 
-## Problem and approach
+## Proven with saved evidence
 
-Agents can buy a cheap answer that is wrong, pay again after a timeout, or confuse a customer's authorization with available operating cash. Touchstone separates these decisions. Bounded tools handle supported calculations without a model purchase. Provider evidence screening rejects unqualified model/task combinations. Financial controls reserve an exact quote within approved limits before dispatch. Every paid attempt remains an expense, including answers rejected by the verifier.
+- **MEASURED testnet:** historical 0.01 USDZ paid inference, incorrect answer,
+  rejection and identical receipt/delivery replay. Historical unused 0.09 USDZ
+  was returned separately.
+- **MEASURED sandbox:** exactly 1 USD → 0.89 EUR FX settled/history-matched;
+  separate hosted 1 USD authorization captured 0.01 USD. Issuer release timing
+  remains unmeasured.
+- **MEASURED testnet:** a new 0.02 USDZ funded job wallet made one 0.01 USDZ engine
+  purchase, survived hard process death and recovered twice without another charge.
+  The remaining 0.01 USDZ was not withdrawn. The answer failed verification.
+- **MEASURED historical fault evidence:** buyer-signed commitment and reproducible
+  1,250/2,000-cent counterexample with original payment signatures checked. The
+  historical provider output was unsigned. No refund or actual credit was issued.
+- **MEASURED on SIMULATED sources:** both local models measured on 180 sources each,
+  both ineligible. Deterministic extraction coverage is 13.3%; useful paid inference
+  remains blocked.
+- **MEASURED local controls:** Python/Node/browser checks, audit chain, immutable
+  billing, atomic reservation and recovery. Controlled financial adapters are MOCK.
 
-The financial stress scenario uses three customer holds totaling $2.50 with only $1.50 operator float. It demonstrates limited allocations, price and latency changes, review/policy pauses, kill/resume, charged failures, partial closure and reconciliation. This multi-job scenario is explicitly simulated.
+All Metal receipts here are preconfirmed, not independently proven finally settled.
+The three-job short-float financial story remains SIMULATED: 2.50 USD holds,
+1.50 USD operator float, immutable customer-pays/merchant-absorbs policies.
+[Evidence index](EVIDENCE_INDEX.md), [validation](VALIDATION.md).
 
-## What has actually run
+## New extensions and boundaries
 
-- A real Metal chain-63825 RPC connection and faucet-funded dedicated wallet.
-- A 0.10 testnet USDZ clearing deposit and one 0.01 testnet USDZ x402 inference purchase through the supported SDK.
-- Local GPU inference, a signed preconfirmed receipt, identical cached replay and original delivery retrieval using the paid receipt.
-- Rejection of the purchased model's incorrect arithmetic answer, with the charge retained.
-- Airwallex sandbox authentication and balance/Global Account reads.
-- Two local model profiles, an honest negative cheap-first cost result, a 1,000-case bounded-tool baseline, and a source-deduplicated eligibility screen.
-- Local failure tests for lost payment/capture responses, changed mandates, receipt mismatches, uncertain outcomes and unavailable withdrawal float.
-- A unified engine-facing Metal tier, queue-priced signed quotes, provider outage/quality chaos switches, and an abrupt process-kill recovery command. One paid engine call now survived hard process death after the rail receipt and repeated recovery without another payment; a live quality-drop comparison remains unrun.
-- A separate Airwallex treasury path for wallet balances, FX quotes/conversions with unique request IDs, and wallet-history spend reconciliation; one authorized 1.00 USD → 0.89 EUR sandbox conversion settled and matched wallet history.
-- An invoice consistency verifier using cited line arithmetic and a measured synthetic false-accept curve for a deliberately noisy checker.
+Signed fault receipts bind independently checkable evidence; signatures alone do
+not prove provider fault or cause a refund. FX-aware comparison includes currencies,
+fees, quality and retry assumptions; provider prices are illustrative and no fiat
+merchant dispatch is authorized. GPU samples are real; uncalibrated price markups
+are disabled. CardRail has guarded issuing/reconciliation, but real issuing reads
+return 401. Controlled RFC 9421 signed intent uses a local identity, rejects replay
+and establishes no Visa credentials, approval, payment or award eligibility.
+[Implementation report](FEATURES.md).
 
-Current independent proofs: sandbox FX write/read-back, hosted 1.00 USD authorization with 0.01 USD capture, and a single 0.01 USDZ engine call with live hard-kill/recovery. Its answer was rejected. The original historical 0.09 USDZ return is separate; the new 0.01 USDZ remainder was not withdrawn. Receipts are preconfirmed, not proven finally settled. No 30–50-step comparison or complete multi-customer external financial loop has run. Both M3 local models failed qualification on 180 synthetic sources each. [Current evidence and limits](RUNNING.md).
+The Kit 12 inference-sourcing story follows the [organizer guide](https://airwallexdev.com/guide).
+Do not claim Kit 11 dispute settlement or real mandate rebalancing from a simulation.
+Airwallex fiat and Metal USDZ are separate accounts; there is no bridge.
 
-## Differentiation
+## Demonstration and packaging
 
-The product's decision is whether an inference purchase is warranted, not just which provider has the lowest price. It connects output quality to an explicit financial trail while preserving the difference between authorization, operator liquidity, a preconfirmed receipt and returned funds.
+Python 3.11+ only, Windows/macOS/Linux: `python tools/run_mock.py`, then
+http://127.0.0.1:8088. Private configuration is ignored and no money moves.
+Installed model stack: `python tools/run_project.py`. [Demo script](DEMO_SCRIPT.md),
+[runtime](RUNNING.md). `python tools/bundle.py` packages an explicit committed tree;
+the manifest records its commit and hashes. A local bundle is not submission.
 
-## Kit fit and claim boundary
+## Outstanding human/external gates
 
-The current three-job scenario maps to the official **Kit 12: Inference Sourcing Agent**: three concurrent jobs, $2.50 in holds, $1.50 in float, provider rerouting, and asking before exceeding a hold. The official guide labels **Kit 11** as x402 Business Agents, which instead requires separate sourcing/support/treasury agent mandates, signed customer orders, a dispute/refund path and treasury settlement. Touchstone does not yet implement that separate mandate/refund workflow, so do not claim Kit 11 based only on the three-job simulation. See the [current starter-kit guide](https://airwallexdev.com/guide).
+1. Hosted credentials/partner-credit authorization and an actually qualified model.
+2. Fresh aggregate caps and funding for M4; no 30–50-call live comparison or live
+   outage/quality study has been recorded. Earlier transaction approvals are consumed.
+3. Issuing permissions, a separate card cap and supported merchant flow; genuine
+   Visa credentials/trust before claiming TAP interoperability or an award.
+4. Observed throughput/calibration before capacity-based economic pricing claims.
+5. Accepted registration, personal portal deadline/schema, sponsor tooling eligibility,
+   video limit, operator recording, manual submission and receipt confirmation.
 
-## Demonstration
+## Submission status
 
-Run `python -m touchstone serve` and open `http://127.0.0.1:8088`. The first card is the historical real $0.01 USDZ GPU purchase: source total 2,000 cents, paid model output 1,250, verifier rejection, identical replays, and no customer capture. Then show the code-only planner and clearly labeled simulated three-policy stress test. The dashboard's simulator approval flow changes only a versioned local mandate and uses no new real funds. Finish with the Airwallex readiness blocker. Use `docs/DEMO_SCRIPT.md` for timing and `docs/VALIDATION.md` for evidence boundaries.
-
-## Priority gates from the current review
-
-1. Set the sandbox account ID and FX Conversion Write scope, then perform one explicitly approved small conversion and reconcile it against Airwallex wallet history. Do not wait on card-acquiring configuration for this treasury proof.
-2. Configure a local small-model provider and a hosted premium provider with partner credits; configure a separate Metal origin for each live tier and approve an aggregate testnet budget before running policy measurements. The present dashboard table remains simulator-only.
-3. Ask the sponsor whether sandbox Developer MCP/CLI usage qualifies as “Airwallex tooling.” The official AgentOS MCP and skills use production connectors, and no production account approval is available in this environment.
-4. Keep the Kit 11 claim separate: the official guide labels this three-job scenario Kit 12; Kit 11 requires agent mandates, signed orders, dispute/refund handling and treasury settlement.
-
-## Additional submission checklist
-
-M4's four-policy comparison code and MOCK control evidence are available in [the M4 report](M4_REPORT.md). The live comparison gate remains BLOCKED; this does not satisfy the paid-run, model-qualification or live chaos requirements below.
-
-Before submission, set the Airwallex account context and verify Checkout Sessions/FX read and write scopes; exercise hosted authorization/capture and a small FX conversion/report; execute 30–50 testnet engine steps plus the chaos and kill/restart demonstrations only with an explicitly approved funded budget; qualify a model on representative finance-operations sources if claiming useful autonomous inference; verify finality of the paid inference receipt; and confirm the signed-in submission requirements. MIT license is included. Freeze features by 11 November, record on 12 November and submit by 13 November. The testnet withdrawal has returned. The repository `https://github.com/kaushikkr-dev092005/touchstone` is **public** (MEASURED: GitHub visibility rechecked on 2 November 2026). The history scanner found no secret-pattern matches within its documented heuristic scope; see [M0 report and scan limits](M0_REPORT.md). Hackathon submission has not been performed. The previously fetched official event page lists the build phase ending 15 November 2026 18:29 UTC; use **13 November 2026, 18:29 UTC / 23:59 IST** as the working deadline and confirm the personal deadline in the portal.
+Repository github.com/kaushikkr-dev092005/touchstone was verified public on
+2 November; MIT licensing is included. Local commits are not a remote push or a
+GitHub CI result. Feature freeze is scheduled for 11 November. Internal submission
+deadline is 13 November 18:29 UTC / 23:59 IST; the previously fetched official page
+listed 15 November build completion, so confirm the signed-in portal deadline.
+No registration, recording or submission has been performed by the agent.
