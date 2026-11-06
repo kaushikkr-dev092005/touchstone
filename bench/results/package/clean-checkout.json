@@ -1,0 +1,63 @@
+{
+  "label": "MEASURED",
+  "commit": "b82b977b9bbab399c08c20e1cc424ffd862a8711",
+  "source_archive_sha256": "e34d4886a7b0804ac596be34673cff2b7f7ab911cbbebd19afeb7bab6ec922ea",
+  "source_hashes_verified": true,
+  "private_data_copied": false,
+  "credentials_available_to_tests": false,
+  "external_financial_transactions": 0,
+  "new_dependencies": 0,
+  "stages": {
+    "npm-ci": {
+      "exit_code": 0,
+      "log_sha256": "bf1d350251e91b6b3f5551d555bd7cae7abb831fe8fec2d73e04b94550bafa44"
+    },
+    "python-tests": {
+      "exit_code": 0,
+      "log_sha256": "9b9a9902af1a8590f85fc7990417d1296abbed87e4bd27c42a5c5c3d523e1f4c"
+    },
+    "node-tests": {
+      "exit_code": 0,
+      "log_sha256": "3576ba3489ead1e99d63ba6e961d2934eeb7f62fdaa2e01a2b79019a2e3553bb"
+    },
+    "browser-tests": {
+      "exit_code": 0,
+      "log_sha256": "3fac85f77cde942a5bef01d49170ae2a90d9b9c2ec55625e0c03a344c67f298c"
+    }
+  },
+  "python_tests": 247,
+  "node_tests": 47,
+  "browser": {
+    "desktop": "passed",
+    "mobile_width": 390,
+    "horizontal_overflow": false,
+    "browser_errors": [],
+    "start_halt_resume_close": "passed",
+    "host_origin_session_controls": "passed",
+    "reconciliation": {
+      "matched": true,
+      "ledger_provider_total": 2780000,
+      "rail_total": 2780000,
+      "verification_total": 128000,
+      "customer_captured": 2698000,
+      "pending": 0,
+      "mismatches": [],
+      "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+      "mode": "SIMULATED"
+    },
+    "planning_tool_and_review_cases": "passed",
+    "provider_evidence_rows": 6,
+    "testnet_proof_disclosure": "passed",
+    "fault_fx_telemetry_rail_panels": "passed",
+    "credential_isolation_and_blocked_fx": "passed",
+    "merchant_absorbs_sse_and_capture": "passed",
+    "screenshots": [
+      "desktop-ready.png",
+      "desktop-paused.png",
+      "desktop-completed.png",
+      "mobile-completed.png"
+    ]
+  },
+  "all_stages_passed": true,
+  "observed_at": 1793949102.4642608
+}

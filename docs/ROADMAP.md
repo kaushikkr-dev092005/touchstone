@@ -68,6 +68,10 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 
 ## Not done
 
+Local packaging/clean-checkout verification has passed for the explicit committed
+source revision in [M7](M7_REPORT.md). This does not close the live or manual gates
+below and does not establish current remote CI success.
+
 - [ ] M4 live gate: ready sellers and a dedicated funded scope, new aggregate purchase/hosted-credit approval, then 30–50 real paid calls and fault/reconciliation evidence. The proposed setup currently fails readiness. [M4 runbook](M4_RUNBOOK.md).
 
 - [ ] M3 useful inference: both measured local tiers failed the unchanged qualification gate. Hosted credentials/partner credits and a separate paid-study cap remain human gates. The negative-result exit is met; useful inference is unproven.

@@ -21,6 +21,8 @@ contain redacted observations; private runtime data is excluded from packaging.
 | [Issuing doctor](../bench/results/features/card-readiness.json) | BLOCKED | Real read returned 401; no card created |
 | [Signed intent](../bench/results/features/tap-probe.json) | MOCK identity / MEASURED protocol check | Controlled HTTP acceptance and replay rejection; no Visa trust/approval or payment |
 | [Feature tests](../bench/results/features/validation.json) | MEASURED local | Test counts, artifact hashes, browser/security checks |
+| [Clean source verification](../bench/results/package/clean-checkout.json) | MEASURED Windows | Exact committed archive, pinned install, 247 Python/47 Node tests and browser checks |
+| [Offline mock smoke](../bench/results/package/mock-smoke.json) | MEASURED local | One-command launch, reduced motion on/off, no external requests and SSE restart/reconnect |
 
 The committed source bundle is produced by `python tools/bundle.py`. Its manifest
 in `dist/bundle-manifest.json` records an exact Git commit and file hashes; the

@@ -1,0 +1,14 @@
+{
+  "label": "MEASURED",
+  "commit": "b82b977b9bbab399c08c20e1cc424ffd862a8711",
+  "one_command_mock_launch": "passed",
+  "reduced_motion_on_and_off": "passed",
+  "widths": [
+    1440,
+    390
+  ],
+  "external_requests": [],
+  "sse_server_restart_reconnect": "passed",
+  "browser_errors": [],
+  "transactions_sent": 0
+}

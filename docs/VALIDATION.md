@@ -1,5 +1,16 @@
 # Validation record
 
+## Clean committed source — 6 November 2026
+
+Revision `b82b977b9bbab399c08c20e1cc424ffd862a8711` passed a clean extracted-source
+run: pinned npm installation, **247 Python / 47 Node tests**, desktop/mobile browser
+checks and the one-command mock demo. Reduced motion on/off, zero external browser
+requests and SSE reconnection after isolated server restart passed. Credentials and
+private runtime data were excluded; no financial operation was sent.
+[Exact artifact and limits](M7_REPORT.md),
+[raw verification](../bench/results/package/clean-checkout.json),
+[mock smoke](../bench/results/package/mock-smoke.json).
+
 ## Extension validation — 6 November 2026
 
 **MEASURED Windows:** 247 Python tests and 47 Node tests pass. Extended browser QA

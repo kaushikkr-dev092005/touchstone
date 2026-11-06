@@ -1,0 +1,31 @@
+{
+  "desktop": "passed",
+  "mobile_width": 390,
+  "horizontal_overflow": false,
+  "browser_errors": [],
+  "start_halt_resume_close": "passed",
+  "host_origin_session_controls": "passed",
+  "reconciliation": {
+    "matched": true,
+    "ledger_provider_total": 2780000,
+    "rail_total": 2780000,
+    "verification_total": 128000,
+    "customer_captured": 2698000,
+    "pending": 0,
+    "mismatches": [],
+    "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+    "mode": "SIMULATED"
+  },
+  "planning_tool_and_review_cases": "passed",
+  "provider_evidence_rows": 6,
+  "testnet_proof_disclosure": "passed",
+  "fault_fx_telemetry_rail_panels": "passed",
+  "credential_isolation_and_blocked_fx": "passed",
+  "merchant_absorbs_sse_and_capture": "passed",
+  "screenshots": [
+    "desktop-ready.png",
+    "desktop-paused.png",
+    "desktop-completed.png",
+    "mobile-completed.png"
+  ]
+}
