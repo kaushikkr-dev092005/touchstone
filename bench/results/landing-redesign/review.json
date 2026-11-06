@@ -1,0 +1,35 @@
+{
+  "url": "http://127.0.0.1:8088/site/",
+  "desktop": [
+    1440,
+    900
+  ],
+  "mobile": [
+    390,
+    844
+  ],
+  "locker_middle_right": true,
+  "pointer_and_keyboard_toggle": "passed",
+  "mobile_navigation": "passed",
+  "reduced_motion_static_open": "passed",
+  "horizontal_overflow": false,
+  "page_errors": [],
+  "external_requests": [],
+  "new_dependencies": 0,
+  "label": "MEASURED",
+  "scope": "STATIC_LANDING_PAGE_AND_ILLUSTRATIVE_LOCKER",
+  "typecheck": "passed",
+  "production_build": "passed",
+  "financial_transactions": 0,
+  "python_tests": 247,
+  "node_tests": 47,
+  "static_font_bytes": 52528,
+  "regression_log_sha256": {
+    "python": "61601c7a1a7615d8863107008c116bbcd39cee2bc4129ee1e02eaedaec134a89",
+    "node": "b6fe0bfe420808aa90fe9c52972ad1c3be2455464c3cf1a7397f708f276dcf03"
+  },
+  "font_files": {
+    "geist-latin-wght-normal-BgDaEnEv.woff2": 29400,
+    "geist-mono-latin-wght-normal-XN7g48iV.woff2": 23128
+  }
+}

@@ -6,7 +6,8 @@ from pathlib import Path
 import secrets
 import threading
 import time
-from urllib.parse import urlparse
+import mimetypes
+from urllib.parse import unquote, urlparse
 
 from .engine import Engine
 from .ledger import Ledger, PolicyError
@@ -108,17 +109,41 @@ def serve(port=8088, data_dir="data"):
         def allowed(self):
             return self.headers.get("Host") in {f"127.0.0.1:{port}", f"localhost:{port}"}
 
-        def send_bytes(self, status, body, mime="application/json"):
+        def send_bytes(self, status, body, mime="application/json", csp=None):
             self.send_response(status)
             self.send_header("Content-Type", mime)
             self.send_header("Content-Length", str(len(body)))
             self.send_header("Cache-Control", "no-store")
             self.send_header("Connection", "close")
             self.send_header("X-Content-Type-Options", "nosniff")
-            self.send_header("Content-Security-Policy", f"default-src 'self'; script-src 'nonce-{token}'; style-src 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'")
+            self.send_header("Content-Security-Policy", csp or f"default-src 'self'; script-src 'nonce-{token}'; style-src 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'")
             self.end_headers()
             self.wfile.write(body)
             self.close_connection = True
+
+        def serve_site(self, path):
+            """Static marketing site built from apps/web; no dashboard token or API access is exposed."""
+            if path == "/site":
+                self.send_response(301)
+                self.send_header("Location", "/site/")
+                self.send_header("Content-Length", "0")
+                self.send_header("Connection", "close")
+                self.end_headers()
+                self.close_connection = True
+                return
+            dist = (ROOT / "apps/web/dist").resolve()
+            rel = unquote(path[len("/site/"):]) or "index.html"
+            target = (dist / rel).resolve()
+            if not target.is_relative_to(dist) or not target.is_file():
+                target = dist / "index.html" if "." not in Path(rel).name else None
+            if target is None or not target.is_file():
+                return self.respond(404, {"error": "Site not built. Run: cd apps/web && bun install && bun run build"})
+            mime = mimetypes.guess_type(target.name)[0] or "application/octet-stream"
+            if mime.startswith("text/") or mime in {"application/javascript", "image/svg+xml"}:
+                mime += "; charset=utf-8"
+            csp = ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
+                   "font-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'")
+            return self.send_bytes(200, target.read_bytes(), mime, csp)
 
         def respond(self, status, payload):
             self.send_bytes(status, json.dumps(payload, allow_nan=False).encode())
@@ -127,6 +152,8 @@ def serve(port=8088, data_dir="data"):
             if not self.allowed():
                 return self.respond(403, {"error": "Loopback host required"})
             path = urlparse(self.path).path
+            if path == "/site" or path.startswith("/site/"):
+                return self.serve_site(path)
             if path == "/":
                 page = (ROOT / "apps/dashboard/index.html").read_text(encoding="utf-8").replace("{{TOKEN}}", token)
                 return self.send_bytes(200, page.encode(), "text/html; charset=utf-8")

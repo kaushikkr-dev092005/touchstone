@@ -34,6 +34,24 @@ Built for the Airwallex Agentic Banking Hackathon, extending Kit 12 with quality
 
 ## Run it
 
+### Marketing landing page
+
+The separate white landing page reuses the interactive isometric locker in its
+hero. Build its existing, locked frontend with Bun:
+
+```text
+cd apps/web
+bun install --frozen-lockfile
+bun run build
+```
+
+From the repository root, run `python -m touchstone serve`, then open
+**http://127.0.0.1:8088/site/**. The operator dashboard remains at `/` and needs
+no frontend build. All marketing assets/fonts are served locally; the locker is
+an illustrative SVG interaction, not a financial action.
+
+### Operator dashboard
+
 Python 3.11+; no runtime dependencies. Tested on Windows with Python 3.12.
 
 Start the installed dashboard, local model and seller together (PowerShell or Bash):
