@@ -1,0 +1,21 @@
+{
+  "label": "MEASURED",
+  "commit": "cb5bce811b5fe4f2ad7f99e92ff7fd450800f11a",
+  "archive": "dist/touchstone-source.zip",
+  "source_files": 372,
+  "bytes": 18258711,
+  "sha256": "c50c7195cd7fab1bda2595a09d7a9f2f9286769edab9e90dca8d3f02b5f2f13d",
+  "secret_shape_scan": "passed",
+  "configured_environment_secret_scan": "passed",
+  "extracted_files_vs_git_blobs_mismatches": 0,
+  "python_tests": {"passed": 274, "failed": 0},
+  "node_tests": {"passed": 53, "failed": 0},
+  "caveats": [
+    "node_modules was copied from the working tree, not installed with npm ci",
+    ".tools (Node, llama) was symlinked from the working tree",
+    "Browser QA was run against the working tree before commit, not the extracted copy",
+    "No financial transaction or hosted inference call was sent"
+  ],
+  "published": false,
+  "submitted": false
+}

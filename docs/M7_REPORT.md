@@ -14,7 +14,24 @@ Concurrent user frontend/configuration edits are preserved and excluded. The one
 public `current-wallet-preflight.json` is a readiness report, not a key store; it
 receives the full content scan. Private wallet files remain excluded.
 
-## Exact source artifact verified
+## Current source artifact (rebuilt 6 November 2026, supersedes the one below)
+
+- Commit: `cb5bce811b5fe4f2ad7f99e92ff7fd450800f11a` (includes the dashboard/landing redesigns and the live-mode,
+  fault-receipt, FX-execution, calibration and banking-adapter work).
+- Local archive: `dist/touchstone-source.zip`; 372 files, 18,258,711 bytes.
+- SHA-256: `c50c7195cd7fab1bda2595a09d7a9f2f9286769edab9e90dca8d3f02b5f2f13d`.
+- [Rebuild evidence](../bench/results/package/head-rebuild.json); manifest in `dist/bundle-manifest.json`.
+- Secret-shape and configured-environment scans passed; no private runtime data or working-tree edits included.
+- Every extracted file matched its Git blob at that commit (0 mismatches).
+- In the extracted copy: **274 Python tests** and **53 Node tests**, zero failures.
+
+**Caveats:** `node_modules` was copied from the working tree rather than installed with `npm ci`; `.tools` was
+symlinked; browser QA ran against the working tree before the commit, not the extracted copy. This is weaker than the
+earlier pinned-install run. Nothing was uploaded, published or submitted, and no financial transaction or hosted
+inference call was sent. The environment notes and exclusions below still apply, except that the new features were
+exercised only with controlled adapters.
+
+## Previous source artifact (superseded; kept for the record)
 
 - Commit: `b82b977b9bbab399c08c20e1cc424ffd862a8711`.
 - Local archive: `dist/touchstone-source.zip`; 323 files, 18,095,749 bytes.
