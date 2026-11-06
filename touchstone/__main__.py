@@ -43,6 +43,14 @@ def main():
     web = commands.add_parser("serve", help="Loopback dashboard; all services simulated")
     web.add_argument("--port", type=int, default=8088)
     web.add_argument("--data-dir", default="data")
+    web.add_argument("--live", action="store_true", help="Authorize one live Metal testnet mandate (requires every --live-* option)")
+    web.add_argument("--live-scope")
+    web.add_argument("--live-steps", type=int, default=30)
+    web.add_argument("--live-seed", type=int, default=42)
+    web.add_argument("--live-budget-usd")
+    web.add_argument("--live-price-cap-usd")
+    web.add_argument("--provider-url", action="append", help="Approved provider origin; repeat for local and hosted tiers")
+    web.add_argument("--live-authorization", help="The exact phrase printed by a --live start without it")
     demo = commands.add_parser("demo", help="Run the three-job short-float scenario")
     demo.add_argument("--data-dir", default="data")
     demo.add_argument("--seed", type=int, default=42)
@@ -91,6 +99,21 @@ def main():
     holds.add_argument("--recover", action="store_true")
     holds.add_argument("--execute", action="store_true", help="Allow sandbox authorization/capture/cancel, including recovery writes")
     holds.add_argument("--journal", default="data/airwallex-operations.sqlite")
+    increase = commands.add_parser("airwallex-hold-increase", help="Add a supplemental sandbox authorization for a policy-paused mandate")
+    increase.add_argument("--parent-scope", required=True)
+    increase.add_argument("--parent-hold-usd", required=True)
+    increase.add_argument("--supplement-scope", required=True)
+    increase.add_argument("--supplement-usd", required=True)
+    increase.add_argument("--ledger", required=True, help="Ledger database holding the paused job")
+    increase.add_argument("--job-id", required=True)
+    increase.add_argument("--expected-version", type=int, required=True)
+    increase.add_argument("--budget-usd", required=True)
+    increase.add_argument("--price-cap-usd", required=True)
+    increase.add_argument("--allocation-usd", required=True)
+    increase.add_argument("--approver", required=True)
+    increase.add_argument("--reason", required=True)
+    increase.add_argument("--execute", action="store_true", help="Required: creates a sandbox authorization")
+    increase.add_argument("--journal", default="data/airwallex-operations.sqlite")
     checkout = commands.add_parser("airwallex-checkout", help="Start or inspect a hosted sandbox card authorization")
     checkout.add_argument("--scope", required=True, help="Stable unique order ID; reuse after interruption")
     checkout.add_argument("--hold-usd", default="1.00")
@@ -168,7 +191,7 @@ def main():
                 target.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
             print(json.dumps(result, indent=2))
             return 0 if result["read_probe"] == "PASS" else 2
-        if (args.command in {'airwallex-hold', 'banked-job'} or
+        if (args.command in {'airwallex-hold', 'banked-job', 'airwallex-hold-increase'} or
             args.command == 'airwallex-checkout' and not args.status) and not args.execute:
             raise ValueError("Money-moving workflow requires --execute and written chat approval with a stated cap")
         from .config import load_local
@@ -250,7 +273,15 @@ def main():
             from .server import serve
             if not 1024 <= args.port <= 65535:
                 parser.error("Use a port from 1024 to 65535")
-            serve(args.port, args.data_dir)
+            live = None
+            if args.live:
+                from .live import LiveSession, mandate_from_args
+                if not (args.live_scope and args.live_budget_usd and args.live_price_cap_usd and args.provider_url):
+                    parser.error("--live requires --live-scope, --live-budget-usd, --live-price-cap-usd and --provider-url")
+                mandate = mandate_from_args(args.live_scope, args.provider_url, args.live_budget_usd,
+                                            args.live_price_cap_usd, args.live_steps, args.live_seed)
+                live = LiveSession(args.data_dir, mandate, args.live_authorization)
+            serve(args.port, args.data_dir, live)
         elif args.command == "demo":
             from .engine import Engine
             from .ledger import Ledger
@@ -363,7 +394,8 @@ def main():
                                    client=MetalRail(args.scope, mandate["provider_url"][0] if isinstance(mandate["provider_url"], list) else mandate["provider_url"], cap, budget, execute=args.execute),
                                    expected_provider_ids=["local-gpu", "hosted-premium"] if job["policy"].startswith("real-") else None)
             rail = CompositeRail(MockRail(data_dir / args.scope / "simulated-rail.sqlite"), live)
-            engine = Engine(ledger, rail)
+            from .fault_pipeline import FaultPipeline, metal_record_source
+            engine = Engine(ledger, rail, fault_pipeline=FaultPipeline(ledger, metal_record_source(live)))
             if args.recover:
                 engine.recover(run_id)
                 result = engine.snapshot(run_id)
@@ -438,6 +470,17 @@ def main():
             result = workflow.run(args.scope, micro_usd(args.hold_usd), micro_usd(args.capture_usd), args.recover)
             print(json.dumps(result, indent=2))
             return 0 if result["complete"] else 2
+        elif args.command == "airwallex-hold-increase":
+            from .treasury import AirwallexSandbox
+            from .holds import OperationJournal, SandboxHoldWorkflow, micro_usd
+            from .ledger import Ledger
+            workflow = SandboxHoldWorkflow(AirwallexSandbox(), OperationJournal(args.journal))
+            result = workflow.increase(args.parent_scope, micro_usd(args.parent_hold_usd), args.supplement_scope,
+                micro_usd(args.supplement_usd), Ledger(args.ledger), args.job_id, args.expected_version,
+                micro_usd(args.budget_usd), micro_usd(args.price_cap_usd), micro_usd(args.allocation_usd),
+                args.approver, args.reason)
+            print(json.dumps(result, indent=2))
+            return 0
         elif args.command == "airwallex-checkout":
             from .treasury import AirwallexSandbox
             from .holds import OperationJournal, micro_usd

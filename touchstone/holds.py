@@ -131,6 +131,19 @@ class OperationJournal:
             db.execute("UPDATE operations SET state='OBSERVED',response=? WHERE scope=? AND action=?",
                        (canonical(public_intent(response)), scope, action))
 
+    def observe_raw(self, scope, action, response):
+        """Record a non-PaymentIntent observation (e.g. a merchant receipt) verbatim."""
+        with self.connect() as db:
+            db.execute('BEGIN IMMEDIATE')
+            self._active(db, scope)
+            db.execute("UPDATE operations SET state='OBSERVED',response=? WHERE scope=? AND action=?",
+                       (canonical(response), scope, action))
+
+    def abandon(self, scope, action):
+        """Drop an IN_FLIGHT local entry that provably never dispatched (a pre-dispatch refusal)."""
+        with self.connect() as db:
+            db.execute("DELETE FROM operations WHERE scope=? AND action=? AND state='IN_FLIGHT'", (scope, action))
+
     def uncertain(self, scope, action):
         with self.connect() as db:
             db.execute("UPDATE operations SET state='UNKNOWN' WHERE scope=? AND action=?", (scope, action))
@@ -315,6 +328,44 @@ class SandboxHoldWorkflow:
             self._validate(current, scope, hold)
         ready = current.get("status") == "REQUIRES_CAPTURE" and micro_usd(current.get("captured_amount", 0)) == 0
         return {"mode": "SANDBOX", "intent": current, "ready": ready, "approved_micro_usd": hold}
+
+    def parent_intent_id(self, scope):
+        """The one PaymentIntent a scope authorized, from its durable journal (direct or hosted)."""
+        for action in ("hosted_authorization", "create"):
+            row = self.journal.get(scope, action)
+            if row and row["state"] == "OBSERVED" and row["response"]:
+                return json.loads(row["response"])["id"]
+        raise OutcomeUnknown("Parent scope has no observed authorization; reconcile it first")
+
+    def increase(self, parent_scope, parent_hold, supplement_scope, delta, ledger, job_id, expected_version,
+                 new_budget, new_price_cap, new_allocation, approver, reason):
+        """Raise a mandate's *real* authorization by adding one supplemental sandbox PaymentIntent.
+
+        The parent authorization is never mutated: Airwallex incremental authorization is not assumed.
+        Order matters: (1) validate the ledger change without writing it, (2) verify the parent hold is
+        still uncaptured, (3) authorize the supplement through the journaled create/confirm path (an
+        uncertain outcome raises and the ledger is untouched), (4) only then raise the local mandate.
+        Capture or cancel each intent through its own scope; the unused remainder is not a wallet credit.
+        """
+        if not re.fullmatch(r"[A-Za-z0-9_-]{1,48}", supplement_scope) or supplement_scope == parent_scope:
+            raise ValueError("A distinct supplemental scope is required")
+        if type(delta) is not int or delta <= 0:
+            raise ValueError("Supplemental amount must be positive integer micro-USD")
+        new_hold = parent_hold + delta
+        ledger.approve_mandate_increase(job_id, expected_version, new_hold, new_budget, new_price_cap,
+                                        new_allocation, approver, reason, dry_run=True)
+        parent_id = self.parent_intent_id(parent_scope)
+        self.refresh(parent_scope, parent_hold, parent_id)
+        supplement = self.authorize(supplement_scope, delta)
+        if not supplement["ready"]:
+            raise OutcomeUnknown("Supplemental authorization is not ready; mandate unchanged")
+        remote = {"kind": "SUPPLEMENTAL_PAYMENT_INTENT", "parent_scope": parent_scope, "parent_intent_id": parent_id,
+                  "supplement_scope": supplement_scope, "supplement_intent_id": supplement["intent"]["id"],
+                  "supplement_micro_usd": delta, "previous_remote_hold_micro_usd": parent_hold}
+        applied = ledger.approve_mandate_increase(job_id, expected_version, new_hold, new_budget, new_price_cap,
+                                                  new_allocation, approver, reason, remote=remote)
+        return {**applied, "remote_authorization_changed": True, "remote": remote,
+                "incremental_authorization_api_used": False}
 
     def refresh(self, scope, hold, intent_id):
         current = self._get(intent_id)

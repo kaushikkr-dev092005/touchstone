@@ -77,15 +77,22 @@ def read_live_policy_runs(directory):
     return {"mode": "LIVE_TESTNET_PROVIDER_POLICIES", "runs": rows}
 
 
-def serve(port=8088, data_dir="data"):
-    ledger = Ledger(Path(data_dir) / "ledger.sqlite")
-    engine = Engine(ledger, MockRail(Path(data_dir) / "rail.sqlite"))
+def serve(port=8088, data_dir="data", live=None):
+    """`live` is an already-authorized LiveSession; None keeps every service simulated."""
+    if live is not None:
+        ledger, engine = live.ledger, live.engine
+    else:
+        ledger = Ledger(Path(data_dir) / "ledger.sqlite")
+        engine = Engine(ledger, MockRail(Path(data_dir) / "rail.sqlite"))
     if any(j["status"] == "RUNNING" for j in ledger.jobs()):
         ledger.halt("Server restart paused orphaned jobs; operator resume reconciles pending purchases first")
     token = secrets.token_urlsafe(32)
     worker = None
     worker_lock = threading.Lock()
     last_error = None
+
+    def live_state():
+        return live.describe() if live is not None else {"mode": "SIMULATED", "authorized": False}
 
     def start_worker(run_id):
         nonlocal worker, last_error
@@ -159,7 +166,13 @@ def serve(port=8088, data_dir="data"):
                 return self.send_bytes(200, page.encode(), "text/html; charset=utf-8")
             if path == "/api/state":
                 return self.respond(200, {**engine.snapshot(), "worker_error": last_error,
-                                          "worker_running": bool(worker and worker.is_alive())})
+                                          "worker_running": bool(worker and worker.is_alive()),
+                                          "live": live_state()})
+            if path == "/api/live":
+                return self.respond(200, live_state())
+            if path == "/api/fault-receipts":
+                return self.respond(200, {"receipts": live.faults.receipts() if live else [],
+                                          "refund_executed": False, "mode": live_state()["mode"]})
             if path == "/api/benchmark":
                 p = ROOT / "bench/results/simulated.json"
                 return self.respond(200, json.loads(p.read_text()) if p.exists() else {"summary": [], "mode": "NOT_RUN"})
@@ -213,7 +226,7 @@ def serve(port=8088, data_dir="data"):
                             cursor = events[-1]["id"]
                         from .telemetry import sample
                         payload = json.dumps({"state": engine.snapshot(), "events": events, "worker_error": last_error,
-                                              "telemetry": sample()})
+                                              "telemetry": sample(), "live": {"mode": live_state()["mode"]}})
                         self.wfile.write(f"id: {cursor}\ndata: {payload}\n\n".encode())
                         self.wfile.flush()
                         time.sleep(.9)
@@ -250,6 +263,24 @@ def serve(port=8088, data_dir="data"):
                         return self.respond(200, {"halted": True})
                     if busy:
                         return self.respond(409, {"error": "A run is active; halt it before changing execution"})
+                    if live is not None and self.path in {"/api/demo", "/api/close", "/api/approve-increase"}:
+                        return self.respond(409, {"error": "Live mode runs one pre-authorized mandate; simulated demo, settlement and limit changes are disabled"})
+                    if self.path == "/api/live/quote":
+                        if live is None:
+                            return self.respond(409, {"error": "Live mode is not authorized for this server"})
+                        try:
+                            return self.respond(200, live.quote_preview())
+                        except Exception:
+                            return self.respond(503, {"label": "BLOCKED", "error": "Live quote unavailable; no payment sent"})
+                    if self.path == "/api/live/run":
+                        if live is None:
+                            return self.respond(409, {"error": "Live mode is not authorized for this server"})
+                        live.confirm(payload.get("confirm_budget_usd"))
+                        if all(j["status"] == "COMPLETED" for j in ledger.jobs(live.run_id)):
+                            return self.respond(409, {"error": "The authorized live run is already complete"})
+                        ledger.resume()
+                        start_worker(live.run_id)
+                        return self.respond(202, {"run_id": live.run_id, "mode": "LIVE_TESTNET_AUTHORIZED"})
                     if self.path == "/api/approve-increase":
                         approved = ledger.approve_mandate_increase(
                             payload.get("job_id"), payload.get("expected_version"),
@@ -271,6 +302,8 @@ def serve(port=8088, data_dir="data"):
                         start_worker(run_id)
                         return self.respond(202, {"run_id": run_id})
                     if self.path == "/api/resume":
+                        if live is not None:
+                            live.confirm(payload.get("confirm_budget_usd"))
                         jobs = [j for j in ledger.jobs() if j["status"] != "COMPLETED"]
                         if not jobs:
                             raise ValueError("No paused jobs")
@@ -288,7 +321,11 @@ def serve(port=8088, data_dir="data"):
                 return self.respond(400, {"error": str(error)})
 
     server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
-    print(f"Touchstone: http://127.0.0.1:{port} | SIMULATED treasury, rail and inference", flush=True)
+    if live is None:
+        print(f"Touchstone: http://127.0.0.1:{port} | SIMULATED treasury, rail and inference", flush=True)
+    else:
+        print(f"Touchstone: http://127.0.0.1:{port} | LIVE TESTNET mandate {live.mandate.scope}: budget "
+              f"{live.mandate.budget/1e6:.6f} USDZ, cap {live.mandate.price_cap/1e6:.6f}; customer holds simulated", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

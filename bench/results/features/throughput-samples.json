@@ -1,0 +1,516 @@
+{
+  "label": "MEASURED",
+  "model": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+  "samples": [
+    {
+      "index": 0,
+      "observed_at": 1793987897.7877567,
+      "max_tokens": 64,
+      "completion_tokens": 64,
+      "elapsed_s": 0.9001,
+      "decode_tps": 120.443,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "dab8b1424d4b80263ec542db",
+        "temperature_c": 59.0,
+        "gpu_utilization_percent": 90.0,
+        "power_w": 32.29,
+        "sm_clock_mhz": 1942.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 1,
+      "observed_at": 1793987898.8366568,
+      "max_tokens": 128,
+      "completion_tokens": 128,
+      "elapsed_s": 1.0489,
+      "decode_tps": 125.617,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "dab8b1424d4b80263ec542db",
+        "temperature_c": 59.0,
+        "gpu_utilization_percent": 90.0,
+        "power_w": 32.29,
+        "sm_clock_mhz": 1942.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 2,
+      "observed_at": 1793987900.9380705,
+      "max_tokens": 256,
+      "completion_tokens": 256,
+      "elapsed_s": 2.101,
+      "decode_tps": 124.154,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "dab8b1424d4b80263ec542db",
+        "temperature_c": 59.0,
+        "gpu_utilization_percent": 90.0,
+        "power_w": 32.29,
+        "sm_clock_mhz": 1942.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 3,
+      "observed_at": 1793987901.4502478,
+      "max_tokens": 64,
+      "completion_tokens": 64,
+      "elapsed_s": 0.5123,
+      "decode_tps": 127.615,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "dab8b1424d4b80263ec542db",
+        "temperature_c": 59.0,
+        "gpu_utilization_percent": 90.0,
+        "power_w": 32.29,
+        "sm_clock_mhz": 1942.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 4,
+      "observed_at": 1793987902.4847763,
+      "max_tokens": 128,
+      "completion_tokens": 128,
+      "elapsed_s": 1.0342,
+      "decode_tps": 126.467,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "dab8b1424d4b80263ec542db",
+        "temperature_c": 59.0,
+        "gpu_utilization_percent": 90.0,
+        "power_w": 32.29,
+        "sm_clock_mhz": 1942.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 5,
+      "observed_at": 1793987904.5943944,
+      "max_tokens": 256,
+      "completion_tokens": 256,
+      "elapsed_s": 2.0543,
+      "decode_tps": 125.575,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "60b5bab89373284cf55534c7",
+        "temperature_c": 63.0,
+        "gpu_utilization_percent": 88.0,
+        "power_w": 84.74,
+        "sm_clock_mhz": 1927.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 6,
+      "observed_at": 1793987905.1283364,
+      "max_tokens": 64,
+      "completion_tokens": 64,
+      "elapsed_s": 0.5341,
+      "decode_tps": 126.392,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "60b5bab89373284cf55534c7",
+        "temperature_c": 63.0,
+        "gpu_utilization_percent": 88.0,
+        "power_w": 84.74,
+        "sm_clock_mhz": 1927.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 7,
+      "observed_at": 1793987906.14384,
+      "max_tokens": 128,
+      "completion_tokens": 128,
+      "elapsed_s": 1.0153,
+      "decode_tps": 126.384,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "60b5bab89373284cf55534c7",
+        "temperature_c": 63.0,
+        "gpu_utilization_percent": 88.0,
+        "power_w": 84.74,
+        "sm_clock_mhz": 1927.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 8,
+      "observed_at": 1793987908.2435157,
+      "max_tokens": 256,
+      "completion_tokens": 256,
+      "elapsed_s": 2.0999,
+      "decode_tps": 122.858,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "60b5bab89373284cf55534c7",
+        "temperature_c": 63.0,
+        "gpu_utilization_percent": 88.0,
+        "power_w": 84.74,
+        "sm_clock_mhz": 1927.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 9,
+      "observed_at": 1793987908.7887018,
+      "max_tokens": 64,
+      "completion_tokens": 64,
+      "elapsed_s": 0.5448,
+      "decode_tps": 124.625,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "60b5bab89373284cf55534c7",
+        "temperature_c": 63.0,
+        "gpu_utilization_percent": 88.0,
+        "power_w": 84.74,
+        "sm_clock_mhz": 1927.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 10,
+      "observed_at": 1793987909.8658216,
+      "max_tokens": 128,
+      "completion_tokens": 128,
+      "elapsed_s": 1.0373,
+      "decode_tps": 126.236,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "a5604998d58785c6db414c6a",
+        "temperature_c": 65.0,
+        "gpu_utilization_percent": 87.0,
+        "power_w": 84.37,
+        "sm_clock_mhz": 1927.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 11,
+      "observed_at": 1793987911.9215655,
+      "max_tokens": 256,
+      "completion_tokens": 256,
+      "elapsed_s": 2.056,
+      "decode_tps": 124.65,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "a5604998d58785c6db414c6a",
+        "temperature_c": 65.0,
+        "gpu_utilization_percent": 87.0,
+        "power_w": 84.37,
+        "sm_clock_mhz": 1927.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 12,
+      "observed_at": 1793987912.4666831,
+      "max_tokens": 64,
+      "completion_tokens": 64,
+      "elapsed_s": 0.5443,
+      "decode_tps": 124.461,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "a5604998d58785c6db414c6a",
+        "temperature_c": 65.0,
+        "gpu_utilization_percent": 87.0,
+        "power_w": 84.37,
+        "sm_clock_mhz": 1927.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 13,
+      "observed_at": 1793987913.4838948,
+      "max_tokens": 128,
+      "completion_tokens": 128,
+      "elapsed_s": 1.0175,
+      "decode_tps": 126.178,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "a5604998d58785c6db414c6a",
+        "temperature_c": 65.0,
+        "gpu_utilization_percent": 87.0,
+        "power_w": 84.37,
+        "sm_clock_mhz": 1927.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 14,
+      "observed_at": 1793987915.6082985,
+      "max_tokens": 256,
+      "completion_tokens": 256,
+      "elapsed_s": 2.0755,
+      "decode_tps": 124.901,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "018ce38367ecdd92765206cf",
+        "temperature_c": 66.0,
+        "gpu_utilization_percent": 91.0,
+        "power_w": 84.81,
+        "sm_clock_mhz": 1905.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 15,
+      "observed_at": 1793987916.1463447,
+      "max_tokens": 64,
+      "completion_tokens": 64,
+      "elapsed_s": 0.5382,
+      "decode_tps": 125.15,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "018ce38367ecdd92765206cf",
+        "temperature_c": 66.0,
+        "gpu_utilization_percent": 91.0,
+        "power_w": 84.81,
+        "sm_clock_mhz": 1905.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 16,
+      "observed_at": 1793987917.1744184,
+      "max_tokens": 128,
+      "completion_tokens": 128,
+      "elapsed_s": 1.0272,
+      "decode_tps": 125.015,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "018ce38367ecdd92765206cf",
+        "temperature_c": 66.0,
+        "gpu_utilization_percent": 91.0,
+        "power_w": 84.81,
+        "sm_clock_mhz": 1905.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 17,
+      "observed_at": 1793987919.2755346,
+      "max_tokens": 256,
+      "completion_tokens": 256,
+      "elapsed_s": 2.1016,
+      "decode_tps": 123.065,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "018ce38367ecdd92765206cf",
+        "temperature_c": 66.0,
+        "gpu_utilization_percent": 91.0,
+        "power_w": 84.81,
+        "sm_clock_mhz": 1905.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 18,
+      "observed_at": 1793987919.8088582,
+      "max_tokens": 64,
+      "completion_tokens": 64,
+      "elapsed_s": 0.5332,
+      "decode_tps": 124.794,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "018ce38367ecdd92765206cf",
+        "temperature_c": 66.0,
+        "gpu_utilization_percent": 91.0,
+        "power_w": 84.81,
+        "sm_clock_mhz": 1905.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 19,
+      "observed_at": 1793987920.9900157,
+      "max_tokens": 128,
+      "completion_tokens": 128,
+      "elapsed_s": 1.126,
+      "decode_tps": 116.495,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "7e056feda1fa03a9e15b7dc8",
+        "temperature_c": 68.0,
+        "gpu_utilization_percent": 84.0,
+        "power_w": 82.35,
+        "sm_clock_mhz": 1897.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 20,
+      "observed_at": 1793987923.081117,
+      "max_tokens": 256,
+      "completion_tokens": 256,
+      "elapsed_s": 2.0903,
+      "decode_tps": 122.738,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "7e056feda1fa03a9e15b7dc8",
+        "temperature_c": 68.0,
+        "gpu_utilization_percent": 84.0,
+        "power_w": 82.35,
+        "sm_clock_mhz": 1897.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 21,
+      "observed_at": 1793987923.619063,
+      "max_tokens": 64,
+      "completion_tokens": 64,
+      "elapsed_s": 0.5383,
+      "decode_tps": 125.327,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "7e056feda1fa03a9e15b7dc8",
+        "temperature_c": 68.0,
+        "gpu_utilization_percent": 84.0,
+        "power_w": 82.35,
+        "sm_clock_mhz": 1897.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 22,
+      "observed_at": 1793987924.6560998,
+      "max_tokens": 128,
+      "completion_tokens": 128,
+      "elapsed_s": 1.0367,
+      "decode_tps": 125.47,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "7e056feda1fa03a9e15b7dc8",
+        "temperature_c": 68.0,
+        "gpu_utilization_percent": 84.0,
+        "power_w": 82.35,
+        "sm_clock_mhz": 1897.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 23,
+      "observed_at": 1793987926.734899,
+      "max_tokens": 256,
+      "completion_tokens": 256,
+      "elapsed_s": 2.0328,
+      "decode_tps": 126.087,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "e4309c2a7aa2dab3c3e2b132",
+        "temperature_c": 70.0,
+        "gpu_utilization_percent": 90.0,
+        "power_w": 84.8,
+        "sm_clock_mhz": 1882.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 24,
+      "observed_at": 1793987927.2437832,
+      "max_tokens": 64,
+      "completion_tokens": 64,
+      "elapsed_s": 0.5089,
+      "decode_tps": 127.225,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "e4309c2a7aa2dab3c3e2b132",
+        "temperature_c": 70.0,
+        "gpu_utilization_percent": 90.0,
+        "power_w": 84.8,
+        "sm_clock_mhz": 1882.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 25,
+      "observed_at": 1793987928.282026,
+      "max_tokens": 128,
+      "completion_tokens": 128,
+      "elapsed_s": 1.038,
+      "decode_tps": 123.574,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "e4309c2a7aa2dab3c3e2b132",
+        "temperature_c": 70.0,
+        "gpu_utilization_percent": 90.0,
+        "power_w": 84.8,
+        "sm_clock_mhz": 1882.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 26,
+      "observed_at": 1793987930.4224622,
+      "max_tokens": 256,
+      "completion_tokens": 256,
+      "elapsed_s": 2.1401,
+      "decode_tps": 119.781,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "e4309c2a7aa2dab3c3e2b132",
+        "temperature_c": 70.0,
+        "gpu_utilization_percent": 90.0,
+        "power_w": 84.8,
+        "sm_clock_mhz": 1882.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 27,
+      "observed_at": 1793987930.9681587,
+      "max_tokens": 64,
+      "completion_tokens": 64,
+      "elapsed_s": 0.5454,
+      "decode_tps": 122.731,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "e4309c2a7aa2dab3c3e2b132",
+        "temperature_c": 70.0,
+        "gpu_utilization_percent": 90.0,
+        "power_w": 84.8,
+        "sm_clock_mhz": 1882.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 28,
+      "observed_at": 1793987932.1054943,
+      "max_tokens": 128,
+      "completion_tokens": 128,
+      "elapsed_s": 1.0779,
+      "decode_tps": 121.118,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "2de1c14355e89c631903e827",
+        "temperature_c": 72.0,
+        "gpu_utilization_percent": 87.0,
+        "power_w": 84.24,
+        "sm_clock_mhz": 1897.0,
+        "thermal_throttling_active": false
+      }
+    },
+    {
+      "index": 29,
+      "observed_at": 1793987934.2044702,
+      "max_tokens": 256,
+      "completion_tokens": 256,
+      "elapsed_s": 2.0996,
+      "decode_tps": 123.326,
+      "basis": "SERVER_DECODE_TIMING",
+      "telemetry": {
+        "sample_id": "2de1c14355e89c631903e827",
+        "temperature_c": 72.0,
+        "gpu_utilization_percent": 87.0,
+        "power_w": 84.24,
+        "sm_clock_mhz": 1897.0,
+        "thermal_throttling_active": false
+      }
+    }
+  ]
+}

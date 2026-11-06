@@ -1,5 +1,10 @@
 # Procurement extensions — 6 November 2026
 
+Status key: **IMPLEMENTED** code and tests exist and ran against controlled adapters only;
+**MEASURED** a real local observation exists; **BLOCKED** an external credential, grant or spend
+approval is required. Nothing below was run against a real paid provider, issuing account, Visa
+service or fiat merchant in this revision.
+
 Implementation is local Python stdlib plus the existing pinned Metal SDK and viem.
 No runtime dependency was added. Tests use controlled adapters; none purchases a
 service, issues a card, settles a credit or converts funds.
@@ -37,6 +42,21 @@ rejection paths produce signed acknowledgements, preserve the original charge
 and never net an acknowledgement against settled cash.
 [MOCK identity / MEASURED signature example](../bench/results/features/controlled-credit-acknowledgement.json).
 
+### Automatic fault receipts (IMPLEMENTED)
+
+`Engine(ledger, rail, fault_pipeline=FaultPipeline(...))` hands every deterministic verification
+failure to `touchstone/fault_pipeline.py`. Per payment key, durably and idempotently, it rebuilds the
+saved-purchase record from the rail's own lookup, creates and re-validates the proof, signs it with
+the job's existing wallet (never a new one), submits it to the original provider's `/faults/review`
+origin (HTTPS or loopback only, no redirects), verifies the provider's acknowledgement signature
+offline with the provider's own verifier, and retains it in the `fault_receipts` table. An outage
+leaves `SUBMIT_PENDING` for `retry_pending()`; a forged or mismatched acknowledgement is `ACK_INVALID`
+and ignored; an unsupported task or missing signed delivery is `NOT_ELIGIBLE`. Any pipeline error is
+swallowed after logging so procurement never stops. Acknowledgements are never refunds and are never
+netted against the settled charge. `engine-metal` and the authorized live dashboard enable it by
+default. **Not yet observed:** a live provider acknowledging a real fault; the default live review
+policy still grants no credit.
+
 ## 2. CardRail and controlled signed intent
 
 `python tools/card_rail.py --help` exposes a sandbox-only issuing doctor, guarded
@@ -61,6 +81,30 @@ onboarding, Visa key trust/discovery, consumer/payment containers or a payment.
 Do not claim Visa-approved identity, full TAP interoperability or award eligibility.
 [Probe](../bench/results/features/tap-probe.json),
 [Visa TAP specification](https://developer.visa.com/docs/trusted-agent-protocol/trusted-agent-protocol-specifications).
+
+### Merchant payment, key directory and hold increases (IMPLEMENTED, controlled adapters only)
+
+`CardRail.pay(scope, amount, adapter=..., execute=True)` re-reads the issued card, re-verifies it is
+active, single-use, unexpired, in the purchase currency and large enough for the exact amount, writes a
+durable request, calls a `MerchantAdapter`, and refuses to retry after any uncertainty.
+`touchstone/merchant.py::SignedIntentMerchant` posts an RFC 9421 Ed25519 intent (signed by
+`integrations/metal/tap-sign-cli.mjs` with an *existing* key file) to an HTTPS or loopback merchant and
+accepts only an acknowledgement that echoes the intent with signature, intent and replay checks true.
+No PAN/CVC is ever requested or sent. A merchant acknowledgement is **not** settlement:
+`settlement_verified` and `merchant_payment_completed` stay false until an adapter supplies independent
+settlement evidence.
+
+`keysFromJwks` lets the merchant verifier trust an Ed25519 JWKS key directory (time-limited,
+`trust_source=KEY_DIRECTORY`). It never sets `visa_approved_agent`: that needs Visa onboarding and key
+trust this repository does not have. **BLOCKED:** genuine Visa integration and any issuing write.
+
+`SandboxHoldWorkflow.increase` raises a mandate's *real* authorization by authorizing one
+supplemental sandbox PaymentIntent through the existing journaled create/confirm path (Airwallex
+incremental authorization is not assumed). It dry-runs the ledger change first, verifies the parent is
+still uncaptured, and raises the local mandate only after the supplement is observed ready; an uncertain
+outcome leaves the mandate unchanged and never recreates the intent. Capture/cancel each intent in its
+own scope. CLI: `python -m touchstone airwallex-hold-increase ... --execute`. **Not yet observed:** a
+real sandbox supplemental authorization; the unused remainder is not a wallet credit.
 
 ## 3. FX-aware procurement
 
@@ -88,6 +132,16 @@ guarded FX command and fresh written approval. No conversion occurs per call.
 The previous one-conversion approval was consumed by the settled M1 proof.
 [Airwallex FX quote contract](https://www.airwallex.com/docs/api/transactional_fx/quotes/create).
 
+### Funded fiat execution (IMPLEMENTED, controlled adapters only)
+
+`touchstone/fx_execution.py::execute_preferred` is the only bridge from comparison to dispatch. It
+requires `--execute`; re-runs the comparison at execution time with MEASURED offers only; requires a
+written approval bound to scope, provider, named approver, maximum effective cost and expiry; reads the
+fiat wallet balance for the card currency; writes a single-use journal row; then calls `CardRail.pay`.
+A card in a different currency is refused (no conversion happens). A pre-dispatch refusal releases the
+journal row so a corrected retry is possible; an uncertain merchant outcome never retries. **BLOCKED:**
+a real funded fiat merchant; this repository has none configured.
+
 ## 4. Measured GPU capacity
 
 `GET /api/telemetry` and SSE expose timestamped NVIDIA driver observations: GPU
@@ -96,16 +150,24 @@ flags. Samples cache for five seconds; failed samples become BLOCKED. These are
 local measurements, not remote hardware attestations.
 [Saved sample](../bench/results/features/telemetry.json).
 
-The seller quotes a compact telemetry reference, rejects new local-model quotes
-when actual thermal throttling is observed and uses observed service latency/
-queue depth only when samples exist. Already-paid delivery/recovery remains
-available. Temperature alone never changes price. Tokens/second is UNMEASURED
-because the current model endpoint exposes no throughput metrics.
+The seller quotes a compact telemetry reference, rejects new local-model quotes when actual
+thermal throttling is observed and uses observed service latency/queue depth only when samples exist.
+Already-paid delivery/recovery remains available. Temperature never changes price.
 
-**BLOCKED calibration:** no fitted capacity coefficients or measured thermal
-throughput experiment exist. Capacity price markups are disabled; new seller
-quotes use the fixed base price. No invented temperature progression or economic
-pricing claim is presented.
+**MEASURED throughput and calibration:** `python tools/measure_throughput.py` drives the pinned local
+model over 30 sequential calls, pairing each with a hardware sample, and writes raw samples and a
+digest-bound calibration under `bench/results/features/`. Result on the RTX 3050 laptop GPU with
+Qwen2.5-1.5B Q4_K_M: **124.8 tokens/s median** (90% interval 124.2–125.6, range 116.5–127.6 over 59–70 °C).
+Pricing rule: `multiplier = clamp(baseline_tps / median(recent live decode tps), 1, 1.25)`, applied only
+when the calibration verifies (digest, model hash, seven-day expiry), at least five live decode samples
+exist and the result stays under the 0.05 USD ceiling. Seller deliveries record the server-reported
+decode rate. Missing, expired, altered or wrong-model calibration reverts to the fixed base price.
+[Samples](../bench/results/features/throughput-samples.json),
+[calibration](../bench/results/features/capacity-calibration.json).
+
+**Limits:** one model, one machine, sequential single-slot load; the 1.25 cap is a policy bound, not a
+fitted economic optimum, and no buyer has paid a calibrated price. Concurrent-load behavior is
+unmeasured. Recalibrate after any model, driver or hardware change.
 
 ## Commands that move no money
 
@@ -114,6 +176,7 @@ PowerShell, macOS and Linux use the same commands:
 ```text
 python tools/run_mock.py
 python tools/features.py --controlled-fx --tap-probe --controlled-fault-proof --sample-gpu
+python tools/measure_throughput.py --runs 30   # local model only; no payment
 python tools/card_rail.py doctor
 python tools/fault_proof.py verify --input bench/results/faults/metal-fault.json
 ```
@@ -124,12 +187,12 @@ for any new purchase, deposit, withdrawal, card or FX transaction.
 
 ## Verification and remaining gates
 
-**MEASURED:** 247 Python tests and 47 Node tests pass locally. Browser checks pass
+**MEASURED:** the full Python and Node suites pass locally (see [validation](VALIDATION.md) for the current counts). Browser checks pass
 at desktop/390px widths, including SSE, session/Host/Origin controls, missing-key
 FX refusal, both simulated billing policies, kill/resume and reconciliation.
 See [validation](VALIDATION.md) and the [evidence index](EVIDENCE_INDEX.md).
 
-M3 useful paid inference, M4 live comparison, calibrated capacity pricing, enabled
-issuing, Visa credentials/trust, final settlement, manual portal/video/submission
-and new spending approvals remain gates. The implementation does not turn those
+M3 useful paid inference, M4 live comparison, enabled issuing, Visa credentials/trust, a funded
+fiat merchant, final settlement, manual portal/video/submission and new spending approvals remain
+gates. The implementation does not turn those
 missing observations into completion claims.

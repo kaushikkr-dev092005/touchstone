@@ -53,6 +53,26 @@ def refresh_fx(client):
         return result
 
 
+def capacity_summary(now=None):
+    """Saved throughput calibration, re-verified on every read. A stale or altered file is reported, not trusted."""
+    from .throughput import verify
+    now = time.time() if now is None else now
+    saved = load(ROOT/'bench/results/features/capacity-calibration.json')
+    try:
+        body = saved['body']
+        verify(saved, body['model_sha256'], now)
+        state = 'MEASURED'
+    except (KeyError, TypeError, ValueError) as error:
+        if not saved:
+            return {'label': 'BLOCKED', 'reason': 'No throughput calibration has been measured', 'markup_enabled': False}
+        return {'label': 'BLOCKED', 'reason': str(error)[:120], 'markup_enabled': False}
+    return {'label': state, 'markup_enabled': True, 'model': body['model'], 'samples': body['samples'],
+            'baseline_tps': body['baseline_tps'], 'baseline_tps_interval_90': body['baseline_tps_interval_90'],
+            'max_multiplier': body['max_multiplier'], 'minimum_live_samples': body['minimum_live_samples'],
+            'valid_until': body['valid_until'], 'pricing_rule': body['pricing_rule'],
+            'temperature_changes_price': False, 'digest': saved['digest']}
+
+
 def summary():
     folder=ROOT/'bench/results/features'
     fault=load(ROOT/'bench/results/faults/metal-fault.json')
@@ -75,4 +95,5 @@ def summary():
              'quote_current':bool(rate and rate.get('expires_at',0)>time.time()),'preview':preview(rate)},
             'card':load(folder/'card-readiness.json') or {'label':'BLOCKED','issuing_read':False},
             'tap':load(folder/'tap-probe.json') or {'label':'BLOCKED','visa_approved_agent':False},
+            'capacity':capacity_summary(),
             'automatic_payments':False,'fiat_token_bridge':False}

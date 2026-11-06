@@ -105,3 +105,17 @@ test('Python-created historical proof has the identical Merkle root and a valid 
   assert.equal(result.payer_signature_verified,true);
   assert.equal(result.provider_output_signature_verified,false);
 });
+
+import { spawnSync } from 'node:child_process';
+test('offline acknowledgement CLI accepts the provider signature and rejects edits, wrong roots and wrong sellers',async()=>{
+  const f=await fixture();try {
+    const ack=await f.reviews.review(f.proof,f.policy), root=f.proof.commitment.root, invoice=f.proof.body.payment.invoice.id;
+    const run=request=>{const r=spawnSync(process.execPath,[new URL('./fault-ack-cli.mjs',import.meta.url).pathname.replace(/^\/([A-Za-z]:)/,'$1')],{input:JSON.stringify(request),encoding:'utf8'});return JSON.parse(r.stdout);};
+    const base={acknowledgement:ack,seller:f.seller.publicKey,root,invoice_id:invoice};
+    assert.equal(run(base).result.signature_valid,true);
+    assert.equal(run({...base,acknowledgement:{...ack,credit_base_units:'1'}}).result.signature_valid,false);
+    assert.equal(run({...base,root:'00'.repeat(32)}).result.signature_valid,false);
+    assert.equal(run({...base,seller:f.payer.publicKey}).result.signature_valid,false);
+    assert.equal(run({acknowledgement:'x'}).result.signature_valid,false);
+  } finally{f.db.close();}
+});

@@ -4,7 +4,7 @@ Offline planning and real local tool execution. No payments sent.
 
 Model profile status: BLOCKED_STALE_OR_INVALID. Stale inputs cannot qualify a model; tool measurements are independent.
 
-Bounded tools solved 1000/1000 generated tasks over five new seeds with no model calls or provider spend. CPU p50 0.0017 ms; p95 0.0035 ms (single local run).
+Bounded tools solved 1000/1000 generated tasks over five new seeds with no model calls or provider spend. CPU p50 0.0016 ms; p95 0.0025 ms (single local run).
 
 No provider purchase. CPU, development, review and service costs are not priced; this is not a zero-total-cost claim.
 

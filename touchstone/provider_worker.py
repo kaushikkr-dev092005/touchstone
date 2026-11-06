@@ -17,9 +17,10 @@ def main():
             if output is None:
                 raise ValueError("Unsupported tool input")
         elif raw["mode"] == "model":
-            output, latency = local_inference(task)
+            usage = {}
+            output, latency = local_inference(task, usage)
             metadata = {"provider_type": "LOCAL_MODEL", "provider_model": os.environ.get("LOCAL_MODEL", "local-model"),
-                        "latency_ms": latency}
+                        "latency_ms": latency, **usage}
         elif raw["mode"] == "anthropic":
             output, latency, metadata = anthropic_inference(task)
         else:

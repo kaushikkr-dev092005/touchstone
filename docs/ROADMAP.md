@@ -85,7 +85,7 @@ below and does not establish current remote CI success.
 - [ ] Ask the sponsor whether sandbox Developer MCP/CLI counts as Airwallex tooling; AgentOS MCP/skills need a production connector and the official CLI has no Windows build.
 - [ ] Kit 11 (price-rise limit rebalance, signed-order dispute settlement) is not implemented; do not claim it.
 - [ ] Replace dashboard simulated inference with real inference (the simulator remains labelled SIMULATED).
-- [ ] Real Airwallex hold increase for mandate-limit approval does not exist; the approval is a simulated, versioned local mandate only.
+- [x] Supplemental-authorization hold increase implemented and tested with a controlled adapter (`airwallex-hold-increase`); a real sandbox run is still pending and needs operator approval. The dashboard approval remains a simulated, versioned local mandate.
 
 ## Evidence summary
 

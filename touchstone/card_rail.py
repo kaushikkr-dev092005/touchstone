@@ -103,5 +103,51 @@ class CardRail:
         self.journal.observe(scope,'issue',{'id':card_id,'status':result['status']})
         return result
 
-    def pay(self, *args, **kwargs):
-        raise PolicyError('Issuing is not merchant acquiring. Configure an independently verified merchant adapter; no automatic fallback or charge')
+    def pay(self, scope, amount_micro=None, *, adapter=None, job_id=None, execute=False, expected_currency=None):
+        """Spend one issued single-use card through an independently verified merchant adapter.
+
+        The card is re-read and its controls re-verified immediately before dispatch. A durable
+        request precedes the merchant call; any uncertainty raises OutcomeUnknown and a second
+        merchant call is never made automatically. The receipt records merchant acknowledgement and,
+        separately, whether independent settlement evidence exists (settlement_verified).
+        """
+        if adapter is None:
+            raise PolicyError('Issuing is not merchant acquiring. Configure an independently verified merchant adapter; no automatic fallback or charge')
+        if not execute:
+            raise ValueError('A merchant payment requires --execute and separate written approval for this amount')
+        issued = self.journal.get(scope, 'issue')
+        if not issued or issued['state'] != 'OBSERVED':
+            raise PolicyError('No observed issued card for this scope; reconcile issuing first')
+        card_id = json.loads(issued['response'])['id']
+        card = self.client.request('GET', '/api/v1/issuing/cards/' + card_id)
+        controls = card.get('authorization_controls', {})
+        limits = controls.get('transaction_limits', {})
+        currency = (controls.get('allowed_currencies') or [None])[0]
+        per_transaction = next((x['amount'] for x in limits.get('limits', []) if x.get('interval') == 'PER_TRANSACTION'), None)
+        expiry = datetime.fromisoformat(controls.get('active_to', '1970-01-01T00:00:00+00:00').replace('Z', '+00:00'))
+        if (card.get('status') != 'ACTIVE' or controls.get('allowed_transaction_count') != 'SINGLE' or per_transaction is None
+                or type(amount_micro) is not int or amount_micro <= 0 or api_usd(amount_micro) > per_transaction
+                or expiry <= datetime.now(timezone.utc) or limits.get('currency') != currency or currency is None):
+            raise PolicyError('Card is not active, single-use, unexpired and large enough for this exact amount')
+        if expected_currency is not None and expected_currency != currency:
+            raise PolicyError('Card currency differs from the purchase currency; no conversion is performed')
+        job_id = job_id or scope
+        body = {'card_id': card_id, 'amount_micro': amount_micro, 'currency': currency, 'job_id': job_id, 'adapter': adapter.name}
+        action = 'merchant_charge'
+        request_id, prior = self.journal.begin(scope, action, '/merchant/charge', body)
+        if prior:
+            return {**prior, 'idempotent_replay': True}
+        try:
+            charge = adapter.charge(job_id=job_id, card_id=card_id, amount_micro=amount_micro, currency=currency)
+            settlement = adapter.confirm(charge)
+        except Exception:
+            self.journal.uncertain(scope, action)
+            raise OutcomeUnknown('Merchant outcome is unknown; reconcile with the merchant and never charge again automatically') from None
+        result = {'label': getattr(self.client, 'evidence_label', 'MOCK'), 'mode': self.mode, 'scope': scope, 'card_id': card_id,
+                  'request_id': request_id, 'amount_micro': amount_micro, 'currency': currency, 'adapter': adapter.name,
+                  'merchant_acknowledged': charge['merchant_acknowledged'], 'merchant_receipt': charge,
+                  'settlement_verified': bool(settlement), 'settlement_evidence': settlement,
+                  'merchant_payment_completed': bool(settlement), 'visa_approved_agent': False,
+                  'sensitive_card_details_requested': False}
+        self.journal.observe_raw(scope, action, result)
+        return result

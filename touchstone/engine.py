@@ -16,8 +16,13 @@ class InjectedCrash(Exception):
 
 
 class Engine:
-    def __init__(self, ledger, rail):
-        self.ledger, self.rail = ledger, rail
+    def __init__(self, ledger, rail, fault_pipeline=None):
+        self.ledger, self.rail, self.fault_pipeline = ledger, rail, fault_pipeline
+
+    def _fault(self, key, verdict):
+        """A deterministic verification failure may become a signed fault receipt; never blocks procurement."""
+        if self.fault_pipeline is not None and verdict.get("passed") is False:
+            self.fault_pipeline.handle(key)
 
     def create_demo(self, seed=42, count=24, failed_call_policy='CUSTOMER_PAYS'):
         specs = []
@@ -74,6 +79,7 @@ class Engine:
             task = next(Task(**t) for t in json.loads(jobs[a["job_id"]]["tasks"]) if t["id"] == a["step_id"])
             verdict = check(task, receipt["output"])
             self.ledger.finish_attempt(a["key"], receipt["output"], verdict)
+            self._fault(a["key"], verdict)
             if not verdict.get("retryable", True):
                 self.ledger.status(a["job_id"], "PAUSED_REVIEW", verdict["reason"])
             recovered += 1
@@ -172,6 +178,7 @@ class Engine:
                         os._exit(86)
                     verdict = check(task, receipt["output"])
                     self.ledger.finish_attempt(key, receipt["output"], verdict)
+                    self._fault(key, verdict)
                     if verdict.get("retryable", True):
                         router.observe(offer.provider, task.kind, verdict["passed"])
                     else:

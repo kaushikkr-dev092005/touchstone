@@ -175,7 +175,8 @@ class Ledger:
             rows = db.execute("SELECT * FROM jobs WHERE run_id=? ORDER BY id", (run_id,)) if run_id else db.execute("SELECT * FROM jobs ORDER BY rowid DESC")
             return [dict(r) for r in rows]
 
-    def approve_mandate_increase(self, job_id, expected_version, hold, budget, price_cap, allocation, approver, reason):
+    def approve_mandate_increase(self, job_id, expected_version, hold, budget, price_cap, allocation, approver, reason,
+                                 remote=None, dry_run=False):
         values = (hold, budget, price_cap, allocation)
         if any(type(value) is not int or value <= 0 for value in values):
             raise ValueError("Approved mandate limits must be positive integer micro-USD")
@@ -207,6 +208,8 @@ class Ledger:
             allocated = db.execute("SELECT COALESCE(SUM(allocation),0) FROM jobs WHERE run_id=?", (job["run_id"],)).fetchone()[0]
             if allocated - job["allocation"] + allocation > run["float_total"]:
                 raise PolicyError("Approved allocation exceeds the run's existing operator float")
+            if dry_run:
+                return {"job_id": job_id, "mandate_version": job["mandate_version"], "dry_run": True}
             old = {name: job[name] for name in ("hold", "budget", "price_cap", "allocation")}
             new_version = job["mandate_version"] + 1
             db.execute("UPDATE jobs SET hold=?,budget=?,price_cap=?,allocation=?,mandate_version=? WHERE id=?",
@@ -215,10 +218,12 @@ class Ledger:
                 "job_id": job_id, "previous_version": job["mandate_version"], "mandate_version": new_version,
                 "previous_limits": old,
                 "approved_limits": {"hold": hold, "budget": budget, "price_cap": price_cap, "allocation": allocation},
-                "approver": approver.strip(), "reason": reason.strip(), "mode": "SIMULATED"})
+                "approver": approver.strip(), "reason": reason.strip(),
+                "mode": "SIMULATED" if remote is None else "SANDBOX_SUPPLEMENTAL_AUTHORIZATION",
+                "remote_authorization": remote})
             return {"job_id": job_id, "mandate_version": new_version, "status": job["status"],
                     "hold": hold, "budget": budget, "price_cap": price_cap, "allocation": allocation,
-                    "mode": "SIMULATED"}
+                    "mode": "SIMULATED" if remote is None else "SANDBOX_SUPPLEMENTAL_AUTHORIZATION"}
 
     def attempts(self, job_id=None):
         with self.connect() as db:

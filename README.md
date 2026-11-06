@@ -125,7 +125,11 @@ Labels: **MEASURED** = execution with saved evidence (scope stated); **SIMULATED
 | Agent planning | MEASURED (deterministic, synthetic) | Deterministic | No live LLM planner or reference judge |
 | M3 invoice extraction | MEASURED negative result / BLOCKED useful inference | 180 synthetic sources; both local models measured and refused | Tool coverage 24/180; 0/180 strict-correct per model; no eligible provider or paid reference |
 | Mandate-limit approval (versioned, human-approved) | SIMULATED | Exists in the simulator only | Audited local mandate version; job stays paused until Resume; uses only existing simulated float |
-| Real Airwallex hold increase | BLOCKED | Not implemented | No external hold, authorization increment or wallet change is made by any approval |
+| Real Airwallex hold increase | IMPLEMENTED (controlled adapter) / not observed live | `airwallex-hold-increase` adds a supplemental sandbox PaymentIntent, then raises the mandate | Not an in-place increment; no real sandbox supplement has been run; the dashboard simulated approval is unchanged |
+| Authorized live dashboard | IMPLEMENTED (controlled adapter) / not run with spend | `serve --live` with an exact authorization phrase | One bound mandate; browser must re-enter the budget; demo/close/simulated increases disabled; customer holds simulated |
+| Automatic fault receipts | IMPLEMENTED (controlled adapters) | Engine failure → signed proof → provider review → retained acknowledgement | Never a refund; no live provider acknowledgement observed |
+| Funded fiat execution / card merchant payment | IMPLEMENTED (controlled adapters) / BLOCKED live | Approval + fresh comparison + funded balance + single-use journal | No funded fiat merchant, issuing write or settlement evidence; Visa integration blocked |
+| Measured GPU throughput | MEASURED | 124.8 tokens/s median, RTX 3050, Qwen2.5-1.5B Q4_K_M | One model, sequential load; bounded ×1.25 markup only with a valid calibration and live samples |
 | Refunds | BLOCKED | Not implemented | Failed calls remain charged |
 
 **The accurate pitch:** spend autonomously within an approved mandate, verify what can be checked, stop or escalate on uncertainty, and account for every paid attempt. Payment precedes verification; this system does not promise payment only for correct output.

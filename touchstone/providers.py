@@ -96,7 +96,7 @@ def simulate(task, provider, seed, index, attempt, chaos=True):
     return answer
 
 
-def local_inference(task):
+def local_inference(task, usage=None):
     url = os.environ.get("LOCAL_INFERENCE_URL", "http://127.0.0.1:8080/v1/chat/completions")
     parsed = urlparse(url)
     if parsed.scheme != "http" or parsed.hostname not in {"127.0.0.1", "localhost", "::1"}:
@@ -110,7 +110,16 @@ def local_inference(task):
     req = urllib.request.Request(url, json.dumps(payload).encode(), {"Content-Type": "application/json"})
     started = time.perf_counter()
     with urllib.request.urlopen(req, timeout=90) as response:
-        raw = json.load(response)["choices"][0]["message"]["content"]
+        body = json.load(response)
+    raw = body["choices"][0]["message"]["content"]
+    if usage is not None:
+        from .throughput import decode_rate
+        try:
+            tokens, rate, basis = decode_rate(body, time.perf_counter() - started)
+            if basis == "SERVER_DECODE_TIMING":
+                usage.update(completion_tokens=tokens, decode_tokens_per_second=round(rate, 3))
+        except ValueError:
+            pass
     text = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw.strip())
     try:
         output = json.loads(text)

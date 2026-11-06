@@ -100,3 +100,22 @@ Account access references: [API key scopes](https://www.airwallex.com/docs/devel
 The [support request](AIRWALLEX_SUPPORT_REQUEST.md) is a draft, not a sent email.
 
 The optional native-fee guard applies to the approved deposit through `tools/fund_metal_probe.py`; it does not claim to retrofit a fee cap onto every legacy deposit command. That fixed-scope script records a consumed approval and must not be rerun as a fresh authorization.
+
+
+## Authorized live dashboard (testnet spend)
+
+The default dashboard is entirely simulated. To drive one real Metal-testnet mandate from the dashboard,
+start it with every live option; the first attempt without `--live-authorization` prints the exact phrase
+that binds scope, budget, per-call cap, step count and a terms digest:
+
+```text
+python -m touchstone serve --live --live-scope demo1 --live-budget-usd 0.50 --live-price-cap-usd 0.05 \
+  --provider-url http://127.0.0.1:8092 --live-steps 10
+python -m touchstone serve --live ... --live-authorization "<phrase printed above>"
+```
+
+The scope binds its terms on disk (a different mandate for the same scope is refused). In the browser, only
+**Start authorized live run** can spend, and only after re-entering the exact budget; **Fetch live quotes**
+sends no payment. The simulated demo, simulated close and simulated limit increases return HTTP 409 so
+synthetic and live state never mix. Customer holds remain simulated. Fault receipts appear in the live panel.
+Running this spends testnet USDZ and needs your own spending approval; it was not run by the tests.

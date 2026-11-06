@@ -12,7 +12,7 @@ import { decodeResource, DeliveryStore, priceForQueue, qualityDropOutput } from 
 import { scenario } from './m4-chaos.mjs';
 import { attestDelivery } from './delivery-proof.mjs';
 import { FaultReviewStore } from './fault-review.mjs';
-import { localCapacity, capacityQuote } from './capacity.mjs';
+import { localCapacity, capacityQuote, loadCalibration } from './capacity.mjs';
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const port = Number(process.env.TOUCHSTONE_PROVIDER_PORT || '8092');
@@ -38,6 +38,11 @@ const maxPriceMicroUsd = amount('0.05') / 10n ** 12n;
 let queueDepth = 0;
 let deliveryTail = Promise.resolve();
 const serviceSamples = [];
+const throughputSamples = [];
+const calibrationPath = resolve(root, process.env.TOUCHSTONE_CAPACITY_CALIBRATION || 'bench/results/features/capacity-calibration.json');
+function activeCalibration() {
+  return mode === 'model' && process.env.LOCAL_MODEL_SHA256 ? loadCalibration(calibrationPath, process.env.LOCAL_MODEL_SHA256) : null;
+}
 
 function averageServiceMs() {
   return serviceSamples.length ? Math.round(serviceSamples.reduce((sum, value) => sum + value, 0) / serviceSamples.length) : 1000;
@@ -107,7 +112,8 @@ const server = createServer({ maxHeaderSize: 65536 }, async (request, response) 
   }
   if (request.method !== 'GET') return send(response, 403, { error: 'GET required' });
   if (chaos === 'outage') return send(response, 503, { error: 'Injected provider outage; no quote is available' });
-  const capacity = capacityQuote(price, queueDepth, serviceSamples, mode === 'model' ? await localCapacity() : null);
+  const capacity = capacityQuote(price, queueDepth, serviceSamples, mode === 'model' ? await localCapacity() : null,
+    activeCalibration(), throughputSamples, maxPriceMicroUsd * 10n ** 12n);
   if (request.url === '/health') return send(response, 200, { mode: 'TESTNET_PROVIDER', provider_type: mode,
     upstream_funding: mode === 'anthropic' && process.env.TOUCHSTONE_HOSTED_FUNDING_SOURCE === 'PARTNER_CREDITS' ? 'PARTNER_CREDITS_OPERATOR_DECLARED' : 'UNVERIFIED',
     inference_ready: await modelReady(), chain: 63825, paid_delivery: 'UNVERIFIED', chaos,
@@ -157,6 +163,10 @@ const server = createServer({ maxHeaderSize: 65536 }, async (request, response) 
     const result = await runQueued(() => store.deliver(id, resource, receiptDigest, async () => {
       if (!await modelReady()) throw Error('Inference provider unavailable after payment; retain and recover the original receipt');
       const output = await worker(task);
+      const decodeTps = output.provider_metadata?.decode_tokens_per_second;
+      if (typeof decodeTps === 'number' && decodeTps > 0 && decodeTps < 1e6) {
+        throughputSamples.push(decodeTps); if (throughputSamples.length > 20) throughputSamples.shift();
+      }
       const delivered = taskChaos === 'quality-drop' ? { ...output, output: qualityDropOutput(task, output.output),
         provider_metadata: { ...output.provider_metadata, chaos_mode: taskChaos } } : output;
       return { ...delivered, delivery_attestation: await attestDelivery(wallet.signer, resource, id, task, delivered.output) };

@@ -1,0 +1,27 @@
+{
+  "label": "MEASURED",
+  "body": {
+    "version": "touchstone-capacity-calibration-v1",
+    "model": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+    "model_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+    "fitted_at": "2026-11-06T17:58:54.206404+00:00",
+    "valid_until": 1794592734.2064037,
+    "samples": 30,
+    "baseline_tps": 124.847,
+    "baseline_tps_interval_90": [
+      124.154,
+      125.575
+    ],
+    "coefficient_of_variation": 0.0189,
+    "max_multiplier": 1.25,
+    "minimum_live_samples": 5,
+    "pricing_rule": "multiplier = clamp(baseline_tps / median(recent live decode tps), 1, max_multiplier)",
+    "temperature_changes_price": false,
+    "excluded_samples": {
+      "throttled": 0,
+      "not_server_timed": 0
+    },
+    "sample_set_sha256": "b9611c341a4d0d22850e299d18443c9ba1cc4584764a81d0e026f4ae951739b3"
+  },
+  "digest": "b98e5ff388de7a7d209544915802bba72cead01f9a15606a2b6b3efebb19fae3"
+}
