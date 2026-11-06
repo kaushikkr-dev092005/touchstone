@@ -10,6 +10,11 @@ PRIORS = {"metal-provider": .5, "local-gpu": .5, "hosted-premium": .5}
 
 
 class Router:
+    @staticmethod
+    def select_fx(offers, rates, **limits):
+        from .fx_router import compare
+        return compare(offers, rates, **limits)
+
     def __init__(self, seed=0):
         self.seed = seed
         self.stats = defaultdict(lambda: [0, 0])

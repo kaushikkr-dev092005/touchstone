@@ -1,0 +1,108 @@
+{
+  "label": "SIMULATED",
+  "rate_source": "MOCK",
+  "implementation_execution": "MEASURED",
+  "cases": [
+    {
+      "label": "SIMULATED",
+      "budget_currency": "USD",
+      "offers": [
+        {
+          "provider": "local-gpu",
+          "currency": "USD",
+          "rail": "AIRWALLEX_CARD",
+          "price_micro": 10000,
+          "label": "SIMULATED",
+          "eligible": true,
+          "reason": "ELIGIBLE_FOR_COMPARISON",
+          "converted_cost_micro": 10000,
+          "fx_fee_micro": 0,
+          "rail_fee_micro": 0,
+          "check_fee_micro": 0,
+          "expected_retry_micro": 0,
+          "effective_cost_micro": 10000,
+          "quote_id": null,
+          "cost_label": "SIMULATED",
+          "latency_ms": 100
+        },
+        {
+          "provider": "hosted-premium",
+          "currency": "EUR",
+          "rail": "AIRWALLEX_CARD",
+          "price_micro": 7000,
+          "label": "SIMULATED",
+          "eligible": true,
+          "reason": "ELIGIBLE_FOR_COMPARISON",
+          "converted_cost_micro": 8050,
+          "fx_fee_micro": 50,
+          "rail_fee_micro": 0,
+          "check_fee_micro": 0,
+          "expected_retry_micro": 0,
+          "effective_cost_micro": 8100,
+          "quote_id": "controlled-reference",
+          "cost_label": "SIMULATED",
+          "latency_ms": 100
+        }
+      ],
+      "preferred_provider": "hosted-premium",
+      "decision": "COMPARISON_ONLY",
+      "dispatch_authorized": false,
+      "conversions_created": 0,
+      "payments_sent": 0,
+      "retry_assumption": "Independent fixed-price attempts, truncated to the explicit maximum; not a measured guarantee",
+      "fx_fee_assumption": "Explicit allocated treasury fee per call; no per-call conversion is performed"
+    },
+    {
+      "label": "SIMULATED",
+      "budget_currency": "USD",
+      "offers": [
+        {
+          "provider": "local-gpu",
+          "currency": "USD",
+          "rail": "AIRWALLEX_CARD",
+          "price_micro": 10000,
+          "label": "SIMULATED",
+          "eligible": true,
+          "reason": "ELIGIBLE_FOR_COMPARISON",
+          "converted_cost_micro": 10000,
+          "fx_fee_micro": 0,
+          "rail_fee_micro": 0,
+          "check_fee_micro": 0,
+          "expected_retry_micro": 0,
+          "effective_cost_micro": 10000,
+          "quote_id": null,
+          "cost_label": "SIMULATED",
+          "latency_ms": 100
+        },
+        {
+          "provider": "hosted-premium",
+          "currency": "EUR",
+          "rail": "AIRWALLEX_CARD",
+          "price_micro": 7000,
+          "label": "SIMULATED",
+          "eligible": true,
+          "reason": "ELIGIBLE_FOR_COMPARISON",
+          "converted_cost_micro": 14000,
+          "fx_fee_micro": 50,
+          "rail_fee_micro": 0,
+          "check_fee_micro": 0,
+          "expected_retry_micro": 0,
+          "effective_cost_micro": 14050,
+          "quote_id": "controlled-reference",
+          "cost_label": "SIMULATED",
+          "latency_ms": 100
+        }
+      ],
+      "preferred_provider": "local-gpu",
+      "decision": "COMPARISON_ONLY",
+      "dispatch_authorized": false,
+      "conversions_created": 0,
+      "payments_sent": 0,
+      "retry_assumption": "Independent fixed-price attempts, truncated to the explicit maximum; not a measured guarantee",
+      "fx_fee_assumption": "Explicit allocated treasury fee per call; no per-call conversion is performed"
+    }
+  ],
+  "payments_sent": 0,
+  "conversions_created": 0,
+  "note": "Illustrative qualified/funded offers; actual local models remain ineligible."
+}

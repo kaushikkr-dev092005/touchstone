@@ -10,6 +10,9 @@ import { discover, amount } from './adapter.mjs';
 import { openWallet } from './wallet.mjs';
 import { decodeResource, DeliveryStore, priceForQueue, qualityDropOutput } from './provider-core.mjs';
 import { scenario } from './m4-chaos.mjs';
+import { attestDelivery } from './delivery-proof.mjs';
+import { FaultReviewStore } from './fault-review.mjs';
+import { localCapacity, capacityQuote } from './capacity.mjs';
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const port = Number(process.env.TOUCHSTONE_PROVIDER_PORT || '8092');
@@ -27,6 +30,7 @@ const walletDirectory = providerId === 'metal-provider' ? 'local-provider' : `pr
 const wallet = openWallet(resolve(root, 'data/metal', walletDirectory));
 wallet.bindDeployment(deployment);
 const store = new DeliveryStore(wallet.db);
+const faultReviews = new FaultReviewStore(wallet.db, wallet.signer);
 const price = amount(process.env.TOUCHSTONE_PROVIDER_PRICE_USD || '0.01');
 if (price <= 0n || price > amount('0.05')) throw Error('Provider test price must be in (0, 0.05] USD');
 const basePriceMicroUsd = price / 10n ** 12n;
@@ -92,8 +96,18 @@ function send(response, status, body, headers = {}) {
 }
 
 const server = createServer({ maxHeaderSize: 65536 }, async (request, response) => {
-  if (request.headers.host !== `127.0.0.1:${port}` || request.method !== 'GET') return send(response, 403, { error: 'Loopback GET required' });
+  if (request.headers.host !== `127.0.0.1:${port}`) return send(response, 403, { error: 'Loopback host required' });
+  if (request.method === 'POST' && request.url === '/faults/review') {
+    try {
+      if (request.headers['content-type'] !== 'application/json') throw Error('JSON required');
+      let text = '';
+      for await (const chunk of request) { text += chunk; if (text.length > 200000) throw Error('Fault too large'); }
+      return send(response, 200, await faultReviews.review(JSON.parse(text)));
+    } catch { return send(response, 400, { error: 'Fault evidence is invalid, expired or not an original signed delivery; original charge preserved' }); }
+  }
+  if (request.method !== 'GET') return send(response, 403, { error: 'GET required' });
   if (chaos === 'outage') return send(response, 503, { error: 'Injected provider outage; no quote is available' });
+  const capacity = capacityQuote(price, queueDepth, serviceSamples, mode === 'model' ? await localCapacity() : null);
   if (request.url === '/health') return send(response, 200, { mode: 'TESTNET_PROVIDER', provider_type: mode,
     upstream_funding: mode === 'anthropic' && process.env.TOUCHSTONE_HOSTED_FUNDING_SOURCE === 'PARTNER_CREDITS' ? 'PARTNER_CREDITS_OPERATOR_DECLARED' : 'UNVERIFIED',
     inference_ready: await modelReady(), chain: 63825, paid_delivery: 'UNVERIFIED', chaos,
@@ -106,7 +120,7 @@ const server = createServer({ maxHeaderSize: 65536 }, async (request, response) 
     latency_source: serviceSamples.length ? 'completed_provider_deliveries' : 'default_before_first_delivery',
     seller_public_key: wallet.signer.publicKey,
     base_price_micro_usd: basePriceMicroUsd.toString(),
-    current_quote_base_units: priceForQueue(basePriceMicroUsd, queueDepth, maxPriceMicroUsd).toString() });
+    current_quote_base_units: capacity.price.toString(), capacity: { ...capacity, price:capacity.price.toString() } });
   try {
     const { task } = decodeResource(request.url);
     const taskChaos = schedule?.fault(task.id, providerId) || chaos;
@@ -115,11 +129,12 @@ const server = createServer({ maxHeaderSize: 65536 }, async (request, response) 
       { 'X-Touchstone-Fault': 'outage', 'X-Touchstone-Scenario-SHA256': schedule.sha256 });
     const resource = origin + request.url;
     if (!request.headers['payment-signature']) {
+      if (!capacity.quote_allowed) return send(response, 503, { error: 'Measured hardware thermal throttle active; no new quote or payment requested', telemetry_ref:capacity.telemetry_ref });
       if (!await modelReady()) return send(response, 503, { error: 'Inference provider is not configured or ready; no quote offered' });
       const quotedQueueDepth = queueDepth;
-      const latencyMs = averageServiceMs() * (quotedQueueDepth + 1);
+      const latencyMs = capacity.latency_ms ?? averageServiceMs() * (quotedQueueDepth + 1);
       const offer = clearingRequirements({ ...deployment, recipient: wallet.signer.publicKey },
-        priceForQueue(basePriceMicroUsd, quotedQueueDepth, maxPriceMicroUsd), resource);
+        capacity.price, resource);
       const expiresAt = Date.now() + 30000;
       store.rememberQuote(resource, offer, expiresAt, quotedQueueDepth, latencyMs);
       const packet = { x402Version: 2, resource: { url: resource, mimeType: 'application/json' }, accepts: [offer] };
@@ -127,6 +142,8 @@ const server = createServer({ maxHeaderSize: 65536 }, async (request, response) 
         { 'PAYMENT-REQUIRED': encodePaymentRequiredHeader(packet), 'X-Touchstone-Queue-Depth': String(quotedQueueDepth),
           'X-Touchstone-Latency-Ms': String(latencyMs),
           'X-Touchstone-Latency-Samples': String(serviceSamples.length),
+          ...(capacity.telemetry_ref ? { 'X-Touchstone-Telemetry-Ref':capacity.telemetry_ref,
+            'X-Touchstone-Telemetry-At':String(capacity.telemetry_observed_at) } : {}),
           'X-Touchstone-Provider': providerId });
     }
     const paymentPacket = decodePaymentSignatureHeader(request.headers['payment-signature']);
@@ -140,8 +157,9 @@ const server = createServer({ maxHeaderSize: 65536 }, async (request, response) 
     const result = await runQueued(() => store.deliver(id, resource, receiptDigest, async () => {
       if (!await modelReady()) throw Error('Inference provider unavailable after payment; retain and recover the original receipt');
       const output = await worker(task);
-      return taskChaos === 'quality-drop' ? { ...output, output: qualityDropOutput(task, output.output),
+      const delivered = taskChaos === 'quality-drop' ? { ...output, output: qualityDropOutput(task, output.output),
         provider_metadata: { ...output.provider_metadata, chaos_mode: taskChaos } } : output;
+      return { ...delivered, delivery_attestation: await attestDelivery(wallet.signer, resource, id, task, delivered.output) };
     }), { retryRunning: mode !== 'anthropic' });
     return send(response, 200, result);
   } catch { return send(response, 503, { error: 'Delivery unconfirmed; retain and replay the original receipt without another payment' }); }

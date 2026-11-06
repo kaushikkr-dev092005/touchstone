@@ -1,0 +1,24 @@
+{
+  "label": "MOCK",
+  "cryptographic_verification": "MEASURED",
+  "profile": "RFC9421_ED25519_AGENT_RECOGNITION_WITH_BODY_DIGEST",
+  "signature_verified": true,
+  "intent_verified": true,
+  "replay_protected": true,
+  "identity_trust": "CONTROLLED_LOCAL_KEY",
+  "visa_approved_agent": false,
+  "visa_credentials_verified": false,
+  "full_tap_payment_containers_verified": false,
+  "intent": {
+    "job_id": "controlled-job",
+    "intent": "purchase",
+    "currency": "USD",
+    "amount_minor": 1
+  },
+  "payments_sent": 0,
+  "merchant_http_status": 200,
+  "replay_http_status": 403,
+  "controlled_public_key_sha256": "6945ad270b64c70082485410a5040205f69bd7671e571c0e11390666474ce70e",
+  "request_sha256": "a1da21451ebcba4a12e7fc16fee280f21533faa8193240a3a508364268748a25",
+  "visa_integration_status": "BLOCKED_VISA_CREDENTIALS_NOT_CONFIGURED"
+}

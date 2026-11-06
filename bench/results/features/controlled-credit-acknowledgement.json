@@ -1,0 +1,105 @@
+{
+  "label": "MOCK",
+  "cryptography": "MEASURED",
+  "trust_anchor": "CONTROLLED_FIXTURE_OPERATOR_KEY",
+  "fault": {
+    "body": {
+      "task": {
+        "id": "fixture",
+        "kind": "arithmetic",
+        "source": {
+          "amounts_cents": [
+            1250,
+            275,
+            499
+          ],
+          "discount_cents": 24
+        },
+        "min_quality": 1
+      },
+      "output": {
+        "total_cents": 1250
+      },
+      "payment": {
+        "invoice": {
+          "id": "0xeebe5304ea5e5016354ca1ddd0af39533b6c707edf4899728bf9d6b6f08a2423:fixture",
+          "network": "eip155:63825",
+          "asset": "0x000000000000000000000000000000000000B5d5",
+          "settlement": "0x1111111111111111111111111111111111111111",
+          "recipient": "0x026ff03b949241ce1dadd43519e6960e0a85b41a69a05c328103aa2bce1594ca16",
+          "amount": "10000000000000000"
+        },
+        "receipt": {
+          "body": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000102550f471003f3df97c3df506ac797f6721fb1a1fb7b8f6f83d224498a65c88e240000000000000000000000000000271032449559bc3e85758296d8365826993e780d5ff426b1954ffa78c84de9902065",
+          "payerSignature": "0x09835fcc9054340bb8c5ba216d7fad1540d7136ee7cecc6fe2b049be0e6aef406cf3652b08b66f59f9f408669228ac45bf774be9097b734f43dfaaeb47fa57b3",
+          "operatorSignature": "0xb35922b022766b86a98d97f2cf34be4ea99469fb9386c59d2e92a51d1f7ab5881fc758a1ea00df5e5c1944b7ea0fc4f751eac4a1d5156f1039368c05b6759021"
+        },
+        "invoiceSignature": "0x02abf14a66e029f3fbb888a2c878fc90f398cdcea3cdfe8ff6923456780897a6458c2eb98d058563bc1700adba44714e850010b5d495a4ddcf17fa6210207c88",
+        "entries": [
+          {
+            "recipient": "0x026ff03b949241ce1dadd43519e6960e0a85b41a69a05c328103aa2bce1594ca16",
+            "cumulative": "10000",
+            "count": "1"
+          }
+        ]
+      },
+      "requirements": {
+        "scheme": "bajillion",
+        "network": "eip155:63825",
+        "asset": "0x000000000000000000000000000000000000B5d5",
+        "amount": "10000000000000000",
+        "payTo": "0x026ff03b949241ce1dadd43519e6960e0a85b41a69a05c328103aa2bce1594ca16",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "settlement": "0x1111111111111111111111111111111111111111",
+          "serviceUrl": "https://example.test",
+          "invoicePrefix": "0xeebe5304ea5e5016354ca1ddd0af39533b6c707edf4899728bf9d6b6f08a2423"
+        }
+      },
+      "resource": "http://127.0.0.1:8092/inference/01bc74b21ab2e7fca9c267a148843a8ae52633e3371a364b3d864679b6246396?task=eyJpZCI6ImZpeHR1cmUiLCJraW5kIjoiYXJpdGhtZXRpYyIsInNvdXJjZSI6eyJhbW91bnRzX2NlbnRzIjpbMTI1MCwyNzUsNDk5XSwiZGlzY291bnRfY2VudHMiOjI0fSwibWluX3F1YWxpdHkiOjF9",
+      "delivery_attestation": {
+        "version": 1,
+        "resource": "http://127.0.0.1:8092/inference/01bc74b21ab2e7fca9c267a148843a8ae52633e3371a364b3d864679b6246396?task=eyJpZCI6ImZpeHR1cmUiLCJraW5kIjoiYXJpdGhtZXRpYyIsInNvdXJjZSI6eyJhbW91bnRzX2NlbnRzIjpbMTI1MCwyNzUsNDk5XSwiZGlzY291bnRfY2VudHMiOjI0fSwibWluX3F1YWxpdHkiOjF9",
+        "payment_id": "eip155:63825:bajillion:0x1111111111111111111111111111111111111111:0x4b28e125841990e7e0f3e8afbb85cbdf95fa33d5b35b36eb85168cb0f6dda6f0",
+        "task_sha256": "b87f537feef5c74e879021f31e380bc17d8d7cafc6b10fb8bf93f84a01c539d4",
+        "output_sha256": "80e9914431ccea057b003e27c9f4c587d16f0f620ffec169226cfb6a31b4cf2b",
+        "signer": "0x026ff03b949241ce1dadd43519e6960e0a85b41a69a05c328103aa2bce1594ca16",
+        "signature": "0x6ddc58658df424e06b4e8903fe012bddeca17766b8d5c51325fb6779c5aec11c6794d4aceb16c5e22d9ed15e11cd19559224e39c391274f0badc306d94d17c8b"
+      },
+      "counterexample": {
+        "error_code": "INVOICE_TOTAL_MISMATCH",
+        "claimed_total_minor": 1250,
+        "recomputed_total_minor": 2000,
+        "decision": "VERIFIED_FAIL"
+      },
+      "created_at": "2026-11-05T17:08:42.487Z",
+      "nonce": "abababababababababababababababab",
+      "original_charge_base_units": "10000000000000000"
+    },
+    "commitment": {
+      "root": "29685682b39699a05883a4aa03a2de7f7f0aea118108c876762fd3ac8ca3fa89"
+    },
+    "fault_signature": {
+      "signer": "0x02550f471003f3df97c3df506ac797f6721fb1a1fb7b8f6f83d224498a65c88e24",
+      "signature": "0x85c06f30eb88c7a7c31592d603650b95e1c04c6a505eca45199e9507a1f8f9407674ea9f69795cb6b4186c1a26db61915c6a3c06e3be2d9ff31ce613adda6dcf"
+    }
+  },
+  "acknowledgement": {
+    "version": 1,
+    "fault_root": "29685682b39699a05883a4aa03a2de7f7f0aea118108c876762fd3ac8ca3fa89",
+    "invoice_id": "0xeebe5304ea5e5016354ca1ddd0af39533b6c707edf4899728bf9d6b6f08a2423:fixture",
+    "decision": "ACCEPTED",
+    "reason": "Provider reproduced the integer total fault; credit acknowledged only",
+    "credit_base_units": "10000000000000000",
+    "credit_status": "ACKNOWLEDGED_NOT_SETTLED",
+    "original_charge_base_units": "10000000000000000",
+    "refund_executed": false,
+    "created_at": "2026-11-05T17:08:42.488Z",
+    "signer": "0x026ff03b949241ce1dadd43519e6960e0a85b41a69a05c328103aa2bce1594ca16",
+    "signature": "0x7ee4119354024093d1bceb153a53bb630fca530c09919a7accc2c01b50bd64584765fbeeab83bbaeb16c9f705b57c33c639d0e25a215e707749818e4faf7583e"
+  },
+  "acknowledgement_signature_verified": true,
+  "refund_executed": false,
+  "original_charge_preserved": true,
+  "credits_settled": 0
+}

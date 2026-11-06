@@ -72,7 +72,9 @@ export async function quote(url, deployment, maximum, fetcher = fetch) {
       !Number.isSafeInteger(latencySamples) || latencySamples < 0 ||
       !['metal-provider','local-gpu','hosted-premium'].includes(providerId)) throw Error('Invalid provider quote metadata');
   return { url, offer, expires_at: Date.now() + 30000, queue_depth: queueDepth,
-    latency_ms: latencyMs, latency_samples: latencySamples, provider_id: providerId };
+    latency_ms: latencyMs, latency_samples: latencySamples, provider_id: providerId,
+    ...(response.headers.get('X-Touchstone-Telemetry-Ref') ? {telemetry_ref:response.headers.get('X-Touchstone-Telemetry-Ref'),
+      telemetry_observed_at:response.headers.get('X-Touchstone-Telemetry-At')} : {}) };
 }
 
 function purchase(wallet, id) {

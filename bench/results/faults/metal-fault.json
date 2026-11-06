@@ -1,0 +1,132 @@
+{
+  "label": "MEASURED",
+  "body": {
+    "version": "touchstone-inferential-fault-v1",
+    "created_at": "2026-11-05T16:44:09.114486+00:00",
+    "nonce": "59f64549cfca42f6bd2241dd3ddc84dd",
+    "task": {
+      "id": "protocol-probe",
+      "kind": "arithmetic",
+      "source": {
+        "amounts_cents": [
+          1250,
+          275,
+          499
+        ],
+        "discount_cents": 24
+      },
+      "min_quality": 1
+    },
+    "output": {
+      "total_cents": 1250
+    },
+    "payment": {
+      "invoice": {
+        "id": "0x1dd182453dea5a728086ed93f14aee6dcadf8c3470f4e26da81164c05ad0f723:adbc7de4-6a2b-405b-a40a-f58d2f40327d",
+        "network": "eip155:63825",
+        "asset": "0x000000000000000000000000000000000000B5d5",
+        "settlement": "0xab3cC15A5Ad1812D0BfEA239bbcF076d2437Ec22",
+        "recipient": "0x02036e68fe68babdd62fbf11ddd6c0e48f1464d79bb46bc24d9d565a75c7bc2a4c",
+        "amount": "10000000000000000"
+      },
+      "receipt": {
+        "body": "0xbb536cb601b2050ae6a476d04a12ed62d0f99185275d64a883fb3c65c0f6ab0100000000000161b70235497315f2bcf4dcbbba72ccad40aa936848eddee835c2ecf54ac81126752f6900000000000000000000000000002710225c9ac89426d43dbbeb69393d37022905f50ffb6e990a8f220c48c4541c6c3e",
+        "operatorSignature": "0x6cee3f801883af92dd138d465d68e46f1aca2aada4df50d257b8e7e5cb433fa73e75f88566c10e14b3007bf00018324543fb1e353a9c999f428b6fa7ef796ea9",
+        "payerSignature": "0xc0c9982ff4c27ca37894224d46d75b7479b6504f94a5660f51fc4e10ca38f8443dbe3afc8215c0801a4f28277d0c458ed7fa2e0f7938e5e8dbfe04cd8cba8015"
+      },
+      "invoiceSignature": "0x232b0e79d82528a71a8e87381723482eaa1514e6eef63f2bd48852c43d6516bb51c8f3b1096bde313326bb9a8e98ad406504147424c31a9c1713337df83b5d19",
+      "entries": [
+        {
+          "recipient": "0x02036e68fe68babdd62fbf11ddd6c0e48f1464d79bb46bc24d9d565a75c7bc2a4c",
+          "cumulative": "10000",
+          "count": "1"
+        }
+      ]
+    },
+    "requirements": {
+      "scheme": "bajillion",
+      "network": "eip155:63825",
+      "asset": "0x000000000000000000000000000000000000B5d5",
+      "amount": "10000000000000000",
+      "payTo": "0x02036e68fe68babdd62fbf11ddd6c0e48f1464d79bb46bc24d9d565a75c7bc2a4c",
+      "maxTimeoutSeconds": 60,
+      "extra": {
+        "settlement": "0xab3cC15A5Ad1812D0BfEA239bbcF076d2437Ec22",
+        "serviceUrl": "https://clearing-testnet.metalntwx.com",
+        "invoicePrefix": "0x1dd182453dea5a728086ed93f14aee6dcadf8c3470f4e26da81164c05ad0f723"
+      }
+    },
+    "resource": "http://127.0.0.1:8092/inference/6f1b959c9e558787289bd68c9abe30c0e910c81a71acf0ba6c1ca06ad98eebf1?task=eyJpZCI6InByb3RvY29sLXByb2JlIiwia2luZCI6ImFyaXRobWV0aWMiLCJtaW5fcXVhbGl0eSI6MS4wLCJzb3VyY2UiOnsiYW1vdW50c19jZW50cyI6WzEyNTAsMjc1LDQ5OV0sImRpc2NvdW50X2NlbnRzIjoyNH19",
+    "delivery_attestation": null,
+    "counterexample": {
+      "error_code": "INVOICE_TOTAL_MISMATCH",
+      "claimed_total_minor": 1250,
+      "recomputed_total_minor": 2000,
+      "currency": "USD",
+      "minor_unit_scale": 100,
+      "expected_output": {
+        "total_cents": 2000
+      },
+      "decision": "VERIFIED_FAIL",
+      "verdict": {
+        "score": 0,
+        "passed": false,
+        "reason": "Source evidence or numeric checks failed"
+      }
+    },
+    "contract": {
+      "verifier_version": "source-rules-v4-source-gating",
+      "code_sha256": {
+        "verifier.py": "5e31d7e313f566bc4411ff2f0217c24a55766a98d50a0a927b22516738ea3e7a",
+        "local_tools.py": "ed1b617ab702c7a7773e615c8fd77b850103d895392ca66ec83d32c2e5928052",
+        "workload.py": "af42df6367bbca65dd76dfa7397b1a712db3022999968a8f3dc26b9f3133a90b"
+      },
+      "scope": "Bounded integer USD invoice/arithmetic only; not a semantic correctness oracle",
+      "provenance": "RECONSTRUCTED_FROM_PUBLIC_TASK_AND_CURRENT_RULES"
+    },
+    "original_charge_base_units": "10000000000000000",
+    "source_evidence_sha256": "7af7f2744c248cab80216489496d4402c44614e8367c3079ef39aad40c1152ae"
+  },
+  "commitment": {
+    "algorithm": "SHA-256-domain-separated-binary-tree",
+    "leaves": {
+      "contract": "a2ee2d61b33b73ab871f7eed41f3b8e86570ffe3cfc0bb01d5d055ec26c0af0a",
+      "counterexample": "048265e2bafdad48df435c5597efd429f500d9e97764d2003e70ed2db3446f4e",
+      "created_at": "723f50c928aaa56b91f676ae0d3e77b1694bf96d824ec2cad97fa98a78b65525",
+      "delivery_attestation": "d9c31f821eab2b8d5c0d1a22f8a2ccdb965710ee7387ad36fac8f9b23bc5a838",
+      "nonce": "effe113a029e99c327fb5bd039a110291ef90c1300df3b27650fd95104709e55",
+      "original_charge_base_units": "aa3c93fde9acb36f0da550e0d90b4236c68041b8d8cdb2729489e00f0e7e3a3b",
+      "output": "0943122501ce44d354900c135f8a9d8e499a9c84d6a8fa1afa5ac30cac351fc0",
+      "payment": "2593842315eee287eddd62f6d8fe7a61b19938c47c0f8477d18e6d1daabfe5b3",
+      "requirements": "6a7682a4b8a1c5d1692cc502320eb220c015eaf615de43708cf4557712090469",
+      "resource": "22c3cb455e2e426d936cc06c24f956851d0164a554b19e3038038a25f7fff4af",
+      "source_evidence_sha256": "71d20781e6e314470b7196d8f62a77d1c871d252f44bf9ce74843afc92f34ab0",
+      "task": "8041ce5f5b5389f142fe140562f8a55d9f2da122d337711f50b89f962a633b4a",
+      "version": "fefcc655ff0d0e0a5b65f00f2368cd4397ade8ed53e100ed81b0814c2f3d8353"
+    },
+    "root": "2ee0189fdb3df446bb90ecd48ffb04d1d136c2a12e6138aee67a5479f88d52ac"
+  },
+  "fault_signature": {
+    "signer": "0x0235497315f2bcf4dcbbba72ccad40aa936848eddee835c2ecf54ac81126752f69",
+    "signature": "0xec3fd2e459f58ab923cae12fe92a84ccbe9a673314e6f91c3f2b82605abfb8270153ad1034e1625db17ced515a6e0327189d9253c4334c0986bef669713b2c96"
+  },
+  "limits": {
+    "refund_executed": false,
+    "credit_issued": false,
+    "historical_unsigned_output_is_not_provider_attributed": true,
+    "signature_alone_is_not_proof_of_fault": true
+  },
+  "cryptographic_observation": {
+    "payer_signature_verified": true,
+    "invoice_and_task_bound": true,
+    "operator_signature_verified": true,
+    "trust_anchor": "READ_ONLY_ONCHAIN_CONTEXT_AND_OPERATOR_JOURNAL",
+    "operator_public_key": "0x03404275cafbcd3b027dabd0a1fb48e017a04c4a1e0f89dea457de8bd4fd0f7bb3",
+    "provider_output_signature_verified": false,
+    "provider_output_attribution": "UNSIGNED_HISTORICAL_DELIVERY",
+    "receipt_status": "preconfirmed",
+    "final_settlement_verified": false,
+    "transactions_sent": 0,
+    "fault_signature_verified": true
+  }
+}

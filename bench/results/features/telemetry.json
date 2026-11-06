@@ -1,0 +1,22 @@
+{
+  "label": "MEASURED",
+  "source": "LOCAL_NVIDIA_SMI",
+  "device_index": 0,
+  "gpu_uuid": "GPU-fafa143a-ced0-8e1e-7367-b61c6c01e506",
+  "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "observed_at": 1793897771.3837228,
+  "temperature_c": 39.0,
+  "gpu_utilization_percent": 0.0,
+  "vram_used_mib": 0.0,
+  "vram_total_mib": 4096.0,
+  "power_w": 12.16,
+  "sm_clock_mhz": 1500.0,
+  "max_sm_clock_mhz": 2100.0,
+  "thermal_throttling_active": false,
+  "throughput_tokens_per_second": null,
+  "throughput_status": "UNMEASURED",
+  "pricing_coefficients_status": "UNMEASURED_NO_CAPACITY_MARKUP",
+  "temperature_alone_changes_price": false,
+  "remote_hardware_attestation": false,
+  "sample_id": "0430e662d1ef61cbabc40fba"
+}

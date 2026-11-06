@@ -1,0 +1,38 @@
+{
+  "label": "MEASURED",
+  "observed_at": 1793948752.8414397,
+  "scope": "LOCAL_WORKING_TREE_BEFORE_SOURCE_PACKAGE",
+  "python": {
+    "passed": 247,
+    "failed": 0
+  },
+  "node": {
+    "passed": 47,
+    "failed": 0
+  },
+  "browser": {
+    "desktop": "passed",
+    "mobile_width": 390,
+    "errors": 0,
+    "both_billing_policies": "passed",
+    "session_host_origin": "passed",
+    "sse_kill_resume_close": "passed",
+    "missing_credentials_fx": "BLOCKED_AS_EXPECTED"
+  },
+  "secrets": {
+    "history_findings": 0,
+    "sensitive_paths_in_history": 0,
+    "working_tree_findings": 5,
+    "working_tree_findings_confined_to_uncommitted_env_example": true,
+    "public_preflight_status_file_scanned": true,
+    "guarantee_of_no_secrets": false
+  },
+  "new_runtime_dependencies": 0,
+  "external_transactions_sent_by_validation": 0,
+  "artifact_sha256": {
+    "python-tests.txt": "ad084341dff2eb6e272ebb8141da8ae1e2a217c0c4fd85e4992b908b0619ee3f",
+    "node-tests.txt": "668822fca79dc8f72c66c26dd2fad7b2b7afe6dca5e7c500c595a0f3fde46885",
+    "browser-validation.json": "3fac85f77cde942a5bef01d49170ae2a90d9b9c2ec55625e0c03a344c67f298c",
+    "secret-scan.json": "9bfd22024c933ec915295e4eefec4243c2808a8c775f23e04789c82a8d76ac32"
+  }
+}

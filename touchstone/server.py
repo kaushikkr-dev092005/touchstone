@@ -146,6 +146,12 @@ def serve(port=8088, data_dir="data"):
             if path == "/api/readiness":
                 from .readiness import inspect
                 return self.respond(200, inspect())
+            if path == '/api/features':
+                from .feature_evidence import summary
+                return self.respond(200, summary())
+            if path == '/api/telemetry':
+                from .telemetry import sample
+                return self.respond(200, sample())
             if path == "/api/procurement-evidence":
                 from .procurement_evidence import summary
                 return self.respond(200, summary())
@@ -178,7 +184,9 @@ def serve(port=8088, data_dir="data"):
                         events = ledger.events(cursor, 100)
                         if events:
                             cursor = events[-1]["id"]
-                        payload = json.dumps({"state": engine.snapshot(), "events": events, "worker_error": last_error})
+                        from .telemetry import sample
+                        payload = json.dumps({"state": engine.snapshot(), "events": events, "worker_error": last_error,
+                                              "telemetry": sample()})
                         self.wfile.write(f"id: {cursor}\ndata: {payload}\n\n".encode())
                         self.wfile.flush()
                         time.sleep(.9)
@@ -201,6 +209,13 @@ def serve(port=8088, data_dir="data"):
                 payload = json.loads(self.rfile.read(length) or b"{}")
                 if not isinstance(payload, dict):
                     raise ValueError("JSON object required")
+                if self.path == '/api/fx-quote':
+                    from .feature_evidence import refresh_fx
+                    from .treasury import AirwallexSandbox
+                    try:
+                        return self.respond(200, refresh_fx(AirwallexSandbox()))
+                    except Exception:
+                        return self.respond(503, {'label':'BLOCKED','error':'FX quote unavailable; no conversion or payment sent'})
                 with worker_lock:
                     busy = worker and worker.is_alive()
                     if self.path == "/api/halt":
@@ -225,7 +240,7 @@ def serve(port=8088, data_dir="data"):
                         seed = payload.get("seed", 42)
                         if type(seed) is not int or not 0 <= seed <= 100000:
                             raise ValueError("Seed must be an integer from 0 to 100000")
-                        run_id = engine.create_demo(seed)
+                        run_id = engine.create_demo(seed, failed_call_policy=payload.get('failed_call_policy','CUSTOMER_PAYS'))
                         start_worker(run_id)
                         return self.respond(202, {"run_id": run_id})
                     if self.path == "/api/resume":
