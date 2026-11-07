@@ -1,6 +1,10 @@
 # M3 invoice-extraction runbook
 
-All commands run from the repository root. Python commands below work in PowerShell and Bash. The committed report currently refuses every model because M3 measurements are absent. Nothing in the dashboard dispatches this workload automatically.
+All commands run from the repository root. Python commands below work in PowerShell and Bash.
+The two saved local profiles each contain 180 measured calls and failed qualification.
+Profiles whose code hashes differ from the current implementation must be remeasured;
+historical results do not qualify the current seller. No eligibility threshold is relaxed.
+Nothing in the dashboard dispatches this workload automatically.
 
 ## Reproduce the no-payment evidence
 

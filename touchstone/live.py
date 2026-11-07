@@ -101,7 +101,8 @@ class LiveSession:
                                          expected_provider_ids=PROVIDER_IDS if len(urls) == 2 else None)
         self.rail = CompositeRail(MockRail(self.directory / mandate.scope / 'simulated-rail.sqlite'), self.live_rail)
         kwargs = {k: v for k, v in (('signer', signer), ('submitter', submitter), ('ack_verifier', ack_verifier)) if v}
-        self.faults = FaultPipeline(self.ledger, record_source or metal_record_source(self.live_rail), **kwargs)
+        self.faults = FaultPipeline(self.ledger, record_source or metal_record_source(self.live_rail),
+                                   wallet_scope=mandate.scope, **kwargs)
         self.engine = Engine(self.ledger, self.rail, fault_pipeline=self.faults)
 
     def confirm(self, value):

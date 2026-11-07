@@ -395,7 +395,8 @@ def main():
                                    expected_provider_ids=["local-gpu", "hosted-premium"] if job["policy"].startswith("real-") else None)
             rail = CompositeRail(MockRail(data_dir / args.scope / "simulated-rail.sqlite"), live)
             from .fault_pipeline import FaultPipeline, metal_record_source
-            engine = Engine(ledger, rail, fault_pipeline=FaultPipeline(ledger, metal_record_source(live)))
+            engine = Engine(ledger, rail, fault_pipeline=FaultPipeline(ledger, metal_record_source(live),
+                                                                      wallet_scope=args.scope))
             if args.recover:
                 engine.recover(run_id)
                 result = engine.snapshot(run_id)

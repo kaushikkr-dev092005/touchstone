@@ -17,7 +17,7 @@ from .ledger import canonical
 from .metal import node_executable
 
 STATES = {'NOT_ELIGIBLE', 'PROOF_CREATED', 'SIGN_FAILED', 'SUBMIT_PENDING', 'ACKNOWLEDGED_ACCEPTED',
-          'ACKNOWLEDGED_REJECTED', 'ACK_INVALID'}
+          'ACKNOWLEDGED_REJECTED', 'ACK_INVALID', 'EVIDENCE_ERROR'}
 FINAL = {'NOT_ELIGIBLE', 'ACKNOWLEDGED_ACCEPTED', 'ACKNOWLEDGED_REJECTED', 'ACK_INVALID'}
 
 
@@ -75,9 +75,10 @@ def metal_record_source(rail):
 
 class FaultPipeline:
     def __init__(self, ledger, record_source, *, signer=cryptographic_check, submitter=http_submit,
-                 ack_verifier=node_ack_verifier, clock=time.time):
+                 ack_verifier=node_ack_verifier, clock=time.time, wallet_scope=None):
         self.ledger, self.record_source = ledger, record_source
         self.signer, self.submitter, self.ack_verifier, self.clock = signer, submitter, ack_verifier, clock
+        self.wallet_scope = wallet_scope
         with ledger.connect() as db:
             db.execute('''CREATE TABLE IF NOT EXISTS fault_receipts(
                 key TEXT PRIMARY KEY, job_id TEXT NOT NULL, step_id TEXT NOT NULL, state TEXT NOT NULL,
@@ -114,7 +115,13 @@ class FaultPipeline:
         try:
             return self._handle(key)
         except Exception as error:  # noqa: BLE001 - evidence generation is best-effort and durable
-            return {'state': 'ERROR', 'detail': type(error).__name__}
+            try:
+                attempt = next((a for a in self.ledger.attempts() if a['key'] == key), None)
+                if attempt and attempt['passed'] == 0:
+                    self._save(key, attempt['job_id'], attempt['step_id'], 'EVIDENCE_ERROR', detail=type(error).__name__)
+            except Exception:
+                pass
+            return {'state': 'EVIDENCE_ERROR', 'detail': type(error).__name__}
 
     def _handle(self, key):
         prior = self.get(key)
@@ -138,8 +145,13 @@ class FaultPipeline:
             except ValueError as error:
                 self._save(key, job_id, step_id, 'NOT_ELIGIBLE', detail=str(error)[:200])
                 return self.get(key)
+        else:
+            proof = json.loads(prior['proof'])
+            validate(proof)
+        if not proof.get('fault_signature'):
             try:
-                crypto = self.signer(proof, wallet_scope=job_id)
+                # A ledger job ID and the existing clearing-wallet scope can differ.
+                crypto = self.signer(proof, wallet_scope=self.wallet_scope or job_id)
                 if not crypto.get('fault_signature'):
                     raise ValueError('No fault signature produced')
                 proof['fault_signature'] = crypto['fault_signature']
@@ -173,7 +185,7 @@ class FaultPipeline:
         """Resubmit receipts whose provider review was unavailable; terminal receipts are untouched."""
         results = []
         for row in self.receipts():
-            if row['state'] not in {'SUBMIT_PENDING', 'SIGN_FAILED', 'PROOF_CREATED'}:
+            if row['state'] not in {'SUBMIT_PENDING', 'SIGN_FAILED', 'PROOF_CREATED', 'EVIDENCE_ERROR'}:
                 continue
             results.append(self.handle(row['key']))
         return results

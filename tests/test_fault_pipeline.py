@@ -30,7 +30,7 @@ class PipelineTests(unittest.TestCase):
         self.submitted = []
         self.online = True
 
-    def pipeline(self, record=RECORD, ack=accepted_ack, verifier=lambda *a: True):
+    def pipeline(self, record=RECORD, ack=accepted_ack, verifier=lambda *a: True, **kwargs):
         def signer(proof, wallet_scope=None):
             return {'fault_signature': {'signer': 'payer', 'signature': '0x'+'11'*65}}
 
@@ -39,7 +39,31 @@ class PipelineTests(unittest.TestCase):
                 raise ConnectionError('offline')
             self.submitted.append(proof['commitment']['root'])
             return ack(proof)
-        return FaultPipeline(self.ledger, lambda key, task, quote: record, signer=signer, submitter=submitter, ack_verifier=verifier)
+        return FaultPipeline(self.ledger, lambda key, task, quote: record, signer=signer, submitter=submitter,
+                             ack_verifier=verifier, **kwargs)
+
+    def test_signer_uses_the_existing_payment_wallet_scope(self):
+        pipeline = self.pipeline(wallet_scope='original-clearing-scope')
+        signer = mock.Mock(wraps=pipeline.signer)
+        pipeline.signer = signer
+        self.run_demo(pipeline)
+        self.assertTrue(signer.called)
+        self.assertTrue(all(call.kwargs['wallet_scope'] == 'original-clearing-scope'
+                            for call in signer.call_args_list))
+
+    def test_sign_failure_retries_signing_the_same_proof_before_submission(self):
+        pipeline = self.pipeline(wallet_scope='original-clearing-scope')
+        original_signer = pipeline.signer
+        pipeline.signer = mock.Mock(side_effect=ValueError('Signer unavailable'))
+        self.run_demo(pipeline)
+        before = {row['key']: row['root'] for row in pipeline.receipts()}
+        self.assertTrue(before)
+        self.assertTrue(all(row['state'] == 'SIGN_FAILED' for row in pipeline.receipts()))
+        self.assertEqual(self.submitted, [])
+        pipeline.signer = original_signer
+        pipeline.retry_pending()
+        self.assertTrue(all(row['state'] == 'ACKNOWLEDGED_ACCEPTED' for row in pipeline.receipts()))
+        self.assertEqual(before, {row['key']: row['root'] for row in pipeline.receipts()})
 
     def run_demo(self, pipeline):
         engine = Engine(self.ledger, MockRail(self.dir/'rail.sqlite'), fault_pipeline=pipeline)
@@ -94,7 +118,13 @@ class PipelineTests(unittest.TestCase):
         pipeline = self.pipeline()
         pipeline.record_source = mock.Mock(side_effect=RuntimeError('boom'))
         engine = self.run_demo(pipeline)
-        self.assertTrue(all(j['status'] == 'COMPLETED' for j in self.ledger.jobs()) or engine.snapshot())
+        self.assertTrue(engine.snapshot()['audit']['valid'])
+        self.assertEqual({row['key'] for row in pipeline.receipts()}, self.failed_keys())
+        self.assertTrue(all(row['state'] == 'EVIDENCE_ERROR' for row in pipeline.receipts()))
+        self.assertTrue(all(row['detail'] == 'RuntimeError' for row in pipeline.receipts()))
+        pipeline.record_source = lambda *args: RECORD
+        pipeline.retry_pending()
+        self.assertTrue(all(row['state'] == 'ACKNOWLEDGED_ACCEPTED' for row in pipeline.receipts()))
 
     def test_review_origin_must_be_https_or_loopback_without_credentials(self):
         with mock.patch.object(fault_pipeline, 'provider_origin', provider_origin):

@@ -7,6 +7,7 @@ an independent funded-balance read for the card currency; a durable single-use j
 any dispatch; and the card rail's own re-verification and merchant adapter. No conversion is created.
 """
 from decimal import Decimal, ROUND_FLOOR
+import math
 import re
 import time
 
@@ -40,7 +41,8 @@ def check_approval(approval, *, scope, provider, cost_micro, now):
         raise PolicyError('Approval needs a named approver')
     if type(approval['max_effective_cost_micro']) is not int or cost_micro > approval['max_effective_cost_micro']:
         raise PolicyError('Effective cost exceeds the approved maximum')
-    if not isinstance(approval['expires_at'], (int, float)) or approval['expires_at'] <= now:
+    if (type(approval['expires_at']) not in (int, float) or not math.isfinite(approval['expires_at'])
+            or approval['expires_at'] <= now):
         raise PolicyError('Approval expired')
 
 

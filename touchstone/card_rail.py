@@ -14,6 +14,17 @@ class CardRail:
 
     def __init__(self, client, journal: OperationJournal):
         self.client, self.journal = client, journal
+        with journal.connect() as db:
+            db.execute('CREATE TABLE IF NOT EXISTS card_mandates(scope TEXT PRIMARY KEY, body TEXT NOT NULL)')
+
+    def _bind_mandate(self, scope, body):
+        encoded = canonical(body)
+        with self.journal.connect() as db:
+            db.execute('BEGIN IMMEDIATE')
+            row = db.execute('SELECT body FROM card_mandates WHERE scope=?', (scope,)).fetchone()
+            if row and row['body'] != encoded:
+                raise ValueError('Card scope is bound to a different approved mandate')
+            db.execute('INSERT OR IGNORE INTO card_mandates VALUES(?,?)', (scope, encoded))
 
     def doctor(self):
         try:
@@ -52,6 +63,7 @@ class CardRail:
         account=getattr(self.client,'account_id',None)
         if not account:raise ValueError('An explicit sandbox account context is required')
         digest_body={**body,'account_context_sha256':hashlib.sha256(account.encode()).hexdigest()}
+        self._bind_mandate(scope, digest_body)
         request_id,prior=self.journal.begin(scope,'issue','/api/v1/issuing/cards/create',digest_body)
         if prior:
             return self._read_and_validate(prior['id'],body)
@@ -100,6 +112,7 @@ class CardRail:
             if len(found)!=1:raise OutcomeUnknown('No unique issued card found; retain the original request and do not recreate')
             card_id=found[0]['id']
         result=self._read_and_validate(card_id,expected)
+        self._bind_mandate(scope, bound)
         self.journal.observe(scope,'issue',{'id':card_id,'status':result['status']})
         return result
 
@@ -118,9 +131,18 @@ class CardRail:
         issued = self.journal.get(scope, 'issue')
         if not issued or issued['state'] != 'OBSERVED':
             raise PolicyError('No observed issued card for this scope; reconcile issuing first')
+        with self.journal.connect() as db:
+            stored = db.execute('SELECT body FROM card_mandates WHERE scope=?', (scope,)).fetchone()
+        if not stored:
+            raise PolicyError('Original card controls are unavailable; reconcile the approved issuing mandate first')
+        expected = json.loads(stored['body'])
+        account = getattr(self.client, 'account_id', None)
+        if (not account or expected.get('account_context_sha256') != hashlib.sha256(account.encode()).hexdigest()
+                or hashlib.sha256(canonical(expected).encode()).hexdigest() != issued['digest']):
+            raise PolicyError('Card account or immutable issuing mandate differs')
         card_id = json.loads(issued['response'])['id']
-        card = self.client.request('GET', '/api/v1/issuing/cards/' + card_id)
-        controls = card.get('authorization_controls', {})
+        card = self._read_and_validate(card_id, expected)
+        controls = card['authorization_controls']
         limits = controls.get('transaction_limits', {})
         currency = (controls.get('allowed_currencies') or [None])[0]
         per_transaction = next((x['amount'] for x in limits.get('limits', []) if x.get('interval') == 'PER_TRANSACTION'), None)

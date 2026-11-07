@@ -54,7 +54,7 @@ MetalBatch(root/'batch',FixtureFactory(root/'remote'),root/'funding.sqlite').run
                             'pending_after_kill': before['pending_attempts'], 'recovery': recovered,
                             'repeat_recovery_receipts_unchanged': True, 'duplicate_charges_observed': 0},
                   'fuzz': fuzz, 'audit': batch.ledger.audit(),
-                  'live_exit_gate': 'BLOCKED: the authorized single live call has not executed; live kill/restart remains unproven'}
+                  'live_exit_gate': 'NOT_ASSESSED: controlled adapters cannot pass a live gate; see separate measured live evidence'}
         target = ROOT/'bench/results/m2/controlled-proof.json'
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')

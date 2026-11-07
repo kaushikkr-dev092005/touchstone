@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+import copy
 import json
 from pathlib import Path
 import tempfile
@@ -77,6 +78,8 @@ class FxExecutionTests(unittest.TestCase):
         cases = [dict(execute=False),
                  dict(approval={**self.approval, 'max_effective_cost_micro': 9999}),
                  dict(approval={**self.approval, 'expires_at': NOW - 1}),
+                 dict(approval={**self.approval, 'expires_at': float('nan')}),
+                 dict(approval={**self.approval, 'expires_at': float('inf')}),
                  dict(approval={**self.approval, 'provider': 'local-gpu'}),
                  dict(approval={}),
                  dict(offers=[offer(label='SIMULATED')]),
@@ -114,6 +117,36 @@ class FxExecutionTests(unittest.TestCase):
     def test_card_must_be_large_enough_for_the_exact_amount(self):
         with self.assertRaises(PolicyError):
             self.run_it(offers=[offer(price=20000)], approval={**self.approval, 'max_effective_cost_micro': 20000})
+
+    def test_changed_card_controls_are_rejected_before_the_merchant_call(self):
+        original = copy.deepcopy(self.client.card)
+        controls = original['authorization_controls']
+        changes = [
+            {'allowed_transaction_count': 'MULTIPLE'},
+            {'allowed_currencies': ['USD', 'EUR']},
+            {'blocked_transaction_usages': []},
+            {'transaction_limits': {'currency': 'USD', 'limits': [
+                {'interval': 'PER_TRANSACTION', 'amount': 1.0}, {'interval': 'ALL_TIME', 'amount': 1.0}]}},
+            {'active_to': (datetime.now(timezone.utc) + timedelta(minutes=50)).isoformat()},
+        ]
+        for change in changes:
+            with self.subTest(change=change):
+                self.client.card = {**copy.deepcopy(original), 'authorization_controls': {**controls, **change}}
+                with self.assertRaises((PolicyError, ValueError)):
+                    self.run_it()
+        self.assertEqual(self.merchant.calls, [])
+
+    def test_different_account_and_legacy_missing_controls_require_reconciliation(self):
+        account = self.client.account_id
+        self.client.account_id = 'another_sandbox_account'
+        with self.assertRaises(PolicyError):
+            self.run_it()
+        self.client.account_id = account
+        with self.journal.connect() as db:
+            db.execute('DELETE FROM card_mandates')
+        with self.assertRaisesRegex(PolicyError, 'reconcile'):
+            self.run_it()
+        self.assertEqual(self.merchant.calls, [])
 
 
 class SignedIntentMerchantTests(unittest.TestCase):

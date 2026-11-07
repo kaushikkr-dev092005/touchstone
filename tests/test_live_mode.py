@@ -53,6 +53,7 @@ class LiveModeTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 LiveSession(self.temp.name, m, bad, client_factory=NoQuoteClient)
         first = self.session(m)
+        self.assertEqual(first.faults.wallet_scope, m.scope)
         other = mandate(budget_usd='0.40')
         with self.assertRaisesRegex(ValueError, 'different'):
             LiveSession(self.temp.name, other, other.phrase(), client_factory=NoQuoteClient)
