@@ -49,6 +49,25 @@ class HostedProviderTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "ANTHROPIC_API_KEY"):
                 anthropic_inference(task, lambda *args, **kwargs: self.fail("network must not be called"))
 
+    def test_workspace_id_is_forwarded_without_becoming_output_metadata(self):
+        captured = []
+        response = {'model': 'claude-fixture', 'stop_reason': 'end_turn', 'content': [{'type': 'text', 'text': '{}'}], 'usage': {}}
+        def opener(request, timeout):
+            captured.append(request)
+            return io.BytesIO(json.dumps(response).encode())
+        task = Task('fixture', 'arithmetic', {'amounts_cents': [1], 'discount_cents': 0})
+        with patch.dict(os.environ, {'ANTHROPIC_API_KEY': 'fixture', 'ANTHROPIC_WORKSPACE_ID': 'wrkspc_fixture'}):
+            _, _, metadata = anthropic_inference(task, opener)
+        headers = {k.lower(): v for k, v in captured[0].header_items()}
+        self.assertEqual(headers['anthropic-workspace-id'], 'wrkspc_fixture')
+        self.assertNotIn('wrkspc_fixture', json.dumps(metadata))
+
+    def test_invalid_workspace_is_rejected_before_network(self):
+        task = Task('fixture', 'arithmetic', {'amounts_cents': [1], 'discount_cents': 0})
+        with patch.dict(os.environ, {'ANTHROPIC_API_KEY': 'fixture', 'ANTHROPIC_WORKSPACE_ID': 'invalid\nworkspace'}):
+            with self.assertRaises(ValueError):
+                anthropic_inference(task, lambda *a, **k: self.fail('Network must not be called'))
+
 
 if __name__ == "__main__":
     unittest.main()

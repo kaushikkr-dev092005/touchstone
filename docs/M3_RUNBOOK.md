@@ -39,6 +39,11 @@ Profiles append calibration and held-out responses in the same tier file, skippi
 
 ## Hosted premium seller — configuration, no purchase
 
+For a masked local setup window, run `python tools/configure_hosted.py`. This checks
+model metadata only, saves the existing hosted tier's settings privately, and can
+start services when the operator selects that option. It makes zero inference
+purchases. Account-wide keys may also require `ANTHROPIC_WORKSPACE_ID`.
+
 The existing Anthropic Messages adapter is the sole hosted premium tier. It uses the same x402 resource binding and source schema as the local seller. The adapter's structured-output format follows the [official Anthropic documentation](https://platform.claude.com/docs/en/build-with-claude/structured-outputs). Compatibility, credentials and partner credits have not been tested with an API call.
 
 Supply `ANTHROPIC_API_KEY` privately in the seller's environment; do not paste or put it in a tracked file. Configure the model ID and partner-credit declaration, then start the existing seller:

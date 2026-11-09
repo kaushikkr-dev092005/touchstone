@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT))
 
 def clean_environment(node):
     env = {k: v for k, v in os.environ.items()
-           if not k.startswith(('AIRWALLEX_', 'METAL_', 'ANTHROPIC_', 'TOUCHSTONE_PROVIDER_', 'TOUCHSTONE_LIVE_'))
+           if not k.startswith(('AIRWALLEX_', 'METAL_', 'ANTHROPIC_', 'TOUCHSTONE_PROVIDER_', 'TOUCHSTONE_LIVE_', 'TOUCHSTONE_HOSTED_'))
            and k != 'AGENT_PRIVATE_KEY'}
     env['TOUCHSTONE_IGNORE_LOCAL_CONFIG'] = '1'
     env['PATH'] = str(Path(node).parent) + os.pathsep + env.get('PATH', '')

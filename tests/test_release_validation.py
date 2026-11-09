@@ -14,7 +14,8 @@ class ReleaseValidationTests(unittest.TestCase):
     def test_environment_removes_financial_credentials_and_live_modes(self):
         private = {'AIRWALLEX_API_KEY': 'bank-fixture', 'METAL_RPC_URL': 'rpc-fixture',
                    'ANTHROPIC_API_KEY': 'hosted-fixture', 'AGENT_PRIVATE_KEY': 'wallet-fixture',
-                   'TOUCHSTONE_LIVE_AUTHORIZATION': 'approval-fixture', 'TOUCHSTONE_PROVIDER_MODE': 'anthropic'}
+                   'TOUCHSTONE_LIVE_AUTHORIZATION': 'approval-fixture', 'TOUCHSTONE_PROVIDER_MODE': 'anthropic',
+                   'TOUCHSTONE_HOSTED_FUNDING_SOURCE': 'PARTNER_CREDITS'}
         with patch.dict(os.environ, {**private, 'PATH': 'tools'}, clear=True):
             env = clean_environment(str(Path('runtime/node.exe').resolve()))
         self.assertTrue(all(key not in env for key in private))

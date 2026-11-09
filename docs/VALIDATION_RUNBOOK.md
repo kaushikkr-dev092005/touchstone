@@ -25,6 +25,28 @@ browser checks. Package downloads are external network requests; no inference,
 card, FX or token transaction is executed. Logs and screenshots stay under `tmp/`.
 The report records their hashes and the exact source commit.
 
+The frontend type-check starts from `src/main.tsx` and its imported modules. Legacy
+scenes that the application does not import are preserved in the source archive;
+their missing experimental assets cannot break the shipped application build.
+
+## Private hosted setup
+
+```text
+python tools/configure_hosted.py
+```
+
+Enter the key in the masked desktop field, an accessible Claude model ID and an
+optional workspace ID. Confirm the partner-credit declaration locally. Verification
+uses only `GET /v1/models/{model_id}`; it does not request inference. Configuration
+is saved atomically under the ignored local settings path. The optional startup
+checkbox lets the operator start the local model and sellers without purchasing.
+An account-wide key needs the appropriate workspace; a workspace-scoped key may
+omit it. The Messages adapter forwards the optional workspace header.
+
+Contract references: [model metadata](https://platform.claude.com/docs/en/api/http/beta/models/retrieve),
+[authentication and workspace selection](https://platform.claude.com/docs/en/manage-claude/authentication).
+Verified metadata is not model qualification, credit-balance verification or spend approval.
+
 ## Read-only provider and qualification checks
 
 ```text
