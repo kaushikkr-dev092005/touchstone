@@ -10,6 +10,7 @@ import urllib.error
 import urllib.request
 
 from playwright.sync_api import sync_playwright
+from check_transactions import check_page
 
 ROOT = Path(__file__).resolve().parent.parent
 ARTIFACTS = ROOT / "tmp/browser"
@@ -71,6 +72,14 @@ def main():
                 assert '2000' in page.locator('#fault-summary').inner_text()
                 assert 'UNSIGNED_HISTORICAL_DELIVERY' in page.locator('#fault-limits').text_content()
                 assert 'No card created' in page.locator('#card-status').inner_text()
+                assert page.locator('a[href="https://www.sandbox.airwallex.com/app/"]').count()==1
+                assert page.request.post(BASE+'/api/issuing-readiness',data={}).status==403
+                assert page.request.post(BASE+'/api/issuing-readiness',headers={
+                    'X-Touchstone-Token':token,'Origin':'https://untrusted.example'},data={}).status==403
+                with page.expect_response(BASE+'/api/issuing-readiness') as issuing_response:
+                    page.click('#refresh-issuing')
+                assert issuing_response.value.status==503
+                page.wait_for_function("() => document.getElementById('card-status').textContent.startsWith('BLOCKED') && document.getElementById('card-status').textContent.includes('No card created')")
                 assert 'MOCK identity' in page.locator('#tap-status').inner_text()
                 assert page.request.post(BASE+'/api/fx-quote',data={}).status==403
                 with page.expect_response(BASE+'/api/fx-quote') as quote_response:
@@ -114,6 +123,7 @@ def main():
                 assert financial['absorbed_failures_micro_usd']>0
                 assert financial['customer_captured_micro_usd']<financial['provider_spend_micro_usd']+financial['check_fees_micro_usd']
                 page.wait_for_function("() => document.getElementById('pnl-values').textContent.includes('MERCHANT_ABSORBS')")
+                transactions = check_page(page, BASE, ARTIFACTS)
                 page.wait_for_timeout(1000)
                 page.screenshot(path=str(ARTIFACTS / "desktop-completed.png"), full_page=True)
                 page.set_viewport_size({"width": 390, "height": 844})
@@ -129,8 +139,10 @@ def main():
                           "testnet_proof_disclosure": "passed",
                           "fault_fx_telemetry_rail_panels": "passed",
                           "credential_isolation_and_blocked_fx": "passed",
+                          "issuing_settings_recheck_and_session_controls": "passed",
                           "merchant_absorbs_sse_and_capture": "passed",
                           "particle_field_stops_on_confirmed_halt": "passed",
+                          "transactions_explorer": transactions,
                           "screenshots": ["desktop-ready.png", "desktop-paused.png", "desktop-completed.png", "mobile-completed.png"]}
                 (ARTIFACTS / "validation.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
                 print(json.dumps(result, indent=2))

@@ -1,0 +1,547 @@
+{
+  "version": 1,
+  "label": "SIMULATED",
+  "execution_status": "BLOCKED_PENDING_APPROVAL_AND_PREFLIGHT",
+  "scope": "m4-20261109",
+  "origins": {
+    "local-gpu": "http://127.0.0.1:8092",
+    "hosted-premium": "http://127.0.0.1:8093"
+  },
+  "aggregate_cap_micro_usdz": 2040000,
+  "per_call_cap_micro_usdz": 50000,
+  "max_purchases": 40,
+  "steps_per_policy_per_seed": 16,
+  "seeds": [
+    20261120
+  ],
+  "policies": [
+    "tools-only",
+    "always-cheapest",
+    "always-premium",
+    "touchstone-ladder"
+  ],
+  "outage_index": 3,
+  "quality_index": 7,
+  "fault_target": "local-gpu",
+  "tasks": [
+    {
+      "seed": 20261120,
+      "index": 0,
+      "source_id": "IX-00-000-20261120",
+      "template_id": "layout-00",
+      "partition": "calibration",
+      "task": {
+        "id": "IX-00-000-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 00\nInvoice ID: IX-00-000-20261120\nSupplier: Vendor 00 Supply\nPurchase order: PO-00-000\nCurrency: USD\nSubtotal: USD 787.80\nTax: USD 7.36\nTotal due: USD 795.16\nITEM-01 | quantity=8 | unit=USD 86.05 | amount=USD 688.40\nITEM-02 | quantity=4 | unit=USD 24.85 | amount=USD 99.40\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-000",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 318064
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 1,
+      "source_id": "IX-01-010-20261120",
+      "template_id": "layout-01",
+      "partition": "calibration",
+      "task": {
+        "id": "IX-01-010-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 01\nInvoice ID: IX-01-010-20261120\nSupplier: Vendor 01 Supply\nPurchase order: PO-01-010\nCurrency: USD\nSubtotal: USD 253.10\nTax: USD 7.96\nTotal due: USD 261.06\nITEM-01 | quantity=4 | unit=USD 41.87 | amount=USD 167.48\nITEM-02 | quantity=6 | unit=USD 14.27 | amount=USD 85.62\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-01-010",
+            "supplier_name": "Vendor 01 Supply",
+            "currency": "USD",
+            "authorized_cents": 104424
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 2,
+      "source_id": "IX-00-013-20261120",
+      "template_id": "layout-00",
+      "partition": "calibration",
+      "task": {
+        "id": "IX-00-013-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 00\nInvoice ID: IX-00-013-20261120\nSupplier: Vendor 00 Supply\nPurchase order: PO-00-013\nCurrency: USD\nSubtotal: USD 95.64\nTax: USD 0.61\nTotal due: USD 96.25\nITEM-01 | quantity=5 | unit=USD 15.90 | amount=USD 79.50\nITEM-02 | quantity=3 | unit=USD 5.38 | amount=USD 16.14\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-013",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 38500
+          },
+          "payments": [
+            {
+              "payment_id": "PAY-IX-00-013-20261120",
+              "invoice_id": "IX-00-013-20261120",
+              "purchase_order_id": "PO-00-013",
+              "supplier_name": "Vendor 00 Supply",
+              "currency": "USD",
+              "amount_cents": 9625,
+              "status": "in_progress"
+            },
+            {
+              "payment_id": "PAY-IX-00-013-20261120",
+              "invoice_id": "IX-00-013-20261120",
+              "purchase_order_id": "PO-00-013",
+              "supplier_name": "Vendor 00 Supply",
+              "currency": "USD",
+              "amount_cents": 9625,
+              "status": "settled"
+            }
+          ]
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 3,
+      "source_id": "IX-10-002-20261120",
+      "template_id": "layout-10",
+      "partition": "holdout",
+      "task": {
+        "id": "IX-10-002-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 10\nSettlement currency ... {USD}\nAmount payable ... {USD 382.47}\nDocument reference ... {IX-10-002-20261120}\nIssued by ... {Vendor 10 Supply}\nNet goods ... {USD 377.82}\nProcurement reference ... {PO-10-002}\nITEM-01  USD 52.78 each / 5 pcs / extended USD 263.90\nITEM-02  USD 28.48 each / 4 pcs / extended USD 113.92\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-10-002",
+            "supplier_name": "Vendor 10 Supply",
+            "currency": "USD",
+            "authorized_cents": 152988
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 4,
+      "source_id": "IX-01-000-20261120",
+      "template_id": "layout-01",
+      "partition": "calibration",
+      "task": {
+        "id": "IX-01-000-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 01\nInvoice ID: IX-01-000-20261120\nSupplier: Vendor 01 Supply\nPurchase order: PO-01-000\nCurrency: USD\nSubtotal: USD 201.97\nTax: USD 3.96\nTotal due: USD 205.93\nITEM-01 | quantity=2 | unit=USD 88.71 | amount=USD 177.42\nITEM-02 | quantity=1 | unit=USD 24.55 | amount=USD 24.55\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-01-000",
+            "supplier_name": "Vendor 01 Supply",
+            "currency": "USD",
+            "authorized_cents": 82372
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 5,
+      "source_id": "IX-05-013-20261120",
+      "template_id": "layout-05",
+      "partition": "calibration",
+      "task": {
+        "id": "IX-05-013-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 05\nPO-05-013  [Procurement reference]\nUSD 857.76  [Amount payable]\nUSD 0.12  [Sales tax]\nUSD 857.64  [Net goods]\nUSD  [Settlement currency]\nIX-05-013-20261120  [Document reference]\nVendor 05 Supply  [Issued by]\nITEM-01  extension USD 534.66; 6 units @ USD 89.11\nITEM-02  extension USD 322.98; 6 units @ USD 53.83\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-05-013",
+            "supplier_name": "Vendor 05 Supply",
+            "currency": "USD",
+            "authorized_cents": 343104
+          },
+          "payments": [
+            {
+              "payment_id": "PAY-IX-05-013-20261120",
+              "invoice_id": "IX-05-013-20261120",
+              "purchase_order_id": "PO-05-013",
+              "supplier_name": "Vendor 05 Supply",
+              "currency": "USD",
+              "amount_cents": 85776,
+              "status": "in_progress"
+            },
+            {
+              "payment_id": "PAY-IX-05-013-20261120",
+              "invoice_id": "IX-05-013-20261120",
+              "purchase_order_id": "PO-05-013",
+              "supplier_name": "Vendor 05 Supply",
+              "currency": "USD",
+              "amount_cents": 85776,
+              "status": "settled"
+            }
+          ]
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 6,
+      "source_id": "IX-08-008-20261120",
+      "template_id": "layout-08",
+      "partition": "holdout",
+      "task": {
+        "id": "IX-08-008-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 08\nPROCUREMENT REFERENCE\tPO-08-008\nDOCUMENT REFERENCE\tIX-08-008-20261120\nISSUED BY\tVendor 08 Supply\nSETTLEMENT CURRENCY\tUSD\nNET GOODS\tUSD 504.08\nSALES TAX\tUSD 4.39\nAMOUNT PAYABLE\tUSD 508.47\nITEM-01  USD 61.48 each / 8 pcs / extended USD 491.84\nITEM-02  USD 3.06 each / 4 pcs / extended USD 12.24\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-08-008",
+            "supplier_name": "Vendor 08 Supply",
+            "currency": "USD",
+            "authorized_cents": 203388
+          },
+          "payments": [
+            {
+              "payment_id": "PAY-IX-08-008-20261120",
+              "invoice_id": "IX-08-008-20261120",
+              "purchase_order_id": "PO-08-008",
+              "supplier_name": "Vendor 08 Supply",
+              "currency": "USD",
+              "amount_cents": 50847,
+              "status": "in_progress"
+            },
+            {
+              "payment_id": "PAY-IX-08-008-20261120",
+              "invoice_id": "IX-08-008-20261120",
+              "purchase_order_id": "PO-08-008",
+              "supplier_name": "Vendor 08 Supply",
+              "currency": "USD",
+              "amount_cents": 50847,
+              "status": "settled"
+            }
+          ]
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 7,
+      "source_id": "IX-05-008-20261120",
+      "template_id": "layout-05",
+      "partition": "calibration",
+      "task": {
+        "id": "IX-05-008-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 05\nUSD  [Settlement currency]\nIX-05-008-20261120  [Document reference]\nUSD 165.48  [Amount payable]\nUSD 160.38  [Net goods]\nPO-05-008  [Procurement reference]\nUSD 5.10  [Sales tax]\nVendor 05 Supply  [Issued by]\nITEM-01  extension USD 16.38; 1 units @ USD 16.38\nITEM-02  extension USD 144.00; 3 units @ USD 48.00\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-05-008",
+            "supplier_name": "Vendor 05 Supply",
+            "currency": "USD",
+            "authorized_cents": 66192
+          },
+          "payments": [
+            {
+              "payment_id": "PAY-IX-05-008-20261120",
+              "invoice_id": "IX-05-008-20261120",
+              "purchase_order_id": "PO-05-008",
+              "supplier_name": "Vendor 05 Supply",
+              "currency": "USD",
+              "amount_cents": 16548,
+              "status": "in_progress"
+            },
+            {
+              "payment_id": "PAY-IX-05-008-20261120",
+              "invoice_id": "IX-05-008-20261120",
+              "purchase_order_id": "PO-05-008",
+              "supplier_name": "Vendor 05 Supply",
+              "currency": "USD",
+              "amount_cents": 16548,
+              "status": "settled"
+            }
+          ]
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 8,
+      "source_id": "IX-04-003-20261120",
+      "template_id": "layout-04",
+      "partition": "calibration",
+      "task": {
+        "id": "IX-04-003-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 04\nUSD  [Settlement currency]\nVendor 04 Supply  [Issued by]\nIX-04-003-20261120  [Document reference]\nUSD 1.94  [Sales tax]\nPO-04-003  [Procurement reference]\nUSD 241.39  [Net goods]\nUSD 243.33  [Amount payable]\nITEM-01  USD 55.97 each / 2 pcs / extended USD 111.94\nITEM-02  USD 25.89 each / 5 pcs / extended USD 129.45\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-04-003",
+            "supplier_name": "Vendor 04 Supply",
+            "currency": "USD",
+            "authorized_cents": 97332
+          },
+          "payments": [
+            {
+              "payment_id": "PAY-IX-04-003-20261120",
+              "invoice_id": "IX-04-003-20261120",
+              "purchase_order_id": "PO-04-003",
+              "supplier_name": "Vendor 04 Supply",
+              "currency": "USD",
+              "amount_cents": 24333,
+              "status": "in_progress"
+            },
+            {
+              "payment_id": "PAY-IX-04-003-20261120",
+              "invoice_id": "IX-04-003-20261120",
+              "purchase_order_id": "PO-04-003",
+              "supplier_name": "Vendor 04 Supply",
+              "currency": "USD",
+              "amount_cents": 24333,
+              "status": "settled"
+            }
+          ]
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 9,
+      "source_id": "IX-11-003-20261120",
+      "template_id": "layout-11",
+      "partition": "holdout",
+      "task": {
+        "id": "IX-11-003-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 11\nSales tax ... {USD 0.20}\nProcurement reference ... {PO-11-003}\nNet goods ... {USD 474.51}\nSettlement currency ... {USD}\nDocument reference ... {IX-11-003-20261120}\nIssued by ... {Vendor 11 Supply}\nAmount payable ... {USD 474.71}\nITEM-01  extension USD 337.23; 9 units @ USD 37.47\nITEM-02  extension USD 137.28; 4 units @ USD 34.32\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-11-003",
+            "supplier_name": "Vendor 11 Supply",
+            "currency": "USD",
+            "authorized_cents": 189884
+          },
+          "payments": [
+            {
+              "payment_id": "PAY-IX-11-003-20261120",
+              "invoice_id": "IX-11-003-20261120",
+              "purchase_order_id": "PO-11-003",
+              "supplier_name": "Vendor 11 Supply",
+              "currency": "USD",
+              "amount_cents": 47471,
+              "status": "in_progress"
+            },
+            {
+              "payment_id": "PAY-IX-11-003-20261120",
+              "invoice_id": "IX-11-003-20261120",
+              "purchase_order_id": "PO-11-003",
+              "supplier_name": "Vendor 11 Supply",
+              "currency": "USD",
+              "amount_cents": 47471,
+              "status": "settled"
+            }
+          ]
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 10,
+      "source_id": "IX-03-007-20261120",
+      "template_id": "layout-03",
+      "partition": "calibration",
+      "task": {
+        "id": "IX-03-007-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 03\nNet goods => USD 327.42\nDocument reference => IX-03-007-20261120\nAmount payable => USD 330.71\nIssued by => Vendor 03 Supply\nSales tax => USD 3.29\nProcurement reference => PO-03-007\nITEM-01  extension USD 210.36; 6 units @ USD 35.06\nITEM-02  extension USD 117.06; 3 units @ USD 39.02\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-03-007",
+            "supplier_name": "Vendor 03 Supply",
+            "currency": "USD",
+            "authorized_cents": 132284
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 11,
+      "source_id": "IX-04-006-20261120",
+      "template_id": "layout-04",
+      "partition": "calibration",
+      "task": {
+        "id": "IX-04-006-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 04\nScanned c0py \u2014 receiv1ng n0tes; page 1 of 1   [OCR]\nUSD 276.54  [Amount payable]\nIX-04-006-20261120  [Document reference]\nUSD 0.42  [Sales tax]\nVendor 04 Supply  [Issued by]\nUSD  [Settlement currency]\nPO-04-006  [Procurement reference]\nUSD 276.12  [Net goods]\nITEM-01  USD 8.93 each / 4 pcs / extended USD 35.72\nITEM-02  USD 60.10 each / 4 pcs / extended USD 240.40\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-04-006",
+            "supplier_name": "Vendor 04 Supply",
+            "currency": "USD",
+            "authorized_cents": 110616
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 12,
+      "source_id": "IX-04-001-20261120",
+      "template_id": "layout-04",
+      "partition": "calibration",
+      "task": {
+        "id": "IX-04-001-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 04\nScanned c0py \u2014 receiv1ng n0tes; page 1 of 1   [OCR]\nUSD 280.98  [Amount payable]\nIX-04-001-20261120  [Document reference]\nVendor 04 Supply  [Issued by]\nUSD 279.97  [Net goods]\nUSD  [Settlement currency]\nUSD 1.01  [Sales tax]\nPO-04-001  [Procurement reference]\nITEM-01  USD 44.53 each / 4 pcs / extended USD 178.12\nITEM-02  USD 20.37 each / 5 pcs / extended USD 101.85\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-04-001",
+            "supplier_name": "Vendor 04 Supply",
+            "currency": "USD",
+            "authorized_cents": 112392
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 13,
+      "source_id": "IX-08-001-20261120",
+      "template_id": "layout-08",
+      "partition": "holdout",
+      "task": {
+        "id": "IX-08-001-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 08\nScanned c0py \u2014 receiv1ng n0tes; page 1 of 1   [OCR]\nPROCUREMENT REFERENCE\tPO-08-001\nSETTLEMENT CURRENCY\tUSD\nSALES TAX\tUSD 2.33\nAMOUNT PAYABLE\tUSD 128.83\nNET GOODS\tUSD 126.50\nISSUED BY\tVendor 08 Supply\nDOCUMENT REFERENCE\tIX-08-001-20261120\nITEM-01  USD 53.57 each / 2 pcs / extended USD 107.14\nITEM-02  USD 4.84 each / 4 pcs / extended USD 19.36\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-08-001",
+            "supplier_name": "Vendor 08 Supply",
+            "currency": "USD",
+            "authorized_cents": 51532
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 14,
+      "source_id": "IX-07-005-20261120",
+      "template_id": "layout-07",
+      "partition": "calibration",
+      "task": {
+        "id": "IX-07-005-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 07\n| Sales tax | USD 5.57 |\n| Document reference | IX-07-005-20261120 |\n| Issued by | Vendor 07 Supply |\n| Net goods | USD 166.73 |\n| Procurement reference | PO-07-005 |\n| Settlement currency | USD |\n| Amount payable | USD 172.30 |\nITEM-01  extension USD 145.62; 6 units @ USD 24.27\nITEM-02  extension USD 21.11; 1 units @ USD 21.11\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-07-005",
+            "supplier_name": "Vendor 07 Supply",
+            "currency": "USD",
+            "authorized_cents": 68920
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 20261120,
+      "index": 15,
+      "source_id": "IX-09-010-20261120",
+      "template_id": "layout-09",
+      "partition": "holdout",
+      "task": {
+        "id": "IX-09-010-20261120",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 09\nISSUED BY\tVendor 09 Supply\nNET GOODS\tUSD 356.16\nPROCUREMENT REFERENCE\tPO-09-010\nDOCUMENT REFERENCE\tIX-09-010-20261120\nSETTLEMENT CURRENCY\tUSD\nAMOUNT PAYABLE\tUSD 361.56\nSALES TAX\tUSD 5.40\nITEM-01  extension USD 289.24; 7 units @ USD 41.32\nITEM-02  extension USD 66.92; 2 units @ USD 33.46\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-09-010",
+            "supplier_name": "Vendor 09 Supply",
+            "currency": "USD",
+            "authorized_cents": 144624
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    }
+  ],
+  "task_digest": "c0372ea959236113a9f470716e7790d34ecdf17fef89fab1a607f0311bedd645",
+  "schedule": {
+    "version": 1,
+    "faults": {
+      "M4-20261120-3-0": {
+        "local-gpu": "outage"
+      },
+      "M4-20261120-3-1": {
+        "local-gpu": "outage"
+      },
+      "M4-20261120-3-2": {
+        "local-gpu": "outage"
+      },
+      "M4-20261120-3-3": {
+        "local-gpu": "outage"
+      },
+      "M4-20261120-7-0": {
+        "local-gpu": "quality-drop"
+      },
+      "M4-20261120-7-1": {
+        "local-gpu": "quality-drop"
+      },
+      "M4-20261120-7-2": {
+        "local-gpu": "quality-drop"
+      },
+      "M4-20261120-7-3": {
+        "local-gpu": "quality-drop"
+      }
+    }
+  },
+  "schedule_sha256": "8e746376da2ca8ae9fd12c4808c43cb411f5e7a7db5604385267cf18bdbae32e",
+  "qualifications": {},
+  "code_sha256": {
+    "touchstone/comparison.py": "0352ddcc9a3b90c982b521128b610b443ba86dc00356ca4636662c5c3232cfe9",
+    "touchstone/invoice_dataset.py": "f940bd9db9df3472f33f81543bd3eed8a0822ca2d54a768c2142a985c0a00908",
+    "touchstone/invoice_extraction.py": "57bd93ba3717898e4ecd045c97b8ba81e07641e7252a155b423d843df13fe546",
+    "touchstone/ledger.py": "85e86baf16ce120856a622ba5a54c5157c834c2c31b2af18b6eba3caa3eeb5dd",
+    "touchstone/invoice_study.py": "ccd33e0d0f3e33a0fd48f2a64dedb6974c8663f4fedc894ccf9ff0125ab72e4b",
+    "touchstone/eligibility.py": "6c026a6a0d0ca50f904e0c191498892b7904a855fcf38767f500815d5ec37033",
+    "touchstone/providers.py": "7cac442dce57e292b7b0ced80c6773ae5e85d2a413c042484e625fb93e985da7",
+    "touchstone/payments.py": "c68631ab35e43bf304e42c805e00fb6912bf4c717f9ef7fe7483c9adb7fd8cb2",
+    "touchstone/metal.py": "7ee72e947811e418f824341842d354cde4932abbc6fda2e49daa7b918a8d7a0b",
+    "integrations/metal/provider.mjs": "791fdccfc4af55b6cfd8c1fa57a96ee951be5b7a47fa59089cf75fb7f01da114",
+    "integrations/metal/provider-core.mjs": "730d094d0e370d48f7c18ba95bc5eb5bcb1b4811eec80f8d009bccf9726abc43",
+    "integrations/metal/m4-chaos.mjs": "b265a4233872b1ba6bada22abd51112f422fbcaf06a71de75872e9d89ad40dc2",
+    "integrations/metal/package-lock.json": "a0c473717904a405840816fd9381ea76b54f61fb91c7b1f4bc5ff98130ab5f47"
+  },
+  "dataset_version": "invoice-exceptions-180-v1",
+  "verifier_version": "invoice-extraction-v1",
+  "verification_fee_micro_usd": 1000,
+  "verification_fee_label": "SIMULATED",
+  "upstream_dollars": "UNMEASURED_PARTNER_CREDITS_SEPARATE_FROM_USDZ",
+  "plan_sha256": "777146152ce195c070782cf72367cd651f2321854876e0ac2743cf7d7eb6f932"
+}

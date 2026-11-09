@@ -6,6 +6,7 @@ from unittest.mock import patch, Mock
 
 from tools import run_project as runner
 from tools import configure_metal_rpc as rpc_setup
+from tools import run_local
 
 
 class RuntimeTests(unittest.TestCase):
@@ -48,6 +49,43 @@ class RuntimeTests(unittest.TestCase):
              patch.object(runner, 'launch', return_value=child):
             result = runner.ensure(8080, '/health', bool, ['unused'], {}, True)
         self.assertEqual(result['status'], 'START_FAILED')
+
+
+class GpuGuardTests(unittest.TestCase):
+    def test_startup_and_runtime_limits_and_missing_sensor_fail_closed(self):
+        observation={'label':'MEASURED','temperature_c':64,'thermal_throttling_active':False}
+        self.assertIsNone(run_local.stop_reason(observation,starting=True))
+        observation['temperature_c']=65
+        self.assertEqual(run_local.stop_reason(observation,starting=True),'GPU_TEMPERATURE_LIMIT')
+        self.assertIsNone(run_local.stop_reason(observation))
+        observation['temperature_c']=75
+        self.assertEqual(run_local.stop_reason(observation),'GPU_TEMPERATURE_LIMIT')
+        observation.update(temperature_c=50,thermal_throttling_active=True)
+        self.assertEqual(run_local.stop_reason(observation),'GPU_THERMAL_THROTTLING')
+        for temperature in (None,float('nan'),-1,'50'):
+            observation.update(temperature_c=temperature,thermal_throttling_active=False)
+            self.assertEqual(run_local.stop_reason(observation),'GPU_TEMPERATURE_UNAVAILABLE')
+
+    def test_overheat_stops_only_owned_child_without_restart(self):
+        child=Mock(returncode=None)
+        child.poll.return_value=None
+        child.terminate.side_effect=lambda:setattr(child.poll,'return_value',2)
+        readings=iter([{'label':'MEASURED','temperature_c':60},
+                       {'label':'MEASURED','temperature_c':75}])
+        events=[];sleep=Mock()
+        self.assertEqual(run_local.supervise(child,observe=lambda:next(readings),sleep=sleep,record=events.append),2)
+        child.terminate.assert_called_once();child.kill.assert_not_called()
+        sleep.assert_called_once_with(5)
+        self.assertEqual(events[-1]['reason'],'GPU_TEMPERATURE_LIMIT')
+        self.assertEqual(events[-1]['peak_temperature_c'],75)
+        self.assertFalse(events[-1]['automatic_restart'])
+
+    def test_lost_temperature_stops_child_immediately(self):
+        child=Mock();child.poll.return_value=None
+        child.terminate.side_effect=lambda:setattr(child.poll,'return_value',2)
+        sleep=Mock()
+        self.assertEqual(run_local.supervise(child,observe=lambda:{'label':'BLOCKED'},sleep=sleep),2)
+        child.terminate.assert_called_once();sleep.assert_not_called()
 
 
 class RpcSetupTests(unittest.TestCase):

@@ -34,10 +34,10 @@
   },
   "code_sha256": {
     "invoice_dataset.py": "f940bd9db9df3472f33f81543bd3eed8a0822ca2d54a768c2142a985c0a00908",
-    "invoice_extraction.py": "57bd93ba3717898e4ecd045c97b8ba81e07641e7252a155b423d843df13fe546",
+    "invoice_extraction.py": "90d17ffe0777a8e22f41134814f0cde60f395f61b825cd794437158cbadfeada",
     "invoice_study.py": "ccd33e0d0f3e33a0fd48f2a64dedb6974c8663f4fedc894ccf9ff0125ab72e4b",
-    "invoice_profile.py": "1068e7401b02812694a9050b7b23cfd9bd7b0722ddc2568b65cf78c795d12330",
-    "providers.py": "3dec6cca0e44ca400b3fb463c5b436f9f669ee5887734247f66ad87f2dd39ca1",
+    "invoice_profile.py": "3e2025acedb406a6fc5eb988ee727c1693d3a7c8ee5a505645c099385fed2a9b",
+    "providers.py": "c0198771e443a85054ff89cdb26bc2ccc7fde63fcad367186c7b3bf75eafa34e",
     "local_tools.py": "ed1b617ab702c7a7773e615c8fd77b850103d895392ca66ec83d32c2e5928052",
     "eligibility.py": "6c026a6a0d0ca50f904e0c191498892b7904a855fcf38767f500815d5ec37033",
     "verifier.py": "5e31d7e313f566bc4411ff2f0217c24a55766a98d50a0a927b22516738ea3e7a"
@@ -70,40 +70,40 @@
       "tier": "balanced",
       "calibration": {
         "sources_scored": 120,
-        "strict_correct": 0,
-        "accepted": 0,
-        "false_accepts": 0,
-        "false_accept_rate_among_accepted": null,
-        "refusals_or_review": 120,
+        "strict_correct": 18,
+        "accepted": 57,
+        "false_accepts": 41,
+        "false_accept_rate_among_accepted": 0.7192982456140351,
+        "refusals_or_review": 107,
         "provider_cost_micro_usd": 0,
         "reference_cost_micro_usd": 0,
         "verification_cost_micro_usd": 0,
         "latency_samples": 120,
-        "latency_p50_ms": 4630.5,
-        "latency_p95_ms": 6432,
+        "latency_p50_ms": 2147.5,
+        "latency_p95_ms": 2363,
         "correct_beyond_tools": 0
       },
       "holdout": {
         "sources_scored": 60,
-        "strict_correct": 0,
-        "accepted": 0,
-        "false_accepts": 0,
-        "false_accept_rate_among_accepted": null,
-        "refusals_or_review": 60,
+        "strict_correct": 1,
+        "accepted": 29,
+        "false_accepts": 28,
+        "false_accept_rate_among_accepted": 0.9655172413793104,
+        "refusals_or_review": 57,
         "provider_cost_micro_usd": 0,
         "reference_cost_micro_usd": 0,
         "verification_cost_micro_usd": 0,
         "latency_samples": 60,
-        "latency_p50_ms": 3370.0,
-        "latency_p95_ms": 5280,
-        "correct_beyond_tools": 0
+        "latency_p50_ms": 2343.0,
+        "latency_p95_ms": 2548,
+        "correct_beyond_tools": 1
       },
       "screen": {
         "observations": 120,
         "unique_sources": 120,
-        "consistently_correct_sources": 0,
-        "unique_success_rate": 0.0,
-        "wilson_95_lower": 0.0,
+        "consistently_correct_sources": 18,
+        "unique_success_rate": 0.15,
+        "wilson_95_lower": 0.09703812292584738,
         "required_success_rate": 0.95,
         "minimum_unique": 20,
         "passes_statistical_screen": false,
@@ -115,67 +115,24 @@
       "heldout_validation_passed": false,
       "eligible": false,
       "live_purchase_authorized": false,
-      "source_profile_sha256": "bbc0ebb33b6739cc307c590b4273e70d7c7aa96cb7578eaedf75b9f9b9a36cca"
-    },
-    {
-      "label": "MEASURED",
-      "model_id": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
-      "tier": "economy",
-      "calibration": {
-        "sources_scored": 120,
-        "strict_correct": 0,
-        "accepted": 0,
-        "false_accepts": 0,
-        "false_accept_rate_among_accepted": null,
-        "refusals_or_review": 120,
-        "provider_cost_micro_usd": 0,
-        "reference_cost_micro_usd": 0,
-        "verification_cost_micro_usd": 0,
-        "latency_samples": 120,
-        "latency_p50_ms": 4309.5,
-        "latency_p95_ms": 16779,
-        "correct_beyond_tools": 0
-      },
-      "holdout": {
-        "sources_scored": 60,
-        "strict_correct": 0,
-        "accepted": 0,
-        "false_accepts": 0,
-        "false_accept_rate_among_accepted": null,
-        "refusals_or_review": 60,
-        "provider_cost_micro_usd": 0,
-        "reference_cost_micro_usd": 0,
-        "verification_cost_micro_usd": 0,
-        "latency_samples": 60,
-        "latency_p50_ms": 4646.5,
-        "latency_p95_ms": 16960,
-        "correct_beyond_tools": 0
-      },
-      "screen": {
-        "observations": 120,
-        "unique_sources": 120,
-        "consistently_correct_sources": 0,
-        "unique_success_rate": 0.0,
-        "wilson_95_lower": 0.0,
-        "required_success_rate": 0.95,
-        "minimum_unique": 20,
-        "passes_statistical_screen": false,
-        "status": "BELOW_QUALITY_TARGET",
-        "live_purchase_authorized": false
-      },
-      "calibration_complete": true,
-      "heldout_complete": true,
-      "heldout_validation_passed": false,
-      "eligible": false,
-      "live_purchase_authorized": false,
-      "source_profile_sha256": "2e42c4b25e085197b0b35921c94acd54a3cbc972fda83d401cce441401667426"
+      "source_profile_sha256": "7487bdb5381558490488924a14bfff927e55bed2780e6c62b5759672b8b23828"
     }
   ],
   "profile_files_sha256": {
-    "balanced.json": "a8cf564ce27cc5efd6305165542f802267deb77386ea0d99ae510845348bc0b9",
-    "economy.json": "2f61f4510b309ba62c7501e406ff535a2f27b54b90564e18aa16f668b14edeb1"
+    "balanced-source-spans-20261110.json": "dad3580f75ab00c60d8a619f239f9817056179e02b7f74c154365b855cfbf0fc"
   },
-  "rejected_profiles": [],
+  "rejected_profiles": [
+    {
+      "file": "balanced.json",
+      "label": "BLOCKED",
+      "reason": "Profile provenance/schema invalid or stale"
+    },
+    {
+      "file": "economy.json",
+      "label": "BLOCKED",
+      "reason": "Profile provenance/schema invalid or stale"
+    }
+  ],
   "showcase": {
     "label": "SIMULATED",
     "payments_sent": 0,
@@ -204,7 +161,7 @@
   },
   "qualification_status": "BLOCKED_NO_ELIGIBLE_MODEL",
   "threshold_changed": false,
-  "models_measured": 2,
+  "models_measured": 1,
   "hosted_funding_source": "PARTNER_CREDITS_UNVERIFIED_UNTIL_CONFIGURED",
   "live_purchase_authorized": false
 }

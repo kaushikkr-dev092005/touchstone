@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import tempfile
 import time
 import urllib.request
 
@@ -81,8 +82,11 @@ def local(tier,partition,max_calls,output):
     for record in [r for r in records if r['partition']==partition and r['task']['id'] not in seen][:max_calls]:
         task=Task(**record['task']);started=time.perf_counter()
         try:
-            response,latency=local_inference(task)
+            trace={}
+            response,latency=local_inference(task,usage=trace)
             row={'task_id':task.id,'output':response,'latency_ms':latency,'provider_cost_micro_usd':0}
+            if 'source_span_selection' in trace:
+                row['source_span_selection']=trace['source_span_selection']
         except Exception as error:
             row={'task_id':task.id,'output':None,'latency_ms':round((time.perf_counter()-started)*1000),
                  'provider_cost_micro_usd':0,'failure_type':type(error).__name__}
@@ -100,8 +104,21 @@ def local(tier,partition,max_calls,output):
 
 def save(path,report):
     path=Path(path);path.parent.mkdir(parents=True,exist_ok=True)
-    pending=path.with_suffix('.pending')
-    pending.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');pending.replace(path)
+    with tempfile.NamedTemporaryFile(mode='w',encoding='utf-8',prefix=path.stem+'.',suffix='.pending',
+                                     dir=path.parent,delete=False) as file:
+        pending=Path(file.name)
+        file.write(json.dumps(report,indent=2)+'\n')
+    try:
+        for retry in range(8):
+            try:
+                os.replace(pending,path)
+                break
+            except PermissionError:
+                if retry==7:raise
+                time.sleep(.02*2**retry)
+    finally:
+        try:pending.unlink(missing_ok=True)
+        except OSError:pass
 
 
 def paid(scope,origin,budget,cap,max_calls,output,execute=False,reference_scope=None,reference_budget=0,

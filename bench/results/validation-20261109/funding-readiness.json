@@ -1,0 +1,9 @@
+{
+  "label": "MEASURED",
+  "scope": "READ_ONLY_FUNDING_CAPACITY",
+  "chain_id": 63825,
+  "funding_address_matches_existing": true,
+  "usdz_balance": "99.969999999998056837",
+  "native_balance_at_least_001": true,
+  "transactions_sent": 0
+}

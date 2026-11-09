@@ -25,6 +25,54 @@ browser checks. Package downloads are external network requests; no inference,
 card, FX or token transaction is executed. Logs and screenshots stay under `tmp/`.
 The report records their hashes and the exact source commit.
 
+To verify current tracked edits before committing, add `--working-tree`:
+
+```text
+python tools/validate_release.py --working-tree --browser --frontend --output bench/results/completion-20261109/release.json
+```
+
+This mode records `TRACKED_WORKING_TREE`, the base commit, changed paths and exact
+file hashes. It excludes untracked files and creates no commit. The default remains
+an exact committed tree. The browser stage first regenerates bounded-tool evidence
+inside the extracted copy; stale historical model profiles remain ineligible.
+The transaction explorer checks confirmed charges, search, outcome/run filters,
+sorting, pagination, keyboard access to the receipt drawer and CSV totals.
+
+New public files can be included explicitly with repeated `--include relative/path`
+arguments in working-tree mode. Every added file receives the same path, secret and
+hash checks. Unlisted untracked files remain excluded.
+
+## Current proposed paid-test limits, 10 November
+
+The operator proposed 1.00 USDZ aggregate and 0.01 USDZ per inference call, with
+$0 hosted spending, no hosted credit usage until its availability and permitted
+use are verified, and no top-ups/transfers. **These limits are not final approval.**
+All zero-cost checks and estimated test costs must be reported before requesting
+the final approval for any paid operation.
+
+```text
+python tools/validation_status.py --rpc --paid-preflight-wallet m2-live-single-20261105-j1 --output bench/results/completion-20261110/paid-preflight.json
+python tools/capped_probe.py --wallet m2-live-single-20261105-j1
+```
+
+Both commands above send no payment. The second prints the exact, scope-bound
+approval phrase and reports FINAL_APPROVAL_REQUIRED. Its execution path requires
+both `--execute` and the exact approved phrase; the operator's separate final
+approval must exist before using them. It permits one local arithmetic protocol
+probe from existing clearing funds, uses a durable ledger, logs actual cost,
+receipt ID and verification, and never deposits, transfers, uses hosted credits
+or automatically repeats an uncertain call. Receipt IDs are not on-chain
+transaction hashes; preconfirmation is not final settlement.
+
+Repeated completed scopes return their stored report. Unresolved reservations
+remain locked for separate recovery. An aggregate owner and conservative exposure
+check enforce the proposed 1.00 USDZ ceiling across this probe runner's scopes.
+
+The 10 November read-only observation found 0.01 USDZ in the selected clearing
+wallet, sufficient for one quoted 0.01 USDZ call. The separate funding account is
+not authorized to transfer. A 30–50-call comparison cannot run from that wallet
+under the no-transfer restriction. Hosted credits remain unverified and unused.
+
 The frontend type-check starts from `src/main.tsx` and its imported modules. Legacy
 scenes that the application does not import are preserved in the source archive;
 their missing experimental assets cannot break the shipped application build.

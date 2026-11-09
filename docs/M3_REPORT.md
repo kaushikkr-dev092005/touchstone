@@ -64,3 +64,25 @@ Not allowed: eligible useful inference, representative OCR/vendor accuracy, inde
 ## Needed from the user
 
 Start the local model for each tier using the [M3 runbook](M3_RUNBOOK.md), then collect calibration and held-out profiles with hardware evidence. Supply hosted credentials through the seller environment and confirm partner-credit funding privately. A new written M3 aggregate USDZ cap and call count are needed before any paid profiling; the existing M2 one-call allowance is not reused. Funding requires its own approval. Keep secrets in ignored local configuration; `.env.example` is a tracked template and its local credential edit is neither loaded by the standard configuration loader nor included in this commit.
+## 10 November follow-up: source-span selection, still ineligible
+
+The model now selects IDs from public source substrings; code reconstructs exact
+Unicode offsets. This removes invented offsets without supplying expected answers
+or assigning semantic roles in the catalog. Unknown selections and abstentions
+fail closed. Historical profiles are retained unchanged.
+
+A fresh 180-call local 1.5B study measured 18/120 strict-correct calibration
+outputs and 1/60 on the fixed holdout. There were 57/29 verifier-accepted outputs
+and 41/28 incorrect acceptances respectively. Exact textual support and arithmetic
+do not establish correct field interpretation. The unchanged 95% qualification
+screen rejects the model; no invoice payment is authorized from these outputs.
+
+The raw profile is `bench/results/m3/profiles/balanced-source-spans-20261110.json`.
+The current dashboard report includes that study and rejects stale historical
+profiles. The experiment uses known synthetic layouts, not representative finance
+operations or a pristine prospective evaluation. Provider/model identity, raw
+selections, hardware samples and source hashes are retained. No hosted call or
+external financial transaction was sent; local electricity/CPU costs are unpriced.
+
+Windows checkpoints now use unique temporary files and bounded sharing-violation
+retries. Retrying a checkpoint does not repeat the model or payment call.

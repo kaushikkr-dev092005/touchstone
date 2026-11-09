@@ -18,7 +18,7 @@ contain redacted observations; private runtime data is excluded from packaging.
 | [Reference FX](../bench/results/features/fx-quote.json) | MEASURED quote / SIMULATED prices | Saved rate may be expired; no conversion or fiat merchant dispatch |
 | [Controlled FX switch](../bench/results/features/controlled-fx.json) | SIMULATED / MOCK rates | FX changes preferred eligible illustrative offer; no payment |
 | [GPU sample](../bench/results/features/telemetry.json) | MEASURED local hardware | Timestamped driver sample; no calibrated capacity markup or measured tokens/sec |
-| [Issuing doctor](../bench/results/features/card-readiness.json) | BLOCKED | Real read returned 401; no card created |
+| [Issuing doctor](../bench/results/features/card-readiness.json) | MEASURED | Fresh Cards, Cardholders, Config and balance reads pass on 10 November; no card created; writes/Visa unverified |
 | [Signed intent](../bench/results/features/tap-probe.json) | MOCK identity / MEASURED protocol check | Controlled HTTP acceptance and replay rejection; no Visa trust/approval or payment |
 | [Feature tests](../bench/results/features/validation.json) | MEASURED local | Test counts, artifact hashes, browser/security checks |
 | [Clean source verification](../bench/results/package/clean-checkout.json) | MEASURED Windows | Exact committed archive, pinned install, 247 Python/47 Node tests and browser checks |

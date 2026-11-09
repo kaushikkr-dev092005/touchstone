@@ -55,13 +55,15 @@ def extract_verified(archive, manifest, destination):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--ref', default='HEAD')
+    parser.add_argument('--working-tree', action='store_true', help='Validate edits to tracked files with an explicit per-file manifest; no commit is created')
+    parser.add_argument('--include',action='append',default=[],help='Explicit public added file to scan and include; requires --working-tree')
     parser.add_argument('--browser', action='store_true', help='Requires existing Playwright/Chromium development tools')
     parser.add_argument('--frontend', action='store_true', help='Install the Bun lockfile and build the optional marketing page')
     parser.add_argument('--output', default='bench/results/validation/release.json')
     args = parser.parse_args()
     from tools.bundle import build
     from touchstone.metal import node_executable
-    artifact = build(args.ref)
+    artifact = build(args.ref, working_tree=args.working_tree, extra_paths=args.include)
     manifest = json.loads((ROOT / 'dist/bundle-manifest.json').read_text(encoding='utf-8'))
     node = str(Path(node_executable()).resolve())
     npm = Path(node).parent / 'node_modules/npm/bin/npm-cli.js'
@@ -75,8 +77,11 @@ def main():
     count = extract_verified(ROOT / 'dist/touchstone-source.zip', manifest, source)
     logs = directory / 'logs'
     logs.mkdir()
-    report = {'label': 'MEASURED', 'scope': 'COMMITTED_SOURCE_WITH_CONTROLLED_FINANCIAL_ADAPTERS',
+    report = {'label': 'MEASURED', 'scope': ('TRACKED_WORKING_TREE' if args.working_tree else 'COMMITTED_SOURCE') + '_WITH_CONTROLLED_FINANCIAL_ADAPTERS',
         'commit': artifact['commit'], 'archive_sha256': artifact['sha256'], 'source_files_verified': count,
+        'source_mode': artifact['source_mode'], 'changed_files': artifact['changed_files'],
+        'working_tree_edits_included': args.working_tree, 'untracked_files_included': artifact['untracked_files_included'],
+        'added_files': artifact['added_files'],
         'private_data_copied': False, 'credentials_forwarded': False, 'external_financial_transactions': 0,
         'node_modules_copied': False, 'tools_directory_symlinked': False,
         'platform': platform.platform(), 'python': platform.python_version(), 'stages': {},
@@ -110,6 +115,7 @@ def main():
             stage('bun-install-frozen', [bun, 'install', '--frozen-lockfile', '--ignore-scripts'], source / 'apps/web')
             stage('frontend-build', [bun, 'run', 'build'], source / 'apps/web')
         if args.browser:
+            stage('procurement-evidence', [sys.executable, '-m', 'touchstone', 'procurement-evidence'])
             stage('dashboard-browser', [sys.executable, 'tools/check_dashboard.py'])
             stage('motion-browser', [sys.executable, 'tools/check_dashboard_motion.py'])
             command = [sys.executable, 'tools/check_release_browser.py']

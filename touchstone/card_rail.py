@@ -26,16 +26,46 @@ class CardRail:
                 raise ValueError('Card scope is bound to a different approved mandate')
             db.execute('INSERT OR IGNORE INTO card_mandates VALUES(?,?)', (scope, encoded))
 
-    def doctor(self):
+    def doctor(self, diagnose=False):
+        result={'label':'BLOCKED','issuing_read':False,'issuing_write_verified':False,
+            'merchant_payment_supported':False,'cards_created':0,'transactions_sent':0,
+            'visa_tap_identity':'NOT_VERIFIED'}
         try:
-            result=self.client.request('GET','/api/v1/issuing/cards?page_size=10')
-            readable=isinstance(result,dict) and isinstance(result.get('items'),list)
-            return {'label':getattr(self.client,'evidence_label','MOCK') if readable else 'BLOCKED','issuing_read':readable,
-                    'issuing_write_verified':False,'merchant_payment_supported':False,
-                    'cards_created':0,'transactions_sent':0,'visa_tap_identity':'NOT_VERIFIED'}
+            raw=self.client.request('GET','/api/v1/issuing/cards?page_size=10')
+            readable=isinstance(raw,dict) and isinstance(raw.get('items'),list)
+            result.update(label=getattr(self.client,'evidence_label','MOCK') if readable else 'BLOCKED',issuing_read=readable)
         except AirwallexHTTPError as error:
-            return {'label':'BLOCKED','issuing_read':False,'http_status':error.status,
-                    'reason':'Issuing access/scope not enabled or unavailable','cards_created':0,'transactions_sent':0}
+            result.update(http_status=error.status,code=error.code,reason='Issuing access/scope not enabled or unavailable')
+        if not diagnose:return result
+        probes={}
+        for name,path in [('balances','/api/v1/balances/current'),
+            ('cardholders','/api/v1/issuing/cardholders?page_size=10'),('issuing_config','/api/v1/issuing/config')]:
+            try:
+                raw=self.client.request('GET',path)
+                valid=(isinstance(raw,list) if name=='balances' else
+                    isinstance(raw,dict) and (name=='issuing_config' or isinstance(raw.get('items'),list)))
+                probes[name]={'allowed':valid,'status':'PASS' if valid else 'INVALID_RESPONSE'}
+            except AirwallexHTTPError as error:
+                probes[name]={'allowed':False,'http_status':error.status,'code':error.code}
+            except (OSError,ValueError,RuntimeError):probes[name]={'allowed':False,'status':'UNAVAILABLE'}
+        if result['issuing_read']:
+            diagnosis='ISSUING_READ_AVAILABLE'
+        elif probes['balances']['allowed'] and result.get('http_status') in {401,403}:
+            diagnosis='ISSUING_PERMISSION_DENIED'
+            result['reason']='Account authentication works, but issuing permission is denied. Check scoped-key issuing permissions and account enablement.'
+        elif probes['balances'].get('code') in {'credentials_invalid','credentials_expired'}:
+            diagnosis='AUTHENTICATION_REJECTED'
+        else:diagnosis='ACCOUNT_OR_ISSUING_ACCESS_UNRESOLVED'
+        result.update(diagnosis=diagnosis,read_probes=probes,
+            account_context_configured=bool(getattr(self.client,'account_id',None)),
+            required_read_scopes=['Issuing / Cards / Read','Issuing / Cardholders / Read','Issuing / Config / Read'],
+            remediation=['Select the configured sandbox account under the current scoped API key.',
+                'In Settings > Developer > API keys, enable the required account-level issuing read scopes.',
+                'If issuing scopes are unavailable, ask the account owner or Airwallex to enable Issuing APIs.',
+                'Recheck access. Creating a card or spending still requires its own explicit approval.'],
+            scope_reference='https://www.airwallex.com/docs/developer-tools/api/api-key-scopes',
+            enablement_reference='https://www.airwallex.com/docs/issuing/test-and-go-live/integration-checklist')
+        return result
 
     @staticmethod
     def body(scope, cardholder_id, created_by, cap_micro, currency, expires_at, *, read_only=False):

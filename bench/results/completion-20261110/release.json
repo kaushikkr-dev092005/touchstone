@@ -1,0 +1,210 @@
+{
+  "label": "MEASURED",
+  "scope": "TRACKED_WORKING_TREE_WITH_CONTROLLED_FINANCIAL_ADAPTERS",
+  "commit": "51ae8a568cce18613d1d3611a843dd649ceedc95",
+  "archive_sha256": "11c992a7e4b8e326fddb27d7de44266b20b9a53ce768e13a93c04168cf65e9d7",
+  "source_files_verified": 385,
+  "source_mode": "TRACKED_WORKING_TREE",
+  "changed_files": [
+    "README.md",
+    "apps/dashboard/index.html",
+    "bench/results/PROCUREMENT_RESULTS.md",
+    "bench/results/m3/report.json",
+    "bench/results/procurement-evidence.json",
+    "docs/AIRWALLEX_SUPPORT_REQUEST.md",
+    "docs/DEMO_SCRIPT.md",
+    "docs/M3_REPORT.md",
+    "docs/M7_REPORT.md",
+    "docs/ROADMAP.md",
+    "docs/SUBMISSION.md",
+    "docs/VALIDATION_RUNBOOK.md",
+    "tests/test_bundle.py",
+    "tests/test_m3.py",
+    "tests/test_transactions_api.py",
+    "tests/test_validation_status.py",
+    "tools/bundle.py",
+    "tools/check_dashboard.py",
+    "tools/check_release_browser.py",
+    "tools/check_transactions.py",
+    "tools/validate_release.py",
+    "tools/validation_status.py",
+    "touchstone/invoice_extraction.py",
+    "touchstone/invoice_profile.py",
+    "touchstone/providers.py",
+    "touchstone/server.py"
+  ],
+  "working_tree_edits_included": true,
+  "untracked_files_included": true,
+  "added_files": [
+    "tools/capped_probe.py",
+    "bench/results/m3/profiles/balanced-source-spans-20261110.json"
+  ],
+  "private_data_copied": false,
+  "credentials_forwarded": false,
+  "external_financial_transactions": 0,
+  "node_modules_copied": false,
+  "tools_directory_symlinked": false,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.10",
+  "stages": {
+    "npm-ci": {
+      "exit_code": 0,
+      "log_sha256": "b3dfbb0ac0ab73e37a4c13e5276d48c63a59bdd74c41b72ed85cbbb26b0effaf"
+    },
+    "python-tests": {
+      "exit_code": 0,
+      "log_sha256": "1c8e4cef75a5e50515a7349a8c1548a4bf8288724e260630870a373e126718bb"
+    },
+    "node-tests": {
+      "exit_code": 0,
+      "log_sha256": "c67c7546f312c4fdbbc1d050a91300d530ba27127586bb6bfd45e7f3936da89e"
+    },
+    "m1-controlled": {
+      "exit_code": 0,
+      "log_sha256": "cf94f4334d482b60d37ade4f33f8006a5d0e2903ed3a13c64d405e421063a3be"
+    },
+    "m2-controlled": {
+      "exit_code": 0,
+      "log_sha256": "a5f42b96e9a42693432bec46ca3492d029ad6c70436978362be2ebca772b2b32"
+    },
+    "m3-controlled": {
+      "exit_code": 0,
+      "log_sha256": "2f04d249b4b8dd513de5ed77cddc8745c1cb2aed5d21e840718345ba797a6d96"
+    },
+    "m4-controlled": {
+      "exit_code": 0,
+      "log_sha256": "a36afd10a6be7b9783d0d498abbfd30c971967adea937788d69e01bd53b43055"
+    },
+    "m5-controlled": {
+      "exit_code": 0,
+      "log_sha256": "c3ea6d2201346865bfb8d3086706deb30df647386ab7a19b350dbec35caf01cb"
+    },
+    "bun-install-frozen": {
+      "exit_code": 0,
+      "log_sha256": "a8105e8c6152ab92ff68e6e8d13bc3d8cbf9098df9ea3818566f043ee70529da"
+    },
+    "frontend-build": {
+      "exit_code": 0,
+      "log_sha256": "cbc584c530f78d9341784fe17a4cb098ea1f2c8a4640b614aace826bb8f14ca1"
+    },
+    "procurement-evidence": {
+      "exit_code": 0,
+      "log_sha256": "f1cb650c5b94ad06ddc236ba22cc6df51f9c09042a48f0ca05ddcaa230050bf8"
+    },
+    "dashboard-browser": {
+      "exit_code": 0,
+      "log_sha256": "d09bff03e53a49800641a88e8ea4342b355f531d93532839d832695dfc0499ba"
+    },
+    "motion-browser": {
+      "exit_code": 0,
+      "log_sha256": "d42420dd859fdf2205d595b7d8d40efea82c6ec3ec4921f2f4bb77c1e847a3cd"
+    },
+    "release-browser": {
+      "exit_code": 0,
+      "log_sha256": "5ef7c9c6122e560cf4920591edc175870eed7b49f63cbe9a28b474ef2dccffba"
+    }
+  },
+  "logs_directory": "tmp/release-validation-9380xz2e/logs",
+  "python_tests": 302,
+  "node_tests": 53,
+  "functional_browser": {
+    "desktop": "passed",
+    "mobile_width": 390,
+    "horizontal_overflow": false,
+    "browser_errors": [],
+    "start_halt_resume_close": "passed",
+    "host_origin_session_controls": "passed",
+    "reconciliation": {
+      "matched": true,
+      "ledger_provider_total": 2780000,
+      "rail_total": 2780000,
+      "verification_total": 128000,
+      "customer_captured": 2698000,
+      "pending": 0,
+      "mismatches": [],
+      "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+      "mode": "SIMULATED"
+    },
+    "planning_tool_and_review_cases": "passed",
+    "provider_evidence_rows": 6,
+    "testnet_proof_disclosure": "passed",
+    "fault_fx_telemetry_rail_panels": "passed",
+    "credential_isolation_and_blocked_fx": "passed",
+    "merchant_absorbs_sse_and_capture": "passed",
+    "particle_field_stops_on_confirmed_halt": "passed",
+    "transactions_explorer": {
+      "rows": 128,
+      "runs": 2,
+      "confirmed_spend_micro_usd": 2908000,
+      "search_filters_sort_pagination": "passed",
+      "keyboard_drawer": "passed",
+      "csv_totals": "passed"
+    },
+    "screenshots": [
+      "desktop-ready.png",
+      "desktop-paused.png",
+      "desktop-completed.png",
+      "mobile-completed.png"
+    ]
+  },
+  "motion_browser": {
+    "label": "MEASURED",
+    "scope": "ISOLATED_SIMULATED_DASHBOARD",
+    "desktop": [
+      1440,
+      900
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "particle_preview": {
+      "fps": "60.0",
+      "render_ms": "1.37",
+      "quality": "full",
+      "particles": 5200
+    },
+    "fps_environment": "HEADLESS_CHROMIUM_WINDOWS_NOT_A_HARDWARE_GUARANTEE",
+    "pause_replay_offscreen_reduced_motion": "passed",
+    "dark_light_toggle": "passed",
+    "horizontal_overflow": false,
+    "page_errors": [],
+    "external_requests": [],
+    "financial_transactions": 0
+  },
+  "release_browser": {
+    "label": "MEASURED",
+    "scope": "ISOLATED_SIMULATED_RELEASE",
+    "sse_restart_reconnect": "passed",
+    "old_process_token_rejected": true,
+    "fresh_process_token_accepted": true,
+    "viewports": [
+      [
+        1440,
+        900
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "reduced_motion_on_and_off": "passed",
+    "landing_built_and_checked": true,
+    "offline_loaded_page": "passed",
+    "external_requests": [],
+    "page_errors": [],
+    "screenshots": [
+      "dashboard-1440-motion.png",
+      "landing-1440-motion.png",
+      "dashboard-390-motion.png",
+      "landing-390-motion.png",
+      "dashboard-1440-reduced.png",
+      "landing-1440-reduced.png",
+      "dashboard-390-reduced.png",
+      "landing-390-reduced.png"
+    ],
+    "financial_transactions": 0
+  },
+  "passed": true,
+  "failure_type": null
+}

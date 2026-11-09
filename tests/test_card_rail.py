@@ -3,6 +3,7 @@ from datetime import datetime,timedelta,timezone
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 from touchstone.card_rail import CardRail
 from touchstone.holds import OperationJournal,OutcomeUnknown
 from touchstone.ledger import PolicyError
@@ -64,6 +65,41 @@ class CardRailTests(unittest.TestCase):
         result=self.rail.doctor()
         self.assertFalse(result['issuing_write_verified']);self.assertEqual(result['cards_created'],0)
         self.assertEqual(self.client.calls[0][0],'GET')
+
+    def diagnose(self, denied=False, authentication=False):
+        def request(method,path,body=None):
+            self.client.calls.append((method,path))
+            self.assertEqual(method,'GET')
+            if authentication or (denied and '/issuing/' in path):
+                error=AirwallexHTTPError(401,'credentials_invalid' if authentication else 'unauthorized')
+                error.private_message='private provider message'
+                raise error
+            if '/balances/' in path:return []
+            if path.endswith('/config'):return {'private':'must not appear'}
+            return {'items':[{'private':'must not appear'}]}
+        with patch.object(self.client,'request',side_effect=request):
+            return self.rail.doctor(diagnose=True)
+
+    def test_diagnosis_distinguishes_issuing_permission_from_authentication(self):
+        result=self.diagnose(denied=True)
+        self.assertEqual(result['diagnosis'],'ISSUING_PERMISSION_DENIED')
+        self.assertTrue(result['read_probes']['balances']['allowed'])
+        self.assertFalse(result['issuing_read'])
+        self.assertNotIn('private provider message',str(result))
+        self.assertEqual(len(self.client.calls),4)
+        result=self.diagnose(authentication=True)
+        self.assertEqual(result['diagnosis'],'AUTHENTICATION_REJECTED')
+
+    def test_successful_diagnosis_verifies_reads_only_and_omits_raw_data(self):
+        result=self.diagnose()
+        self.assertEqual(result['diagnosis'],'ISSUING_READ_AVAILABLE')
+        self.assertEqual(result['label'],'MOCK')
+        self.assertTrue(all(p['allowed'] for p in result['read_probes'].values()))
+        self.assertNotIn('must not appear',str(result))
+        self.assertFalse(result['issuing_write_verified'])
+        self.assertFalse(result['merchant_payment_supported'])
+        self.assertEqual(result['visa_tap_identity'],'NOT_VERIFIED')
+        self.assertEqual(result['cards_created'],0)
 
     def test_cap_cannot_change_after_issue(self):
         self.rail.issue(*self.args,execute=True)

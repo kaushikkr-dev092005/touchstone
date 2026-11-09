@@ -23,6 +23,14 @@ does not generate a wallet, deposit, purchase, withdraw, convert money or call a
 hosted inference API. Seller health is configuration evidence, not payment proof.
 The dashboard's three-job demo remains **SIMULATED**.
 
+The model launcher checks NVIDIA telemetry every five seconds. It refuses startup
+at 65 C or above and stops its own model child at 75 C, reported thermal throttling
+or unavailable temperature readings. It never automatically restarts. These are
+conservative application limits, not device specifications or an overheating
+guarantee. `tmp/inference/gpu-guard.json` records the latest guarded run. Do not
+start llama-server directly if these controls are required. The model is currently
+stopped after the 10 November paid test; the dashboard works without it.
+
 On Windows, the launcher reads configured user environment variables, then uses
 the normal local configuration loader. It never loads `.env.example`. Bank secrets
 and the funding key are removed from seller/model environments; the local model
@@ -81,8 +89,8 @@ No Python runtime dependencies or Node dependency changes were added.
 | Gate | Current evidence | Required operator action |
 |---|---|---|
 | Native acquiring / production | **MEASURED:** the separate hosted sandbox authorization/capture is complete. Native API enablement and production are unverified. | Support must confirm native entitlement only if needed; the successful hosted path can be used independently. |
-| Further Metal operations | **MEASURED:** single-call/recovery gates passed. The deposit and purchase approvals are consumed; 0.01 USDZ remains in the job wallet. | Obtain fresh written caps before any new purchase, deposit or withdrawal. No new operation is needed for this proof. |
-| Hosted premium tier | **BLOCKED:** no hosted API credential is configured. | Supply credentials privately in the seller environment and identify the intended model/credit source. Hosted API usage needs its own authorization. |
+| Further Metal operations | **MEASURED:** single-call/recovery gates passed. The separately approved 10 November probe used the remaining 0.01 USDZ; read-back found zero spendable balance and no pending invoice. | Further purchases require funding and fresh transaction approval. Transfers/top-ups remain unauthorized. |
+| Hosted premium tier | **MEASURED:** a zero-inference Models API GET returned HTTP 200 for the configured model and confirmed structured-output support. Credits and permitted usage remain unverified. | Verify available credits and their permitted use through the account's Billing page, then approve a concrete study plan. No hosted inference is currently authorized. |
 | M3/M4 paid studies | **BLOCKED:** the single-purchase allowance does not cover these experiments. | Qualify a model using actual measurements; approve the study's aggregate cap/call count and upstream usage. No eligibility threshold is reduced. |
 
 Repair RPC credentials locally without exposing the URL:

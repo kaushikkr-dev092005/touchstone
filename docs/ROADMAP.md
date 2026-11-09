@@ -68,6 +68,11 @@ A checked item is not a live-service completion claim; see VALIDATION.md and LIV
 
 ## Not done
 
+Local completion follow-up (9 November): clean-source browser setup, isolated
+history panels, transaction charge accounting and tracked-edit packaging are
+covered by [M7](M7_REPORT.md) and the fresh completion report. The open live and
+manual gates below are still separate deliverables; local checks cannot close them.
+
 Local packaging/clean-checkout verification has passed for the explicit committed
 source revision in [M7](M7_REPORT.md). This does not close the live or manual gates
 below and does not establish current remote CI success.
@@ -78,7 +83,7 @@ below and does not establish current remote CI success.
 
 - [ ] Full M2/M4 live scale: one-call Metal integration/recovery passed; a larger concurrent/30–50-step study needs fresh funding/purchase/upstream approvals and eligible models. Existing one-purchase and deposit approvals are consumed.
 
-- [ ] Native acquiring entitlement remains unverified; separate hosted sandbox authorization/capture is complete. Issuing reads return 401 and require separate enablement.
+- [ ] Native acquiring entitlement remains unverified; separate hosted sandbox authorization/capture is complete. Issuing reads now pass; issuing writes and Visa onboarding remain unverified.
 - [ ] Collect representative finance-operations sources and prospective evaluation evidence; qualify an inference provider for that domain. No measured model passes the eligibility screen.
 - [ ] Larger live paid comparison/quality-chaos remains unrun; the separate one-call hard-kill/recovery proof is complete. Fresh aggregate approvals and eligible providers are required.
 - [ ] Configure hosted premium credentials and both provider origins, then run the matched three-policy paid trial (hosted API invoice is separate from the USDZ metric).
@@ -175,5 +180,16 @@ Record the final video on 12 November. Submit the repository, working demonstrat
 Drop PDF export, per-token precision switching, extra provider types, reference-model summaries and any claim that the uncalibrated Thompson policy is production-ready before cutting the paid-call proof, customer hold lifecycle, verification, recovery, evidence or mode disclosures. The current synthetic tasks are intentionally narrow; one credible finance-ops workflow is enough for the first demonstration.
 
 ## Unresolved dependencies
+
+10 November follow-up: issuing Cards/Cardholders/Config read scopes now pass with
+a fresh login. One newly approved local protocol call spent exactly 0.01 USDZ,
+returned 1,400 instead of 2,000 cents, and was rejected and logged without retry.
+It does not qualify the model. No hosted call, deposit or transfer was sent.
+The idle model was stopped; the installed model launcher now refuses startup at
+65 C and stops at 75 C, thermal throttling or missing temperature telemetry.
+This is a conservative software control, not a hardware-temperature guarantee.
+The source model-quality gate remains unchanged. Visa/merchant access and portal
+confirmation remain external dependencies. Earlier dated wallet/setup notes below
+are historical and do not authorize more spending.
 
 `AIRWALLEX_ACCOUNT_ID`, Checkout Sessions/Transactional FX permissions, active payment methods and accepted registration are user-controlled. The live testnet provider URL is not configured and the previously funded wallet was withdrawn; one old paid proof and returned-float evidence remain recorded. No representative finance-operations evaluation set or qualified provider is available. Record the demo on 12 November and submit by 13 November with hours to spare, after verifying portal requirements. MIT is selected; official judging rubric, submission schema, team details and video requirements still need portal confirmation.

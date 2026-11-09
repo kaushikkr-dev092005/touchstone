@@ -1,0 +1,63 @@
+{
+  "label": "MEASURED",
+  "scope": "COMMITTED_SOURCE_WITH_CONTROLLED_FINANCIAL_ADAPTERS",
+  "commit": "a2f3896a1d7831c8304769feb615246ee86f1bf9",
+  "archive_sha256": "5ca745d06d86f7d18e5673b186aaa5d051d6e44e98019823f6bcd5d728c44b8d",
+  "source_files_verified": 381,
+  "private_data_copied": false,
+  "credentials_forwarded": false,
+  "external_financial_transactions": 0,
+  "node_modules_copied": false,
+  "tools_directory_symlinked": false,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.10",
+  "stages": {
+    "npm-ci": {
+      "exit_code": 0,
+      "log_sha256": "ffdbd7063467606475706d555b77d0988e9933d7c68ad36fd484331e9bed16c9"
+    },
+    "python-tests": {
+      "exit_code": 0,
+      "log_sha256": "a2fd41f086e9c5a8b0f43450ecfdab2e7587c80e16d27057061d6bd35e1e3aba"
+    },
+    "node-tests": {
+      "exit_code": 0,
+      "log_sha256": "d8335b74a2f764b5c41c2cc8502fa43d6e597ad09f735d7298729bb0b41ed00c"
+    },
+    "m1-controlled": {
+      "exit_code": 0,
+      "log_sha256": "c6cfa9636387e3041c60bc81529f1acf24c523df9c7fe317605cee6d53c217f4"
+    },
+    "m2-controlled": {
+      "exit_code": 0,
+      "log_sha256": "c597ed739feeb1cc0656da019e593eed5780983b7431f9f3ad7ac76ea25ee566"
+    },
+    "m3-controlled": {
+      "exit_code": 0,
+      "log_sha256": "08adc3b54336c6259d23e5f216bfea17a5cf8a16a61eddb9343d48e12e8b2d0e"
+    },
+    "m4-controlled": {
+      "exit_code": 0,
+      "log_sha256": "7b4e258915b1f1e99ffa91a1ffdd204decb269c32ff96b298c965f2621b671a1"
+    },
+    "m5-controlled": {
+      "exit_code": 0,
+      "log_sha256": "244b7f10bfa510bf798bdc8137df8c83a6e6a3a100f683bc4c62a22238131e9d"
+    },
+    "bun-install-frozen": {
+      "exit_code": 0,
+      "log_sha256": "c9ed9bd1d460674a9724f0b1e30fd54fcba99c22d03b5af7b8d2538db488db0f"
+    },
+    "frontend-build": {
+      "exit_code": 0,
+      "log_sha256": "c285f6d026e4a186ed58487d7d7ec675cf8b0bcf0adbab192ead097d67e30ee7"
+    },
+    "dashboard-browser": {
+      "exit_code": 1,
+      "log_sha256": "0f0841fbf3bcc98b73cf1750f72d1ac9fe1e2b7621d5c96f3122c306523b1c1f"
+    }
+  },
+  "logs_directory": "tmp/release-validation-kgkvpxkk/logs",
+  "passed": false,
+  "failure_type": "RuntimeError"
+}

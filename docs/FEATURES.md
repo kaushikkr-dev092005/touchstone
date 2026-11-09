@@ -2,8 +2,9 @@
 
 Status key: **IMPLEMENTED** code and tests exist and ran against controlled adapters only;
 **MEASURED** a real local observation exists; **BLOCKED** an external credential, grant or spend
-approval is required. Nothing below was run against a real paid provider, issuing account, Visa
-service or fiat merchant in this revision.
+approval is required. The 10 November follow-up verified sandbox issuing reads and
+one approved testnet inference. Issuing writes, Visa services and fiat merchant
+settlement remain unverified.
 
 Implementation is local Python stdlib plus the existing pinned Metal SDK and viem.
 No runtime dependency was added. Tests use controlled adapters; none purchases a
@@ -67,8 +68,12 @@ uncertain creation never automatically retries. No PAN/CVC endpoint is used.
 Issuing a card is not a merchant payment: `pay` refuses without a separately
 verified merchant adapter. The existing Metal path remains independent.
 
-**BLOCKED:** the saved real issuing read returned HTTP 401. No card was created.
-An operator must enable issuing access and separately approve a stated cap.
+**MEASURED, 10 November:** fresh login and Cards, Cardholders, Config and balance
+reads pass after the operator enabled the three issuing read scopes. The earlier
+401 is resolved. No card was created. Card creation needs its own write access,
+existing cardholder and separately approved cap. `doctor --diagnose` and the
+dashboard's authenticated recheck distinguish account authentication from issuing
+permission denial, save only sanitized diagnostics and bind evidence to the account.
 [Readiness](../bench/results/features/card-readiness.json).
 The contract follows [Airwallex create card documentation](https://www.airwallex.com/docs/api/issuing/cards/create);
 live write/read-back compatibility remains unverified.
@@ -192,7 +197,7 @@ at desktop/390px widths, including SSE, session/Host/Origin controls, missing-ke
 FX refusal, both simulated billing policies, kill/resume and reconciliation.
 See [validation](VALIDATION.md) and the [evidence index](EVIDENCE_INDEX.md).
 
-M3 useful paid inference, M4 live comparison, enabled issuing, Visa credentials/trust, a funded
+M3 useful paid inference, M4 live comparison, issuing write access, Visa credentials/trust, a funded
 fiat merchant, final settlement, manual portal/video/submission and new spending approvals remain
 gates. The implementation does not turn those
 missing observations into completion claims.

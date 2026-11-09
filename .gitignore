@@ -9,4 +9,5 @@ __pycache__/
 *.py[cod]
 *.sqlite*
 *.log
+*.pending
 node_modules/

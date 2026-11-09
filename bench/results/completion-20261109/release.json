@@ -1,0 +1,192 @@
+{
+  "label": "MEASURED",
+  "scope": "TRACKED_WORKING_TREE_WITH_CONTROLLED_FINANCIAL_ADAPTERS",
+  "commit": "51ae8a568cce18613d1d3611a843dd649ceedc95",
+  "archive_sha256": "1aaca83be403e89287dd6a2dffcd12526c0e6e3afe01b8f6cbff111c38027ba0",
+  "source_files_verified": 383,
+  "source_mode": "TRACKED_WORKING_TREE",
+  "changed_files": [
+    "README.md",
+    "apps/dashboard/index.html",
+    "docs/M7_REPORT.md",
+    "docs/ROADMAP.md",
+    "docs/VALIDATION_RUNBOOK.md",
+    "tests/test_bundle.py",
+    "tests/test_transactions_api.py",
+    "tools/bundle.py",
+    "tools/check_dashboard.py",
+    "tools/check_transactions.py",
+    "tools/validate_release.py",
+    "touchstone/server.py"
+  ],
+  "working_tree_edits_included": true,
+  "untracked_files_included": false,
+  "private_data_copied": false,
+  "credentials_forwarded": false,
+  "external_financial_transactions": 0,
+  "node_modules_copied": false,
+  "tools_directory_symlinked": false,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.10",
+  "stages": {
+    "npm-ci": {
+      "exit_code": 0,
+      "log_sha256": "a30df252edf0a500d194f1eb0bd3ddf1bbda66c811198480ff9b3b6c2581a803"
+    },
+    "python-tests": {
+      "exit_code": 0,
+      "log_sha256": "5b5910400c74fe8323692af877d0e8f63bae45e29764850fc7b96adad8309311"
+    },
+    "node-tests": {
+      "exit_code": 0,
+      "log_sha256": "93e24db4ca59ba6a67a47f75928fd75a4274509a290c3a700df477f77692447c"
+    },
+    "m1-controlled": {
+      "exit_code": 0,
+      "log_sha256": "f0aa241c17df4e50807fbf421ecd0b3b216b76a82ff2eeb8e3b5feee42a7dbe4"
+    },
+    "m2-controlled": {
+      "exit_code": 0,
+      "log_sha256": "bc32fc09facf72aa2eff7d9841baea731c91e5b68740ef298d6f9feeffcf3ba6"
+    },
+    "m3-controlled": {
+      "exit_code": 0,
+      "log_sha256": "7f86e5e62996f9fa5ff64d4c3c934e16a2d3d0c4ed41cbb5c2fdc79445a6d062"
+    },
+    "m4-controlled": {
+      "exit_code": 0,
+      "log_sha256": "affec1905641fd2b2af7b198cc5115b9bb103f19096146e93eefebb7ec552e65"
+    },
+    "m5-controlled": {
+      "exit_code": 0,
+      "log_sha256": "7bad2372a666fb16a486a92ae12d0ab622a773af03e4705fb884496306d5f8c7"
+    },
+    "bun-install-frozen": {
+      "exit_code": 0,
+      "log_sha256": "82ce85cbcb0cf46c3fdfa100b3d1ef3fd5117a09f4904835551ee4fd19ad4fb4"
+    },
+    "frontend-build": {
+      "exit_code": 0,
+      "log_sha256": "3ac8e8001605deea927b0a60765180decc766a01d54bfdaa16193ed26f02004a"
+    },
+    "procurement-evidence": {
+      "exit_code": 0,
+      "log_sha256": "26b0deeb02be7e3849b48396dcd18234f6b5092678b9ec2af00937d8831c8053"
+    },
+    "dashboard-browser": {
+      "exit_code": 0,
+      "log_sha256": "d09bff03e53a49800641a88e8ea4342b355f531d93532839d832695dfc0499ba"
+    },
+    "motion-browser": {
+      "exit_code": 0,
+      "log_sha256": "bcf442c404df8b2c1313e20ddd20245890d14ce3b3df0b8b7756b837c3dd2b58"
+    },
+    "release-browser": {
+      "exit_code": 0,
+      "log_sha256": "5ef7c9c6122e560cf4920591edc175870eed7b49f63cbe9a28b474ef2dccffba"
+    }
+  },
+  "logs_directory": "tmp/release-validation-uwx4j4xo/logs",
+  "python_tests": 296,
+  "node_tests": 53,
+  "functional_browser": {
+    "desktop": "passed",
+    "mobile_width": 390,
+    "horizontal_overflow": false,
+    "browser_errors": [],
+    "start_halt_resume_close": "passed",
+    "host_origin_session_controls": "passed",
+    "reconciliation": {
+      "matched": true,
+      "ledger_provider_total": 2780000,
+      "rail_total": 2780000,
+      "verification_total": 128000,
+      "customer_captured": 2698000,
+      "pending": 0,
+      "mismatches": [],
+      "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+      "mode": "SIMULATED"
+    },
+    "planning_tool_and_review_cases": "passed",
+    "provider_evidence_rows": 6,
+    "testnet_proof_disclosure": "passed",
+    "fault_fx_telemetry_rail_panels": "passed",
+    "credential_isolation_and_blocked_fx": "passed",
+    "merchant_absorbs_sse_and_capture": "passed",
+    "particle_field_stops_on_confirmed_halt": "passed",
+    "transactions_explorer": {
+      "rows": 128,
+      "runs": 2,
+      "confirmed_spend_micro_usd": 2908000,
+      "search_filters_sort_pagination": "passed",
+      "keyboard_drawer": "passed",
+      "csv_totals": "passed"
+    },
+    "screenshots": [
+      "desktop-ready.png",
+      "desktop-paused.png",
+      "desktop-completed.png",
+      "mobile-completed.png"
+    ]
+  },
+  "motion_browser": {
+    "label": "MEASURED",
+    "scope": "ISOLATED_SIMULATED_DASHBOARD",
+    "desktop": [
+      1440,
+      900
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "particle_preview": {
+      "fps": "60.0",
+      "render_ms": "1.53",
+      "quality": "full",
+      "particles": 5200
+    },
+    "fps_environment": "HEADLESS_CHROMIUM_WINDOWS_NOT_A_HARDWARE_GUARANTEE",
+    "pause_replay_offscreen_reduced_motion": "passed",
+    "dark_light_toggle": "passed",
+    "horizontal_overflow": false,
+    "page_errors": [],
+    "external_requests": [],
+    "financial_transactions": 0
+  },
+  "release_browser": {
+    "label": "MEASURED",
+    "scope": "ISOLATED_SIMULATED_RELEASE",
+    "sse_restart_reconnect": "passed",
+    "old_process_token_rejected": true,
+    "fresh_process_token_accepted": true,
+    "viewports": [
+      [
+        1440,
+        900
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "reduced_motion_on_and_off": "passed",
+    "landing_built_and_checked": true,
+    "offline_loaded_page": "passed",
+    "external_requests": [],
+    "page_errors": [],
+    "screenshots": [
+      "dashboard-1440-motion.png",
+      "landing-1440-motion.png",
+      "dashboard-390-motion.png",
+      "landing-390-motion.png",
+      "dashboard-1440-reduced.png",
+      "landing-1440-reduced.png",
+      "dashboard-390-reduced.png",
+      "landing-390-reduced.png"
+    ],
+    "financial_transactions": 0
+  },
+  "passed": true,
+  "failure_type": null
+}

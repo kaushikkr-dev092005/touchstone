@@ -1,0 +1,38 @@
+{
+  "label": "MEASURED",
+  "observed_at": 1794248431.947855,
+  "scope": "LOCAL_STARTUP_ONLY",
+  "services": {
+    "dashboard": {
+      "label": "MEASURED",
+      "status": "RUNNING",
+      "pid": 19212,
+      "existing_service_kept": false
+    },
+    "model": {
+      "label": "MEASURED",
+      "status": "RUNNING",
+      "pid": 22892,
+      "existing_service_kept": false
+    },
+    "local_seller": {
+      "label": "MEASURED",
+      "status": "RUNNING",
+      "pid": 13576,
+      "existing_service_kept": false
+    },
+    "premium": {
+      "label": "MEASURED",
+      "status": "RUNNING",
+      "pid": 24288,
+      "existing_service_kept": false
+    }
+  },
+  "dashboard_url": "http://127.0.0.1:8088/",
+  "local_stack_running": true,
+  "dashboard_mode": "SIMULATED",
+  "live_paid_integration": "NOT_CHECKED_BY_STARTUP",
+  "money_moved": false,
+  "payments_sent": 0,
+  "notice": "Seller health is not RPC authentication, funded-wallet, model-quality or paid-delivery proof."
+}

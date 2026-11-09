@@ -1,0 +1,11 @@
+{
+  "artifact": "dist\\touchstone-release.zip",
+  "bytes": 18294456,
+  "sha256": "ae93828d7ff4d9bde73e87a5d400b3c1684d5c74bdd0f16833933e29a5c5eee1",
+  "members_verified": 9,
+  "python_tests": 296,
+  "node_tests": 53,
+  "release_passed": true,
+  "published": false,
+  "submitted": false
+}

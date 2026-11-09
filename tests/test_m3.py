@@ -2,6 +2,7 @@ import copy
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -9,8 +10,8 @@ from unittest.mock import patch
 
 from m2_fixtures import FixtureFactory, FixtureClient
 from touchstone.invoice_dataset import build,save
-from touchstone.invoice_extraction import deterministic,duplicate_reference,verify
-from touchstone.invoice_profile import local,paid,raw_profile
+from touchstone.invoice_extraction import deterministic,duplicate_reference,verify,source_spans,selection_contract,resolve_selection,FIELDS,ITEM_FIELDS
+from touchstone.invoice_profile import local,paid,raw_profile,save as save_profile
 from touchstone.invoice_study import assess,dashboard,evaluate_profile,report,score
 from touchstone.metal import PaymentPending,MetalQuote
 from touchstone.workload import Task
@@ -19,6 +20,46 @@ from touchstone.workload import Task
 class CorpusTests(unittest.TestCase):
     def setUp(self):
         self.records,self.truth=build()
+
+    def test_profile_checkpoint_retries_file_sharing_without_repeating_inference(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output=Path(directory)/'profile.json';output.write_text('{"rows":[]}')
+            original=os.replace;calls=[]
+            def transient(source,destination):
+                calls.append(1)
+                if len(calls)<3:raise PermissionError('Transient Windows sharing violation')
+                return original(source,destination)
+            with patch('touchstone.invoice_profile.os.replace',side_effect=transient),patch('touchstone.invoice_profile.time.sleep'):
+                save_profile(output,{'rows':[{'completed':True}]})
+            self.assertEqual(json.loads(output.read_text())['rows'],[{'completed':True}])
+            self.assertEqual(len(calls),3)
+            self.assertFalse(list(Path(directory).glob('*.pending')))
+
+    def test_source_span_catalog_covers_exact_public_citations_without_assigning_roles(self):
+        for record in self.records:
+            task=Task(**record['task'])
+            spans,_=source_spans(task)
+            by_position={(s['start'],s['end']):key for key,s in spans.items()}
+            expected=self.truth[task.id]['output']
+            identity=lambda span: by_position[(span['start'],span['end'])]
+            selected={'fields':{name:identity(span) if span is not None else None for name,span in expected['fields'].items()},
+                      'items':[{name:identity(item[name]) for name in ('line',*ITEM_FIELDS)} for item in expected['items']]}
+            self.assertEqual(resolve_selection(task,selected),expected)
+            _,_,public=selection_contract(task)
+            self.assertNotIn('offline_truth',json.dumps(public))
+            self.assertNotIn('expected',public)
+
+    def test_model_selection_cannot_invent_spans_or_fill_abstentions(self):
+        task=Task(**self.records[0]['task'])
+        selected={'fields':dict.fromkeys(FIELDS),'items':[]}
+        result=resolve_selection(task,selected)
+        self.assertTrue(all(value is None for value in result['fields'].values()))
+        self.assertFalse(verify(task,result)['passed'])
+        for malicious in ('unknown',True,{'start':0,'end':5,'value':'forged'}):
+            bad=copy.deepcopy(selected);bad['fields']['invoice_id']=malicious
+            result=resolve_selection(task,bad)
+            self.assertIn('invalid_source_span_selection',result)
+            self.assertFalse(verify(task,result)['passed'])
 
     def test_unique_fixed_template_split_and_truth_excluded_from_public_sources(self):
         self.assertEqual(len(self.records),180)

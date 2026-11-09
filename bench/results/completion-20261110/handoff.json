@@ -1,0 +1,23 @@
+{
+  "artifact": "dist\\touchstone-release.zip",
+  "bytes": 23013037,
+  "sha256": "f63c202f99b67d5fec9c5015a72ee3ca816cd009fbd6eb6316c7d290de7ea6a7",
+  "source_sha256": "20d8fba7fef52e5e1ccc121a765f700871aeccbd0dfe3ef37b37461cd9357579",
+  "members_verified": 16,
+  "python_tests": 308,
+  "node_tests": 53,
+  "release_passed": true,
+  "new_paid_operations": 1,
+  "final_approval_received": true,
+  "actual_cost_micro_usdz": 10000,
+  "paid_answer_verified": false,
+  "issuing_read_verified": true,
+  "gpu_model_running": false,
+  "remaining_gates": [
+    "QUALIFIED_INFERENCE_PROVIDER",
+    "LIVE_M4_STUDY_APPROVAL_AND_FUNDING",
+    "ISSUING_WRITE_AND_MERCHANT_ACCESS",
+    "VISA_ONBOARDING",
+    "PORTAL_SUBMISSION"
+  ]
+}

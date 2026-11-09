@@ -177,7 +177,7 @@ def serve(port=8088, data_dir="data", live=None):
                 p = ROOT / "bench/results/simulated.json"
                 return self.respond(200, json.loads(p.read_text()) if p.exists() else {"summary": [], "mode": "NOT_RUN"})
             if path == "/api/real-provider-runs":
-                return self.respond(200, read_live_policy_runs(ROOT / "data/metal-engine/results"))
+                return self.respond(200, read_live_policy_runs(Path(data_dir) / "metal-engine/results"))
             if path == "/api/noisy-verification-chart":
                 chart = ROOT / "bench/results/noisy-verification.svg"
                 if not chart.exists():
@@ -201,7 +201,7 @@ def serve(port=8088, data_dir="data", live=None):
             if path == "/api/banked-jobs":
                 from .banked import BankedStore
                 from .treasury_job import read_treasury_jobs
-                p = ROOT / 'data/banked/ledger.sqlite'
+                p = Path(data_dir) / 'banked/ledger.sqlite'
                 if not p.exists():
                     return self.respond(200, {"mode": "SANDBOX_TESTNET", "jobs": [], "treasury_jobs": [], "funded_run_verified": False})
                 store = BankedStore(p)
@@ -218,6 +218,8 @@ def serve(port=8088, data_dir="data", live=None):
                         "step_id": a["step_id"], "attempt": a["attempt"], "state": a["state"],
                         "provider": a["provider"], "tier": quote.get("tier"), "price": a["price"],
                         "verify_cost": a["verify_cost"], "score": a["score"], "passed": a["passed"],
+                        "charged_provider": a["price"] if a["receipt"] else 0,
+                        "charged_verification": a["verify_cost"] if a["state"] in {"VERIFIED_OK", "VERIFIED_FAIL"} else 0,
                         "reason": a["reason"], "receipt": a["receipt"], "dispatched_at": a.get("dispatched_at"),
                         "mandate_version": a.get("mandate_version"),
                         "provider_metadata": json.loads(a["provider_metadata"]) if a.get("provider_metadata") else None,
@@ -265,6 +267,15 @@ def serve(port=8088, data_dir="data", live=None):
                 payload = json.loads(self.rfile.read(length) or b"{}")
                 if not isinstance(payload, dict):
                     raise ValueError("JSON object required")
+                if self.path == '/api/issuing-readiness':
+                    from .feature_evidence import refresh_issuing
+                    from .treasury import AirwallexSandbox
+                    try:
+                        return self.respond(200, refresh_issuing(AirwallexSandbox()))
+                    except Exception:
+                        return self.respond(503, {'label':'BLOCKED','issuing_read':False,
+                            'error':'Sandbox issuing credentials or read checks are unavailable. No card created.',
+                            'cards_created':0,'transactions_sent':0})
                 if self.path == '/api/fx-quote':
                     from .feature_evidence import refresh_fx
                     from .treasury import AirwallexSandbox

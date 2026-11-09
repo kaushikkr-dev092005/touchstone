@@ -1,0 +1,20 @@
+{
+  "label": "MEASURED",
+  "scope": "HISTORICAL_FAULT_EVIDENCE_READ_ONLY_RECHECK",
+  "fault_root": "2ee0189fdb3df446bb90ecd48ffb04d1d136c2a12e6138aee67a5479f88d52ac",
+  "deterministic_fault_reproduced": true,
+  "checks": {
+    "payer_signature_verified": true,
+    "invoice_and_task_bound": true,
+    "operator_signature_verified": true,
+    "trust_anchor": "READ_ONLY_ONCHAIN_CONTEXT_AND_OPERATOR_JOURNAL",
+    "operator_public_key": "0x03404275cafbcd3b027dabd0a1fb48e017a04c4a1e0f89dea457de8bd4fd0f7bb3",
+    "provider_output_signature_verified": false,
+    "provider_output_attribution": "UNSIGNED_HISTORICAL_DELIVERY",
+    "receipt_status": "preconfirmed",
+    "final_settlement_verified": false,
+    "transactions_sent": 0,
+    "fault_signature_verified": true
+  },
+  "financial_transactions": 0
+}

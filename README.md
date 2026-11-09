@@ -19,7 +19,7 @@ cost money.
 Receipts are preconfirmed; final settlement is not independently proven. The
 three-job dashboard remains **SIMULATED**. Airwallex fiat and Metal USDZ are separate.
 
-*Demo GIF placeholder — add the operator-recorded capture after final rehearsal.*
+For a guided demonstration, follow the [four-minute rehearsal script](docs/DEMO_SCRIPT.md).
 
 **New extensions:** signed reproducible fault receipts, guarded CardRail, controlled
 signed intent, FX-aware comparison, measured GPU telemetry and immutable simulated
@@ -29,6 +29,19 @@ failed-call billing. [Implementation, evidence and limits](docs/FEATURES.md) ·
 Built for the Airwallex Agentic Banking Hackathon, extending Kit 12 with quality checks and payment recovery. **MEASURED: sandbox FX 1.00 USD → 0.89 EUR settled and reconciled; hosted 1.00 USD authorization / 0.01 USD capture completed; one new 0.01 USDZ unified-engine purchase survived hard process death and recovery without a duplicate.** The purchased answer failed verification. Receipts remain preconfirmed, and the three-job dashboard remains SIMULATED. [Current runtime, proofs and blockers](docs/RUNNING.md).
 
 **M3, 5 November — MEASURED on SIMULATED sources:** 180 unique invoices, fixed 120/60 template split. Tool coverage 24/180 (13.3%); both installed models measured on all 180 sources, both 0 strict-correct and ineligible. The unchanged gate refuses unsafe purchases. Useful paid inference remains BLOCKED. [Report](docs/M3_REPORT.md) · [Runbook](docs/M3_RUNBOOK.md).
+
+**10 November remeasurement:** selecting source spans instead of generating offsets
+improved the 1.5B model to 19/180 strict-correct extractions. It still fails the
+unchanged qualification gate; 69 accepted outputs were incorrect under offline
+truth scoring. The dashboard reports this negative result and keeps autonomous
+invoice purchases blocked. No paid or hosted call was used for this study.
+
+**10 November integration follow-up:** issuing Cards, Cardholders and Config
+reads now pass; the earlier 401 is resolved. One separately approved testnet
+probe spent exactly 0.01 USDZ, returned 1,400 instead of 2,000 cents and was
+rejected without retry. Issuing writes, Visa trust and model qualification remain
+unverified. The idle GPU model is stopped; its launcher now enforces conservative
+temperature cutoffs. [Runtime controls](docs/RUNNING.md).
 
 **M4, 4 November — implementation complete; live gate BLOCKED:** matched four-policy runner, shared fault schedule, independent scoring, aggregate caps and environment manifests. The saved proof contains **32 MOCK purchases**, not live model measurements. Proposed seller/wallet readiness is blocked and a new paid-run approval is required. [Report](docs/M4_REPORT.md) · [Runbook](docs/M4_RUNBOOK.md).
 
@@ -94,6 +107,11 @@ python -m touchstone demo --data-dir data/cli-demo
 Benchmark results are saved to [bench/results/RESULTS.md](bench/results/RESULTS.md) and `simulated.json`. The demo command emits JSON; the server provides the visual dashboard and SSE stream. A policy pause is an expected result of the short-float scenario, not permission to raise a limit.
 
 ## What works today
+
+Local release checks, including the transaction explorer and both dashboard and
+landing layouts, are reproducible with the [validation runbook](docs/VALIDATION_RUNBOOK.md).
+The explorer distinguishes confirmed charges from reserved quotes and supports
+search, run/outcome filters, receipt details and CSV export.
 
 - SQLite WAL accounting with integer micro-USD, atomic reservations, hold limits, per-call caps, provider allowlists, mandate expiry and shared-float allocation.
 - Three provider simulators, expiring price offers, observed-check routing and bounded escalation.

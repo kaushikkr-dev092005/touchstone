@@ -1,5 +1,53 @@
 # M7 — local packaging verification, 6 November 2026
 
+## Current follow-up, 10 November 2026
+
+The latest exact source snapshot and all stage results are recorded in
+`bench/results/completion-20261110/release-current.json`; earlier reports below
+remain historical. Its working-tree manifest includes explicitly named public
+added files, excludes private runtime data and binds every source file by hash.
+
+The dashboard now has an authenticated, read-only issuing recheck and a sandbox
+settings link. Current-account Cards, Cardholders and Config reads pass after the
+operator enabled their Read scopes. Mismatched historical account evidence cannot
+claim current access. No card was created; issuing writes and Visa remain unverified.
+
+One separately approved local test spent exactly 0.01 USDZ and was rejected
+(1,400 vs 2,000 cents). The receipt, actual cost, output, audit and post-test wallet
+read are preserved in the release evidence; no retry, top-up, transfer or hosted
+call occurred. This protocol test does not qualify a model. The model was stopped
+afterward; final validation uses controlled adapters without GPU inference.
+
+The model launcher refuses startup at 65 C and stops its owned child at 75 C,
+reported thermal throttling or lost temperature telemetry. Unit tests exercise
+the cutoffs and child-process shutdown with controlled readings, without heating
+hardware. A captioned local recording exists; no upload or submission occurred.
+
+## Completion follow-up, 9 November 2026
+
+The 9 November release attempt passed Python/Node and the frontend build, then
+failed browser validation because saved planning evidence was stale. The runner
+now regenerates bounded-tool evidence in the extracted copy before browser QA.
+This does not refresh historical model profiles or qualify an inference provider.
+
+The dashboard now respects `--data-dir` for banked and real-policy history. Its
+transaction explorer separates quoted/reserved amounts from confirmed charges;
+void attempts are labelled as uncharged. CSV exports include both amounts and
+neutralize formula-leading text. Browser QA covers filters, pagination, keyboard
+drawer access and exported totals across two simulated runs.
+
+An explicit `--working-tree` packaging/validation mode verifies tracked edits
+without creating a commit. Its manifest binds the base revision and every file
+hash, labels changed paths, and excludes untracked files and private data.
+The committed-tree default remains available. See the
+[validation runbook](VALIDATION_RUNBOOK.md) for the reproduction command.
+
+The fresh run is recorded at
+`bench/results/completion-20261109/release.json`. Consult its `passed`, `stages`,
+`source_mode`, base `commit` and `archive_sha256` fields for the precise result;
+the older artifacts below remain historical. This local work performs no live
+financial transaction, hosted inference, publication or submission.
+
 ## Changes
 
 README leads with the pitch and three saved proofs. The demo script and submission

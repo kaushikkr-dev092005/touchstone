@@ -1,0 +1,20 @@
+{
+  "label": "BLOCKED",
+  "ready": false,
+  "checks": {
+    "local-gpu": false,
+    "hosted-premium": false,
+    "existing_wallet": false,
+    "rpc_chain_63825": false
+  },
+  "health": {},
+  "payments_sent": 0,
+  "required_chain_id": 63825,
+  "verified_chain_id": null,
+  "plan_sha256": "4c9be4d41420efa206e34b6f36b375373989e338d4c7d18abd665e20bf15bd01",
+  "wallet_balance_assurance": "OPERATOR_ESTIMATE_NOT_FINALITY",
+  "qualification_status": {
+    "local-gpu": false,
+    "hosted-premium": false
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "label": "MEASURED",
+  "observed_at": 1794067130.115936,
+  "host": "https://api.sandbox.airwallex.com",
+  "configuration_source": "PROCESS_ENVIRONMENT_ONLY",
+  "configured": {
+    "AIRWALLEX_CLIENT_ID": true,
+    "AIRWALLEX_API_KEY": true,
+    "AIRWALLEX_ACCOUNT_ID": true
+  },
+  "account_context_valid": true,
+  "authenticated": true,
+  "reads": {
+    "balances": {
+      "label": "MEASURED",
+      "allowed": true,
+      "status": "PASS"
+    },
+    "balance_history": {
+      "label": "MEASURED",
+      "allowed": true,
+      "status": "PASS"
+    },
+    "conversions": {
+      "label": "MEASURED",
+      "allowed": true,
+      "status": "PASS"
+    }
+  },
+  "writes_performed": false,
+  "money_moved": false,
+  "conversion_write": {
+    "label": "BLOCKED",
+    "status": "UNVERIFIED",
+    "reason": "Read access cannot prove write scope; an approved quote/conversion is required"
+  },
+  "required_scopes": [
+    "Core Resources / Balances / Read",
+    "Transactional FX / Conversion / Write"
+  ],
+  "scope_reference": "https://www.airwallex.com/docs/developer-tools/api/api-key-scopes",
+  "blockers": [],
+  "read_probe": "PASS"
+}

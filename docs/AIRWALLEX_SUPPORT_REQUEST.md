@@ -37,3 +37,21 @@ current account's supported checkout capabilities through a private channel.
 Evidence: `docs/LIVE_PROOF.md`, `bench/results/airwallex-hold-proof.json`, and `docs/M1_REPORT.md` in the public repository. This draft contains no credentials, tokens, wallet material or raw account identifiers.
 
 Thank you.
+## Current additional access request, 10 November 2026
+
+Resolved, 10 November: the operator enabled Issuing / Cards, Cardholders and
+Config / Read for the selected account. A fresh login now passes those three
+read probes and the balance read. The earlier HTTP 401 was an issuing-permission
+denial while account authentication/balance access worked. No card was created
+and no card transaction was sent.
+
+Please identify the minimum issuing write scopes, cardholder setup, account context and permissions
+needed for capped virtual-card creation and transaction simulation. Return no
+PAN, CVC, API keys or other sensitive card details in the support response.
+
+Visa agent identity/trust and an independently verified merchant settlement flow
+are separate onboarding requirements. Please identify the supported sandbox
+process and credentials for those integrations; a local HTTP signature does not
+establish Visa approval or payment settlement.
+
+This is an unsent draft. No request has been sent to support by this agent.

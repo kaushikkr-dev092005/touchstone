@@ -1,0 +1,29 @@
+{
+  "label": "MEASURED",
+  "services": {
+    "dashboard": {
+      "label": "MEASURED",
+      "status": "RUNNING",
+      "existing_service_kept": true
+    },
+    "model": {
+      "label": "MEASURED",
+      "status": "RUNNING",
+      "existing_service_kept": true
+    },
+    "local_seller": {
+      "label": "MEASURED",
+      "status": "RUNNING",
+      "existing_service_kept": true
+    },
+    "premium": {
+      "label": "MEASURED",
+      "status": "RUNNING",
+      "pid": 7340,
+      "existing_service_kept": false
+    }
+  },
+  "dashboard_mode": "SIMULATED",
+  "payments_sent": 0,
+  "money_moved": false
+}

@@ -1,0 +1,85 @@
+{
+  "label": "MEASURED",
+  "observed_at": 1794067033.575831,
+  "scope": "READ_ONLY_VALIDATION_GATE_CHECK",
+  "services": {
+    "dashboard": false,
+    "model": false,
+    "local-gpu": {
+      "label": "BLOCKED",
+      "checks": {
+        "health_available": false,
+        "identity_matches": false,
+        "provider_type_matches": false,
+        "testnet_63825": false,
+        "inference_ready": false
+      }
+    },
+    "hosted-premium": {
+      "label": "BLOCKED",
+      "checks": {
+        "health_available": false,
+        "identity_matches": false,
+        "provider_type_matches": false,
+        "testnet_63825": false,
+        "inference_ready": false,
+        "partner_credits_declared": false
+      }
+    }
+  },
+  "profiles": [
+    {
+      "file": "balanced.json",
+      "eligible": false,
+      "saved_calls": 180,
+      "changed_code": [
+        "providers.py"
+      ],
+      "measurement_scope": "HISTORICAL_SAVED_OUTPUTS_NO_NEW_MODEL_CALLS",
+      "offline_rescore": {
+        "sources_scored": 180,
+        "strict_correct": 0,
+        "accepted": 0,
+        "false_accepts": 0,
+        "correct_beyond_tools": 0
+      },
+      "label": "BLOCKED",
+      "reason": "STALE_PROFILE_REQUIRES_REMEASUREMENT"
+    },
+    {
+      "file": "economy.json",
+      "eligible": false,
+      "saved_calls": 180,
+      "changed_code": [
+        "providers.py"
+      ],
+      "measurement_scope": "HISTORICAL_SAVED_OUTPUTS_NO_NEW_MODEL_CALLS",
+      "offline_rescore": {
+        "sources_scored": 180,
+        "strict_correct": 0,
+        "accepted": 0,
+        "false_accepts": 0,
+        "correct_beyond_tools": 0
+      },
+      "label": "BLOCKED",
+      "reason": "STALE_PROFILE_REQUIRES_REMEASUREMENT"
+    }
+  ],
+  "eligible_models": 0,
+  "configuration_presence": {
+    "hosted_key": false,
+    "hosted_model": false,
+    "metal_rpc": true
+  },
+  "rpc": {
+    "label": "MEASURED",
+    "connected": true,
+    "chain_id": 63825,
+    "transactions_sent": 0
+  },
+  "fresh_written_spend_approval": false,
+  "paid_validation_authorized": false,
+  "financial_transactions": 0,
+  "model_inference_calls": 0,
+  "notice": "Health and configuration presence do not prove working hosted credentials, credits, model quality or settlement."
+}

@@ -1,0 +1,56 @@
+{
+  "label": "MEASURED",
+  "purpose": "SINGLE_LOCAL_PROTOCOL_PROBE_NOT_MODEL_QUALIFICATION",
+  "terms": {
+    "scope": "final-local-probe-20261110",
+    "wallet": "m2-live-single-20261105-j1",
+    "task": {
+      "id": "approval-local-probe-001",
+      "kind": "arithmetic",
+      "source": {
+        "amounts_cents": [
+          1250,
+          775
+        ],
+        "discount_cents": 25
+      },
+      "min_quality": 1.0
+    },
+    "maximum_calls": 1,
+    "maximum_micro_usdz": 10000,
+    "hosted_spend_micro_usd": 0,
+    "hosted_credits_authorized": false,
+    "transfers_authorized": false
+  },
+  "paid_calls": [
+    {
+      "key": "97650a0e82280b1326fde8ed2bb64cc1ee4d4d602afe43e96cd7598f368d915d",
+      "state": "VERIFIED_FAIL",
+      "actual_provider_micro_usdz": 10000,
+      "transaction_id": "0x937af3a9f4cd51b0f2b01ab160ac576fc598c13d351420a358c0708a6829a227:44d29d52-956e-4521-bfcd-7d9675de9d4b",
+      "transaction_id_type": "CLEARING_RECEIPT_NOT_ONCHAIN_TRANSACTION",
+      "verification_result": {
+        "passed": false,
+        "reason": "Source evidence or numeric checks failed",
+        "score": 0.0
+      },
+      "output": {
+        "total_cents": 1400
+      }
+    }
+  ],
+  "additional_provider_micro_usdz": 10000,
+  "possible_unresolved_exposure_micro_usdz": 0,
+  "idempotent_report_replay": false,
+  "failure_type": null,
+  "audit": {
+    "valid": true,
+    "events": 7,
+    "head": "3ea01d9db5d0997794e91c059cea7e08c991b0d1a9e3c216641220a2b687f310"
+  },
+  "hosted_inference_calls": 0,
+  "transfers_sent": 0,
+  "deposits_sent": 0,
+  "automatic_retries": 0,
+  "receipt_assurance": "PRECONFIRMED_NOT_INDEPENDENT_FINAL_SETTLEMENT"
+}

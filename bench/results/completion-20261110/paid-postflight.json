@@ -1,0 +1,27 @@
+{
+  "label": "MEASURED",
+  "operation": "READ_ONLY_POST_TEST_VERIFICATION",
+  "new_financial_transactions": 0,
+  "new_model_calls": 0,
+  "receipt_found_in_existing_wallet": true,
+  "paid_receipts_in_wallet": 2,
+  "actual_test_micro_usdz": 10000,
+  "transaction_id": "0x937af3a9f4cd51b0f2b01ab160ac576fc598c13d351420a358c0708a6829a227:44d29d52-956e-4521-bfcd-7d9675de9d4b",
+  "transaction_id_type": "CLEARING_RECEIPT_NOT_ONCHAIN_TRANSACTION",
+  "wallet_spendable_base_units": "0",
+  "pending_invoice": false,
+  "gpu": {
+    "temperature_c": 43.0,
+    "gpu_utilization_percent": 0.0,
+    "power_w": 12.81,
+    "thermal_throttling_active": false
+  },
+  "model_service_intentionally_stopped": true,
+  "dashboard": {
+    "issuing_read_recheck": "PASS",
+    "no_card_created": true,
+    "ledger_audit_unchanged": true,
+    "page_errors": [],
+    "screenshot": "tmp\\browser\\issuing-read-verified.png"
+  }
+}

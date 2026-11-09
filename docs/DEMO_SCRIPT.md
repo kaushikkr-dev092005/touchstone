@@ -1,5 +1,18 @@
 # Demo script — target 4 minutes 45 seconds
 
+## Recorded local preview, 10 November
+
+`python tools/check_release_browser.py --include-landing --record-demo --output tmp/final-demo-20261110-v2`
+records a captioned workflow and writes `touchstone-demo.webm`, `demo-transcript.md`
+and a machine-readable browser report. The preview is approximately 66 seconds,
+without audio, and shows saved testnet evidence separately from new SIMULATED
+three-job actions. It covers tools/review, halt/resume, limits, transaction filters,
+receipt details and simulated closure. No live payment or hosted inference is sent.
+
+This is a reviewable local video, not a portal upload or confirmed submission.
+The longer operator script below remains available if the portal requires another
+format, narration or length.
+
 Confirm the video limit in the signed-in portal. This rehearsal authorizes no new
 financial transaction. Use saved evidence for real proofs and label the working
 three-job scenario SIMULATED.
@@ -12,8 +25,8 @@ three-job scenario SIMULATED.
 | 1:35–2:10 | Signed fault commitment | Recompute the numeric counterexample. The buyer signature binds a statement; the historical provider output was unsigned. Provider attribution and policy still require independent checks. Credit acknowledgement is not a refund. |
 | 2:10–2:40 | Tools and qualification | Tools avoid supported purchases. On 180 synthetic sources each, both local models fail the unchanged gate. Unfamiliar extraction pauses; useful paid inference is unproven. |
 | 2:40–3:35 | Three-job demo, kill/resume, close | SIMULATED 2.50 USD holds versus 1.50 USD float. Show immutable failed-call billing and separate expenses. A simulated mandate increase changes no real hold. |
-| 3:35–4:10 | FX/capacity/rail panels | Expired/reference quote labels, illustrative provider prices, measured GPU samples, disabled uncalibrated markup. Issuing is blocked. Controlled signed intent establishes no Visa approval. |
-| 4:10–4:45 | Audit and evidence index | Show audit head/reconciliation and raw proof links. M4 live comparison, hosted qualification, issuing/Visa access and manual submission remain gates. |
+| 3:35–4:10 | FX/capacity/rail panels | Expired/reference quote labels, illustrative provider prices, measured GPU samples, disabled uncalibrated markup. Issuing reads pass for the configured account; card creation is unverified. Controlled signed intent establishes no Visa approval. |
+| 4:10–4:45 | Audit and evidence index | Show audit head/reconciliation and raw proof links. M4 live comparison, hosted qualification, issuing writes/Visa access and manual submission remain gates. |
 
 ## Rehearse without credentials or purchases
 

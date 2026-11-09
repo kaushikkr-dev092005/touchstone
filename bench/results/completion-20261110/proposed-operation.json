@@ -1,0 +1,6 @@
+{
+  "label": "BLOCKED",
+  "reason": "FINAL_APPROVAL_REQUIRED",
+  "payments_sent": 0,
+  "approval_phrase": "APPROVE ONE LOCAL TESTNET CALL scope=final-local-probe-20261110 wallet=m2-live-single-20261105-j1 cap=0.010000 USDZ task=97260c7efd24"
+}

@@ -1,6 +1,7 @@
 """Public saved evidence for the four extensions. No payment dispatcher."""
 import json
 import hashlib
+import os
 from pathlib import Path
 import threading
 import time
@@ -9,6 +10,7 @@ from .config import ROOT
 from .fx_router import compare, rate_observation
 
 _fx_lock=threading.Lock()
+_issuing_lock=threading.Lock()
 
 
 def load(path):
@@ -53,6 +55,21 @@ def refresh_fx(client):
         return result
 
 
+def refresh_issuing(client):
+    """Refresh only access diagnostics; never issues or charges a card."""
+    from .card_rail import CardRail
+    from .holds import OperationJournal
+    with _issuing_lock:
+        result=CardRail(client,OperationJournal(ROOT/'data/issuing.sqlite')).doctor(diagnose=True)
+        result.update(observed_at=time.time(),operation='READ_ONLY_ISSUING_DIAGNOSIS',
+            account_fingerprint=hashlib.sha256(str(getattr(client,'account_id','')).encode()).hexdigest())
+        path=ROOT/'data/issuing-readiness.json'
+        path.parent.mkdir(parents=True,exist_ok=True)
+        temporary=path.with_suffix('.pending')
+        temporary.write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8');temporary.replace(path)
+        return result
+
+
 def capacity_summary(now=None):
     """Saved throughput calibration, re-verified on every read. A stale or altered file is reported, not trusted."""
     from .throughput import verify
@@ -91,9 +108,20 @@ def summary():
         except (ValueError,KeyError,TypeError):pass
     fx=load(folder/'fx-quote.json')
     rate=fx.get('rate')
+    card=load(folder/'card-readiness.json') or {'label':'BLOCKED','issuing_read':False}
+    account=os.environ.get('AIRWALLEX_ACCOUNT_ID')
+    if account:
+        observed=load(ROOT/'data/issuing-readiness.json')
+        if observed.get('account_fingerprint')==hashlib.sha256(account.encode()).hexdigest():
+            card=observed
+    if card.get('label')=='MEASURED' and (not account or
+            card.get('account_fingerprint')!=hashlib.sha256(account.encode()).hexdigest()):
+        card={'label':'BLOCKED','issuing_read':False,'historical_issuing_read':bool(card.get('issuing_read')),
+            'reason':'Saved issuing evidence is not bound to the configured account. Recheck access.',
+            'cards_created':0,'transactions_sent':0}
     return {'fault':fault_summary,'fx':{'label':'MEASURED' if rate else 'BLOCKED','rate':rate,
              'quote_current':bool(rate and rate.get('expires_at',0)>time.time()),'preview':preview(rate)},
-            'card':load(folder/'card-readiness.json') or {'label':'BLOCKED','issuing_read':False},
+            'card':card,
             'tap':load(folder/'tap-probe.json') or {'label':'BLOCKED','visa_approved_agent':False},
             'capacity':capacity_summary(),
             'automatic_payments':False,'fiat_token_bridge':False}

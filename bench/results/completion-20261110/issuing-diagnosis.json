@@ -1,0 +1,53 @@
+{
+  "label": "MEASURED",
+  "scope": "READ_ONLY_ISSUING_DIAGNOSIS",
+  "observations": [
+    {
+      "source": "effective_configuration",
+      "account_context_configured": true,
+      "account_fingerprint": "d155423c58483e6d78feb62d489101bf7acc838f2d04223b06401027e3b51a3c",
+      "fresh_authentication": true,
+      "reads": {
+        "balances": {
+          "http_status": 200,
+          "valid_object_response": true,
+          "items_list_present": false
+        },
+        "issuing_cards": {
+          "http_status": 401,
+          "code": "unauthorized",
+          "permission_or_scope_denial_named": true,
+          "expired_credentials_named": false
+        },
+        "issuing_cardholders": {
+          "http_status": 401,
+          "code": "unauthorized",
+          "permission_or_scope_denial_named": true,
+          "expired_credentials_named": false
+        },
+        "issuing_config": {
+          "http_status": 401,
+          "code": "unauthorized",
+          "permission_or_scope_denial_named": true,
+          "expired_credentials_named": false
+        },
+        "issuing_cards_2024": {
+          "http_status": 401,
+          "code": "unauthorized",
+          "permission_or_scope_denial_named": true,
+          "expired_credentials_named": false
+        }
+      },
+      "transactions_sent": 0,
+      "unverified_claim_hints": {
+        "issuing_permission_named": false,
+        "configured_account_named": false,
+        "not_authoritative_scope_evidence": true
+      }
+    }
+  ],
+  "credentials_disclosed": false,
+  "card_details_disclosed": false,
+  "financial_transactions": 0,
+  "cards_created": 0
+}

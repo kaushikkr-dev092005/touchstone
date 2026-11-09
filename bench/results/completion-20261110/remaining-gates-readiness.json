@@ -1,0 +1,47 @@
+{
+  "label": "MEASURED",
+  "observed_at": 1794251749.20933,
+  "scope": "READ_ONLY_REMAINING_GATES",
+  "financial_transactions": 0,
+  "model_inference_calls": 0,
+  "gpu_model_running": false,
+  "hosted": {
+    "configured": true,
+    "credit_balance_verified": false,
+    "permitted_credit_usage_verified": false,
+    "inference_authorized": false,
+    "http_status": 200,
+    "model_metadata_verified": true,
+    "resolved_model": "claude-haiku-5-5",
+    "structured_outputs_supported": true
+  },
+  "issuing": {
+    "cardholder_read_passed": true,
+    "cardholders_returned": 0,
+    "additional_pages": false,
+    "cardholder_creation_authorized": false,
+    "card_creation_authorized": false,
+    "write_permission_verified": false,
+    "cards_created": 0,
+    "missing": [
+      "SEPARATE_CARD_CAP_AND_CURRENCY",
+      "EXPLICIT_CARD_CREATE_APPROVAL",
+      "OPERATOR_CREATED_BY_NAME",
+      "WRITE_SCOPES",
+      "SUPPORTED_MERCHANT_AND_SETTLEMENT_ACCESS"
+    ]
+  },
+  "study": {
+    "existing_wallet_scope": "m2-live-single-20261105-j1",
+    "spendable_base_units": "0",
+    "pending_invoice": false,
+    "prior_one_call_approval_consumed": true,
+    "transfers_authorized": false,
+    "hosted_dollar_budget": 0
+  },
+  "visa": {
+    "configured_environment_present": false,
+    "onboarding_verified": false,
+    "interoperability_verified": false
+  }
+}

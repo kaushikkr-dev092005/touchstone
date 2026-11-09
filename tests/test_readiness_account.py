@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from touchstone import readiness
+from touchstone import readiness,feature_evidence
 
 
 class ReadinessAccountTests(unittest.TestCase):
@@ -71,6 +71,33 @@ class ReadinessAccountTests(unittest.TestCase):
     def test_old_account_card_proof_cannot_verify_current_writes(self):
         report = self.observe('acct_current', card_account='acct_old')
         self.assertFalse(report['hosted_checkout']['write_access_verified'])
+
+
+class IssuingEvidenceTests(unittest.TestCase):
+    def test_refresh_saves_only_read_diagnostics_and_binds_selected_account(self):
+        from types import SimpleNamespace
+        from unittest.mock import Mock
+        request=Mock(side_effect=[{'items':[{'secret_card_detail':'never expose'}]},[],
+            {'items':[{'private_cardholder':'never expose'}]},{'private_config':'never expose'}])
+        client=SimpleNamespace(account_id='acct_current',evidence_label='MEASURED',request=request)
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            with patch.object(feature_evidence,'ROOT',root):
+                result=feature_evidence.refresh_issuing(client)
+                self.assertEqual(result['operation'],'READ_ONLY_ISSUING_DIAGNOSIS')
+                self.assertTrue(result['issuing_read'])
+                saved=(root/'data/issuing-readiness.json').read_text()
+                public=root/'bench/results/features/card-readiness.json'
+                public.parent.mkdir(parents=True);public.write_text(saved)
+                self.assertNotIn('never expose',saved)
+                self.assertNotIn('acct_current',saved)
+                self.assertTrue(all(call.args[0]=='GET' for call in request.call_args_list))
+                with patch.dict(os.environ,{'AIRWALLEX_ACCOUNT_ID':'acct_current'},clear=True):
+                    self.assertEqual(feature_evidence.summary()['card'],result)
+                with patch.dict(os.environ,{'AIRWALLEX_ACCOUNT_ID':'acct_other'},clear=True):
+                    self.assertFalse(feature_evidence.summary()['card']['issuing_read'])
+                with patch.dict(os.environ,{},clear=True):
+                    self.assertFalse(feature_evidence.summary()['card']['issuing_read'])
 
 
 if __name__ == '__main__':

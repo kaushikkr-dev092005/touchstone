@@ -1,0 +1,160 @@
+{
+  "label": "MEASURED",
+  "observed_at": 1794249309.7706711,
+  "scope": "READ_ONLY_VALIDATION_GATE_CHECK",
+  "services": {
+    "dashboard": true,
+    "model": true,
+    "local-gpu": {
+      "label": "MEASURED",
+      "checks": {
+        "health_available": true,
+        "identity_matches": true,
+        "provider_type_matches": true,
+        "testnet_63825": true,
+        "inference_ready": true
+      }
+    },
+    "hosted-premium": {
+      "label": "MEASURED",
+      "checks": {
+        "health_available": true,
+        "identity_matches": true,
+        "provider_type_matches": true,
+        "testnet_63825": true,
+        "inference_ready": true,
+        "partner_credits_declared": true
+      }
+    }
+  },
+  "profiles": [
+    {
+      "file": "balanced.json",
+      "eligible": false,
+      "saved_calls": 180,
+      "changed_code": [
+        "invoice_extraction.py",
+        "invoice_profile.py",
+        "providers.py"
+      ],
+      "measurement_scope": "HISTORICAL_SAVED_OUTPUTS_NO_NEW_MODEL_CALLS",
+      "offline_rescore": {
+        "sources_scored": 180,
+        "strict_correct": 0,
+        "accepted": 0,
+        "false_accepts": 0,
+        "correct_beyond_tools": 0
+      },
+      "label": "BLOCKED",
+      "reason": "STALE_PROFILE_REQUIRES_REMEASUREMENT"
+    },
+    {
+      "file": "economy.json",
+      "eligible": false,
+      "saved_calls": 180,
+      "changed_code": [
+        "invoice_extraction.py",
+        "invoice_profile.py",
+        "providers.py"
+      ],
+      "measurement_scope": "HISTORICAL_SAVED_OUTPUTS_NO_NEW_MODEL_CALLS",
+      "offline_rescore": {
+        "sources_scored": 180,
+        "strict_correct": 0,
+        "accepted": 0,
+        "false_accepts": 0,
+        "correct_beyond_tools": 0
+      },
+      "label": "BLOCKED",
+      "reason": "STALE_PROFILE_REQUIRES_REMEASUREMENT"
+    }
+  ],
+  "eligible_models": 0,
+  "configuration_presence": {
+    "hosted_key": true,
+    "hosted_model": true,
+    "metal_rpc": true
+  },
+  "rpc": {
+    "label": "MEASURED",
+    "connected": true,
+    "chain_id": 63825,
+    "transactions_sent": 0
+  },
+  "fresh_written_spend_approval": false,
+  "paid_validation_authorized": false,
+  "financial_transactions": 0,
+  "model_inference_calls": 0,
+  "notice": "Health and configuration presence do not prove working hosted credentials, credits, model quality or settlement.",
+  "paid_preflight": {
+    "label": "MEASURED",
+    "scope": "READ_ONLY_PAID_TEST_PREFLIGHT",
+    "wallet_scope": "m2-live-single-20261105-j1",
+    "proposed_limits": {
+      "aggregate_micro_usdz": 1000000,
+      "per_call_micro_usdz": 10000,
+      "hosted_paid_budget_micro_usd": 0,
+      "hosted_credits_authorized": false,
+      "automatic_topups": false,
+      "transfers_authorized": false
+    },
+    "checks": {
+      "existing_wallet": true,
+      "local_seller_ready": true,
+      "chain_63825": true,
+      "no_pending_purchase": true,
+      "quote_provider_matches": true,
+      "quote_within_caps": true,
+      "quote_current": true,
+      "existing_clearing_funds_cover_one_call": true
+    },
+    "payments_sent": 0,
+    "financial_transactions": 0,
+    "model_inference_calls": 0,
+    "final_approval_received": false,
+    "paid_operation_authorized": false,
+    "hosted_study": {
+      "ready": false,
+      "reason": "CREDITS_AND_PERMITTED_USAGE_NOT_VERIFIED_NO_HOSTED_CALLS_AUTHORIZED"
+    },
+    "purpose": "One local arithmetic integration probe; not invoice qualification or an M4 live comparison",
+    "balances": {
+      "clearing_spendable_base_units": "10000000000000000",
+      "clearing_spendable_micro_usdz": 10000,
+      "assurance": "OPERATOR_ESTIMATE_NOT_FINALITY",
+      "funding_account_usdz_base_units": "99969999999998056837",
+      "funding_account_native_base_units": "99969999999998056837",
+      "funding_account_will_not_be_used": true,
+      "existing_receipts": 1
+    },
+    "proposed_test": {
+      "task": {
+        "id": "approval-local-probe-001",
+        "kind": "arithmetic",
+        "source": {
+          "amounts_cents": [
+            1250,
+            775
+          ],
+          "discount_cents": 25
+        },
+        "min_quality": 1.0
+      },
+      "task_sha256": "97260c7efd24bed5c6c5f2616ca464e0cfdd72e435ea4ac282d508bc64f90bd6",
+      "calls": 1,
+      "estimated_provider_micro_usdz": 10000,
+      "maximum_provider_micro_usdz": 10000,
+      "hosted_api_cost_micro_usd": 0,
+      "quote_expires_at": 1794249347.258,
+      "quote_sha256": "20916324dfe598dbffe1aa5a21393767691a6d65d21bc54e083b4179821d022a",
+      "verification": "Independent integer arithmetic; a failed answer is still charged",
+      "required_new_deposits": 0,
+      "required_transfers": 0,
+      "funding_account_transactions": 0,
+      "unapproved_additional_fees_allowed": false,
+      "requote_before_execution": true
+    },
+    "ready_for_final_approval": true,
+    "reason": "AWAITING_FINAL_APPROVAL"
+  }
+}

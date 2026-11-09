@@ -20,7 +20,8 @@ def git(*args):
 
 def safe_path(name):
     path=PurePosixPath(name)
-    return (not path.is_absolute() and '..' not in path.parts and not name.startswith(('data/','.tools/','tmp/','dist/','.git/'))
+    return (not path.is_absolute() and '..' not in path.parts and ':' not in name and '\\' not in name
+            and not name.startswith(('data/','.tools/','tmp/','dist/','.git/'))
             and 'node_modules' not in path.parts and not any(part.startswith('.env') and part!='.env.example' for part in path.parts)
             and (name in PUBLIC_EVIDENCE or not re.search(r'(?:^|/)[^/]*wallet[^/]*\.json$',name,re.I)))
 
@@ -32,20 +33,38 @@ def inspect_payload(name,payload,secrets):
         raise ValueError('Secret-shaped value found; bundle refused')
 
 
-def build(ref='HEAD'):
+def build(ref='HEAD', working_tree=False, extra_paths=()):
+    if extra_paths and not working_tree:raise ValueError('Explicit added paths require --working-tree')
     commit=git('rev-parse','--verify','--end-of-options',ref+'^{commit}').decode().strip()
     if not re.fullmatch(r'[a-f0-9]{40}|[a-f0-9]{64}',commit):raise ValueError('A committed Git object is required')
     rows=git('ls-tree','-r','-z',commit).decode().split('\0')
     names={'AIRWALLEX_API_KEY','AIRWALLEX_CLIENT_ID','AGENT_PRIVATE_KEY','METAL_RPC_URL','ANTHROPIC_API_KEY'}
     secrets=[v.encode() for k,v in os.environ.items() if k in names and len(v)>12]
-    contents=[];hashes={}
+    contents=[];hashes={};changed=[]
     for row in rows:
         if not row:continue
         meta,name=row.split('\t',1);mode,kind,oid=meta.split()
         if kind!='blob' or mode not in {'100644','100755'}:raise ValueError('Unsupported archive entry')
         payload=git('cat-file','blob',oid)
+        if working_tree:
+            source=ROOT/name
+            if source.is_symlink() or not source.resolve().is_relative_to(ROOT.resolve()) or not source.is_file():
+                raise ValueError('Tracked source is missing or is a symlink')
+            current=source.read_bytes()
+            if current.replace(b'\r\n',b'\n')!=payload.replace(b'\r\n',b'\n'):
+                changed.append(name)
+            payload=current
         inspect_payload(name,payload,secrets)
         contents.append((name,payload));hashes[name]=hashlib.sha256(payload).hexdigest()
+    added=[]
+    for name in extra_paths:
+        if not isinstance(name,str) or not safe_path(name) or name in hashes:
+            raise ValueError('Added source must be an explicit, unique public relative file')
+        source=ROOT/name
+        if source.is_symlink() or not source.resolve().is_relative_to(ROOT.resolve()) or not source.is_file():
+            raise ValueError('Added source must be a regular file inside the project')
+        payload=source.read_bytes();inspect_payload(name,payload,secrets)
+        contents.append((name,payload));hashes[name]=hashlib.sha256(payload).hexdigest();added.append(name)
     target=ROOT/'dist/touchstone-source.zip';target.parent.mkdir(parents=True,exist_ok=True)
     temporary=target.with_suffix('.pending')
     with zipfile.ZipFile(temporary,'w',zipfile.ZIP_DEFLATED) as archive:
@@ -54,14 +73,19 @@ def build(ref='HEAD'):
     report={'label':'MEASURED','archive':target.name,'commit':commit,'source_files':len(contents),
             'bytes':target.stat().st_size,'sha256':hashlib.sha256(target.read_bytes()).hexdigest(),
             'source_sha256':hashes,'secret_shape_scan':'passed','configured_environment_secret_scan':'passed',
-            'private_runtime_data_included':False,'working_tree_edits_included':False,'published':False,'submitted':False}
+            'private_runtime_data_included':False,'working_tree_edits_included':working_tree,
+            'source_mode':'TRACKED_WORKING_TREE' if working_tree else 'COMMITTED_TREE',
+            'changed_files':changed,'untracked_files_included':bool(added),'added_files':added,'published':False,'submitted':False}
     (target.parent/'bundle-manifest.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     return {k:v for k,v in report.items() if k!='source_sha256'}
 
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--ref',default='HEAD');args=parser.parse_args()
-    try:print(json.dumps(build(args.ref),indent=2));return 0
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--ref',default='HEAD')
+    parser.add_argument('--working-tree',action='store_true',help='Include edits to tracked files; record base commit and individual file hashes, exclude untracked files')
+    parser.add_argument('--include',action='append',default=[],help='Explicit public untracked file to scan and include with --working-tree; repeat for each file')
+    args=parser.parse_args()
+    try:print(json.dumps(build(args.ref,args.working_tree,args.include),indent=2));return 0
     except (ValueError,OSError,subprocess.SubprocessError):
         print(json.dumps({'label':'BLOCKED','reason':'Committed source bundle failed validation; no secrets disclosed'}));return 1
 

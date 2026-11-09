@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "faults": {
+    "M4-20261120-3-0": {
+      "local-gpu": "outage"
+    },
+    "M4-20261120-3-1": {
+      "local-gpu": "outage"
+    },
+    "M4-20261120-3-2": {
+      "local-gpu": "outage"
+    },
+    "M4-20261120-3-3": {
+      "local-gpu": "outage"
+    },
+    "M4-20261120-7-0": {
+      "local-gpu": "quality-drop"
+    },
+    "M4-20261120-7-1": {
+      "local-gpu": "quality-drop"
+    },
+    "M4-20261120-7-2": {
+      "local-gpu": "quality-drop"
+    },
+    "M4-20261120-7-3": {
+      "local-gpu": "quality-drop"
+    }
+  }
+}

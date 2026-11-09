@@ -1,0 +1,635 @@
+{
+  "label": "MEASURED",
+  "tier": "balanced",
+  "model_id": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+  "dataset_version": "invoice-exceptions-180-v1",
+  "verifier_version": "invoice-extraction-v1",
+  "code_sha256": {
+    "invoice_dataset.py": "f940bd9db9df3472f33f81543bd3eed8a0822ca2d54a768c2142a985c0a00908",
+    "invoice_extraction.py": "cca120b3c1b46f2765b3a55a682e98a23d03e32a8cb951da94e00189e0a43ef1",
+    "invoice_study.py": "ccd33e0d0f3e33a0fd48f2a64dedb6974c8663f4fedc894ccf9ff0125ab72e4b",
+    "invoice_profile.py": "a5ca3ae73b0d1bf2135314003a8760f31f5b62d463316c0e66a8a924b3eb2d2a",
+    "providers.py": "c0198771e443a85054ff89cdb26bc2ccc7fde63fcad367186c7b3bf75eafa34e",
+    "local_tools.py": "ed1b617ab702c7a7773e615c8fd77b850103d895392ca66ec83d32c2e5928052",
+    "eligibility.py": "6c026a6a0d0ca50f904e0c191498892b7904a855fcf38767f500815d5ec37033",
+    "verifier.py": "5e31d7e313f566bc4411ff2f0217c24a55766a98d50a0a927b22516738ea3e7a"
+  },
+  "rows": [
+    {
+      "task_id": "IX-00-000-20261103",
+      "output": {
+        "fields": {
+          "invoice_id": {
+            "value": "IX-00-000-20261103",
+            "start": 49,
+            "end": 67
+          },
+          "supplier_name": {
+            "value": "Vendor 00 Supply",
+            "start": 78,
+            "end": 94
+          },
+          "purchase_order_id": {
+            "value": "PO-00-000",
+            "start": 111,
+            "end": 120
+          },
+          "currency": {
+            "value": "Currency",
+            "start": 121,
+            "end": 129
+          },
+          "subtotal_cents": {
+            "value": "USD 77.34",
+            "start": 145,
+            "end": 154
+          },
+          "tax_cents": {
+            "value": "USD 1.98",
+            "start": 160,
+            "end": 168
+          },
+          "total_cents": {
+            "value": "USD 79.32",
+            "start": 180,
+            "end": 189
+          }
+        },
+        "items": [
+          {
+            "line": {
+              "value": "ITEM-01",
+              "start": 190,
+              "end": 197
+            },
+            "quantity": {
+              "value": "01",
+              "start": 195,
+              "end": 197
+            },
+            "unit_price_cents": {
+              "value": "quantity=2",
+              "start": 200,
+              "end": 210
+            },
+            "line_total_cents": {
+              "value": "2",
+              "start": 209,
+              "end": 210
+            }
+          },
+          {
+            "line": {
+              "value": "ITEM-02",
+              "start": 247,
+              "end": 254
+            },
+            "quantity": {
+              "value": "02",
+              "start": 252,
+              "end": 254
+            },
+            "unit_price_cents": {
+              "value": "quantity=2",
+              "start": 257,
+              "end": 267
+            },
+            "line_total_cents": {
+              "value": "2",
+              "start": 266,
+              "end": 267
+            }
+          }
+        ]
+      },
+      "latency_ms": 7954,
+      "provider_cost_micro_usd": 0,
+      "source_span_selection": {
+        "fields": {
+          "invoice_id": "l1s1",
+          "supplier_name": "l2s1",
+          "purchase_order_id": "l3s1",
+          "currency": "l4s0",
+          "subtotal_cents": "l5s1",
+          "tax_cents": "l6s1",
+          "total_cents": "l7s1"
+        },
+        "items": [
+          {
+            "line": "l8s0",
+            "quantity": "l8s1",
+            "unit_price_cents": "l8s2",
+            "line_total_cents": "l8s3"
+          },
+          {
+            "line": "l9s0",
+            "quantity": "l9s1",
+            "unit_price_cents": "l9s2",
+            "line_total_cents": "l9s3"
+          }
+        ]
+      }
+    },
+    {
+      "task_id": "IX-00-001-20261103",
+      "output": {
+        "fields": {
+          "invoice_id": {
+            "value": "IX-00-001-20261103",
+            "start": 101,
+            "end": 119
+          },
+          "supplier_name": {
+            "value": "Vendor 00 Supply",
+            "start": 130,
+            "end": 146
+          },
+          "purchase_order_id": {
+            "value": "PO-00-001",
+            "start": 163,
+            "end": 172
+          },
+          "currency": {
+            "value": "USD",
+            "start": 183,
+            "end": 186
+          },
+          "subtotal_cents": {
+            "value": "USD 340.59",
+            "start": 197,
+            "end": 207
+          },
+          "tax_cents": {
+            "value": "USD 6.05",
+            "start": 213,
+            "end": 221
+          },
+          "total_cents": {
+            "value": "USD 346.64",
+            "start": 233,
+            "end": 243
+          }
+        },
+        "items": [
+          {
+            "line": {
+              "value": "ITEM-01",
+              "start": 244,
+              "end": 251
+            },
+            "quantity": {
+              "value": "01",
+              "start": 249,
+              "end": 251
+            },
+            "unit_price_cents": {
+              "value": "4",
+              "start": 263,
+              "end": 264
+            },
+            "line_total_cents": {
+              "value": "unit=USD 53.91",
+              "start": 267,
+              "end": 281
+            }
+          },
+          {
+            "line": {
+              "value": "ITEM-02",
+              "start": 302,
+              "end": 309
+            },
+            "quantity": {
+              "value": "quantity=3",
+              "start": 312,
+              "end": 322
+            },
+            "unit_price_cents": {
+              "value": "3",
+              "start": 321,
+              "end": 322
+            },
+            "line_total_cents": {
+              "value": "unit=USD 41.65",
+              "start": 325,
+              "end": 339
+            }
+          }
+        ]
+      },
+      "latency_ms": 2358,
+      "provider_cost_micro_usd": 0,
+      "source_span_selection": {
+        "fields": {
+          "invoice_id": "l2s1",
+          "supplier_name": "l3s1",
+          "purchase_order_id": "l4s1",
+          "currency": "l5s1",
+          "subtotal_cents": "l6s1",
+          "tax_cents": "l7s1",
+          "total_cents": "l8s1"
+        },
+        "items": [
+          {
+            "line": "l9s0",
+            "quantity": "l9s1",
+            "unit_price_cents": "l9s3",
+            "line_total_cents": "l9s4"
+          },
+          {
+            "line": "l10s0",
+            "quantity": "l10s2",
+            "unit_price_cents": "l10s3",
+            "line_total_cents": "l10s4"
+          }
+        ]
+      }
+    },
+    {
+      "task_id": "IX-00-002-20261103",
+      "output": {
+        "fields": {
+          "invoice_id": {
+            "value": "IX-00-002-20261103",
+            "start": 49,
+            "end": 67
+          },
+          "supplier_name": {
+            "value": "Vendor 00 Supply",
+            "start": 78,
+            "end": 94
+          },
+          "purchase_order_id": {
+            "value": "USD",
+            "start": 105,
+            "end": 108
+          },
+          "currency": {
+            "value": "USD",
+            "start": 105,
+            "end": 108
+          },
+          "subtotal_cents": {
+            "value": "USD 121.42",
+            "start": 119,
+            "end": 129
+          },
+          "tax_cents": {
+            "value": "USD 4.20",
+            "start": 135,
+            "end": 143
+          },
+          "total_cents": {
+            "value": "USD 125.62",
+            "start": 155,
+            "end": 165
+          }
+        },
+        "items": [
+          {
+            "line": {
+              "value": "ITEM-01",
+              "start": 166,
+              "end": 173
+            },
+            "quantity": {
+              "value": "01",
+              "start": 171,
+              "end": 173
+            },
+            "unit_price_cents": {
+              "value": "unit=USD 25.74",
+              "start": 189,
+              "end": 203
+            },
+            "line_total_cents": {
+              "value": "amount=USD 77.22",
+              "start": 206,
+              "end": 222
+            }
+          },
+          {
+            "line": {
+              "value": "ITEM-02",
+              "start": 223,
+              "end": 230
+            },
+            "quantity": {
+              "value": "02",
+              "start": 228,
+              "end": 230
+            },
+            "unit_price_cents": {
+              "value": "unit=USD 8.84",
+              "start": 246,
+              "end": 259
+            },
+            "line_total_cents": {
+              "value": "amount=USD 44.20",
+              "start": 262,
+              "end": 278
+            }
+          }
+        ]
+      },
+      "latency_ms": 2292,
+      "provider_cost_micro_usd": 0,
+      "source_span_selection": {
+        "fields": {
+          "invoice_id": "l1s1",
+          "supplier_name": "l2s1",
+          "purchase_order_id": "l3s1",
+          "currency": "l3s1",
+          "subtotal_cents": "l4s1",
+          "tax_cents": "l5s1",
+          "total_cents": "l6s1"
+        },
+        "items": [
+          {
+            "line": "l7s0",
+            "quantity": "l7s1",
+            "unit_price_cents": "l7s4",
+            "line_total_cents": "l7s6"
+          },
+          {
+            "line": "l8s0",
+            "quantity": "l8s1",
+            "unit_price_cents": "l8s4",
+            "line_total_cents": "l8s6"
+          }
+        ]
+      }
+    },
+    {
+      "task_id": "IX-00-003-20261103",
+      "output": {
+        "fields": {
+          "invoice_id": {
+            "value": "IX-00-003-20261103",
+            "start": 49,
+            "end": 67
+          },
+          "supplier_name": {
+            "value": "Vendor 00 Supply",
+            "start": 78,
+            "end": 94
+          },
+          "purchase_order_id": {
+            "value": "PO-00-003",
+            "start": 111,
+            "end": 120
+          },
+          "currency": {
+            "value": "USD",
+            "start": 131,
+            "end": 134
+          },
+          "subtotal_cents": {
+            "value": "USD 55.57",
+            "start": 145,
+            "end": 154
+          },
+          "tax_cents": {
+            "value": "USD 0.07",
+            "start": 160,
+            "end": 168
+          },
+          "total_cents": {
+            "value": "USD 55.64",
+            "start": 180,
+            "end": 189
+          }
+        },
+        "items": [
+          {
+            "line": {
+              "value": "ITEM-01 | quantity=1 | unit=USD 15.47 | amount=USD 15.47",
+              "start": 190,
+              "end": 246
+            },
+            "quantity": {
+              "value": "01",
+              "start": 195,
+              "end": 197
+            },
+            "unit_price_cents": {
+              "value": "1",
+              "start": 209,
+              "end": 210
+            },
+            "line_total_cents": {
+              "value": "unit=USD 15.47",
+              "start": 213,
+              "end": 227
+            }
+          },
+          {
+            "line": {
+              "value": "ITEM-02 | quantity=2 | unit=USD 20.05 | amount=USD 40.10",
+              "start": 247,
+              "end": 303
+            },
+            "quantity": {
+              "value": "02",
+              "start": 252,
+              "end": 254
+            },
+            "unit_price_cents": {
+              "value": "2",
+              "start": 266,
+              "end": 267
+            },
+            "line_total_cents": {
+              "value": "unit=USD 20.05",
+              "start": 270,
+              "end": 284
+            }
+          }
+        ]
+      },
+      "latency_ms": 2307,
+      "provider_cost_micro_usd": 0,
+      "source_span_selection": {
+        "fields": {
+          "invoice_id": "l1s1",
+          "supplier_name": "l2s1",
+          "purchase_order_id": "l3s1",
+          "currency": "l4s1",
+          "subtotal_cents": "l5s2",
+          "tax_cents": "l6s2",
+          "total_cents": "l7s2"
+        },
+        "items": [
+          {
+            "line": "l8",
+            "quantity": "l8s1",
+            "unit_price_cents": "l8s3",
+            "line_total_cents": "l8s4"
+          },
+          {
+            "line": "l9",
+            "quantity": "l9s1",
+            "unit_price_cents": "l9s3",
+            "line_total_cents": "l9s4"
+          }
+        ]
+      }
+    },
+    {
+      "task_id": "IX-00-004-20261103",
+      "output": {
+        "fields": {
+          "invoice_id": {
+            "value": "IX-00-004-20261103",
+            "start": 49,
+            "end": 67
+          },
+          "supplier_name": {
+            "value": "Vendor 00 Supply",
+            "start": 78,
+            "end": 94
+          },
+          "purchase_order_id": {
+            "value": "PO-00-004-OTHER",
+            "start": 111,
+            "end": 126
+          },
+          "currency": {
+            "value": "Currency",
+            "start": 127,
+            "end": 135
+          },
+          "subtotal_cents": {
+            "value": "USD 526.38",
+            "start": 151,
+            "end": 161
+          },
+          "tax_cents": {
+            "value": "USD 7.49",
+            "start": 167,
+            "end": 175
+          },
+          "total_cents": {
+            "value": "USD 533.87",
+            "start": 187,
+            "end": 197
+          }
+        },
+        "items": [
+          {
+            "line": {
+              "value": "ITEM-01 | quantity=7 | unit=USD 73.33 | amount=USD 513.31",
+              "start": 198,
+              "end": 255
+            },
+            "quantity": {
+              "value": "01",
+              "start": 203,
+              "end": 205
+            },
+            "unit_price_cents": {
+              "value": "quantity=7",
+              "start": 208,
+              "end": 218
+            },
+            "line_total_cents": {
+              "value": "7",
+              "start": 217,
+              "end": 218
+            }
+          },
+          {
+            "line": {
+              "value": "ITEM-02 | quantity=1 | unit=USD 13.07 | amount=USD 13.07",
+              "start": 256,
+              "end": 312
+            },
+            "quantity": {
+              "value": "02",
+              "start": 261,
+              "end": 263
+            },
+            "unit_price_cents": {
+              "value": "quantity=1",
+              "start": 266,
+              "end": 276
+            },
+            "line_total_cents": {
+              "value": "1",
+              "start": 275,
+              "end": 276
+            }
+          }
+        ]
+      },
+      "latency_ms": 2288,
+      "provider_cost_micro_usd": 0,
+      "source_span_selection": {
+        "fields": {
+          "invoice_id": "l1s1",
+          "supplier_name": "l2s1",
+          "purchase_order_id": "l3s1",
+          "currency": "l4s0",
+          "subtotal_cents": "l5s1",
+          "tax_cents": "l6s1",
+          "total_cents": "l7s1"
+        },
+        "items": [
+          {
+            "line": "l8",
+            "quantity": "l8s1",
+            "unit_price_cents": "l8s2",
+            "line_total_cents": "l8s3"
+          },
+          {
+            "line": "l9",
+            "quantity": "l9s1",
+            "unit_price_cents": "l9s2",
+            "line_total_cents": "l9s3"
+          }
+        ]
+      }
+    }
+  ],
+  "partitions": [
+    "calibration"
+  ],
+  "model_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+  "runtime_archive_sha256": "7377042036a1db75639316459accc336e8fd4b772b27ae35f7ce19a66226a95d",
+  "hardware_samples": [
+    {
+      "total_vram_mib": 4096,
+      "used_vram_mib": 1240,
+      "headroom_at_least_20_percent": true
+    },
+    {
+      "total_vram_mib": 4096,
+      "used_vram_mib": 1256,
+      "headroom_at_least_20_percent": true
+    },
+    {
+      "total_vram_mib": 4096,
+      "used_vram_mib": 1256,
+      "headroom_at_least_20_percent": true
+    },
+    {
+      "total_vram_mib": 4096,
+      "used_vram_mib": 1256,
+      "headroom_at_least_20_percent": true
+    },
+    {
+      "total_vram_mib": 4096,
+      "used_vram_mib": 1256,
+      "headroom_at_least_20_percent": true
+    },
+    {
+      "total_vram_mib": 4096,
+      "used_vram_mib": 1256,
+      "headroom_at_least_20_percent": true
+    }
+  ],
+  "decoding": "temperature-0-json-schema",
+  "financial_cost_label": "LOCAL_UNPRICED",
+  "payments_sent": 0,
+  "stop_reason": null
+}

@@ -16,7 +16,8 @@ recover uncertain payments and account for every attempt. Payment precedes check
   remains unmeasured.
 - **MEASURED testnet:** a new 0.02 USDZ funded job wallet made one 0.01 USDZ engine
   purchase, survived hard process death and recovered twice without another charge.
-  The remaining 0.01 USDZ was not withdrawn. The answer failed verification.
+  The remaining 0.01 USDZ was later used for the separately approved 10 November
+  local probe; that result (1,400 vs 2,000 cents) also failed verification.
 - **MEASURED historical fault evidence:** buyer-signed commitment and reproducible
   1,250/2,000-cent counterexample with original payment signatures checked. The
   historical provider output was unsigned. No refund or actual credit was issued.
@@ -37,8 +38,9 @@ Signed fault receipts bind independently checkable evidence; signatures alone do
 not prove provider fault or cause a refund. FX-aware comparison includes currencies,
 fees, quality and retry assumptions; provider prices are illustrative and no fiat
 merchant dispatch is authorized. GPU samples are real; uncalibrated price markups
-are disabled. CardRail has guarded issuing/reconciliation, but real issuing reads
-return 401. Controlled RFC 9421 signed intent uses a local identity, rejects replay
+are disabled. CardRail has guarded issuing/reconciliation; fresh issuing Cards,
+Cardholders and Config reads now pass. Issuing writes remain unverified.
+Controlled RFC 9421 signed intent uses a local identity, rejects replay
 and establishes no Visa credentials, approval, payment or award eligibility.
 [Implementation report](FEATURES.md).
 
@@ -59,7 +61,7 @@ the manifest records its commit and hashes. A local bundle is not submission.
 1. Hosted credentials/partner-credit authorization and an actually qualified model.
 2. Fresh aggregate caps and funding for M4; no 30–50-call live comparison or live
    outage/quality study has been recorded. Earlier transaction approvals are consumed.
-3. Issuing permissions, a separate card cap and supported merchant flow; genuine
+3. Issuing write permissions, a separate card cap and supported merchant flow; genuine
    Visa credentials/trust before claiming TAP interoperability or an award.
 4. Observed throughput/calibration before capacity-based economic pricing claims.
 5. Accepted registration, personal portal deadline/schema, sponsor tooling eligibility,
@@ -73,3 +75,34 @@ GitHub CI result. Feature freeze is scheduled for 11 November. Internal submissi
 deadline is 13 November 18:29 UTC / 23:59 IST; the previously fetched official page
 listed 15 November build completion, so confirm the signed-in portal deadline.
 No registration, recording or submission has been performed by the agent.
+## 10 November local completion update
+
+A captioned local workflow video and transcript have been recorded. They show
+saved testnet evidence separately from SIMULATED execution and have not been
+uploaded or submitted. The current local 1.5B invoice study is still ineligible
+(19/180 strict-correct); no stronger-model qualification is claimed.
+
+The user proposed 1.00 USDZ aggregate / 0.01 USDZ per inference call, $0 hosted
+spending, no unverified hosted credits, and no top-ups/transfers. The user then
+approved one local protocol probe capped at 0.01 USDZ after resolving issuing.
+Fresh issuing Cards/Cardholders/Config reads pass. The single test spent exactly
+0.01 USDZ and logged its clearing receipt; the verifier rejected 1,400 cents
+against the independently computed 2,000. No retry, transfer, deposit or hosted
+call occurred. This is not model qualification or the 30–50-call comparison.
+Visa trust and
+merchant settlement access are not supplied by a local signature implementation.
+
+The public event page and builder guide were rechecked; the signed-in portal's
+format, registration status and submission receipt remain unverified. Local
+packaging, a recording and a public event-page read do not constitute submission.
+
+GPU: the idle model was stopped after the test (48 C observed before stopping).
+The local launcher now checks every five seconds, refuses startup at 65 C or
+above, and stops at 75 C, reported thermal throttling or lost temperature telemetry.
+No automatic restart or hardware power-limit change is performed.
+
+A subsequent zero-cost preflight verified hosted model metadata (HTTP 200 and
+structured-output support), without inference or credit usage. The sandbox has
+no existing cardholders; creating one and a card needs the operator's details,
+write permissions and a separate approved card cap. The selected study wallet
+has zero spendable USDZ. Visa onboarding and portal access remain unverified.

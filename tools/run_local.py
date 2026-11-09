@@ -5,8 +5,59 @@ from pathlib import Path
 import re
 import socket
 import subprocess
+import sys
+import time
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0,str(ROOT))
+from touchstone.telemetry import sample
+
+START_LIMIT_C=65
+STOP_LIMIT_C=75
+CHECK_INTERVAL_SECONDS=5
+
+
+def stop_reason(observation, *, starting=False):
+    temperature=observation.get('temperature_c')
+    if (observation.get('label')!='MEASURED' or type(temperature) not in (int,float)
+            or not 0<=temperature<150):
+        return 'GPU_TEMPERATURE_UNAVAILABLE'
+    if observation.get('thermal_throttling_active') is True:return 'GPU_THERMAL_THROTTLING'
+    if temperature>=(START_LIMIT_C if starting else STOP_LIMIT_C):return 'GPU_TEMPERATURE_LIMIT'
+    return None
+
+
+def stop_owned_process(process):
+    if process.poll() is not None:return
+    process.terminate()
+    try:process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        process.kill();process.wait(timeout=5)
+
+
+def supervise(process, *, observe=sample, sleep=time.sleep, record=lambda _:None):
+    """Monitor only the child we launched; never restarts after a thermal stop."""
+    peak=None
+    try:
+        while process.poll() is None:
+            observation=observe()
+            reason=stop_reason(observation)
+            temperature=observation.get('temperature_c')
+            if type(temperature) in (int,float) and 0<=temperature<150:
+                peak=max(peak or temperature,temperature)
+            record({'state':'STOPPED' if reason else 'MONITORING','reason':reason,
+                'observed_at':time.time(),'temperature_c':temperature,'peak_temperature_c':peak,
+                'start_limit_c':START_LIMIT_C,'stop_limit_c':STOP_LIMIT_C,
+                'check_interval_seconds':CHECK_INTERVAL_SECONDS,'automatic_restart':False})
+            if reason:
+                stop_owned_process(process)
+                return 2
+            sleep(CHECK_INTERVAL_SECONDS)
+        record({'state':'EXITED','exit_code':process.returncode,'peak_temperature_c':peak,
+            'automatic_restart':False})
+        return process.returncode
+    finally:
+        stop_owned_process(process)
 
 
 def main():
@@ -17,6 +68,12 @@ def main():
     args = parser.parse_args()
     if not 512 <= args.ctx_size <= 16384:
         parser.error('--ctx-size must be between 512 and 16384; profiling checks actual VRAM headroom')
+    observation=sample()
+    reason=stop_reason(observation,starting=True)
+    if reason:
+        print(json.dumps({'mode':'BLOCKED','reason':reason,'temperature_c':observation.get('temperature_c'),
+            'start_limit_c':START_LIMIT_C,'model_started':False}),flush=True)
+        return 2
     with socket.socket() as probe:
         probe.bind(('127.0.0.1', args.port))
     manifest = json.loads((ROOT / '.tools/models' / f'{args.tier}-manifest.json').read_text())
@@ -30,14 +87,17 @@ def main():
     log_path = ROOT / 'tmp/inference/provider-model.log'
     log_path.parent.mkdir(parents=True, exist_ok=True)
     print(json.dumps({'mode': 'LOCAL_MODEL', 'tier': args.tier, 'device': selected[0],
-                      'url': f'http://127.0.0.1:{args.port}', 'model_sha256': manifest['model_sha256']}), flush=True)
+                      'url': f'http://127.0.0.1:{args.port}', 'model_sha256': manifest['model_sha256'],
+                      'gpu_start_limit_c':START_LIMIT_C,'gpu_stop_limit_c':STOP_LIMIT_C}), flush=True)
+    def record(value):
+        path=log_path.with_name('gpu-guard.json')
+        temporary=path.with_suffix('.pending')
+        temporary.write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8');temporary.replace(path)
     with log_path.open('w', encoding='utf-8') as log:
         process = subprocess.Popen(command, stdout=log, stderr=log, cwd=ROOT)
         try:
-            return process.wait()
+            return supervise(process,record=record)
         except KeyboardInterrupt:
-            process.terminate()
-            process.wait(timeout=15)
             return 0
 
 

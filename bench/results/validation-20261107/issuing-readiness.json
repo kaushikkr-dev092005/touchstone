@@ -1,0 +1,8 @@
+{
+  "label": "BLOCKED",
+  "issuing_read": false,
+  "http_status": 401,
+  "reason": "Issuing access/scope not enabled or unavailable",
+  "cards_created": 0,
+  "transactions_sent": 0
+}

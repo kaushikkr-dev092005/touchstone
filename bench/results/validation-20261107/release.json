@@ -1,0 +1,59 @@
+{
+  "label": "MEASURED",
+  "scope": "COMMITTED_SOURCE_WITH_CONTROLLED_FINANCIAL_ADAPTERS",
+  "commit": "686481b133d08006c0d620632c3fc06aaa2e8110",
+  "archive_sha256": "434fecd17268d43fe4955c7b4dcf29fc1c5760df9a6ab42f0e45654fac5684cb",
+  "source_files_verified": 379,
+  "private_data_copied": false,
+  "credentials_forwarded": false,
+  "external_financial_transactions": 0,
+  "node_modules_copied": false,
+  "tools_directory_symlinked": false,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.10",
+  "stages": {
+    "npm-ci": {
+      "exit_code": 0,
+      "log_sha256": "3db685f1f851f8dfe35e64cd87f01d0fbc5b4520cab813f4833b7796ae28fb88"
+    },
+    "python-tests": {
+      "exit_code": 0,
+      "log_sha256": "7c9bbbbcb60d7d065829d74f932bc64943a78d37d7dd302765eed699f2220a6d"
+    },
+    "node-tests": {
+      "exit_code": 0,
+      "log_sha256": "5a5e77dcabde9fd984e0965609d7613625737bdb1e22e65c481fadab8d583c2c"
+    },
+    "m1-controlled": {
+      "exit_code": 0,
+      "log_sha256": "93d36e04ff1bd2ca38f478f2487376dca5242b8e40aa1ff344ee372acb4dc719"
+    },
+    "m2-controlled": {
+      "exit_code": 0,
+      "log_sha256": "611cef792034365b73a394143271d8e297bb8200c6b627f4dc0ea156703ba977"
+    },
+    "m3-controlled": {
+      "exit_code": 0,
+      "log_sha256": "eb89253831a15a04bff0e3eeef5808472e90a51d6312ba903aac581aedc950c6"
+    },
+    "m4-controlled": {
+      "exit_code": 0,
+      "log_sha256": "14a72e7fafc711f8c529295618f99014ba69fdd6ad30a451934cec0b46d6f5bd"
+    },
+    "m5-controlled": {
+      "exit_code": 0,
+      "log_sha256": "bb4d686896edb15eb40d3714693eb4f9d31444c956d9c185f561b58b1aca3eac"
+    },
+    "bun-install-frozen": {
+      "exit_code": 0,
+      "log_sha256": "e6048776c7526dabb8fc410ca4f69e3f3ebcfa403c1acd1023c73bd91c6df22f"
+    },
+    "frontend-build": {
+      "exit_code": 1,
+      "log_sha256": "212500a2b835ecdfa620f1d123f1943d8509d842fe34a06b5c0f195f01b6fd7a"
+    }
+  },
+  "logs_directory": "tmp/release-validation-7au4jz4_/logs",
+  "passed": false,
+  "failure_type": "RuntimeError"
+}
