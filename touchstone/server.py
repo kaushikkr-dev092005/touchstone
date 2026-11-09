@@ -207,6 +207,22 @@ def serve(port=8088, data_dir="data", live=None):
                 store = BankedStore(p)
                 return self.respond(200, {"mode": "SANDBOX_TESTNET", "jobs": store.jobs(),
                                           "treasury_jobs": read_treasury_jobs(store.ledger), "audit": store.ledger.audit()})
+            if path == "/api/transactions":
+                jobs = {j["id"]: j for j in ledger.jobs()}
+                rows = []
+                for a in ledger.attempts():
+                    job = jobs.get(a["job_id"], {})
+                    quote = json.loads(a["quote"]) if a.get("quote") else {}
+                    rows.append({
+                        "seq": len(rows) + 1, "key": a["key"], "run_id": job.get("run_id"), "job_id": a["job_id"],
+                        "step_id": a["step_id"], "attempt": a["attempt"], "state": a["state"],
+                        "provider": a["provider"], "tier": quote.get("tier"), "price": a["price"],
+                        "verify_cost": a["verify_cost"], "score": a["score"], "passed": a["passed"],
+                        "reason": a["reason"], "receipt": a["receipt"], "dispatched_at": a.get("dispatched_at"),
+                        "mandate_version": a.get("mandate_version"),
+                        "provider_metadata": json.loads(a["provider_metadata"]) if a.get("provider_metadata") else None,
+                        "job_status": job.get("status")})
+                return self.respond(200, {"transactions": rows, "mode": live_state()["mode"], "audit": ledger.audit()})
             if path == "/api/audit":
                 return self.respond(200, {"audit": ledger.audit(), "events": ledger.events(limit=100000)})
             if path == "/api/events":
