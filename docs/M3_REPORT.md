@@ -2,13 +2,23 @@
 
 ## Current review, 10 November
 
-The new hosted calibration is complete: **Haiku 5.5, 107/120 strict correct,
-47 candidate / 72 review / 1 rejected, zero false accepts, Wilson lower bound
-82.34%, ineligible**. The fresh holdout remains untouched. Reported credit usage
-is estimated at $0.078151 plus a conservative $0.0112 uncertainty allowance;
-USDZ service spend is 0.01. [Completed result](../bench/results/m3-v2/haiku-qualification-result.json).
-The later Sonnet cost preflight/plan requires separate approval; it has no inference
-result yet. Paragraphs below this update describe earlier snapshots.
+**Sonnet 5.5 is qualified under unchanged criteria:** 120/120 strictly correct
+calibration trials (Wilson 95% lower bound 96.90%), then 59/60 strictly correct
+holdout trials. One interrupted holdout request counts as incorrect and was never
+retried. The holdout has 0 candidates / 60 review / 0 rejected and zero observed
+false accepts; 59 correct review drafts exceed the deterministic parser's coverage.
+These are implementer-authored synthetic sources, not real-world invoice accuracy.
+[Completed result](../bench/results/m3-v2/sonnet-qualification-result.json).
+
+The user reduced the total prepaid-credit ceiling to **$3**, superseding the
+historical $8 approval. All qualification exposure is conservatively **$2.217105**:
+$1.981905 reported-usage estimate plus $0.2352 uncertainty allowance. Billing is not
+independently reconciled. Prior Haiku calibration scored 107/120 and remained
+ineligible; its conditional holdout never ran. USDZ qualification spend was 0.01.
+The [integrated proof](../bench/results/m3-v2/integrated-receipt.json) subsequently
+bought one Sonnet review draft for 0.01 USDZ and closed the customer sandbox hold.
+Its separate API estimate is $0.008204. No new hosted cash was spent.
+Paragraphs below this update describe earlier snapshots.
 
 The historical statements below describe earlier code and are not current model
 qualification. The semantic-role flaw and review-as-accepted metric are fixed.
@@ -16,11 +26,12 @@ See [the current review](REVIEW_20261110.md) and [v2 report](../bench/results/m3
 The old 1.5B holdout re-score has 1/60 strict correct, 0 candidates, 6 review,
 54 rejected and 0 observed false accepts. That is historical rescoring, not new
 model evidence. The stronger tool can draft all old sources; the narrow 24/180
-baseline is obsolete. A new 60-source holdout is frozen and unmeasured.
+baseline is obsolete. The new 60-source holdout was frozen before model output
+and has now been measured once without tuning or retry.
 
 One approved hosted paid inference was correct; the next request was confirmed
-unpaid and was not retried. Qualification remains incomplete and no model is
-eligible. API usage estimates, USDZ spend and funding are separately reported.
+unpaid and was not retried. Sonnet subsequently qualified through direct prepaid
+API calls. API usage estimates, USDZ spend and funding are separately reported.
 No threshold has been lowered. The original history is retained below.
 
 ## Current evidence — 5 November 2026

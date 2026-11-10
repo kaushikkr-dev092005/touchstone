@@ -222,11 +222,83 @@
       "eligible": false,
       "live_purchase_authorized": false,
       "source_profile_sha256": "74c3cb0d67b7b2feb21c01e086873ae76ee03a8837f930023b54bfbc9e4c831f"
+    },
+    {
+      "label": "MEASURED",
+      "model_id": "claude-sonnet-5-5",
+      "tier": "hosted-premium",
+      "calibration": {
+        "sources_scored": 120,
+        "strict_correct": 120,
+        "candidates": 48,
+        "review": 72,
+        "rejected": 0,
+        "accepted": 48,
+        "accepted_definition": "passed AND decision=candidate; never payment authorization",
+        "structurally_valid": 96,
+        "semantic_role_binding_verified": 96,
+        "arithmetic_valid": 96,
+        "false_accepts": 0,
+        "false_accept_rate_among_accepted": 0.0,
+        "refusals_or_review": 72,
+        "provider_cost_micro_usd": 0,
+        "reference_cost_micro_usd": 0,
+        "verification_cost_micro_usd": 0,
+        "latency_samples": 120,
+        "latency_p50_ms": 2970.5,
+        "latency_p95_ms": 5716,
+        "correct_beyond_tools": 0,
+        "tool_draft_strict_correct": 120,
+        "correct_review_drafts_beyond_tools": 0
+      },
+      "holdout": {
+        "sources_scored": 60,
+        "strict_correct": 59,
+        "candidates": 0,
+        "review": 60,
+        "rejected": 0,
+        "accepted": 0,
+        "accepted_definition": "passed AND decision=candidate; never payment authorization",
+        "structurally_valid": 43,
+        "semantic_role_binding_verified": 0,
+        "arithmetic_valid": 43,
+        "false_accepts": 0,
+        "false_accept_rate_among_accepted": null,
+        "refusals_or_review": 60,
+        "provider_cost_micro_usd": 0,
+        "reference_cost_micro_usd": 0,
+        "verification_cost_micro_usd": 0,
+        "latency_samples": 59,
+        "latency_p50_ms": 3031,
+        "latency_p95_ms": 5265,
+        "correct_beyond_tools": 0,
+        "tool_draft_strict_correct": 0,
+        "correct_review_drafts_beyond_tools": 59
+      },
+      "screen": {
+        "observations": 120,
+        "unique_sources": 120,
+        "consistently_correct_sources": 120,
+        "unique_success_rate": 1.0,
+        "wilson_95_lower": 0.9689808335812966,
+        "required_success_rate": 0.95,
+        "minimum_unique": 20,
+        "passes_statistical_screen": true,
+        "status": "PASSES_OFFLINE_SCREEN",
+        "live_purchase_authorized": false
+      },
+      "calibration_complete": true,
+      "heldout_complete": true,
+      "heldout_validation_passed": true,
+      "eligible": true,
+      "live_purchase_authorized": false,
+      "source_profile_sha256": "53f3772e151a15061f33f328282b031b64ffb521765293e71202bbdf10cc86ae"
     }
   ],
   "profile_files_sha256": {
     "direct-hosted-premium.json": "84f6437ccb4152c02947e7ea25151327c1f6861346e48c247b14acd832784815",
-    "hosted-premium.json": "c6ba00bbe2cc030bc8457d3cacfdd7f4da893842e0fa3df898142e3fb805cce0"
+    "hosted-premium.json": "c6ba00bbe2cc030bc8457d3cacfdd7f4da893842e0fa3df898142e3fb805cce0",
+    "sonnet-hosted-premium.json": "5527f17fd46b7baee5ba99994246937f3a8d6f8eeb542ef42891d239d4767c65"
   },
   "rejected_profiles": [],
   "showcase": {
@@ -243,9 +315,9 @@
       },
       {
         "task": "Extract an unfamiliar invoice",
-        "decision": "REVIEW_REQUIRED",
-        "label": "BLOCKED",
-        "reason": "No current invoice-extraction model has passed the complete measured qualification screen"
+        "decision": "QUALIFIED_MODEL_AVAILABLE",
+        "label": "MEASURED",
+        "reason": "Offline-qualified model: claude-sonnet-5-5; a separate spend mandate is still required"
       },
       {
         "task": "Resolve an ambiguous duplicate payment",
@@ -256,9 +328,9 @@
     ]
   },
   "corpus_directory": "bench\\results\\m3-v2\\dataset",
-  "qualification_status": "BLOCKED_NO_ELIGIBLE_MODEL",
+  "qualification_status": "OFFLINE_MODEL_AVAILABLE",
   "threshold_changed": false,
-  "models_measured": 2,
+  "models_measured": 3,
   "hosted_funding_source": "PARTNER_CREDITS_UNVERIFIED_UNTIL_CONFIGURED",
   "live_purchase_authorized": false
 }

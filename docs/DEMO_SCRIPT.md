@@ -1,47 +1,28 @@
-# Demo script — target 4 minutes 45 seconds
+# Captioned operator demo
 
-## Recorded local preview, 10 November
-
-`python tools/check_release_browser.py --include-landing --record-demo --output tmp/final-demo-20261110-v2`
-records a captioned workflow and writes `touchstone-demo.webm`, `demo-transcript.md`
-and a machine-readable browser report. The preview is approximately 66 seconds,
-without audio, and shows saved testnet evidence separately from new SIMULATED
-three-job actions. It covers tools/review, halt/resume, limits, transaction filters,
-receipt details and simulated closure. No live payment or hosted inference is sent.
-
-This is a reviewable local video, not a portal upload or confirmed submission.
-The longer operator script below remains available if the portal requires another
-format, narration or length.
-
-Confirm the video limit in the signed-in portal. This rehearsal authorizes no new
-financial transaction. Use saved evidence for real proofs and label the working
-three-job scenario SIMULATED.
-
-| Time | Show | Explain |
-|---|---|---|
-| 0:00–0:35 | Historical paid-and-rejected Metal proof | 1,250 cents returned for a 2,000-cent source. Paid, rejected and replayed without a second purchase. Receipt preconfirmed; no customer capture for the probe. |
-| 0:35–1:05 | M1 FX and hosted capture | One sandbox USD converted to 0.89 EUR and history-matched. Separate 1 USD authorization captured 0.01 USD. Fiat and USDZ remain separate; issuer release timing is unmeasured. |
-| 1:05–1:35 | M2 hard-kill/recovery | One new 0.01 USDZ engine purchase, process death after the receipt, two recoveries with one receipt and no duplicate observed. Rejected answer, no final-settlement claim. |
-| 1:35–2:10 | Signed fault commitment | Recompute the numeric counterexample. The buyer signature binds a statement; the historical provider output was unsigned. Provider attribution and policy still require independent checks. Credit acknowledgement is not a refund. |
-| 2:10–2:40 | Tools and qualification | Tools avoid supported purchases. On 180 synthetic sources each, both local models fail the unchanged gate. Unfamiliar extraction pauses; useful paid inference is unproven. |
-| 2:40–3:35 | Three-job demo, kill/resume, close | SIMULATED 2.50 USD holds versus 1.50 USD float. Show immutable failed-call billing and separate expenses. A simulated mandate increase changes no real hold. |
-| 3:35–4:10 | FX/capacity/rail panels | Expired/reference quote labels, illustrative provider prices, measured GPU samples, disabled uncalibrated markup. Issuing reads pass for the configured account; card creation is unverified. Controlled signed intent establishes no Visa approval. |
-| 4:10–4:45 | Audit and evidence index | Show audit head/reconciliation and raw proof links. M4 live comparison, hosted qualification, issuing writes/Visa access and manual submission remain gates. |
-
-## Rehearse without credentials or purchases
-
-PowerShell, macOS and Linux:
+The final local recording shows saved measured proofs and new simulated dashboard
+actions with explicit labels. It sends no financial transaction or hosted inference.
 
 ```text
-python tools/run_mock.py
+python tools/check_release_browser.py --include-landing --record-demo --output tmp/final-live-demo-20261110
 ```
 
-Open http://127.0.0.1:8088. If occupied, add `--port 8090`. This launcher ignores
-private configuration. The installed model stack uses `python tools/run_project.py`;
-startup also sends no financial transaction or hosted inference call.
-Use [the evidence index](EVIDENCE_INDEX.md) for saved real proofs. Never reuse a
-consumed purchase, funding, FX or capture approval while filming.
+Outputs: `touchstone-demo.webm`, `demo-transcript.md` and `review.json`. The release
+package includes the recording/transcript. It has captions and no audio; the
+signed-in portal must confirm whether narration, a public video URL or another
+format/length is required. A local file is not an uploaded submission.
 
-Freeze is scheduled for 11 November. Operator records on 12 November, confirms
-the personal portal deadline and submits before the internal 13 November deadline.
-These manual actions have not been performed by the agent.
+| Scene | Demonstration |
+|---|---|
+| Saved Metal proof | Paid rejected answer and receipt replay without another purchase |
+| Qualification and closure | Sonnet 120/120 calibration, 59/60 holdout; integrated USD 1 hold / USD 0.01 capture; separate 0.01 USDZ service charge |
+| Comparison boundary | Clearing refusals and credit-cap stop, incomplete study, no savings claim |
+| Signed fault | Current seller rejected credit; acknowledgement is not refund |
+| Tools and review | Deterministic supported cases, unfamiliar roles require review |
+| Three-job scenario | SIMULATED short float, halt/resume, immutable limits |
+| Transaction inspection | Failed calls retain costs; quote/reservation/charge stay distinct |
+| Closure and audit | SIMULATED captures/releases and complete receipt history |
+
+Rehearse with `python tools/run_mock.py`, open http://127.0.0.1:8088. Never reuse
+consumed approvals while filming. GPU inference is unnecessary for this recording.
+See [the final measured review](LIVE_PROOFS_20261110.md) for precise limits.

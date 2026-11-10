@@ -1,0 +1,15 @@
+{
+  "id": "BANKED-REVIEW-20261110",
+  "kind": "invoice_extraction",
+  "source": {
+    "text": "Independent demonstration receiving copy\nInvoice ID = DEMO-20261110-A\nSupplier = Example Supply\nPurchase order = PO-DEMO-001\nCurrency = USD\nSubtotal = USD 20.00\nTax = USD 1.00\nTotal due = USD 21.00\nITEM-01 | quantity=2 | unit=USD 10.00 | amount=USD 20.00\nReceiving copy only. Do not initiate a payment.",
+    "purchase_order": {
+      "purchase_order_id": "PO-DEMO-001",
+      "supplier_name": "Example Supply",
+      "currency": "USD",
+      "authorized_cents": 10000
+    },
+    "payments": []
+  },
+  "min_quality": 1.0
+}

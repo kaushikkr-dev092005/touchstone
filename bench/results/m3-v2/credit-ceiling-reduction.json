@@ -1,0 +1,15 @@
+{
+  "observed_at": 1794298556.0180743,
+  "original_plan_sha256": "9fa82df5ef4f43120a619318cd0081b14061cc39103f3c5162c1e87d9d798dce",
+  "effective_total_credit_cap_micro_usd": 3000000,
+  "authority": "USER_EXPLICITLY_REDUCED_TOTAL_CEILING_TO_3_USD",
+  "completed_original_results_reused": 124,
+  "unknown_original_sources_never_repeated": [
+    "H2-202611101-0-04"
+  ],
+  "unknown_credit_allowance_micro_usd": 224000,
+  "criteria_changed": false,
+  "prompts_changed": false,
+  "resume_driver_sha256": "01d6c5cae3c3e6870f1b49bb21fc475ebbae319ea850696480c840e5f69a0a68",
+  "new_usdz_operations": 0
+}

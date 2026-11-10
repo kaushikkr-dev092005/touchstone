@@ -27,7 +27,9 @@ The dashboard does not silently turn a failed live service into a simulation.
 | [Metal recovery](bench/results/m2/live-single-call-final.json) | A 0.01 USDZ purchase survived process death and recovered without another charge | Testnet; purchased answer failed verification |
 | [Current fault acknowledgement](bench/results/completion-20261110/current-seller-fault-acknowledgement.json) | Real signed delivery, reproduced wrong answer, signed seller response | Seller rejected credit; no refund moved |
 | [Role-aware verifier review](docs/REVIEW_20261110.md) | Labels selected as field values now fail semantic checks independently of arithmetic | Bounded source grammar; unfamiliar/ambiguous roles require review |
-| [Current qualification](bench/results/m3-v2/haiku-qualification-result.json) | Haiku 5.5: 107/120 strictly correct calibration trials; zero false accepts | Ineligible under unchanged criteria; fresh holdout remains unmeasured |
+| [Current qualification](bench/results/m3-v2/sonnet-qualification-result.json) | Sonnet 5.5: 120/120 calibration, 59/60 untouched holdout trials strictly correct | Eligible for synthetic review drafts; interrupted trial counted incorrect, zero false accepts |
+| [Integrated financial proof](bench/results/m3-v2/integrated-receipt.json) | One qualified paid draft, sandbox USD 1 hold / USD 0.01 capture, 0.01 USDZ provider charge, customer closed | Correct draft requires human review; unused tokens retained; no fiat/token bridge |
+| [Matched comparison](bench/results/m4-v2/live-report.json) | 12/64 policy outcomes; 3 actual charges and 5 confirmed-unpaid failures | Clearing refusals and credit-cap stop; incomplete, no savings claim |
 | [Paid qualification status](bench/results/m3-v2/paid-qualification-status.json) | 1.32 USDZ deposited; 0.01 USDZ bought one correct hosted result; next request confirmed unpaid | Stopped without retry; API usage estimate separate from USDZ |
 
 **Candidate, review and rejected are separate outcomes.** A candidate is a checked
@@ -53,8 +55,8 @@ settlement. [Evidence index](docs/EVIDENCE_INDEX.md) · [Serious review and rema
   conservative GPU temperature supervision.
 
 Issuing reads now pass; issuing writes/merchant access and Visa onboarding remain
-external gates. A qualified model, authorized integrated financial run and live
-matched comparison remain unfinished. [Detailed feature boundaries](docs/FEATURES.md).
+external gates. The matched comparison and submission status are recorded in the
+[current review](docs/REVIEW_20261110.md). [Detailed feature boundaries](docs/FEATURES.md).
 
 ## Operator and developer paths
 
@@ -77,8 +79,9 @@ python tools/fault_proof.py verify --input bench/results/faults/current-paid-fau
 ```
 
 The last command performs read-only signature/chain/operator checks. It neither
-pays nor refunds. Current local verification: **340 Python tests and 53 Node tests
-passed**; controlled adapters remain MOCK evidence. [Validation runbook](docs/VALIDATION_RUNBOOK.md).
+pays nor refunds. The [release validation](bench/results/m3-v2/release-validation.json)
+records the tested revision and check counts; controlled adapters remain MOCK
+evidence. [Validation runbook](docs/VALIDATION_RUNBOOK.md).
 
 Financial execution requires a concrete, explicitly approved scope and caps.
 Qualification approval is not approval for a comparison, card issuance or merchant

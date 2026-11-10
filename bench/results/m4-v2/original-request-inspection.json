@@ -1,0 +1,10 @@
+{
+  "state": "UNKNOWN",
+  "confirmed_nonpayment": true,
+  "assurance": "PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP",
+  "pending_invoice": false,
+  "historical_payments": 2,
+  "new_receipt_ids": [],
+  "transactions_sent": 0,
+  "inference_requests_sent": 0
+}

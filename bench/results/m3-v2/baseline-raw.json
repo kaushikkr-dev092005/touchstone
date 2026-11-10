@@ -86,7 +86,7 @@
         }
       ]
     },
-    "latency_ms": 5,
+    "latency_ms": 3,
     "provider_cost_micro_usd": 0,
     "partition": "calibration",
     "template_id": "layout-00",
@@ -3038,7 +3038,7 @@
   {
     "task_id": "IX-03-009-20261103",
     "output": null,
-    "latency_ms": 0,
+    "latency_ms": 1,
     "provider_cost_micro_usd": 0,
     "partition": "calibration",
     "template_id": "layout-03",
@@ -3294,7 +3294,7 @@
   {
     "task_id": "IX-03-013-20261103",
     "output": null,
-    "latency_ms": 0,
+    "latency_ms": 1,
     "provider_cost_micro_usd": 0,
     "partition": "calibration",
     "template_id": "layout-03",
@@ -3422,7 +3422,7 @@
         }
       ]
     },
-    "latency_ms": 0,
+    "latency_ms": 1,
     "provider_cost_micro_usd": 0,
     "partition": "calibration",
     "template_id": "layout-04",
@@ -5646,7 +5646,7 @@
         }
       ]
     },
-    "latency_ms": 0,
+    "latency_ms": 1,
     "provider_cost_micro_usd": 0,
     "partition": "calibration",
     "template_id": "layout-06",
@@ -6030,7 +6030,7 @@
         }
       ]
     },
-    "latency_ms": 1,
+    "latency_ms": 0,
     "provider_cost_micro_usd": 0,
     "partition": "calibration",
     "template_id": "layout-07",

@@ -1,5 +1,14 @@
 # Validation record
 
+## Current source validation, 10 November 2026
+
+The [latest release report](../bench/results/m3-v2/release-validation.json) records
+the exact tested source commit, test counts, pinned dependency installation,
+frontend build and isolated browser checks. Financial tests use controlled
+adapters; no credential or private wallet is copied into validation. The
+[final live review](LIVE_PROOFS_20261110.md) separately records authorized real
+sandbox/testnet observations. Earlier dated counts below are historical.
+
 ## Clean committed source — 6 November 2026
 
 Revision `b82b977b9bbab399c08c20e1cc424ffd862a8711` passed a clean extracted-source

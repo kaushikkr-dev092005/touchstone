@@ -1,3 +1,20 @@
+# Current evidence, 10 November 2026
+
+- [Final live review and incomplete comparison](LIVE_PROOFS_20261110.md)
+- [Final caps, actual charges, funding transaction IDs, balances and native fees](../bench/results/completion-20261110/final-proof-status.json)
+- [Qualified Sonnet result, unchanged criteria](../bench/results/m3-v2/sonnet-qualification-result.json)
+- [Raw Sonnet profile](../bench/results/m3-v2/profiles/sonnet-hosted-premium.json)
+- [Integrated customer closure receipt](../bench/results/m3-v2/integrated-receipt.json)
+- [Matched comparison: incomplete, no savings claim](../bench/results/m4-v2/live-report.json)
+- [Sampled GPU temperatures and stop limits](../bench/results/m4-v2/gpu-monitor.json)
+- [Latest exact-source release validation](../bench/results/m3-v2/release-validation.json)
+- [Recording and submission material](DEMO_SCRIPT.md), [submission draft](SUBMISSION.md)
+
+The dated snapshots below retain their original observations. They do not supersede
+the current results above. Earlier $8 approval was lowered to $3; it is historical.
+
+---
+
 # Evidence index — 6 November 2026
 
 Labels describe the evidence scope, not production readiness. Public artifacts
@@ -32,17 +49,17 @@ the exact packaged revision separately.
 # Latest review evidence, 10 November 2026
 
 - [Completed Haiku calibration, ineligible; holdout untouched](../bench/results/m3-v2/haiku-qualification-result.json)
-- [Sonnet zero-cost preflight](../bench/results/m3-v2/sonnet-cost-preflight.json) and [new approval plan](../bench/results/m3-v2/sonnet-qualification-plan.json)
+- [Historical Sonnet zero-cost preflight](../bench/results/m3-v2/sonnet-cost-preflight.json) and [superseded $8 plan](../bench/results/m3-v2/sonnet-qualification-plan.json)
 
 - [Semantic verifier review and remaining gates](REVIEW_20261110.md)
 - [Current role-aware study report](../bench/results/m3-v2/report.json)
-- [Frozen untouched prospective holdout](../bench/results/m3-v2/dataset/manifest.json)
+- [Holdout frozen before model output](../bench/results/m3-v2/dataset/manifest.json)
 - [Historical outputs re-scored, no new calls](../bench/results/m3-v2/historical-rescore.json)
 - [Approved paid attempt and safe stop](../bench/results/m3-v2/paid-qualification-status.json)
-- [Credit-only continuation plan, separate final approval required](../bench/results/m3-v2/direct-continuation-plan.json)
+- [Approved historical credit-only continuation plan](../bench/results/m3-v2/direct-continuation-plan.json)
 - [Current signed fault proof](../bench/results/faults/current-paid-fault-20261110.json)
 - [Current signed seller acknowledgement; no refund](../bench/results/completion-20261110/current-seller-fault-acknowledgement.json)
-- [Separate frozen difficult comparison corpus, not executed](../bench/results/m4-v2/dataset/manifest.json)
+- [Separate frozen difficult comparison corpus](../bench/results/m4-v2/dataset/manifest.json)
 
 Historical dated evidence follows. A re-score, frozen source or MOCK test is not a
 new live model/payment result.

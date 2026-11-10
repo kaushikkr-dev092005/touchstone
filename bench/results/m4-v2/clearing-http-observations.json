@@ -1,0 +1,201 @@
+{
+  "label": "MEASURED",
+  "scope": "SELECTED_FINAL_ATTEMPT_HTTP_STATUS_ONLY",
+  "observations": [
+    {
+      "pid": 12760,
+      "kind": "other",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "pid": 12760,
+      "kind": "supported",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "pid": 12760,
+      "kind": "other",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "pid": 12760,
+      "kind": "other",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "pid": 11896,
+      "kind": "other",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "pid": 11896,
+      "kind": "supported",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "pid": 11896,
+      "kind": "inference",
+      "status": 402,
+      "method": "GET"
+    },
+    {
+      "pid": 7252,
+      "kind": "other",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "pid": 7252,
+      "kind": "supported",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "pid": 7252,
+      "kind": "inference",
+      "status": 402,
+      "method": "GET"
+    },
+    {
+      "pid": 3700,
+      "kind": "other",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "pid": 3700,
+      "kind": "supported",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "pid": 3700,
+      "kind": "other",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "pid": 3700,
+      "kind": "other",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "pid": 28896,
+      "kind": "other",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "pid": 28896,
+      "kind": "supported",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "pid": 28896,
+      "kind": "inference",
+      "status": 402,
+      "method": "GET"
+    },
+    {
+      "pid": 24260,
+      "kind": "other",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "pid": 24260,
+      "kind": "supported",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "pid": 24260,
+      "kind": "inference",
+      "status": 402,
+      "method": "GET"
+    },
+    {
+      "pid": 19764,
+      "kind": "other",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "pid": 19764,
+      "kind": "supported",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "pid": 19764,
+      "kind": "inference",
+      "status": 402,
+      "method": "GET"
+    },
+    {
+      "pid": 26364,
+      "kind": "other",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "pid": 26364,
+      "kind": "supported",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "pid": 26364,
+      "kind": "inference",
+      "status": 402,
+      "method": "GET"
+    },
+    {
+      "pid": 25116,
+      "kind": "other",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "pid": 25116,
+      "kind": "supported",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "pid": 25116,
+      "kind": "inference",
+      "status": 402,
+      "method": "GET"
+    },
+    {
+      "pid": 25116,
+      "kind": "context",
+      "status": 409,
+      "method": "GET"
+    },
+    {
+      "pid": 25116,
+      "kind": "other",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "pid": 25116,
+      "kind": "other",
+      "status": 200,
+      "method": "POST"
+    }
+  ],
+  "secrets_queries_headers_bodies_logged": false,
+  "additional_financial_transactions": 0,
+  "additional_inference_calls": 0
+}

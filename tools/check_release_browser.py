@@ -47,6 +47,9 @@ def record_demo(browser, base, folder):
         raise AssertionError('Simulated recording did not reach an idle state')
     scene('Touchstone: an approved budget, a checked result, and a receipt for every attempt.')
     scene('SAVED TESTNET EVIDENCE: a paid answer failed verification. Replaying its receipt did not purchase again.','#featured-evidence',6000)
+    scene('SAVED QUALIFICATION: Sonnet passed unchanged criteria: 120/120 calibration, 59/60 fresh holdout trials. Synthetic review drafts; no automatic invoice payment.','#completion-evidence',6500)
+    scene('SAVED INTEGRATION: USD 1 sandbox hold, USD 0.01 capture, separate 0.01 USDZ model charge. Customer closed; unused tokens retained.','#completion-evidence',6500)
+    scene('HONEST STUDY STOP: clearing refusals and the credit guard left the matched comparison incomplete. Conservative API exposure stays below $3. No savings claim.','#completion-evidence',6000)
     scene('A signed fault statement binds checkable evidence. It does not reverse a charge or promise a refund.','#fault-summary',5000)
     scene('LOCAL TOOLS: supported sources need no model purchase; unfamiliar or ambiguous sources pause for review.','#planning',5000)
     page.locator('#start').click()
@@ -68,7 +71,7 @@ def record_demo(browser, base, folder):
     page.locator('#close').click()
     idle()
     scene('SIMULATED SETTLEMENT: close accounts for every attempt, captures the agreed cost, and releases the unused hold.','#financial-story',5000)
-    scene('Reproducible local controls and saved sandbox/testnet evidence. Further paid studies require final approval.', 'footer',5000)
+    scene('Reproducible controls and saved measured proofs. Issuing writes, Visa onboarding and signed-in portal submission remain external requirements.', 'footer',5000)
     context.close()
     video.save_as(str(folder/'touchstone-demo.webm'))
     assert not errors and not external, 'Recording contains a script error or external asset request'

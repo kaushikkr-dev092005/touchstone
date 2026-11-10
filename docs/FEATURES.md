@@ -197,7 +197,8 @@ at desktop/390px widths, including SSE, session/Host/Origin controls, missing-ke
 FX refusal, both simulated billing policies, kill/resume and reconciliation.
 See [validation](VALIDATION.md) and the [evidence index](EVIDENCE_INDEX.md).
 
-M3 useful paid inference, M4 live comparison, issuing write access, Visa credentials/trust, a funded
-fiat merchant, final settlement, manual portal/video/submission and new spending approvals remain
-gates. The implementation does not turn those
+M3 useful synthetic review drafting and one integrated customer sandbox proof are now measured.
+M4 remains incomplete after clearing refusals and the credit-cap stop. Issuing write access,
+Visa credentials/trust, a funded fiat merchant, independent final settlement and signed-in portal
+submission remain gates. A captioned local recording is available in the release package. The implementation does not turn those
 missing observations into completion claims.

@@ -1,5 +1,13 @@
 # Build roadmap, M0 review 2 November 2026
 
+**10 November current status:** Sonnet qualification and the integrated customer
+sandbox proof are complete. The matched study stopped at its conservative credit
+guard after clearing refusals: 12/64 policy outcomes, no pending invoice, no savings
+claim. Total Claude exposure remains $2.919117 within the $3 ceiling. Issuing writes,
+Visa onboarding and portal submission remain external gates. See the
+[final live review](LIVE_PROOFS_20261110.md); dated plans below are historical and
+do not authorize further spending.
+
 Current status: [10 November serious review](REVIEW_20261110.md). Semantic role
 binding and candidate/review/rejected accounting are implemented and tested.
 The new holdout is frozen. One hosted inference was correct; qualification stopped

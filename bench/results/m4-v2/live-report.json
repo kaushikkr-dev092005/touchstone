@@ -1,0 +1,1779 @@
+{
+  "label": "MEASURED",
+  "mode": "TESTNET",
+  "plan_sha256": "f9252a61e04736f3597bf9fe0bd38f81a21297972b515dc3001f802e6c63a721",
+  "observed_at": 1794300912.2041416,
+  "complete": false,
+  "stop_reason": "PolicyError",
+  "seeds": [
+    202611102
+  ],
+  "rows": [
+    {
+      "seed": 202611102,
+      "index": 0,
+      "source_id": "IX-00-000-20261103",
+      "template_id": "layout-00",
+      "partition": "calibration",
+      "task": {
+        "id": "M4-202611102-0-1",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 00\nInvoice ID: IX-00-000-20261103\nSupplier: Vendor 00 Supply\nPurchase order: PO-00-000\nCurrency: USD\nSubtotal: USD 77.34\nTax: USD 1.98\nTotal due: USD 79.32\nITEM-01 | quantity=2 | unit=USD 24.52 | amount=USD 49.04\nITEM-02 | quantity=2 | unit=USD 14.15 | amount=USD 28.30\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-000",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 31728
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      },
+      "policy": "always-cheapest",
+      "output": {
+        "fields": {
+          "currency": {
+            "end": 134,
+            "start": 131,
+            "value": "USD"
+          },
+          "invoice_id": {
+            "end": 67,
+            "start": 49,
+            "value": "IX-00-000-20261103"
+          },
+          "purchase_order_id": {
+            "end": 120,
+            "start": 111,
+            "value": "PO-00-000"
+          },
+          "subtotal_cents": {
+            "end": 154,
+            "start": 145,
+            "value": "USD 77.34"
+          },
+          "supplier_name": {
+            "end": 94,
+            "start": 78,
+            "value": "Vendor 00 Supply"
+          },
+          "tax_cents": {
+            "end": 168,
+            "start": 160,
+            "value": "USD 1.98"
+          },
+          "total_cents": {
+            "end": 189,
+            "start": 180,
+            "value": "USD 79.32"
+          }
+        },
+        "items": [
+          {
+            "line": {
+              "end": 246,
+              "start": 190,
+              "value": "ITEM-01 | quantity=2 | unit=USD 24.52 | amount=USD 49.04"
+            },
+            "line_total_cents": {
+              "end": 246,
+              "start": 237,
+              "value": "USD 49.04"
+            },
+            "quantity": {
+              "end": 210,
+              "start": 209,
+              "value": "2"
+            },
+            "unit_price_cents": {
+              "end": 227,
+              "start": 218,
+              "value": "USD 24.52"
+            }
+          },
+          {
+            "line": {
+              "end": 303,
+              "start": 247,
+              "value": "ITEM-02 | quantity=2 | unit=USD 14.15 | amount=USD 28.30"
+            },
+            "line_total_cents": {
+              "end": 303,
+              "start": 294,
+              "value": "USD 28.30"
+            },
+            "quantity": {
+              "end": 267,
+              "start": 266,
+              "value": "2"
+            },
+            "unit_price_cents": {
+              "end": 284,
+              "start": 275,
+              "value": "USD 14.15"
+            }
+          }
+        ]
+      },
+      "accepted": true,
+      "decision": "candidate",
+      "calls": [
+        "f3adb0ae2de9dc3463c3f189463a54ca1395ffeed3d1d4f0786ee2f72e830e59"
+      ],
+      "fault": {},
+      "quote_failures": [],
+      "verifier": {
+        "arithmetic_valid": true,
+        "checked": {
+          "evidence_spans": {
+            "fields": {
+              "currency": [
+                131,
+                134
+              ],
+              "invoice_id": [
+                49,
+                67
+              ],
+              "purchase_order_id": [
+                111,
+                120
+              ],
+              "subtotal_cents": [
+                145,
+                154
+              ],
+              "supplier_name": [
+                78,
+                94
+              ],
+              "tax_cents": [
+                160,
+                168
+              ],
+              "total_cents": [
+                180,
+                189
+              ]
+            },
+            "items": [
+              {
+                "line_total_cents": [
+                  237,
+                  246
+                ],
+                "quantity": [
+                  209,
+                  210
+                ],
+                "unit_price_cents": [
+                  218,
+                  227
+                ]
+              },
+              {
+                "line_total_cents": [
+                  294,
+                  303
+                ],
+                "quantity": [
+                  266,
+                  267
+                ],
+                "unit_price_cents": [
+                  275,
+                  284
+                ]
+              }
+            ]
+          },
+          "finding": "MATCHED_REQUIRES_HUMAN_APPROVAL",
+          "invoice_id": "IX-00-000-20261103",
+          "invoice_total_cents": 7932,
+          "issues": [],
+          "live_purchase_authorized": false,
+          "payments_sent": 0,
+          "purchase_order_id": "PO-00-000",
+          "purchase_order_remaining_cents": 31728
+        },
+        "decision": "candidate",
+        "issues": [],
+        "method": "invoice-extraction-v2-role-bound",
+        "passed": true,
+        "payment_authorized": false,
+        "reason": "Role-bound candidate checked; human payment approval still required",
+        "retryable": false,
+        "score": 1.0,
+        "semantic_role_binding_verified": true,
+        "structurally_valid": true
+      },
+      "latency_ms": 14611,
+      "strict_correct": true,
+      "false_accept": false
+    },
+    {
+      "seed": 202611102,
+      "index": 0,
+      "source_id": "IX-00-000-20261103",
+      "template_id": "layout-00",
+      "partition": "calibration",
+      "task": {
+        "id": "M4-202611102-0-2",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 00\nInvoice ID: IX-00-000-20261103\nSupplier: Vendor 00 Supply\nPurchase order: PO-00-000\nCurrency: USD\nSubtotal: USD 77.34\nTax: USD 1.98\nTotal due: USD 79.32\nITEM-01 | quantity=2 | unit=USD 24.52 | amount=USD 49.04\nITEM-02 | quantity=2 | unit=USD 14.15 | amount=USD 28.30\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-000",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 31728
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      },
+      "policy": "always-premium",
+      "output": {
+        "fields": {
+          "currency": {
+            "end": 134,
+            "start": 131,
+            "value": "USD"
+          },
+          "invoice_id": {
+            "end": 67,
+            "start": 49,
+            "value": "IX-00-000-20261103"
+          },
+          "purchase_order_id": {
+            "end": 120,
+            "start": 111,
+            "value": "PO-00-000"
+          },
+          "subtotal_cents": {
+            "end": 154,
+            "start": 145,
+            "value": "USD 77.34"
+          },
+          "supplier_name": {
+            "end": 94,
+            "start": 78,
+            "value": "Vendor 00 Supply"
+          },
+          "tax_cents": {
+            "end": 168,
+            "start": 160,
+            "value": "USD 1.98"
+          },
+          "total_cents": {
+            "end": 189,
+            "start": 180,
+            "value": "USD 79.32"
+          }
+        },
+        "items": [
+          {
+            "line": {
+              "end": 246,
+              "start": 190,
+              "value": "ITEM-01 | quantity=2 | unit=USD 24.52 | amount=USD 49.04"
+            },
+            "line_total_cents": {
+              "end": 246,
+              "start": 237,
+              "value": "USD 49.04"
+            },
+            "quantity": {
+              "end": 210,
+              "start": 209,
+              "value": "2"
+            },
+            "unit_price_cents": {
+              "end": 227,
+              "start": 218,
+              "value": "USD 24.52"
+            }
+          },
+          {
+            "line": {
+              "end": 303,
+              "start": 247,
+              "value": "ITEM-02 | quantity=2 | unit=USD 14.15 | amount=USD 28.30"
+            },
+            "line_total_cents": {
+              "end": 303,
+              "start": 294,
+              "value": "USD 28.30"
+            },
+            "quantity": {
+              "end": 267,
+              "start": 266,
+              "value": "2"
+            },
+            "unit_price_cents": {
+              "end": 284,
+              "start": 275,
+              "value": "USD 14.15"
+            }
+          }
+        ]
+      },
+      "accepted": true,
+      "decision": "candidate",
+      "calls": [
+        "43a599c2a622921b615133290295076a22227d699d86ac0233731991dd31da2c"
+      ],
+      "fault": {},
+      "quote_failures": [],
+      "verifier": {
+        "arithmetic_valid": true,
+        "checked": {
+          "evidence_spans": {
+            "fields": {
+              "currency": [
+                131,
+                134
+              ],
+              "invoice_id": [
+                49,
+                67
+              ],
+              "purchase_order_id": [
+                111,
+                120
+              ],
+              "subtotal_cents": [
+                145,
+                154
+              ],
+              "supplier_name": [
+                78,
+                94
+              ],
+              "tax_cents": [
+                160,
+                168
+              ],
+              "total_cents": [
+                180,
+                189
+              ]
+            },
+            "items": [
+              {
+                "line_total_cents": [
+                  237,
+                  246
+                ],
+                "quantity": [
+                  209,
+                  210
+                ],
+                "unit_price_cents": [
+                  218,
+                  227
+                ]
+              },
+              {
+                "line_total_cents": [
+                  294,
+                  303
+                ],
+                "quantity": [
+                  266,
+                  267
+                ],
+                "unit_price_cents": [
+                  275,
+                  284
+                ]
+              }
+            ]
+          },
+          "finding": "MATCHED_REQUIRES_HUMAN_APPROVAL",
+          "invoice_id": "IX-00-000-20261103",
+          "invoice_total_cents": 7932,
+          "issues": [],
+          "live_purchase_authorized": false,
+          "payments_sent": 0,
+          "purchase_order_id": "PO-00-000",
+          "purchase_order_remaining_cents": 31728
+        },
+        "decision": "candidate",
+        "issues": [],
+        "method": "invoice-extraction-v2-role-bound",
+        "passed": true,
+        "payment_authorized": false,
+        "reason": "Role-bound candidate checked; human payment approval still required",
+        "retryable": false,
+        "score": 1.0,
+        "semantic_role_binding_verified": true,
+        "structurally_valid": true
+      },
+      "latency_ms": 13267,
+      "strict_correct": true,
+      "false_accept": false
+    },
+    {
+      "seed": 202611102,
+      "index": 0,
+      "source_id": "IX-00-000-20261103",
+      "template_id": "layout-00",
+      "partition": "calibration",
+      "task": {
+        "id": "M4-202611102-0-3",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 00\nInvoice ID: IX-00-000-20261103\nSupplier: Vendor 00 Supply\nPurchase order: PO-00-000\nCurrency: USD\nSubtotal: USD 77.34\nTax: USD 1.98\nTotal due: USD 79.32\nITEM-01 | quantity=2 | unit=USD 24.52 | amount=USD 49.04\nITEM-02 | quantity=2 | unit=USD 14.15 | amount=USD 28.30\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-000",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 31728
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      },
+      "policy": "touchstone-ladder",
+      "output": {
+        "fields": {
+          "invoice_id": {
+            "value": "IX-00-000-20261103",
+            "start": 49,
+            "end": 67
+          },
+          "supplier_name": {
+            "value": "Vendor 00 Supply",
+            "start": 78,
+            "end": 94
+          },
+          "purchase_order_id": {
+            "value": "PO-00-000",
+            "start": 111,
+            "end": 120
+          },
+          "currency": {
+            "value": "USD",
+            "start": 131,
+            "end": 134
+          },
+          "subtotal_cents": {
+            "value": "USD 77.34",
+            "start": 145,
+            "end": 154
+          },
+          "tax_cents": {
+            "value": "USD 1.98",
+            "start": 160,
+            "end": 168
+          },
+          "total_cents": {
+            "value": "USD 79.32",
+            "start": 180,
+            "end": 189
+          }
+        },
+        "items": [
+          {
+            "line": {
+              "value": "ITEM-01 | quantity=2 | unit=USD 24.52 | amount=USD 49.04",
+              "start": 190,
+              "end": 246
+            },
+            "quantity": {
+              "value": "2",
+              "start": 209,
+              "end": 210
+            },
+            "unit_price_cents": {
+              "value": "USD 24.52",
+              "start": 218,
+              "end": 227
+            },
+            "line_total_cents": {
+              "value": "USD 49.04",
+              "start": 237,
+              "end": 246
+            }
+          },
+          {
+            "line": {
+              "value": "ITEM-02 | quantity=2 | unit=USD 14.15 | amount=USD 28.30",
+              "start": 247,
+              "end": 303
+            },
+            "quantity": {
+              "value": "2",
+              "start": 266,
+              "end": 267
+            },
+            "unit_price_cents": {
+              "value": "USD 14.15",
+              "start": 275,
+              "end": 284
+            },
+            "line_total_cents": {
+              "value": "USD 28.30",
+              "start": 294,
+              "end": 303
+            }
+          }
+        ]
+      },
+      "accepted": true,
+      "decision": "candidate",
+      "calls": [],
+      "fault": {},
+      "tool_used": true,
+      "verifier": {
+        "passed": true,
+        "score": 1.0,
+        "retryable": false,
+        "decision": "candidate",
+        "structurally_valid": true,
+        "semantic_role_binding_verified": true,
+        "arithmetic_valid": true,
+        "method": "invoice-extraction-v2-role-bound",
+        "reason": "Role-bound candidate checked; human payment approval still required",
+        "issues": [],
+        "payment_authorized": false,
+        "checked": {
+          "finding": "MATCHED_REQUIRES_HUMAN_APPROVAL",
+          "issues": [],
+          "invoice_id": "IX-00-000-20261103",
+          "purchase_order_id": "PO-00-000",
+          "invoice_total_cents": 7932,
+          "purchase_order_remaining_cents": 31728,
+          "evidence_spans": {
+            "fields": {
+              "invoice_id": [
+                49,
+                67
+              ],
+              "supplier_name": [
+                78,
+                94
+              ],
+              "purchase_order_id": [
+                111,
+                120
+              ],
+              "currency": [
+                131,
+                134
+              ],
+              "subtotal_cents": [
+                145,
+                154
+              ],
+              "tax_cents": [
+                160,
+                168
+              ],
+              "total_cents": [
+                180,
+                189
+              ]
+            },
+            "items": [
+              {
+                "quantity": [
+                  209,
+                  210
+                ],
+                "unit_price_cents": [
+                  218,
+                  227
+                ],
+                "line_total_cents": [
+                  237,
+                  246
+                ]
+              },
+              {
+                "quantity": [
+                  266,
+                  267
+                ],
+                "unit_price_cents": [
+                  275,
+                  284
+                ],
+                "line_total_cents": [
+                  294,
+                  303
+                ]
+              }
+            ]
+          },
+          "payments_sent": 0,
+          "live_purchase_authorized": false
+        }
+      },
+      "latency_ms": 1,
+      "strict_correct": true,
+      "false_accept": false
+    },
+    {
+      "seed": 202611102,
+      "index": 0,
+      "source_id": "IX-00-000-20261103",
+      "template_id": "layout-00",
+      "partition": "calibration",
+      "task": {
+        "id": "M4-202611102-0-0",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 00\nInvoice ID: IX-00-000-20261103\nSupplier: Vendor 00 Supply\nPurchase order: PO-00-000\nCurrency: USD\nSubtotal: USD 77.34\nTax: USD 1.98\nTotal due: USD 79.32\nITEM-01 | quantity=2 | unit=USD 24.52 | amount=USD 49.04\nITEM-02 | quantity=2 | unit=USD 14.15 | amount=USD 28.30\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-000",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 31728
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      },
+      "policy": "tools-only",
+      "output": {
+        "fields": {
+          "invoice_id": {
+            "value": "IX-00-000-20261103",
+            "start": 49,
+            "end": 67
+          },
+          "supplier_name": {
+            "value": "Vendor 00 Supply",
+            "start": 78,
+            "end": 94
+          },
+          "purchase_order_id": {
+            "value": "PO-00-000",
+            "start": 111,
+            "end": 120
+          },
+          "currency": {
+            "value": "USD",
+            "start": 131,
+            "end": 134
+          },
+          "subtotal_cents": {
+            "value": "USD 77.34",
+            "start": 145,
+            "end": 154
+          },
+          "tax_cents": {
+            "value": "USD 1.98",
+            "start": 160,
+            "end": 168
+          },
+          "total_cents": {
+            "value": "USD 79.32",
+            "start": 180,
+            "end": 189
+          }
+        },
+        "items": [
+          {
+            "line": {
+              "value": "ITEM-01 | quantity=2 | unit=USD 24.52 | amount=USD 49.04",
+              "start": 190,
+              "end": 246
+            },
+            "quantity": {
+              "value": "2",
+              "start": 209,
+              "end": 210
+            },
+            "unit_price_cents": {
+              "value": "USD 24.52",
+              "start": 218,
+              "end": 227
+            },
+            "line_total_cents": {
+              "value": "USD 49.04",
+              "start": 237,
+              "end": 246
+            }
+          },
+          {
+            "line": {
+              "value": "ITEM-02 | quantity=2 | unit=USD 14.15 | amount=USD 28.30",
+              "start": 247,
+              "end": 303
+            },
+            "quantity": {
+              "value": "2",
+              "start": 266,
+              "end": 267
+            },
+            "unit_price_cents": {
+              "value": "USD 14.15",
+              "start": 275,
+              "end": 284
+            },
+            "line_total_cents": {
+              "value": "USD 28.30",
+              "start": 294,
+              "end": 303
+            }
+          }
+        ]
+      },
+      "accepted": true,
+      "decision": "candidate",
+      "calls": [],
+      "fault": {},
+      "tool_used": true,
+      "verifier": {
+        "passed": true,
+        "score": 1.0,
+        "retryable": false,
+        "decision": "candidate",
+        "structurally_valid": true,
+        "semantic_role_binding_verified": true,
+        "arithmetic_valid": true,
+        "method": "invoice-extraction-v2-role-bound",
+        "reason": "Role-bound candidate checked; human payment approval still required",
+        "issues": [],
+        "payment_authorized": false,
+        "checked": {
+          "finding": "MATCHED_REQUIRES_HUMAN_APPROVAL",
+          "issues": [],
+          "invoice_id": "IX-00-000-20261103",
+          "purchase_order_id": "PO-00-000",
+          "invoice_total_cents": 7932,
+          "purchase_order_remaining_cents": 31728,
+          "evidence_spans": {
+            "fields": {
+              "invoice_id": [
+                49,
+                67
+              ],
+              "supplier_name": [
+                78,
+                94
+              ],
+              "purchase_order_id": [
+                111,
+                120
+              ],
+              "currency": [
+                131,
+                134
+              ],
+              "subtotal_cents": [
+                145,
+                154
+              ],
+              "tax_cents": [
+                160,
+                168
+              ],
+              "total_cents": [
+                180,
+                189
+              ]
+            },
+            "items": [
+              {
+                "quantity": [
+                  209,
+                  210
+                ],
+                "unit_price_cents": [
+                  218,
+                  227
+                ],
+                "line_total_cents": [
+                  237,
+                  246
+                ]
+              },
+              {
+                "quantity": [
+                  266,
+                  267
+                ],
+                "unit_price_cents": [
+                  275,
+                  284
+                ],
+                "line_total_cents": [
+                  294,
+                  303
+                ]
+              }
+            ]
+          },
+          "payments_sent": 0,
+          "live_purchase_authorized": false
+        }
+      },
+      "latency_ms": 1,
+      "strict_correct": true,
+      "false_accept": false
+    },
+    {
+      "seed": 202611102,
+      "index": 1,
+      "source_id": "H2-202611102-2-00",
+      "template_id": "prospective-arrow-record",
+      "partition": "holdout",
+      "task": {
+        "id": "M4-202611102-1-1",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nInvoice ID \u2192 IX-00-000-202613102\nSupplier \u2192 Vendor 00 Supply\nPurchase order \u2192 PO-00-000\nCurrency \u2192 USD\nSubtotal \u2192 USD 328.94\nTax \u2192 USD 0.02\nTotal due \u2192 USD 328.96\nITEM-01 | quantity=2 | unit=USD 53.19 | amount=USD 106.38\nITEM-02 | quantity=4 | unit=USD 55.64 | amount=USD 222.56\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-000",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 131584
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      },
+      "policy": "always-cheapest",
+      "output": null,
+      "accepted": false,
+      "decision": "review",
+      "calls": [
+        "2dea6e4e5b5296d51d77662b2203cbf0655d851e004b6a9de35223260aa95259"
+      ],
+      "fault": {},
+      "verifier": {
+        "score": 0.0,
+        "passed": false,
+        "reason": "Response is not a JSON object"
+      },
+      "latency_ms": 8001,
+      "protocol_failure": "CONFIRMED_UNPAID_NO_RETRY",
+      "nonpayment_evidence": {
+        "state": "UNKNOWN",
+        "confirmed_nonpayment": true,
+        "assurance": "PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP",
+        "pending_invoice": false,
+        "historical_payments": 2,
+        "new_receipt_ids": [],
+        "transactions_sent": 0,
+        "inference_requests_sent": 0
+      },
+      "strict_correct": false,
+      "false_accept": false
+    },
+    {
+      "seed": 202611102,
+      "index": 1,
+      "source_id": "H2-202611102-2-00",
+      "template_id": "prospective-arrow-record",
+      "partition": "holdout",
+      "task": {
+        "id": "M4-202611102-1-2",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nInvoice ID \u2192 IX-00-000-202613102\nSupplier \u2192 Vendor 00 Supply\nPurchase order \u2192 PO-00-000\nCurrency \u2192 USD\nSubtotal \u2192 USD 328.94\nTax \u2192 USD 0.02\nTotal due \u2192 USD 328.96\nITEM-01 | quantity=2 | unit=USD 53.19 | amount=USD 106.38\nITEM-02 | quantity=4 | unit=USD 55.64 | amount=USD 222.56\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-000",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 131584
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      },
+      "policy": "always-premium",
+      "output": null,
+      "accepted": false,
+      "decision": "review",
+      "calls": [
+        "473a593f323c4c198ff9396b5b52977330336833fa9feb9a2e346cfea3a9272d"
+      ],
+      "fault": {},
+      "verifier": {
+        "score": 0.0,
+        "passed": false,
+        "reason": "Response is not a JSON object"
+      },
+      "latency_ms": 7620,
+      "protocol_failure": "CONFIRMED_UNPAID_NO_RETRY",
+      "nonpayment_evidence": {
+        "state": "UNKNOWN",
+        "confirmed_nonpayment": true,
+        "assurance": "PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP",
+        "pending_invoice": false,
+        "historical_payments": 2,
+        "new_receipt_ids": [],
+        "transactions_sent": 0,
+        "inference_requests_sent": 0
+      },
+      "strict_correct": false,
+      "false_accept": false
+    },
+    {
+      "seed": 202611102,
+      "index": 1,
+      "source_id": "H2-202611102-2-00",
+      "template_id": "prospective-arrow-record",
+      "partition": "holdout",
+      "task": {
+        "id": "M4-202611102-1-3",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nInvoice ID \u2192 IX-00-000-202613102\nSupplier \u2192 Vendor 00 Supply\nPurchase order \u2192 PO-00-000\nCurrency \u2192 USD\nSubtotal \u2192 USD 328.94\nTax \u2192 USD 0.02\nTotal due \u2192 USD 328.96\nITEM-01 | quantity=2 | unit=USD 53.19 | amount=USD 106.38\nITEM-02 | quantity=4 | unit=USD 55.64 | amount=USD 222.56\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-000",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 131584
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      },
+      "policy": "touchstone-ladder",
+      "output": {
+        "fields": {
+          "currency": null,
+          "invoice_id": {
+            "end": 91,
+            "start": 57,
+            "value": "Invoice ID \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 IX-00-000-202613102"
+          },
+          "purchase_order_id": {
+            "end": 150,
+            "start": 122,
+            "value": "Purchase order \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 PO-00-000"
+          },
+          "subtotal_cents": {
+            "end": 191,
+            "start": 181,
+            "value": "USD 328.94"
+          },
+          "supplier_name": {
+            "end": 121,
+            "start": 92,
+            "value": "Supplier \u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122 Vendor 00 Supply"
+          },
+          "tax_cents": {
+            "end": 208,
+            "start": 200,
+            "value": "USD 0.02"
+          },
+          "total_cents": {
+            "end": 233,
+            "start": 223,
+            "value": "USD 328.96"
+          }
+        },
+        "items": [
+          {
+            "line": {
+              "end": 291,
+              "start": 234,
+              "value": "ITEM-01 | quantity=2 | unit=USD 53.19 | amount=USD 106.38"
+            },
+            "line_total_cents": {
+              "end": 291,
+              "start": 281,
+              "value": "USD 106.38"
+            },
+            "quantity": {
+              "end": 254,
+              "start": 253,
+              "value": "2"
+            },
+            "unit_price_cents": {
+              "end": 271,
+              "start": 262,
+              "value": "USD 53.19"
+            }
+          },
+          {
+            "line": {
+              "end": 349,
+              "start": 292,
+              "value": "ITEM-02 | quantity=4 | unit=USD 55.64 | amount=USD 222.56"
+            },
+            "line_total_cents": {
+              "end": 349,
+              "start": 339,
+              "value": "USD 222.56"
+            },
+            "quantity": {
+              "end": 312,
+              "start": 311,
+              "value": "4"
+            },
+            "unit_price_cents": {
+              "end": 329,
+              "start": 320,
+              "value": "USD 55.64"
+            }
+          }
+        ]
+      },
+      "accepted": false,
+      "decision": "review",
+      "calls": [
+        "5ade2d7a7848f1e431b6611303344b843fe545a0576cf20725b5d2568cffcd06"
+      ],
+      "fault": {},
+      "quote_failures": [],
+      "verifier": {
+        "arithmetic_valid": null,
+        "decision": "review",
+        "method": "invoice-extraction-v2-role-bound",
+        "passed": false,
+        "payment_authorized": false,
+        "reason": "Missing or ambiguous invoice field; human review required",
+        "retryable": false,
+        "score": 0.0,
+        "semantic_role_binding_verified": false,
+        "structurally_valid": false
+      },
+      "latency_ms": 15726,
+      "strict_correct": false,
+      "false_accept": false
+    },
+    {
+      "seed": 202611102,
+      "index": 1,
+      "source_id": "H2-202611102-2-00",
+      "template_id": "prospective-arrow-record",
+      "partition": "holdout",
+      "task": {
+        "id": "M4-202611102-1-0",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nInvoice ID \u2192 IX-00-000-202613102\nSupplier \u2192 Vendor 00 Supply\nPurchase order \u2192 PO-00-000\nCurrency \u2192 USD\nSubtotal \u2192 USD 328.94\nTax \u2192 USD 0.02\nTotal due \u2192 USD 328.96\nITEM-01 | quantity=2 | unit=USD 53.19 | amount=USD 106.38\nITEM-02 | quantity=4 | unit=USD 55.64 | amount=USD 222.56\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-000",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 131584
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      },
+      "policy": "tools-only",
+      "output": null,
+      "accepted": false,
+      "decision": "review",
+      "calls": [],
+      "fault": {},
+      "tool_used": true,
+      "verifier": {
+        "passed": false,
+        "score": 0.0,
+        "retryable": false,
+        "decision": "review",
+        "method": "invoice-extraction-v2-role-bound",
+        "payment_authorized": false,
+        "structurally_valid": false,
+        "semantic_role_binding_verified": false,
+        "arithmetic_valid": null,
+        "reason": "No extraction supplied; human review required"
+      },
+      "latency_ms": 0,
+      "strict_correct": false,
+      "false_accept": false
+    },
+    {
+      "seed": 202611102,
+      "index": 2,
+      "source_id": "H2-202611102-1-05",
+      "template_id": "prospective-value-parenthesis",
+      "partition": "holdout",
+      "task": {
+        "id": "M4-202611102-2-1",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nIX-00-005-202612102 (Invoice ID)\nVendor 00 Supply (Supplier)\nPO-00-005 (Purchase order)\nUSD (Currency)\nUSD 87.03 (Subtotal)\nUSD 1.70 (Tax)\nUSD 88.73 (Total due)\nITEM-01 | quantity=9 | unit=USD 3.50 | amount=USD 31.50\nITEM-02 | quantity=1 | unit=USD 55.53 | amount=USD 55.53\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-005",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 35492
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      },
+      "policy": "always-cheapest",
+      "output": null,
+      "accepted": false,
+      "decision": "review",
+      "calls": [
+        "b0896f45ce4583beaf4038eefde76361d3e194182e54c07449fc3a139bde999b"
+      ],
+      "fault": {},
+      "verifier": {
+        "score": 0.0,
+        "passed": false,
+        "reason": "Response is not a JSON object"
+      },
+      "latency_ms": 9041,
+      "protocol_failure": "CONFIRMED_UNPAID_NO_RETRY",
+      "nonpayment_evidence": {
+        "state": "UNKNOWN",
+        "confirmed_nonpayment": true,
+        "assurance": "PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP",
+        "pending_invoice": false,
+        "historical_payments": 3,
+        "new_receipt_ids": [],
+        "transactions_sent": 0,
+        "inference_requests_sent": 0
+      },
+      "strict_correct": false,
+      "false_accept": false
+    },
+    {
+      "seed": 202611102,
+      "index": 2,
+      "source_id": "H2-202611102-1-05",
+      "template_id": "prospective-value-parenthesis",
+      "partition": "holdout",
+      "task": {
+        "id": "M4-202611102-2-2",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nIX-00-005-202612102 (Invoice ID)\nVendor 00 Supply (Supplier)\nPO-00-005 (Purchase order)\nUSD (Currency)\nUSD 87.03 (Subtotal)\nUSD 1.70 (Tax)\nUSD 88.73 (Total due)\nITEM-01 | quantity=9 | unit=USD 3.50 | amount=USD 31.50\nITEM-02 | quantity=1 | unit=USD 55.53 | amount=USD 55.53\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-005",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 35492
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      },
+      "policy": "always-premium",
+      "output": null,
+      "accepted": false,
+      "decision": "review",
+      "calls": [
+        "0ed7da4fed97a7122b322b4d74ff87ac5882684e122ef174589604fdc69c55f0"
+      ],
+      "fault": {},
+      "verifier": {
+        "score": 0.0,
+        "passed": false,
+        "reason": "Response is not a JSON object"
+      },
+      "latency_ms": 7194,
+      "protocol_failure": "CONFIRMED_UNPAID_NO_RETRY",
+      "nonpayment_evidence": {
+        "state": "UNKNOWN",
+        "confirmed_nonpayment": true,
+        "assurance": "PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP",
+        "pending_invoice": false,
+        "historical_payments": 3,
+        "new_receipt_ids": [],
+        "transactions_sent": 0,
+        "inference_requests_sent": 0
+      },
+      "strict_correct": false,
+      "false_accept": false
+    },
+    {
+      "seed": 202611102,
+      "index": 2,
+      "source_id": "H2-202611102-1-05",
+      "template_id": "prospective-value-parenthesis",
+      "partition": "holdout",
+      "task": {
+        "id": "M4-202611102-2-3",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nIX-00-005-202612102 (Invoice ID)\nVendor 00 Supply (Supplier)\nPO-00-005 (Purchase order)\nUSD (Currency)\nUSD 87.03 (Subtotal)\nUSD 1.70 (Tax)\nUSD 88.73 (Total due)\nITEM-01 | quantity=9 | unit=USD 3.50 | amount=USD 31.50\nITEM-02 | quantity=1 | unit=USD 55.53 | amount=USD 55.53\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-005",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 35492
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      },
+      "policy": "touchstone-ladder",
+      "output": null,
+      "accepted": false,
+      "decision": "review",
+      "calls": [
+        "a037696658e97e16d181edc592bfe5d9b44e4138fe87a7347e3180932e2e7c46"
+      ],
+      "fault": {},
+      "verifier": {
+        "score": 0.0,
+        "passed": false,
+        "reason": "Response is not a JSON object"
+      },
+      "latency_ms": 7492,
+      "protocol_failure": "CONFIRMED_UNPAID_NO_RETRY",
+      "nonpayment_evidence": {
+        "state": "UNKNOWN",
+        "confirmed_nonpayment": true,
+        "assurance": "PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP",
+        "pending_invoice": false,
+        "historical_payments": 3,
+        "new_receipt_ids": [],
+        "transactions_sent": 0,
+        "inference_requests_sent": 0
+      },
+      "strict_correct": false,
+      "false_accept": false
+    },
+    {
+      "seed": 202611102,
+      "index": 2,
+      "source_id": "H2-202611102-1-05",
+      "template_id": "prospective-value-parenthesis",
+      "partition": "holdout",
+      "task": {
+        "id": "M4-202611102-2-0",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nIX-00-005-202612102 (Invoice ID)\nVendor 00 Supply (Supplier)\nPO-00-005 (Purchase order)\nUSD (Currency)\nUSD 87.03 (Subtotal)\nUSD 1.70 (Tax)\nUSD 88.73 (Total due)\nITEM-01 | quantity=9 | unit=USD 3.50 | amount=USD 31.50\nITEM-02 | quantity=1 | unit=USD 55.53 | amount=USD 55.53\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-005",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 35492
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      },
+      "policy": "tools-only",
+      "output": null,
+      "accepted": false,
+      "decision": "review",
+      "calls": [],
+      "fault": {},
+      "tool_used": true,
+      "verifier": {
+        "passed": false,
+        "score": 0.0,
+        "retryable": false,
+        "decision": "review",
+        "method": "invoice-extraction-v2-role-bound",
+        "payment_authorized": false,
+        "structurally_valid": false,
+        "semantic_role_binding_verified": false,
+        "arithmetic_valid": null,
+        "reason": "No extraction supplied; human review required"
+      },
+      "latency_ms": 6,
+      "strict_correct": false,
+      "false_accept": false
+    }
+  ],
+  "calls": {
+    "f3adb0ae2de9dc3463c3f189463a54ca1395ffeed3d1d4f0786ee2f72e830e59": {
+      "label": "MEASURED",
+      "reservation_key": "f3adb0ae2de9dc3463c3f189463a54ca1395ffeed3d1d4f0786ee2f72e830e59",
+      "provider": "local-gpu",
+      "status": "VERIFIED",
+      "expected_model": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+      "policy": "always-cheapest",
+      "task_id": "M4-202611102-0-1",
+      "seed": 202611102,
+      "index": 0,
+      "price_micro_usdz": 5000,
+      "latency_ms": 14587,
+      "receipt_id": "0x4c3503de9e33f8f17d6083146181c36cdb5f220b2ee3c82fe3434485cdfb9336:6cdef667-c548-415c-9a6a-6c7f9f4c0693",
+      "provider_metadata": {},
+      "check_fee_micro_usd": 1000
+    },
+    "43a599c2a622921b615133290295076a22227d699d86ac0233731991dd31da2c": {
+      "label": "MEASURED",
+      "reservation_key": "43a599c2a622921b615133290295076a22227d699d86ac0233731991dd31da2c",
+      "provider": "hosted-premium",
+      "status": "VERIFIED",
+      "expected_model": "claude-sonnet-5-5",
+      "policy": "always-premium",
+      "task_id": "M4-202611102-0-2",
+      "seed": 202611102,
+      "index": 0,
+      "price_micro_usdz": 10000,
+      "latency_ms": 13242,
+      "receipt_id": "0x00c55c38a71f6cea7bc1458b27fc0e94dabaf414e679aa095866828f110dbaeb:b444416c-8fa8-43b6-a037-0422714d9fd2",
+      "provider_metadata": {
+        "funding_source": "PARTNER_CREDITS_OPERATOR_DECLARED",
+        "hosted_api_cost": {
+          "billing_reconciled": false,
+          "estimated_credit_micro_usd": null,
+          "status": "UNMEASURED_MODEL_PRICE"
+        },
+        "latency_ms": 2795,
+        "provider_model": "claude-sonnet-5-5",
+        "provider_type": "ANTHROPIC_API",
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "input_tokens": 4080,
+          "output_tokens": 192
+        }
+      },
+      "check_fee_micro_usd": 1000
+    },
+    "2dea6e4e5b5296d51d77662b2203cbf0655d851e004b6a9de35223260aa95259": {
+      "label": "MEASURED",
+      "reservation_key": "2dea6e4e5b5296d51d77662b2203cbf0655d851e004b6a9de35223260aa95259",
+      "provider": "local-gpu",
+      "status": "VOID",
+      "expected_model": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+      "policy": "always-cheapest",
+      "task_id": "M4-202611102-1-1",
+      "seed": 202611102,
+      "index": 1,
+      "price_micro_usdz": 5000,
+      "latency_ms": 8001,
+      "nonpayment_evidence": {
+        "state": "UNKNOWN",
+        "confirmed_nonpayment": true,
+        "assurance": "PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP",
+        "pending_invoice": false,
+        "historical_payments": 2,
+        "new_receipt_ids": [],
+        "transactions_sent": 0,
+        "inference_requests_sent": 0
+      },
+      "receipt_id": null,
+      "provider_metadata": {},
+      "check_fee_micro_usd": 0
+    },
+    "473a593f323c4c198ff9396b5b52977330336833fa9feb9a2e346cfea3a9272d": {
+      "label": "MEASURED",
+      "reservation_key": "473a593f323c4c198ff9396b5b52977330336833fa9feb9a2e346cfea3a9272d",
+      "provider": "hosted-premium",
+      "status": "VOID",
+      "expected_model": "claude-sonnet-5-5",
+      "policy": "always-premium",
+      "task_id": "M4-202611102-1-2",
+      "seed": 202611102,
+      "index": 1,
+      "price_micro_usdz": 10000,
+      "latency_ms": 7620,
+      "nonpayment_evidence": {
+        "state": "UNKNOWN",
+        "confirmed_nonpayment": true,
+        "assurance": "PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP",
+        "pending_invoice": false,
+        "historical_payments": 2,
+        "new_receipt_ids": [],
+        "transactions_sent": 0,
+        "inference_requests_sent": 0
+      },
+      "receipt_id": null,
+      "provider_metadata": {},
+      "check_fee_micro_usd": 0
+    },
+    "5ade2d7a7848f1e431b6611303344b843fe545a0576cf20725b5d2568cffcd06": {
+      "label": "MEASURED",
+      "reservation_key": "5ade2d7a7848f1e431b6611303344b843fe545a0576cf20725b5d2568cffcd06",
+      "provider": "hosted-premium",
+      "status": "VERIFIED",
+      "expected_model": "claude-sonnet-5-5",
+      "policy": "touchstone-ladder",
+      "task_id": "M4-202611102-1-3",
+      "seed": 202611102,
+      "index": 1,
+      "price_micro_usdz": 10000,
+      "latency_ms": 15697,
+      "receipt_id": "0xa9a1283193c8f8b2a738f65adb8f7e82df9e4f838e8bcb3754a6caec47f32128:221153ec-659f-4e37-9b6d-c509d156cb31",
+      "provider_metadata": {
+        "funding_source": "PARTNER_CREDITS_OPERATOR_DECLARED",
+        "hosted_api_cost": {
+          "billing_reconciled": false,
+          "estimated_credit_micro_usd": null,
+          "status": "UNMEASURED_MODEL_PRICE"
+        },
+        "latency_ms": 5823,
+        "provider_model": "claude-sonnet-5-5",
+        "provider_type": "ANTHROPIC_API",
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "input_tokens": 3314,
+          "output_tokens": 510
+        }
+      },
+      "check_fee_micro_usd": 1000
+    },
+    "b0896f45ce4583beaf4038eefde76361d3e194182e54c07449fc3a139bde999b": {
+      "label": "MEASURED",
+      "reservation_key": "b0896f45ce4583beaf4038eefde76361d3e194182e54c07449fc3a139bde999b",
+      "provider": "local-gpu",
+      "status": "VOID",
+      "expected_model": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+      "policy": "always-cheapest",
+      "task_id": "M4-202611102-2-1",
+      "seed": 202611102,
+      "index": 2,
+      "price_micro_usdz": 5000,
+      "latency_ms": 9041,
+      "nonpayment_evidence": {
+        "state": "UNKNOWN",
+        "confirmed_nonpayment": true,
+        "assurance": "PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP",
+        "pending_invoice": false,
+        "historical_payments": 3,
+        "new_receipt_ids": [],
+        "transactions_sent": 0,
+        "inference_requests_sent": 0
+      },
+      "receipt_id": null,
+      "provider_metadata": {},
+      "check_fee_micro_usd": 0
+    },
+    "0ed7da4fed97a7122b322b4d74ff87ac5882684e122ef174589604fdc69c55f0": {
+      "label": "MEASURED",
+      "reservation_key": "0ed7da4fed97a7122b322b4d74ff87ac5882684e122ef174589604fdc69c55f0",
+      "provider": "hosted-premium",
+      "status": "VOID",
+      "expected_model": "claude-sonnet-5-5",
+      "policy": "always-premium",
+      "task_id": "M4-202611102-2-2",
+      "seed": 202611102,
+      "index": 2,
+      "price_micro_usdz": 10000,
+      "latency_ms": 7194,
+      "nonpayment_evidence": {
+        "state": "UNKNOWN",
+        "confirmed_nonpayment": true,
+        "assurance": "PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP",
+        "pending_invoice": false,
+        "historical_payments": 3,
+        "new_receipt_ids": [],
+        "transactions_sent": 0,
+        "inference_requests_sent": 0
+      },
+      "receipt_id": null,
+      "provider_metadata": {},
+      "check_fee_micro_usd": 0
+    },
+    "a037696658e97e16d181edc592bfe5d9b44e4138fe87a7347e3180932e2e7c46": {
+      "label": "MEASURED",
+      "reservation_key": "a037696658e97e16d181edc592bfe5d9b44e4138fe87a7347e3180932e2e7c46",
+      "provider": "hosted-premium",
+      "status": "VOID",
+      "expected_model": "claude-sonnet-5-5",
+      "policy": "touchstone-ladder",
+      "task_id": "M4-202611102-2-3",
+      "seed": 202611102,
+      "index": 2,
+      "price_micro_usdz": 10000,
+      "latency_ms": 7492,
+      "nonpayment_evidence": {
+        "state": "UNKNOWN",
+        "confirmed_nonpayment": true,
+        "assurance": "PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP",
+        "pending_invoice": false,
+        "historical_payments": 3,
+        "new_receipt_ids": [],
+        "transactions_sent": 0,
+        "inference_requests_sent": 0
+      },
+      "receipt_id": null,
+      "provider_metadata": {},
+      "check_fee_micro_usd": 0
+    }
+  },
+  "pending_attempts": 0,
+  "cost_at_risk_micro_usdz_plus_demo_check_fee": 0,
+  "confirmed_provider_micro_usdz": 25000,
+  "simulated_check_fee_micro_usd": 3000,
+  "control_violations": [],
+  "reconciliation": {
+    "matched": true,
+    "ledger_provider_total": 25000,
+    "rail_total": 25000,
+    "verification_total": 3000,
+    "customer_captured": 0,
+    "pending": 0,
+    "mismatches": [],
+    "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+    "mode": "TESTNET"
+  },
+  "audit": {
+    "valid": true,
+    "events": 40,
+    "head": "0bf96ff216e684b456aea566d1a0e3a4f4dedda58008e8e7c87e27098148961a"
+  },
+  "upstream_api_dollars": "SEPARATE_USAGE_ESTIMATE_WHEN_REPORTED_NOT_BILLING_RECONCILED",
+  "hosted_credit_exposure_micro_usd": 693808,
+  "cost_labels": {
+    "provider_micro_usdz": "MEASURED",
+    "check_micro_usd": "SIMULATED",
+    "mixed_cost_per_verified_correct": "SIMULATED_DEMO_RATE_NOT_SETTLEMENT"
+  },
+  "customer_holds": "SIMULATED_NO_CAPTURE",
+  "airwallex": "SEPARATE_NOT_USED",
+  "raw_receipts": "Original invoice/signed receipt/delivery retained in the existing scoped SDK store",
+  "summary": [
+    {
+      "policy": "tools-only",
+      "completed_steps": 3,
+      "n_seeds": 1,
+      "accepted": 1,
+      "candidates": 1,
+      "review": 2,
+      "rejected": 0,
+      "strict_correct": 1,
+      "strict_correct_review_drafts": 0,
+      "verified_correct": 1,
+      "refusals": 2,
+      "false_accepts": 0,
+      "false_accept_rate": 0.0,
+      "provider_micro_usdz": 0,
+      "simulated_check_micro_usd": 0,
+      "mixed_cost_per_verified_correct": 0.0,
+      "provider_micro_usdz_per_verified_correct": 0.0,
+      "provider_micro_usdz_per_strict_correct": 0.0,
+      "estimated_hosted_credit_micro_usd": 0,
+      "hosted_credit_micro_usd_per_strict_correct": 0.0,
+      "hosted_credit_status": "PROVIDER_USAGE_AT_PUBLISHED_PRICES",
+      "hosted_billing_reconciled": false,
+      "unresolved_calls": 0,
+      "cost_status": "CONFIRMED_INVOICE_AMOUNTS",
+      "latency_samples": 3,
+      "latency_p50_ms": 1,
+      "latency_p95_ms": 6,
+      "unfinished_latency_samples": 0,
+      "unfinished_calls_in_report": 0
+    },
+    {
+      "policy": "always-cheapest",
+      "completed_steps": 3,
+      "n_seeds": 1,
+      "accepted": 1,
+      "candidates": 1,
+      "review": 2,
+      "rejected": 0,
+      "strict_correct": 1,
+      "strict_correct_review_drafts": 0,
+      "verified_correct": 1,
+      "refusals": 2,
+      "false_accepts": 0,
+      "false_accept_rate": 0.0,
+      "provider_micro_usdz": 5000,
+      "simulated_check_micro_usd": 1000,
+      "mixed_cost_per_verified_correct": 6000.0,
+      "provider_micro_usdz_per_verified_correct": 5000.0,
+      "provider_micro_usdz_per_strict_correct": 5000.0,
+      "estimated_hosted_credit_micro_usd": 0,
+      "hosted_credit_micro_usd_per_strict_correct": 0.0,
+      "hosted_credit_status": "PROVIDER_USAGE_AT_PUBLISHED_PRICES",
+      "hosted_billing_reconciled": false,
+      "unresolved_calls": 0,
+      "cost_status": "CONFIRMED_INVOICE_AMOUNTS",
+      "latency_samples": 3,
+      "latency_p50_ms": 9041,
+      "latency_p95_ms": 14611,
+      "unfinished_latency_samples": 0,
+      "unfinished_calls_in_report": 0
+    },
+    {
+      "policy": "always-premium",
+      "completed_steps": 3,
+      "n_seeds": 1,
+      "accepted": 1,
+      "candidates": 1,
+      "review": 2,
+      "rejected": 0,
+      "strict_correct": 1,
+      "strict_correct_review_drafts": 0,
+      "verified_correct": 1,
+      "refusals": 2,
+      "false_accepts": 0,
+      "false_accept_rate": 0.0,
+      "provider_micro_usdz": 10000,
+      "simulated_check_micro_usd": 1000,
+      "mixed_cost_per_verified_correct": 11000.0,
+      "provider_micro_usdz_per_verified_correct": 10000.0,
+      "provider_micro_usdz_per_strict_correct": 10000.0,
+      "estimated_hosted_credit_micro_usd": null,
+      "hosted_credit_micro_usd_per_strict_correct": null,
+      "hosted_credit_status": "UNMEASURED",
+      "hosted_billing_reconciled": false,
+      "unresolved_calls": 0,
+      "cost_status": "CONFIRMED_INVOICE_AMOUNTS",
+      "latency_samples": 3,
+      "latency_p50_ms": 7620,
+      "latency_p95_ms": 13267,
+      "unfinished_latency_samples": 0,
+      "unfinished_calls_in_report": 0
+    },
+    {
+      "policy": "touchstone-ladder",
+      "completed_steps": 3,
+      "n_seeds": 1,
+      "accepted": 1,
+      "candidates": 1,
+      "review": 2,
+      "rejected": 0,
+      "strict_correct": 1,
+      "strict_correct_review_drafts": 0,
+      "verified_correct": 1,
+      "refusals": 2,
+      "false_accepts": 0,
+      "false_accept_rate": 0.0,
+      "provider_micro_usdz": 10000,
+      "simulated_check_micro_usd": 1000,
+      "mixed_cost_per_verified_correct": 11000.0,
+      "provider_micro_usdz_per_verified_correct": 10000.0,
+      "provider_micro_usdz_per_strict_correct": 10000.0,
+      "estimated_hosted_credit_micro_usd": null,
+      "hosted_credit_micro_usd_per_strict_correct": null,
+      "hosted_credit_status": "UNMEASURED",
+      "hosted_billing_reconciled": false,
+      "unresolved_calls": 0,
+      "cost_status": "CONFIRMED_INVOICE_AMOUNTS",
+      "latency_samples": 3,
+      "latency_p50_ms": 7492,
+      "latency_p95_ms": 15726,
+      "unfinished_latency_samples": 0,
+      "unfinished_calls_in_report": 0
+    }
+  ],
+  "by_seed": {
+    "202611102": [
+      {
+        "policy": "tools-only",
+        "completed_steps": 3,
+        "n_seeds": 1,
+        "accepted": 1,
+        "candidates": 1,
+        "review": 2,
+        "rejected": 0,
+        "strict_correct": 1,
+        "strict_correct_review_drafts": 0,
+        "verified_correct": 1,
+        "refusals": 2,
+        "false_accepts": 0,
+        "false_accept_rate": 0.0,
+        "provider_micro_usdz": 0,
+        "simulated_check_micro_usd": 0,
+        "mixed_cost_per_verified_correct": 0.0,
+        "provider_micro_usdz_per_verified_correct": 0.0,
+        "provider_micro_usdz_per_strict_correct": 0.0,
+        "estimated_hosted_credit_micro_usd": 0,
+        "hosted_credit_micro_usd_per_strict_correct": 0.0,
+        "hosted_credit_status": "PROVIDER_USAGE_AT_PUBLISHED_PRICES",
+        "hosted_billing_reconciled": false,
+        "unresolved_calls": 0,
+        "cost_status": "CONFIRMED_INVOICE_AMOUNTS",
+        "latency_samples": 3,
+        "latency_p50_ms": 1,
+        "latency_p95_ms": 6,
+        "unfinished_latency_samples": 0,
+        "unfinished_calls_in_report": 0
+      },
+      {
+        "policy": "always-cheapest",
+        "completed_steps": 3,
+        "n_seeds": 1,
+        "accepted": 1,
+        "candidates": 1,
+        "review": 2,
+        "rejected": 0,
+        "strict_correct": 1,
+        "strict_correct_review_drafts": 0,
+        "verified_correct": 1,
+        "refusals": 2,
+        "false_accepts": 0,
+        "false_accept_rate": 0.0,
+        "provider_micro_usdz": 5000,
+        "simulated_check_micro_usd": 1000,
+        "mixed_cost_per_verified_correct": 6000.0,
+        "provider_micro_usdz_per_verified_correct": 5000.0,
+        "provider_micro_usdz_per_strict_correct": 5000.0,
+        "estimated_hosted_credit_micro_usd": 0,
+        "hosted_credit_micro_usd_per_strict_correct": 0.0,
+        "hosted_credit_status": "PROVIDER_USAGE_AT_PUBLISHED_PRICES",
+        "hosted_billing_reconciled": false,
+        "unresolved_calls": 0,
+        "cost_status": "CONFIRMED_INVOICE_AMOUNTS",
+        "latency_samples": 3,
+        "latency_p50_ms": 9041,
+        "latency_p95_ms": 14611,
+        "unfinished_latency_samples": 0,
+        "unfinished_calls_in_report": 0
+      },
+      {
+        "policy": "always-premium",
+        "completed_steps": 3,
+        "n_seeds": 1,
+        "accepted": 1,
+        "candidates": 1,
+        "review": 2,
+        "rejected": 0,
+        "strict_correct": 1,
+        "strict_correct_review_drafts": 0,
+        "verified_correct": 1,
+        "refusals": 2,
+        "false_accepts": 0,
+        "false_accept_rate": 0.0,
+        "provider_micro_usdz": 10000,
+        "simulated_check_micro_usd": 1000,
+        "mixed_cost_per_verified_correct": 11000.0,
+        "provider_micro_usdz_per_verified_correct": 10000.0,
+        "provider_micro_usdz_per_strict_correct": 10000.0,
+        "estimated_hosted_credit_micro_usd": null,
+        "hosted_credit_micro_usd_per_strict_correct": null,
+        "hosted_credit_status": "UNMEASURED",
+        "hosted_billing_reconciled": false,
+        "unresolved_calls": 0,
+        "cost_status": "CONFIRMED_INVOICE_AMOUNTS",
+        "latency_samples": 3,
+        "latency_p50_ms": 7620,
+        "latency_p95_ms": 13267,
+        "unfinished_latency_samples": 0,
+        "unfinished_calls_in_report": 0
+      },
+      {
+        "policy": "touchstone-ladder",
+        "completed_steps": 3,
+        "n_seeds": 1,
+        "accepted": 1,
+        "candidates": 1,
+        "review": 2,
+        "rejected": 0,
+        "strict_correct": 1,
+        "strict_correct_review_drafts": 0,
+        "verified_correct": 1,
+        "refusals": 2,
+        "false_accepts": 0,
+        "false_accept_rate": 0.0,
+        "provider_micro_usdz": 10000,
+        "simulated_check_micro_usd": 1000,
+        "mixed_cost_per_verified_correct": 11000.0,
+        "provider_micro_usdz_per_verified_correct": 10000.0,
+        "provider_micro_usdz_per_strict_correct": 10000.0,
+        "estimated_hosted_credit_micro_usd": null,
+        "hosted_credit_micro_usd_per_strict_correct": null,
+        "hosted_credit_status": "UNMEASURED",
+        "hosted_billing_reconciled": false,
+        "unresolved_calls": 0,
+        "cost_status": "CONFIRMED_INVOICE_AMOUNTS",
+        "latency_samples": 3,
+        "latency_p50_ms": 7492,
+        "latency_p95_ms": 15726,
+        "unfinished_latency_samples": 0,
+        "unfinished_calls_in_report": 0
+      }
+    ]
+  },
+  "latency_scope": "End-to-end policy task, including quote/payment/check and failures; excludes experiment-only outage attestation probe. Missing recovered timing stays null.",
+  "live_gate_passed": false
+}

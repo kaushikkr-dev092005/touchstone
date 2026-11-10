@@ -1,0 +1,27 @@
+{
+  "label": "MEASURED",
+  "observations": [
+    {
+      "operation": "READ_ONLY_EPOCH_INSPECTION",
+      "http_status": 409,
+      "ready": false,
+      "financial_transactions": 0,
+      "inference_requests": 0
+    },
+    {
+      "label": "MEASURED",
+      "operation": "READ_ONLY_EPOCH_INSPECTION",
+      "registered": true,
+      "admitted": "210110",
+      "epoch": "210110",
+      "fault": 0,
+      "seconds_before_admission_deadline": 296,
+      "context_matches_chain": true,
+      "ready": true,
+      "financial_transactions": 0,
+      "inference_requests": 0
+    }
+  ],
+  "financial_transactions": 0,
+  "inference_requests": 0
+}

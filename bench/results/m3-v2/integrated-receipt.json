@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "scope": "banked-useful-20261110",
+  "mode": "SANDBOX_TESTNET",
+  "phase": "CLOSED_FLOAT_RETAINED",
+  "assurance": "WORKFLOW_JOURNAL_NOT_INDEPENDENT_SETTLEMENT",
+  "mandate_sha256": "8c5cd9ca02d6efb877c57e05fb743889dd36347f8c4148237239d8b68c116230",
+  "task_sha256": "fd68d2df148ddff63ebf31bc23b4888380fe53633f3e7ef64cd171e85aa57c34",
+  "qualification": {
+    "corpus_sha256": "5ef414704acbbb540bd889b99dd1c2498ebf805caa4b70abbb29dd2e2b95209f",
+    "model_id": "claude-sonnet-5-5",
+    "profile_sha256": "7051ceabb2186b0a7db06c9d8096e9ba92b552efeb880fdca61eae2db3b64cfb"
+  },
+  "fiat": {
+    "currency": "USD",
+    "environment": "AIRWALLEX_SANDBOX",
+    "authorization_id": "int_sgpvdzck4ho0y0ydddh",
+    "approved_micro_usd": 1000000,
+    "captured_micro_usd": 10000,
+    "unused_authorization_micro_usd": 990000,
+    "customer_closed": true,
+    "issuer_release_verified": false
+  },
+  "token": {
+    "currency": "USDZ",
+    "chain_id": 63825,
+    "environment": "METAL_TESTNET",
+    "provider_spend_micro_usdz": 10000,
+    "receipt_id": "0xe827c5c0beea5f967fecfab9ab5d18ef6cc260b9b2bf420ad0d20527c6b922b4:e1639cb8-72d8-4658-8e61-231b80af0951",
+    "receipt_status": "preconfirmed",
+    "onchain_payment_transaction_id": null,
+    "unused_float_policy": "RETAIN_IN_ORIGINAL_WALLET",
+    "retained_float_base_units": "10000000000000000",
+    "returned_float_micro_usdz": 0,
+    "return_confirmed": false,
+    "final_settlement_verified": false
+  },
+  "provider_metadata": {
+    "funding_source": "PARTNER_CREDITS_OPERATOR_DECLARED",
+    "hosted_api_cost": {
+      "billing_reconciled": false,
+      "estimated_credit_micro_usd": null,
+      "status": "UNMEASURED_MODEL_PRICE"
+    },
+    "latency_ms": 3374,
+    "provider_model": "claude-sonnet-5-5",
+    "provider_type": "ANTHROPIC_API",
+    "usage": {
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "input_tokens": 3372,
+      "output_tokens": 146
+    }
+  },
+  "hosted_api_credit_estimate": {
+    "status": "PROVIDER_USAGE_AT_PUBLISHED_PRICES",
+    "estimated_credit_micro_usd": 8204,
+    "billing_reconciled": false,
+    "price_reference": "https://platform.claude.com/docs/en/about-claude/pricing",
+    "price_checked_date": "2026-11-10"
+  },
+  "verification": {
+    "arithmetic_valid": true,
+    "checked": {
+      "evidence_spans": {
+        "fields": {
+          "currency": [
+            136,
+            139
+          ],
+          "invoice_id": [
+            54,
+            69
+          ],
+          "purchase_order_id": [
+            113,
+            124
+          ],
+          "subtotal_cents": [
+            151,
+            160
+          ],
+          "supplier_name": [
+            81,
+            95
+          ],
+          "tax_cents": [
+            167,
+            175
+          ],
+          "total_cents": [
+            188,
+            197
+          ]
+        },
+        "items": [
+          {
+            "line_total_cents": [
+              245,
+              254
+            ],
+            "quantity": [
+              217,
+              218
+            ],
+            "unit_price_cents": [
+              226,
+              235
+            ]
+          }
+        ]
+      },
+      "finding": "MATCHED_REQUIRES_HUMAN_APPROVAL",
+      "invoice_id": "DEMO-20261110-A",
+      "invoice_total_cents": 2100,
+      "issues": [],
+      "live_purchase_authorized": false,
+      "payments_sent": 0,
+      "purchase_order_id": "PO-DEMO-001",
+      "purchase_order_remaining_cents": 10000
+    },
+    "decision": "review",
+    "issues": [
+      "UNSUPPORTED_HEADER_ROLE:currency",
+      "UNSUPPORTED_HEADER_ROLE:invoice_id",
+      "UNSUPPORTED_HEADER_ROLE:purchase_order_id",
+      "UNSUPPORTED_HEADER_ROLE:subtotal_cents",
+      "UNSUPPORTED_HEADER_ROLE:supplier_name",
+      "UNSUPPORTED_HEADER_ROLE:tax_cents",
+      "UNSUPPORTED_HEADER_ROLE:total_cents"
+    ],
+    "method": "invoice-extraction-v2-role-bound",
+    "passed": false,
+    "payment_authorized": false,
+    "reason": "Source roles, arithmetic or purchase-order/payment relationships require rejection or human review",
+    "retryable": false,
+    "score": 0.0,
+    "semantic_role_binding_verified": false,
+    "structurally_valid": true
+  },
+  "reconciliation": {
+    "bank_and_token_balances_separate": true,
+    "bridge_or_fx_executed": false,
+    "customer_capture_micro_usd": 10000,
+    "final_settlement_verified": false,
+    "provider_spend_micro_usdz": 10000,
+    "receipt_matches_quote": true,
+    "retained_balance_matches": true
+  },
+  "audit": {
+    "valid": true,
+    "events": 16,
+    "head": "7075918b0081c8d8646d3c4b0fae35efb859f1e246a16d4d58ac9ce2ba75b3a8"
+  },
+  "bridge_or_fx_executed": false,
+  "invoice_payment_authorized": false
+}

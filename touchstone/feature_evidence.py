@@ -92,19 +92,32 @@ def capacity_summary(now=None):
 
 def summary():
     folder=ROOT/'bench/results/features'
-    fault=load(ROOT/'bench/results/faults/metal-fault.json')
+    current_fault=ROOT/'bench/results/faults/current-paid-fault-20261110.json'
+    fault=load(current_fault) if current_fault.exists() else load(ROOT/'bench/results/faults/metal-fault.json')
     fault_summary={'label':'BLOCKED','reason':'No valid saved fault proof'}
     if fault:
         try:
             from .fault_proof import validate
             validate(fault)
             body=fault['body'];obs=fault.get('cryptographic_observation',{})
+            saved_ack=load(ROOT/'bench/results/completion-20261110/current-seller-fault-acknowledgement.json') if current_fault.exists() else {}
+            ack=saved_ack.get('acknowledgement');ack_verified=False
+            if ack and saved_ack.get('root')==fault['commitment']['root']:
+                from .fault_pipeline import node_ack_verifier
+                try:
+                    ack_verified=node_ack_verifier(ack,body['requirements']['payTo'],fault['commitment']['root'],body['payment']['invoice']['id'])
+                except (RuntimeError,OSError,ValueError):pass # Pure-Python no-key demo needs no Node installation.
+                obs=saved_ack.get('independent_receipt_check',obs)
             fault_summary={'label':'MEASURED','scope':'SAVED_HISTORICAL_EVIDENCE',
                 'root':fault['commitment']['root'],'counterexample':body['counterexample'],
                 'buyer_signature_on_file':bool(fault.get('fault_signature')),
                 'recorded_operator_signature_check':obs.get('operator_signature_verified',False),
                 'provider_output_attribution':obs.get('provider_output_attribution','UNVERIFIED'),
-                'refund_executed':False,'credit_issued':False,'receipt_status':'preconfirmed'}
+                'refund_executed':False,'credit_issued':False,'receipt_status':'preconfirmed',
+                'seller_ack_signature_verified':bool(ack_verified),
+                'seller_ack_decision':ack.get('decision') if ack_verified else None,
+                'seller_credit_status':ack.get('credit_status') if ack_verified else 'UNVERIFIED',
+                'final_settlement_verified':False}
         except (ValueError,KeyError,TypeError):pass
     fx=load(folder/'fx-quote.json')
     rate=fx.get('rate')
@@ -119,7 +132,8 @@ def summary():
         card={'label':'BLOCKED','issuing_read':False,'historical_issuing_read':bool(card.get('issuing_read')),
             'reason':'Saved issuing evidence is not bound to the configured account. Recheck access.',
             'cards_created':0,'transactions_sent':0}
-    return {'fault':fault_summary,'fx':{'label':'MEASURED' if rate else 'BLOCKED','rate':rate,
+    return {'completion':load(ROOT/'bench/results/completion-20261110/final-proof-status.json'),
+            'fault':fault_summary,'fx':{'label':'MEASURED' if rate else 'BLOCKED','rate':rate,
              'quote_current':bool(rate and rate.get('expires_at',0)>time.time()),'preview':preview(rate)},
             'card':card,
             'tap':load(folder/'tap-probe.json') or {'label':'BLOCKED','visa_approved_agent':False},
