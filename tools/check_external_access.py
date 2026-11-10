@@ -1,6 +1,7 @@
 """Read sandbox issuing and merchant setup; never create a card or onboard a merchant."""
 import argparse
 from datetime import datetime, timezone
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -10,6 +11,7 @@ sys.path.insert(0, str(ROOT))
 
 from touchstone.card_rail import CardRail
 from touchstone.holds import OperationJournal
+from touchstone.ledger import canonical
 from touchstone.treasury import AirwallexSandbox, AirwallexHTTPError
 from tools.run_project import environment
 
@@ -55,10 +57,23 @@ def main():
     if updates.is_file():
         raw = json.loads(updates.read_text(encoding='utf-8'))
         if raw.get('issuing_write_scopes') == 'ENABLED_USER_REPORTED':
-            report['issuing']['write_scopes_user_reported'] = 'ENABLED_NOT_WRITE_TESTED'
+            report['issuing']['write_scopes_user_reported'] = 'ENABLED_USER_REPORTED'
         if raw.get('visa_application') == 'SUBMITTED_APPROVAL_PENDING_USER_REPORTED':
             report['visa'].update(status='APPROVAL_PENDING_USER_REPORTED',
                                   source='USER_REPORT_NOT_VERIFIED_WITH_VISA')
+    proof_path = ROOT/'bench/results/completion-20261110/issuing-proof.json'
+    plan_path = ROOT/'bench/results/completion-20261110/issuing-plan.json'
+    if proof_path.is_file() and plan_path.is_file():
+        proof, saved = (json.loads(p.read_text(encoding='utf-8')) for p in (proof_path, plan_path))
+        digest = hashlib.sha256(canonical(saved.get('plan', {})).encode()).hexdigest()
+        if (proof.get('card_controls_verified') is True and saved.get('approved') is True
+                and digest == saved.get('plan_sha256') == proof.get('original_plan_sha256')):
+            report['issuing']['prior_sandbox_creation'] = {
+                'label': 'MEASURED_SAVED_PROOF', 'controls_verified_at_readback': True,
+                'evidence': proof_path.relative_to(ROOT).as_posix(),
+                'current_account_matches': saved['plan'].get('account_fingerprint') ==
+                    hashlib.sha256(str(client.account_id).encode()).hexdigest(),
+                'does_not_authorize_additional_writes': True}
     path = ROOT/args.output
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')

@@ -1,5 +1,23 @@
 # Sandbox merchant service
 
+The [public sandbox service](https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site)
+has active Airwallex merchant configuration and 100 uploaded synthetic products.
+[Onboarding proof](../bench/results/completion-20261110/merchant-onboarding.json)
+records exactly one onboarding POST and one catalog upsert, with zero failed rows.
+[Real gateway checks](../bench/results/completion-20261110/merchant-oauth.json)
+complete guest PKCE and MCP discovery, reject missing/tampered tokens, accept the
+signed guest token and perform a read-only product lookup. No checkout/payment
+mutation or inference runs. The earlier
+[private-deployment checks](../bench/results/completion-20261110/merchant-service.json)
+retain their original private-access scope. Public access was explicitly approved
+after those checks.
+
+The hosting edge intermittently returned a sign-in page for the generic `/health`
+diagnostic while required OAuth/catalog endpoints and a fresh anonymous browser
+worked. `/api/merchant-health` provides the application-specific diagnostic; check
+the latest hosted evidence before treating availability as verified. `oauth_ready`
+means a signing key is loaded; the separate gateway proof establishes actual OAuth.
+
 `apps/merchant/worker.mjs` is a dependency-free Worker implementing the
 [Airwallex developer-lab merchant contract](https://airwallexdev.com/agentic-commerce/).
 It exposes 100 synthetic products, signed checkout quotes, OAuth discovery,

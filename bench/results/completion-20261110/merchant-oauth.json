@@ -1,0 +1,53 @@
+{
+  "label": "MEASURED_SANDBOX_OAUTH_MCP",
+  "origin": "https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site",
+  "mcp_url": "https://mcp.sandbox.airwallex.com/pa/ai/cb9fc56a-3b98-41c9-9412-b57cbd41fa4a/acp/mcp",
+  "public_anonymous_health_status": 200,
+  "unauthenticated_gateway_status": 401,
+  "tampered_signature_status": 401,
+  "guest_pkce_flow_verified": true,
+  "gateway_accepts_signed_guest_token": true,
+  "saved_card_identity_asserted": false,
+  "protocol_version": "2025-06-18",
+  "tools_count": 8,
+  "tools": [
+    {
+      "name": "cancel_checkout_session",
+      "read_only_hint": false
+    },
+    {
+      "name": "complete_checkout_session",
+      "read_only_hint": false
+    },
+    {
+      "name": "create_checkout_session",
+      "read_only_hint": false
+    },
+    {
+      "name": "get_checkout_session",
+      "read_only_hint": true
+    },
+    {
+      "name": "update_checkout_session",
+      "read_only_hint": false
+    },
+    {
+      "name": "create_delegate_payment_token",
+      "read_only_hint": false
+    },
+    {
+      "name": "explore_products",
+      "read_only_hint": true
+    },
+    {
+      "name": "render_products",
+      "read_only_hint": true
+    }
+  ],
+  "merchant_tools_invoked": 1,
+  "read_only_catalog_tool": "render_products",
+  "catalog_read_succeeded": true,
+  "payment_operations": 0,
+  "model_calls": 0,
+  "visa_approved": false
+}

@@ -14,6 +14,7 @@ async function fixture(t){const database=new DatabaseSync(':memory:');t.after(()
 
 test('discovery and JWKS contain public signing fields, not private material',async t=>{
   const {call}=await fixture(t),discovery=await (await call('/.well-known/openid-configuration')).json();
+  assert.equal((await (await call('/api/merchant-health')).json()).payment_dispatch,false);
   assert.equal(discovery.issuer,origin);assert.deepEqual(discovery.code_challenge_methods_supported,['S256']);
   const jwks=await (await call('/.well-known/jwks.json')).json();assert.equal(jwks.keys[0].alg,'RS256');
   for(const name of ['d','p','q','dp','dq','qi'])assert.equal(jwks.keys[0][name],undefined);

@@ -1,0 +1,26 @@
+{
+  "label": "MEASURED_SANDBOX_CONFIGURATION",
+  "plan_sha256": "2ce5ecc382199fff92f4366789caef26b0d8f18af9ea764d6c488b8d358680ef",
+  "phase": "MERCHANT_AND_CATALOG_OBSERVED",
+  "configuration": {
+    "status": "active",
+    "merchant_fingerprint": "661c19e3deb7d7ddd39be979487126169ae3ba42f9b9f9e717f868c3ddb64630",
+    "checkout_url": "https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site/api/checkout",
+    "psp_key_configured": true,
+    "checkout_secret_configured": true,
+    "mcp_url": "https://mcp.sandbox.airwallex.com/pa/ai/cb9fc56a-3b98-41c9-9412-b57cbd41fa4a/acp/mcp",
+    "oauth_values_returned_by_config_read": false
+  },
+  "catalog": {
+    "records_added": 100,
+    "records_updated": 0,
+    "records_failed": 0,
+    "error_report_present": false
+  },
+  "oauth_configuration_submitted": true,
+  "oauth_gateway_verification": false,
+  "financial_transactions": 0,
+  "model_calls": 0,
+  "new_cards": 0,
+  "visa_approved": false
+}

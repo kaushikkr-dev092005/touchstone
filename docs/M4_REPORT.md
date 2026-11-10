@@ -4,7 +4,7 @@
 sandbox proof are complete. The matched study stopped at its conservative credit
 guard after clearing refusals: 12/64 policy outcomes, no pending invoice, no savings
 claim. Total Claude exposure remains $2.919117 within the $3 ceiling. Sandbox issuing
-creation is verified; merchant enablement, Visa approval and portal submission remain gates. See the
+creation and merchant onboarding/OAuth are verified; Visa approval and portal submission remain gates. See the
 [final live review](LIVE_PROOFS_20261110.md); dated plans below are historical and
 do not authorize further spending.
 

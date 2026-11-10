@@ -12,6 +12,8 @@
 - [Current read-only account access](../bench/results/completion-20261110/external-access.json)
 - [Completed issuing proof and consumed cap](ISSUING_PROOF_PLAN.md)
 - [Measured card creation and read-only control reconciliation](../bench/results/completion-20261110/issuing-proof.json)
+- [Active sandbox merchant configuration and 100-product upload](../bench/results/completion-20261110/merchant-onboarding.json)
+- [Real gateway guest OAuth, tamper rejection and read-only catalog lookup](../bench/results/completion-20261110/merchant-oauth.json)
 - [Recording and submission material](DEMO_SCRIPT.md), [submission draft](SUBMISSION.md)
 
 The dated snapshots below retain their original observations. They do not supersede

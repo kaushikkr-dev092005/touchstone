@@ -1,5 +1,21 @@
 # Airwallex support request — draft, not sent
 
+**Latest outcome:** the approved sandbox Agentic Commerce onboarding succeeded.
+Configuration is active; 100 synthetic products were added, with zero row failures.
+Guest OAuth/PKCE and real MCP gateway discovery pass. No merchant payment or model
+call was made. Merchant enablement requests below are superseded; this draft was
+never sent. Visa approval remains pending with Visa, according to the operator.
+
+**10 November current status:** hosted customer checkout/capture and capped sandbox
+issuing creation now pass. The original two issuing creation approvals are consumed.
+Agentic Commerce merchant config still returned `MERCHANT_CONFIG_NOT_FOUND` at the
+last read. A separate synthetic merchant checkout/OAuth service is implemented and
+deployed on private Sites hosting; public callback access is required before
+onboarding. Please confirm merchant-side enablement if the documented onboarding
+endpoint remains unavailable after those endpoints are public. Visa application is
+submitted and approval pending, as reported by the operator. No new support message
+or Visa application has been sent. The dated draft below retains historical facts.
+
 **5 November update (draft remains unsent):** current scoped-key reads, one sandbox
 FX conversion, and a separately approved hosted card authorization/capture pass.
 The historical native PaymentIntent error below remains relevant only to native

@@ -59,8 +59,10 @@ settlement. [Evidence index](docs/EVIDENCE_INDEX.md) · [Serious review and rema
   conservative GPU temperature supervision.
 
 Issuing creation is verified: one READY synthetic delegate and one capped sandbox
-card, without a merchant charge. Merchant access and pending Visa approval remain
-external gates. [Current issuing proof and account setup](docs/EXTERNAL_ACCESS.md).
+card, without a merchant charge. Agentic Commerce merchant configuration is active,
+100 synthetic products are uploaded, and guest OAuth/MCP discovery passes.
+[Open the sandbox merchant](https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site).
+Visa approval remains pending. [Proofs and boundaries](docs/EXTERNAL_ACCESS.md).
 The matched comparison and submission status are recorded in the
 [current review](docs/REVIEW_20261110.md). [Detailed feature boundaries](docs/FEATURES.md).
 

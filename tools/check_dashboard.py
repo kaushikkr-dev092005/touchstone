@@ -79,7 +79,8 @@ def main():
                 assert 'CLOSED_FLOAT_RETAINED' in page.locator('#completion-status').text_content()
                 assert page.locator('#completion-comparison').text_content() == 'Stopped · incomplete'
                 assert 'No savings claim' in page.locator('#completion-limits').text_content()
-                assert 'No card created' in page.locator('#card-status').inner_text()
+                assert 'SAVED MEASURED sandbox card creation' in page.locator('#card-status').inner_text()
+                assert 'Current account is not verified by this saved proof' in page.locator('#card-status').inner_text()
                 assert page.locator('a[href="https://www.sandbox.airwallex.com/app/"]').count()==1
                 assert page.request.post(BASE+'/api/issuing-readiness',data={}).status==403
                 assert page.request.post(BASE+'/api/issuing-readiness',headers={

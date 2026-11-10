@@ -92,7 +92,10 @@ def finalize():
         'issuing_reads':'PASS',
         'issuing_creation':{'status':'SEE_SEPARATE_SAVED_PROOF',
             'evidence':'bench/results/completion-20261110/issuing-proof.json'},
-        'merchant_configuration':'NOT_CONFIGURED_AT_LAST_READ',
+        'merchant_configuration':{'status':'SAVED_ACTIVE_SANDBOX',
+            'evidence':'bench/results/completion-20261110/merchant-onboarding.json'},
+        'merchant_oauth':{'status':'SAVED_GATEWAY_VERIFIED',
+            'evidence':'bench/results/completion-20261110/merchant-oauth.json'},
         'visa_onboarding':'APPROVAL_PENDING_USER_REPORTED','portal_submission':'OPERATOR_ACCESS_REQUIRED',
         'financial_transactions_in_this_check':0,'inference_calls_in_this_check':0}
     save(ROOT/'bench/results/completion-20261110/final-proof-status.json',status)

@@ -74,7 +74,7 @@ export async function handle(request,env,{now=Date.now()}={}){
   try{
     const origin=originOf(env),url=new URL(request.url),path=url.pathname,db=env.DB;
     requireThat(url.origin===origin,'Origin differs from configured merchant');
-    if(path==='/health'&&request.method==='GET')return json({mode:'SANDBOX_ONLY',payment_dispatch:false,hosted_inference:false,catalog_products:catalog.length,oauth_ready:!!env.OAUTH_PRIVATE_JWK,checkout_secret_configured:!!env.CHECKOUT_HMAC_SECRET});
+    if(['/health','/api/merchant-health'].includes(path)&&request.method==='GET')return json({mode:'SANDBOX_ONLY',payment_dispatch:false,hosted_inference:false,catalog_products:catalog.length,oauth_ready:!!env.OAUTH_PRIVATE_JWK,checkout_secret_configured:!!env.CHECKOUT_HMAC_SECRET});
     if(path==='/.well-known/openid-configuration'&&request.method==='GET')return json({issuer:origin,authorization_endpoint:origin+'/oauth/authorize',token_endpoint:origin+'/oauth/token',registration_endpoint:origin+'/oauth/register',jwks_uri:origin+'/.well-known/jwks.json',response_types_supported:['code'],grant_types_supported:['authorization_code'],code_challenge_methods_supported:['S256'],token_endpoint_auth_methods_supported:['none'],scopes_supported:['openid','email'],subject_types_supported:['public'],id_token_signing_alg_values_supported:['RS256']});
     if(path==='/.well-known/jwks.json'&&request.method==='GET'){
       const key=jwkOf(env);return json({keys:[{kty:'RSA',kid:key.kid,n:key.n,e:key.e,alg:'RS256',use:'sig'}]});

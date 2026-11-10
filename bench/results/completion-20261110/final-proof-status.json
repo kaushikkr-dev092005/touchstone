@@ -377,5 +377,12 @@
     "status": "SEE_SEPARATE_SAVED_PROOF",
     "evidence": "bench/results/completion-20261110/issuing-proof.json"
   },
-  "merchant_configuration": "NOT_CONFIGURED_AT_LAST_READ"
+  "merchant_configuration": {
+    "status": "SAVED_ACTIVE_SANDBOX",
+    "evidence": "bench/results/completion-20261110/merchant-onboarding.json"
+  },
+  "merchant_oauth": {
+    "status": "SAVED_GATEWAY_VERIFIED",
+    "evidence": "bench/results/completion-20261110/merchant-oauth.json"
+  }
 }

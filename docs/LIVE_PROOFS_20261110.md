@@ -91,8 +91,9 @@ cannot guarantee a hardware temperature under every condition.
 
 Issuing reads and the approved one-delegate/one-card writes are verified. The
 single-use USD 0.01 card has its original controls and an earlier server-truncated
-expiry. There was no merchant charge. Merchant configuration still returns HTTP 404
-`MERCHANT_CONFIG_NOT_FOUND` for Agentic Commerce configuration. See the
+expiry. There was no merchant charge. Agentic Commerce configuration is now active,
+100 synthetic products were uploaded without failures, and guest OAuth/MCP plus a
+read-only catalog lookup pass. See the
 [exact account setup and prepared support requests](EXTERNAL_ACCESS.md).
 Visa registered-agent onboarding/trust remains unverified. The
 signed-in hackathon portal must provide registration/submission access and confirm

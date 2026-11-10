@@ -28,6 +28,6 @@ The receipt drawer records the provider, mandate, quoted amounts, confirmed char
 
 SIMULATED SETTLEMENT: close accounts for every attempt, captures the agreed cost, and releases the unused hold.
 
-Reproducible controls and saved measured proofs. Issuing writes, Visa onboarding and signed-in portal submission remain external requirements.
+Sandbox issuing, merchant configuration and guest OAuth are verified. Visa approval and signed-in portal submission remain external requirements.
 
 All new financial activity in this recording is SIMULATED. No live purchase, conversion, card charge or hosted inference was sent.

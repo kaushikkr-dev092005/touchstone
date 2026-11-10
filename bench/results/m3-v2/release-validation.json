@@ -1,9 +1,9 @@
 {
   "label": "MEASURED",
   "scope": "COMMITTED_SOURCE_WITH_CONTROLLED_FINANCIAL_ADAPTERS",
-  "commit": "d1aa316005e1761e4b3faf0e9418b48ba9d48d53",
-  "archive_sha256": "316c8775e5287a28ace39dcc702eaa242af70e1593585ab8f04e21018fca92f5",
-  "source_files_verified": 513,
+  "commit": "334df9af368b9502a9bc1b4ac9246b85c744e0fb",
+  "archive_sha256": "5f63fc52d35d03066bc997ddd635454a52df49cb972fa97c5e3e808e38d56153",
+  "source_files_verified": 525,
   "source_mode": "COMMITTED_TREE",
   "changed_files": [],
   "working_tree_edits_included": false,
@@ -23,160 +23,50 @@
     },
     "python-tests": {
       "exit_code": 0,
-      "log_sha256": "1c1ff58a5fb75b852cb99a6326fe394dfd73c2c069706cb142fd43656c33873e"
+      "log_sha256": "ec6c3ba1693d98d2a4b0449ea8a11c8c53104f909f4ab73c9e3d925111232c39"
     },
     "node-tests": {
       "exit_code": 0,
-      "log_sha256": "ac2179d6e1c6207168cadee6059b38a7f23bf7f1f624d5f3c308f670e34c2b3f"
+      "log_sha256": "71da383fcc9a2f67769a354b5a8402242ca1f1e400a5c30f0a7fe6f373b57f75"
     },
     "m1-controlled": {
       "exit_code": 0,
-      "log_sha256": "cd9ce78e62f8d2e3adf039f9f47c35059f979e7f6769ef7ee482ab1cc7320502"
+      "log_sha256": "5f83046abfcc31155948404676d9520ba9a152e2fcf1542a2313150045e44f09"
     },
     "m2-controlled": {
       "exit_code": 0,
-      "log_sha256": "c8d0d72478828bed89b57c0a403c995273aa5dbf1a2ae647589728ce7af97ea3"
+      "log_sha256": "230439c108f17ecb3e0f928503515c863f8eb2c715c9c2ca09dcd13930a13f3c"
     },
     "m3-controlled": {
       "exit_code": 0,
-      "log_sha256": "1ca2aa92e9ccf54e7e3f9c3d0c4d7a92da1e3ec3c874da5739463d7b783e363e"
+      "log_sha256": "4d212d6fc212900dfedfcbfdd1e653166e7c9143110676fa1b7989fe7e188f0b"
     },
     "m4-controlled": {
       "exit_code": 0,
-      "log_sha256": "29ed0460ee739bff17537c1efeb8ffe697393c750089363dea6ec8de6668fcea"
+      "log_sha256": "92d9a19290d31ba5ec99f5dcdea6d147dec38c6aa77d6198af5d53d043f4301b"
     },
     "m5-controlled": {
       "exit_code": 0,
-      "log_sha256": "0434b877b690d6f4ded05c1e5eb6a766e374a648dc01cc53e52b285ec65ad905"
+      "log_sha256": "3fadc8869e90ca363930e5ee5866bf3acc1bec6d86dc3027d67df8ea8d79cb63"
     },
     "bun-install-frozen": {
       "exit_code": 0,
-      "log_sha256": "c9ed9bd1d460674a9724f0b1e30fd54fcba99c22d03b5af7b8d2538db488db0f"
+      "log_sha256": "590478547fdead01a130d32dd596beb9abd061116213bedd4af4852fd8e1110a"
     },
     "frontend-build": {
       "exit_code": 0,
-      "log_sha256": "31b57ae659da7321a27f87977abd299eaddd0d0d766cf783378497ceed0ad77f"
+      "log_sha256": "655599246cc7202d38a857738827a6467bc671f3c859f950f3fe9bea34744f8e"
     },
     "procurement-evidence": {
       "exit_code": 0,
-      "log_sha256": "560f962e60b27cbd8e2e94bdac7a91695ecd26d12d16c11fac0d3f315149e472"
+      "log_sha256": "67e5c3d0363a1d3e2f9c6e19388c9454d6b595c219f9e787370ae11a887a9b78"
     },
     "dashboard-browser": {
-      "exit_code": 0,
-      "log_sha256": "8e71ecdc959c434e06b42e0e3d8c7b927ded6ead552fb233cf3b2b99f4f446cc"
-    },
-    "motion-browser": {
-      "exit_code": 0,
-      "log_sha256": "cfe5004383a10524581265417c5147d350bf3dd200304da122b9f32c4c4917f2"
-    },
-    "release-browser": {
-      "exit_code": 0,
-      "log_sha256": "5ef7c9c6122e560cf4920591edc175870eed7b49f63cbe9a28b474ef2dccffba"
+      "exit_code": 1,
+      "log_sha256": "c61a09b9e6c013927516ed6022cda738226557089e0d08808593f1746500644e"
     }
   },
-  "logs_directory": "tmp/release-validation-5zfpk_p3/logs",
-  "python_tests": 367,
-  "node_tests": 53,
-  "functional_browser": {
-    "desktop": "passed",
-    "mobile_width": 390,
-    "horizontal_overflow": false,
-    "browser_errors": [],
-    "start_halt_resume_close": "passed",
-    "host_origin_session_controls": "passed",
-    "reconciliation": {
-      "matched": true,
-      "ledger_provider_total": 2780000,
-      "rail_total": 2780000,
-      "verification_total": 128000,
-      "customer_captured": 2698000,
-      "pending": 0,
-      "mismatches": [],
-      "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
-      "mode": "SIMULATED"
-    },
-    "planning_tool_and_review_cases": "passed",
-    "provider_evidence_rows": 6,
-    "testnet_proof_disclosure": "passed",
-    "fault_fx_telemetry_rail_panels": "passed",
-    "current_signed_fault_and_capped_completion_proofs": "passed",
-    "credential_isolation_and_blocked_fx": "passed",
-    "issuing_settings_recheck_and_session_controls": "passed",
-    "merchant_absorbs_sse_and_capture": "passed",
-    "particle_field_stops_on_confirmed_halt": "passed",
-    "transactions_explorer": {
-      "rows": 128,
-      "runs": 2,
-      "confirmed_spend_micro_usd": 2908000,
-      "search_filters_sort_pagination": "passed",
-      "keyboard_drawer": "passed",
-      "csv_totals": "passed"
-    },
-    "screenshots": [
-      "desktop-ready.png",
-      "desktop-paused.png",
-      "desktop-completed.png",
-      "mobile-completed.png"
-    ]
-  },
-  "motion_browser": {
-    "label": "MEASURED",
-    "scope": "ISOLATED_SIMULATED_DASHBOARD",
-    "desktop": [
-      1440,
-      900
-    ],
-    "mobile": [
-      390,
-      844
-    ],
-    "particle_preview": {
-      "fps": "60.0",
-      "render_ms": "1.44",
-      "quality": "full",
-      "particles": 5200
-    },
-    "fps_environment": "HEADLESS_CHROMIUM_WINDOWS_NOT_A_HARDWARE_GUARANTEE",
-    "pause_replay_offscreen_reduced_motion": "passed",
-    "dark_light_toggle": "passed",
-    "horizontal_overflow": false,
-    "page_errors": [],
-    "external_requests": [],
-    "financial_transactions": 0
-  },
-  "release_browser": {
-    "label": "MEASURED",
-    "scope": "ISOLATED_SIMULATED_RELEASE",
-    "sse_restart_reconnect": "passed",
-    "old_process_token_rejected": true,
-    "fresh_process_token_accepted": true,
-    "viewports": [
-      [
-        1440,
-        900
-      ],
-      [
-        390,
-        844
-      ]
-    ],
-    "reduced_motion_on_and_off": "passed",
-    "landing_built_and_checked": true,
-    "offline_loaded_page": "passed",
-    "external_requests": [],
-    "page_errors": [],
-    "screenshots": [
-      "dashboard-1440-motion.png",
-      "landing-1440-motion.png",
-      "dashboard-390-motion.png",
-      "landing-390-motion.png",
-      "dashboard-1440-reduced.png",
-      "landing-1440-reduced.png",
-      "dashboard-390-reduced.png",
-      "landing-390-reduced.png"
-    ],
-    "financial_transactions": 0
-  },
-  "passed": true,
-  "failure_type": null
+  "logs_directory": "tmp/release-validation-y0b86jb1/logs",
+  "passed": false,
+  "failure_type": "RuntimeError"
 }

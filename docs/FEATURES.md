@@ -4,8 +4,8 @@ Status key: **IMPLEMENTED** code and tests exist and ran against controlled adap
 **MEASURED** a real local observation exists; **BLOCKED** an external credential, grant or spend
 approval is required. The follow-up verified sandbox issuing reads, one approved
 synthetic delegate and a single-use USD 0.01 sandbox card, with no merchant payment.
-Visa approval is pending; merchant Agentic Commerce config and fiat merchant
-settlement remain unverified. [Current evidence](EXTERNAL_ACCESS.md).
+Agentic Commerce configuration, 100 synthetic products and guest OAuth/MCP are
+verified. Visa approval is pending; paid merchant fulfillment and final settlement remain unverified. [Current evidence](EXTERNAL_ACCESS.md).
 
 Implementation is local Python stdlib plus the existing pinned Metal SDK and viem.
 No runtime dependency was added. Tests use controlled adapters; none purchases a
@@ -102,7 +102,7 @@ settlement evidence.
 
 `keysFromJwks` lets the merchant verifier trust an Ed25519 JWKS key directory (time-limited,
 `trust_source=KEY_DIRECTORY`). It never sets `visa_approved_agent`: that needs Visa onboarding and key
-trust this repository does not have. **BLOCKED:** genuine Visa integration and any issuing write.
+trust this repository does not have. **BLOCKED:** genuine Visa approval. One separately approved sandbox issuing creation is measured; additional writes need fresh authorization.
 
 `SandboxHoldWorkflow.increase` raises a mandate's *real* authorization by authorizing one
 supplemental sandbox PaymentIntent through the existing journaled create/confirm path (Airwallex
@@ -200,6 +200,6 @@ See [validation](VALIDATION.md) and the [evidence index](EVIDENCE_INDEX.md).
 
 M3 useful synthetic review drafting and one integrated customer sandbox proof are now measured.
 M4 remains incomplete after clearing refusals and the credit-cap stop. Sandbox issuing creation
-and controls are verified. Visa credentials/trust, merchant enablement, independent final settlement and signed-in portal
+and controls are verified. Merchant configuration and guest OAuth/MCP pass. Visa credentials/trust, independent final settlement and signed-in portal
 submission remain gates. A captioned local recording is available in the release package. The implementation does not turn those
 missing observations into completion claims.

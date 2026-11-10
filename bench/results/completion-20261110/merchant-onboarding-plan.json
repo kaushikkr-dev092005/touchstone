@@ -1,0 +1,32 @@
+{
+  "label": "PREPARED_NOT_EXECUTED",
+  "approved": true,
+  "plan": {
+    "mode": "SANDBOX_CONFIGURATION_ONLY",
+    "site_project_id": "appgprj_6af368c6a8c08191ae7cf258968836db",
+    "origin": "https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site",
+    "make_public": true,
+    "checkout_url": "https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site/api/checkout",
+    "oauth_issuer": "https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site",
+    "jwks_url": "https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site/.well-known/jwks.json",
+    "maximum_onboarding_posts": 1,
+    "maximum_catalog_upserts": 1,
+    "synthetic_catalog_products": 100,
+    "existing_config_replacement_allowed": false,
+    "automatic_retries_allowed": false,
+    "unknown_write_outcome": "READ_ONLY_RECONCILIATION_REQUIRED",
+    "merchant_charges": 0,
+    "new_cards": 0,
+    "funding_transfers": 0,
+    "model_calls": 0,
+    "new_cash_usd": "0.00",
+    "claude_total_ceiling_usd": "3.00",
+    "gpu_start": false,
+    "bank_or_model_credentials_hosted": false,
+    "raw_secret_values_published": false,
+    "support_messages_authorized": false
+  },
+  "plan_sha256": "2ce5ecc382199fff92f4366789caef26b0d8f18af9ea764d6c488b8d358680ef",
+  "approval_source": "EXPLICIT_USER_RESPONSE",
+  "approved_at": "2026-11-10T19:14:59.314687+00:00"
+}
