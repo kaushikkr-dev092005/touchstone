@@ -99,11 +99,15 @@ class LiveModeTests(unittest.TestCase):
         status, body = post('/api/live/run', {'confirm_budget_usd': '0.500000'})
         self.assertEqual(status, 202)
         for _ in range(50):
-            if json.load(urllib.request.urlopen(base + '/api/state'))['jobs'][0]['status'] == 'PAUSED_POLICY':
+            current = json.load(urllib.request.urlopen(base + '/api/state'))
+            # The status is committed before the worker releases its lease.
+            # Cleanup must wait for both, especially on Windows/Python 3.11.
+            if current['jobs'][0]['status'] == 'PAUSED_POLICY' and not current['worker_running']:
                 break
             time.sleep(.1)
         final = json.load(urllib.request.urlopen(base + '/api/state'))
         self.assertEqual(final['jobs'][0]['status'], 'PAUSED_POLICY')
+        self.assertFalse(final['worker_running'])
         self.assertEqual(final['live']['rail_spent_micro_usd'], 0)
         self.assertEqual(json.load(urllib.request.urlopen(base + '/api/fault-receipts'))['refund_executed'], False)
 
