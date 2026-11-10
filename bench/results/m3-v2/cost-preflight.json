@@ -1,0 +1,1662 @@
+{
+  "label": "MEASURED",
+  "scope": "FREE_TOKEN_COUNT_AND_READ_ONLY_STUDY_PREFLIGHT",
+  "model": "claude-haiku-5-5",
+  "corpus_sources_sha256": "5ef414704acbbb540bd889b99dd1c2498ebf805caa4b70abbb29dd2e2b95209f",
+  "code_sha256": {
+    "invoice_dataset.py": "f940bd9db9df3472f33f81543bd3eed8a0822ca2d54a768c2142a985c0a00908",
+    "invoice_corpus.py": "5644dbfd47d0ce3d2fcb9f975dc7d45196eb19df2b216a4b114cd1de760dac1c",
+    "invoice_extraction.py": "08a8b52d4911599129296f4572b7fdfc08a2c79710e643370d81fd0ecae55ce4",
+    "invoice_roles.py": "716a5ebd849e9fbe8fb5cd6daeaf7bfbed5445d7bddcd047df3efb6bb8cdee47",
+    "invoice_study.py": "950b73006ce95d9abfceabbebb619c7ab7a33780ee44a561ae8f77f398259f50",
+    "invoice_profile.py": "061cd1133c3aab32d7f04b86be1d9d782fd2705b1acfb113e608c5dc6342ea32",
+    "providers.py": "c0198771e443a85054ff89cdb26bc2ccc7fde63fcad367186c7b3bf75eafa34e",
+    "local_tools.py": "ed1b617ab702c7a7773e615c8fd77b850103d895392ca66ec83d32c2e5928052",
+    "eligibility.py": "6c026a6a0d0ca50f904e0c191498892b7904a855fcf38767f500815d5ec37033",
+    "verifier.py": "5e31d7e313f566bc4411ff2f0217c24a55766a98d50a0a927b22516738ea3e7a"
+  },
+  "token_count_documentation": "https://platform.claude.com/docs/en/build-with-claude/token-counting",
+  "pricing_reference": "https://platform.claude.com/docs/en/about-claude/pricing",
+  "pricing_checked_date": "2026-11-10",
+  "financial_transactions": 0,
+  "inference_calls": 0,
+  "credit_debits": 0,
+  "rows": [
+    {
+      "task_id": "H2-202611101-0-00",
+      "input_tokens_estimate": 4043,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1890,
+      "request_sha256": "8862228a7c4d88a8ccd44dd219ac376dce94455a5928dd882c4875bc573bc2b8",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-01",
+      "input_tokens_estimate": 4223,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1912,
+      "request_sha256": "3480fd289756e7d15deae6b10e7dc422cb0a1032dd5c98671a1db9be8dbb11b5",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-02",
+      "input_tokens_estimate": 3900,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1873,
+      "request_sha256": "86714110ab76ae6f59bd749da96f310e87ef4defdab09f27e5b8044fd034f8d2",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-03",
+      "input_tokens_estimate": 4256,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1916,
+      "request_sha256": "04ae32e28f6c27b47109c8499fdb7180f580c3214b6f3a6bcf218d41d4c258f6",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-04",
+      "input_tokens_estimate": 4053,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1892,
+      "request_sha256": "1f98f87ddaae12970504104f2597917436a8117a82642b13d886eaecdbd6b805",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-05",
+      "input_tokens_estimate": 4043,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1890,
+      "request_sha256": "3eec31aaeefc6cec7f1be08365e3793bc83bc140172482b8ddfcd245a7abe2bb",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-06",
+      "input_tokens_estimate": 4229,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1913,
+      "request_sha256": "e83aa4108ee7a0d96cd0ed3faf249dc61305f677f3eeef4c8aaddb63f7330d5b",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-07",
+      "input_tokens_estimate": 3890,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1872,
+      "request_sha256": "1fe4278ce61bc0823a110d8544c1a240d07cbb941b4b3a889a7727dffc87fbb8",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-08",
+      "input_tokens_estimate": 4256,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1916,
+      "request_sha256": "3ce980bf3446e5bcaeed41b38e3feac965188315b5d82c99412508ed6a3544db",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-09",
+      "input_tokens_estimate": 4053,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1892,
+      "request_sha256": "2671f37c87c2ad3f7fac9650a612432330681d311267a2093057ec9e633a3568",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-10",
+      "input_tokens_estimate": 4043,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1890,
+      "request_sha256": "3e967a3a819f4ced9975feb00b967dd492dbf640a076ecc6ffd3d145df5c6881",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-11",
+      "input_tokens_estimate": 4223,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1912,
+      "request_sha256": "c7cb137415d814a613ee60cff9301cff190702c601135aea3c60b2e6ea5c8947",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-12",
+      "input_tokens_estimate": 3777,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1859,
+      "request_sha256": "98fdb807606725b09ce2aba54d58a7c1acc331a932f0c1117325161273390b91",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-13",
+      "input_tokens_estimate": 4256,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1916,
+      "request_sha256": "dd1946f105b51c5c2e26fa0049dd149a3e2d2f81641897dd2831ba0b7bd83bd0",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-0-14",
+      "input_tokens_estimate": 4212,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1911,
+      "request_sha256": "5d9e2272dc7596fd5464792b2f6a911c356f4b0f6443604be771b637232a3496",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-00",
+      "input_tokens_estimate": 4055,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1892,
+      "request_sha256": "0de280ee170d2a52479b026e0703d4fed3ba14ad03b70640b7a2bce3659b9dd4",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-01",
+      "input_tokens_estimate": 4235,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1913,
+      "request_sha256": "5df38d85b333439f773da05f279f35fb67fa779eb0d49a8106e5d3625841f46f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-02",
+      "input_tokens_estimate": 3910,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1874,
+      "request_sha256": "51997e408e700b98d7ac055dd3dd11dcfee795a2a02395dbd0d2659c3901ffaf",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-03",
+      "input_tokens_estimate": 4268,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1917,
+      "request_sha256": "23ad70b60e26f60d084f079148fd2b1507373b444e4c740bc43ec06d2ceb48fa",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-04",
+      "input_tokens_estimate": 4064,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1893,
+      "request_sha256": "4ab438fedf08f2c44a1b3bf05a070f9921d65158d95cf5eb42fd90fa6c99967b",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-05",
+      "input_tokens_estimate": 4055,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1892,
+      "request_sha256": "46941c42059aa31fd3d239f6b2ae9838d7081455ee8093249db475960f6cdb55",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-06",
+      "input_tokens_estimate": 4235,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1913,
+      "request_sha256": "e305a72523cdc8d455e6ab8ad961c621a0e9dbc3467e3ef3f8692612964b601b",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-07",
+      "input_tokens_estimate": 3900,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1873,
+      "request_sha256": "ed850eaa87d89fd4a26fdde1ca1c549b0b1e2ff60183ce52a5450f7fa0ef5113",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-08",
+      "input_tokens_estimate": 4268,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1917,
+      "request_sha256": "9e164f7a6ad2144cc3daf1a4595b103ef8dcecfc257221cc161a76e5eb17676f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-09",
+      "input_tokens_estimate": 4064,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1893,
+      "request_sha256": "09fd88534e52cf8343d7377fd59881a5ff0b7eb6c89df4a2143846e749e8c69d",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-10",
+      "input_tokens_estimate": 4055,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1892,
+      "request_sha256": "998c0a68bab678375ca2204f756bd1ff30f7487375173ca6ade81a44d6232173",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-11",
+      "input_tokens_estimate": 4235,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1913,
+      "request_sha256": "78f32a7cf4a2d08f206f875856e9bea3865df8316e2140e85b9efe50fd30e11e",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-12",
+      "input_tokens_estimate": 3787,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1860,
+      "request_sha256": "a3c828232346d3bad2b585a1836527113a33579ab1f51330ec318ef3d33ab7a4",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-13",
+      "input_tokens_estimate": 4268,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1917,
+      "request_sha256": "e3e78f5ada9f673f3c0f88b8375ca2086d1613ad69078863d6b1e3ebb6d81986",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-1-14",
+      "input_tokens_estimate": 4225,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1912,
+      "request_sha256": "c39cebb84991421cb89f0607893136d528bf06bc60b5dcb65d4ee3bab2729a34",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-00",
+      "input_tokens_estimate": 4071,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1894,
+      "request_sha256": "f08b09e594aa64985f18c225752c73169da2f781b8ed0a91e6d5bb2a5c0eb071",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-01",
+      "input_tokens_estimate": 4251,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1915,
+      "request_sha256": "cddc1f239b8df8cec3b02a41bb1829e356cb7acdb52ca5112ab038c09b293ace",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-02",
+      "input_tokens_estimate": 3924,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1876,
+      "request_sha256": "240da189ec28503f18c3269f280834ffaa90cfa967dba3a9c63fabdbd170e7ac",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-03",
+      "input_tokens_estimate": 4284,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1919,
+      "request_sha256": "fb066b0fa3d0ed3b82274fc42149f643e1a7188cb5870af2edaff9c14df2ba9c",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-04",
+      "input_tokens_estimate": 4081,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1895,
+      "request_sha256": "5a7c196f5ef6ffc91e282dbfa39e5804d7e807edc5025193227ef4486eb34fe8",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-05",
+      "input_tokens_estimate": 4071,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1894,
+      "request_sha256": "e6cb644d49443cf7fdb05ae4ce890acb0c8743ee808b2f0570b7b777fca72013",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-06",
+      "input_tokens_estimate": 4251,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1915,
+      "request_sha256": "bf6b3c9127cca97ceb597d5c2b5f44799be9bd4b38a0e6236adb42eb69e706b9",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-07",
+      "input_tokens_estimate": 3914,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1875,
+      "request_sha256": "f560413e363396f44ae5277d09713107e769f18ab8d8a66b9126230d63f909e5",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-08",
+      "input_tokens_estimate": 4284,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1919,
+      "request_sha256": "abc40502827db5fbaf2cf8bf859141286dc22eee811ad035ee4eafac172e0e46",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-09",
+      "input_tokens_estimate": 4081,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1895,
+      "request_sha256": "eca6de206f38e9edd5c19fea74e57722f10fdeef41a408f27b4d862891d02b9c",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-10",
+      "input_tokens_estimate": 4071,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1894,
+      "request_sha256": "ec151582f2540f81563a4c5b0ae2c29b4a5337df9cf7605a7d081f1252d35c2f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-11",
+      "input_tokens_estimate": 4251,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1915,
+      "request_sha256": "bcb11e09b37a39f42b21359169f1124dbd6db96b806d64b962969211902bd530",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-12",
+      "input_tokens_estimate": 3801,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1861,
+      "request_sha256": "6fa8b78c18eacb1232502d8d7c1f885db0ce63edf31ec1604d960ce382912b87",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-13",
+      "input_tokens_estimate": 4284,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1919,
+      "request_sha256": "42e239a3d079f659bcff9d570ee62a396de5e613a175b1add068f5c683f06200",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-2-14",
+      "input_tokens_estimate": 4244,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1915,
+      "request_sha256": "050650b253140402b1a6329b4ffc83ef3656e9a8833ed8acb0380fe073ea42a9",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-00",
+      "input_tokens_estimate": 3993,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1884,
+      "request_sha256": "3d3a20ec669fe7dbd60368f4c999c53fe3cc2375f365a033fcfd5741ca76f78c",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-01",
+      "input_tokens_estimate": 4173,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1906,
+      "request_sha256": "bd7b8b75e30595ee9f445c5243f4a36d12e97defe52a695c85a425d8cee1a2e5",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-02",
+      "input_tokens_estimate": 3858,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1868,
+      "request_sha256": "a4ca85c3f9f5661a94bd76bcc89ae7a63c48522a21d3dcd1eea78653089785ee",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-03",
+      "input_tokens_estimate": 4206,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1910,
+      "request_sha256": "db44cf34020cd5fbdf6e64cc3c0050ec1c7f7ce3963e8fce4bf5d73674b35c7e",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-04",
+      "input_tokens_estimate": 4003,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1886,
+      "request_sha256": "fe497a9302f125ccb005d4bf137a0c641ef3b1c8a9e82fc20243f7725f1a5901",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-05",
+      "input_tokens_estimate": 3993,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1884,
+      "request_sha256": "653c628dde6d23a199132bc4e69b61cc1912303c3e04c374b391957070f65cf5",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-06",
+      "input_tokens_estimate": 4173,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1906,
+      "request_sha256": "44e62f5cbaba6df43101ee76c9414d5f38ec570f5a56174e3390936a596b3f48",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-07",
+      "input_tokens_estimate": 3849,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1867,
+      "request_sha256": "35e4f66694170fe43ddddc740239aeaea5e47186194f72ae7bbec1b3f1bb6489",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-08",
+      "input_tokens_estimate": 4206,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1910,
+      "request_sha256": "f1494293a9dfc24cbfb93531884d191d328b240d8ed0c654168568449ba67a2b",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-09",
+      "input_tokens_estimate": 4003,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1886,
+      "request_sha256": "29e5d2c23b55dd46143e1bbfa548cac5b7697a8be2d1bf202f606e5f1144f6a4",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-10",
+      "input_tokens_estimate": 3993,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1884,
+      "request_sha256": "f3f9ef7d73fa62a4abff3faaf003f91c432423497f0e736b862925698f39dd70",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-11",
+      "input_tokens_estimate": 4173,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1906,
+      "request_sha256": "d9d84a6f2e5929016677021eca4557a8c504d0fd749316923a22dff1ae8e4ac5",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-12",
+      "input_tokens_estimate": 3733,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1853,
+      "request_sha256": "293e67642e4589872241751beecf5142da776f028d5e27b17bad65d475015eea",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-13",
+      "input_tokens_estimate": 4206,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1910,
+      "request_sha256": "9131fb836eeae5e31ad11c6d3840a3d0393570e525b6e3347d58a635abd97068",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "H2-202611101-3-14",
+      "input_tokens_estimate": 4153,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1904,
+      "request_sha256": "e66a0fb05e20df546e50885faadc626131cd00adb82db8848486e1cc1ebf773d",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-000-20261103",
+      "input_tokens_estimate": 4079,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1895,
+      "request_sha256": "25e9df50a66a914a5108eed2cd80419498b9c1b74e34170dc0351ab7383de454",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-001-20261103",
+      "input_tokens_estimate": 4360,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1928,
+      "request_sha256": "eb73057b8f8fa6d0735fc9625cff5a1c66737ce8e0b548860b0fdd5fc0f39daf",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-002-20261103",
+      "input_tokens_estimate": 3936,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1878,
+      "request_sha256": "cd5f3d3e1e1e04a70ddc4b8ff385a4fb2eb25963cc0cba3a919b6e81a07e6ec6",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-003-20261103",
+      "input_tokens_estimate": 4292,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1920,
+      "request_sha256": "240bd41b535dc8805b8c553e8bb918ea5727cdc8c258f5bd58079cea03570d03",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-004-20261103",
+      "input_tokens_estimate": 4157,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1904,
+      "request_sha256": "2c040ca7682a46b5e8136f0dcdea599e1430b77a80bb3b8dc6c9f93acd2afd65",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-005-20261103",
+      "input_tokens_estimate": 4079,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1895,
+      "request_sha256": "58e78b6c3246e95b5c5dcac06919c57ba4cc8c7db92ee0be5c7f474f2403da23",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-006-20261103",
+      "input_tokens_estimate": 4360,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1928,
+      "request_sha256": "a6b6b796eaebd63a1d51cf60ace99f12eb39d432e17f2c2602b539f5daaf31a2",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-007-20261103",
+      "input_tokens_estimate": 3926,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1876,
+      "request_sha256": "1f0aa2cd0cd2e5a68ff94b43b944fb8bc1bf322272363b95f135992713baf88f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-008-20261103",
+      "input_tokens_estimate": 4292,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1920,
+      "request_sha256": "243fb46cc5423e06f2aadc6d76112d674d0cc9fbf7df2f85df23f3b31e4c5600",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-009-20261103",
+      "input_tokens_estimate": 4157,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1904,
+      "request_sha256": "9bccd016ceaf13e0e73ff9574fd322d601b95dd527d911778df12baaa16b0a91",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-010-20261103",
+      "input_tokens_estimate": 4079,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1895,
+      "request_sha256": "5f4c0ab4837801a0882ce0a3ea3e2c2e9d406750f784f9d3ffd7483d21268c16",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-011-20261103",
+      "input_tokens_estimate": 4360,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1928,
+      "request_sha256": "a026066aae51e4999f35a5e0f0ca89d9f4ec74bad69ed27a3db90e1496e6fb8a",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-012-20261103",
+      "input_tokens_estimate": 3813,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1863,
+      "request_sha256": "bd653f9c0fb2333567ad73526d0b215e1519b78427db9cde5a00a70234ddd824",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-013-20261103",
+      "input_tokens_estimate": 4292,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1920,
+      "request_sha256": "b8804104b85a2b017cdc6ecad428c3b378d3aa207cf03430c72f44cb9bb4861f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-00-014-20261103",
+      "input_tokens_estimate": 4157,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1904,
+      "request_sha256": "607969b8d8c4832ccc69ae3ab44c1da88516ad12f65cb2f96d0509bdc60ad7d2",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-000-20261103",
+      "input_tokens_estimate": 4079,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1895,
+      "request_sha256": "50aa227fd358726c753a7e655de6d401cfe69cc3716b4f37cb4c2ad22aaef0ef",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-001-20261103",
+      "input_tokens_estimate": 4360,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1928,
+      "request_sha256": "c67a74d070d6f44c023ab66c4054f81e9c0b0c8c0f40254d4ed22e1cbec72352",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-002-20261103",
+      "input_tokens_estimate": 3896,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1873,
+      "request_sha256": "0901358eeaa9fe74e5257a53da2c6de2426497d954b9cb454e10010582d6edce",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-003-20261103",
+      "input_tokens_estimate": 4292,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1920,
+      "request_sha256": "d3b0c7dba72798dc3d1abcec8439381072de64c0eae6012acc6b8309634abb38",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-004-20261103",
+      "input_tokens_estimate": 4157,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1904,
+      "request_sha256": "8615b9b2d395f2184d6dcaada5add611667e8dac1a45ad0931abafded0ac0cd2",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-005-20261103",
+      "input_tokens_estimate": 4079,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1895,
+      "request_sha256": "a2828b960bf334f11dc479e6f9b078b030ed6713a070d99a3aa837e2f4a5bd4a",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-006-20261103",
+      "input_tokens_estimate": 4360,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1928,
+      "request_sha256": "ab748ef9f621ebc554199e293931ee7e86c5b633fec21e628146f0c94d1d9f7c",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-007-20261103",
+      "input_tokens_estimate": 3888,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1872,
+      "request_sha256": "d077bd6dd52450615a75415f92970cea5706aee198bb7aa02009c01b0dd051d0",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-008-20261103",
+      "input_tokens_estimate": 4292,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1920,
+      "request_sha256": "0c5c4a0f0387d2f2c57ed7d3320a6fd68cc96472a88e0daf0ca2aeab02720ead",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-009-20261103",
+      "input_tokens_estimate": 4157,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1904,
+      "request_sha256": "848502738931674a3a5f415e7a0464bfed0b65e80d553df52780890ad1f04b8f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-010-20261103",
+      "input_tokens_estimate": 4079,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1895,
+      "request_sha256": "0bc5557a74206441ac2c406a8429e2d21970a2591fc8e0f032ee25959eef4f39",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-011-20261103",
+      "input_tokens_estimate": 4360,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1928,
+      "request_sha256": "b37ecf2f4097e5ca9d1a397280622545e87bbad9c3cf540170962db3769fa8bb",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-012-20261103",
+      "input_tokens_estimate": 3813,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1863,
+      "request_sha256": "72aa5f9cb07dc01154782f49544f0304e3eb782a098cda442ce66a343bc1a7a1",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-013-20261103",
+      "input_tokens_estimate": 4292,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1920,
+      "request_sha256": "02b64b953107e777ce7a75d6d92542dcc61b8f2964ef0a9f7bab804f4c97b400",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-01-014-20261103",
+      "input_tokens_estimate": 4157,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1904,
+      "request_sha256": "dbbdb78f74c688f5183cb14c5cd483bebefa4eabc94af7f0ae09dda5f640144f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-000-20261103",
+      "input_tokens_estimate": 3453,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1820,
+      "request_sha256": "58d51c7ec76be9dbb4d3cc5503ef6b957a553d38416c4d0742f9b5124e5ce49f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-001-20261103",
+      "input_tokens_estimate": 3734,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1853,
+      "request_sha256": "a6da5767ad0f938ce9e609b356201327e1e0158f815c816ab4c33341173981f0",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-002-20261103",
+      "input_tokens_estimate": 3188,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1788,
+      "request_sha256": "378f3d4648fa62e8d308e79389405deb67010cba70d58e2ac2d2e05c11866bbf",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-003-20261103",
+      "input_tokens_estimate": 3666,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1845,
+      "request_sha256": "e2f1f29998c34fa30775eb16d4636c893cd0b55449c54f6990d1619638b94b1c",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-004-20261103",
+      "input_tokens_estimate": 3531,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1829,
+      "request_sha256": "5068519c91d0f94157ace17154851e2faf1f35e8c4b34b150bb3e84e26aecb5b",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-005-20261103",
+      "input_tokens_estimate": 3453,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1820,
+      "request_sha256": "56f4f2d294718a7d717ef867d6731f54f63a56dd8199163cf21cd5fe531d257c",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-006-20261103",
+      "input_tokens_estimate": 3734,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1853,
+      "request_sha256": "11b66cac6569e72f98ef4cc07869be8c887734dae7504f3aa5c2dee3fb80270e",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-007-20261103",
+      "input_tokens_estimate": 3308,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1802,
+      "request_sha256": "ea395eee8c29ce6c225d5b922c2f75723f7bc4a0133b7bb56854e06c463e4f6a",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-008-20261103",
+      "input_tokens_estimate": 3666,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1845,
+      "request_sha256": "75fa8923062f53c4d6fc7a5f03a1cabd2e2754c30d7d6a2e0f4a9b8f91503d28",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-009-20261103",
+      "input_tokens_estimate": 3531,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1829,
+      "request_sha256": "7a8ba91d9c6e1d6fb006edbc6c7261a69ae83c771908427a3330804f88183647",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-010-20261103",
+      "input_tokens_estimate": 3453,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1820,
+      "request_sha256": "d8e920b87eb53e4115b9501db67960d432495f3d5c9cce765dc291513247145c",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-011-20261103",
+      "input_tokens_estimate": 3734,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1853,
+      "request_sha256": "e293b20c5b194cd5cac0ea7993ccb49cf1fa1a2b14f0937825cac5eaa005326d",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-012-20261103",
+      "input_tokens_estimate": 3304,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1802,
+      "request_sha256": "98d17da2736326cd52b33c06364de63dcfddcdde434848d2ea020588aae31eb0",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-013-20261103",
+      "input_tokens_estimate": 3666,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1845,
+      "request_sha256": "3973f2f1696689a223c11c78fb83f9cebd9746333580b12552a957888815bd40",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-02-014-20261103",
+      "input_tokens_estimate": 3531,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1829,
+      "request_sha256": "988e8ede10963d2ea06491a165473b8b5873f6eced8d315745f24b6713538b62",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-000-20261103",
+      "input_tokens_estimate": 3447,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1819,
+      "request_sha256": "6e4367d67adb98c7628660330df1753fe36ce866bb847726af21cda5e292f537",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-001-20261103",
+      "input_tokens_estimate": 3728,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1853,
+      "request_sha256": "6a99a2548aac7dbd9897278c3a03b1605ed06701553c895a561119ffe7eb0112",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-002-20261103",
+      "input_tokens_estimate": 3177,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1787,
+      "request_sha256": "4c45ebfd453aa885df05e806e289fe923ddaef9a0f902cb749efcf1ca489997f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-003-20261103",
+      "input_tokens_estimate": 3660,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1844,
+      "request_sha256": "8d3461c7759c5a9b8f17a1fc8d40932a10abcd515a71fe39208ec10350390386",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-004-20261103",
+      "input_tokens_estimate": 3525,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1828,
+      "request_sha256": "dce13a392013ecb54534460c27ec01491c3470404c7d7b17930e8b51c1a2fad0",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-005-20261103",
+      "input_tokens_estimate": 3447,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1819,
+      "request_sha256": "3c9e3ad64c6d1c486757112d4d66b825b7e1545aee01311e33ba0f80298c2d1e",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-006-20261103",
+      "input_tokens_estimate": 3728,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1853,
+      "request_sha256": "4b38bf89756ae4795e4b3ca7024c4e2f21fb63c7a99d9d2014d7a456d5c62cb1",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-007-20261103",
+      "input_tokens_estimate": 3258,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1796,
+      "request_sha256": "b2cacfc7f6772bcff41d4590a3f6e122e164f51136e9d13bf12537bc75bb9732",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-008-20261103",
+      "input_tokens_estimate": 3660,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1844,
+      "request_sha256": "f9c75fda50421d9f825e75ac91645af6dbe8aa9d2817e2db8ab729bfbd7792f8",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-009-20261103",
+      "input_tokens_estimate": 3525,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1828,
+      "request_sha256": "0fbb8a27b733a364acffb8978b8a8b00f5cfe1b876c974be8c44f9d8f4067481",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-010-20261103",
+      "input_tokens_estimate": 3447,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1819,
+      "request_sha256": "2dbe315bcf26609110784d712096cd835169827b0409915c6adf3c205c2c45da",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-011-20261103",
+      "input_tokens_estimate": 3728,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1853,
+      "request_sha256": "3bcc735ae51f893bce0da12494dfa9d67631c842e7aaa88eed01a4a8108f3d9a",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-012-20261103",
+      "input_tokens_estimate": 3256,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1796,
+      "request_sha256": "8e56a5662724c08a858d2b42648855f9d5c2472c4f63c953785bf33c3bb618db",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-013-20261103",
+      "input_tokens_estimate": 3660,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1844,
+      "request_sha256": "80d5a2fff2c522c6d620dfa897b79f9d7e8af1a3adc11d1bdf7871cd23cca2e8",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-03-014-20261103",
+      "input_tokens_estimate": 3525,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1828,
+      "request_sha256": "5a9fbdaef54d11b8d092679d363e4143b28079868d1c428289152f9d9ae319a6",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-000-20261103",
+      "input_tokens_estimate": 3467,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1821,
+      "request_sha256": "6f76c579f7b3359dcda7d3131dc3ef9f7acfa0e86e0df2b49531d782cd0a51e4",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-001-20261103",
+      "input_tokens_estimate": 3748,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1855,
+      "request_sha256": "2e7773d72632c07429e3713c9d7b8549bb375b9604a043874127c2284632f52f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-002-20261103",
+      "input_tokens_estimate": 3198,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1789,
+      "request_sha256": "e9d0b50f5182bbe48f99c4c87a1f5eb0bb8fde469114928730e969199c241b79",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-003-20261103",
+      "input_tokens_estimate": 3680,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1847,
+      "request_sha256": "cd93cf1260063bd50620e468b04584a04530a5409c1d59ac683ee44103638ebf",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-004-20261103",
+      "input_tokens_estimate": 3545,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1831,
+      "request_sha256": "e8260ac17fdd7d1ec5431b4c5e34246db8f4baabd77dceeb16d0304c0fa6beb6",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-005-20261103",
+      "input_tokens_estimate": 3467,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1821,
+      "request_sha256": "775e38268b40e0e37153d564e76c9d6851ac2098ce29105660eb456ab329d50f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-006-20261103",
+      "input_tokens_estimate": 3748,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1855,
+      "request_sha256": "2b3857d0f288634f333233bfda709095c368e8caf5a0967517bb13debfd87a4b",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-007-20261103",
+      "input_tokens_estimate": 3197,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1789,
+      "request_sha256": "a0cac04320b639f5022f96f223c932be1e61a097518951fc42591f8f206dc4b4",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-008-20261103",
+      "input_tokens_estimate": 3680,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1847,
+      "request_sha256": "368eaf85a7cc89a669a0b8ca7667606d4c739ca066c02ca3a50cad115eb70f58",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-009-20261103",
+      "input_tokens_estimate": 3545,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1831,
+      "request_sha256": "3372ab6bb52bb78cdd14810697bc25d38cce7e1c31367991fb82fd7e449a0e8f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-010-20261103",
+      "input_tokens_estimate": 3467,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1821,
+      "request_sha256": "57a8ef2176aa28d7403f46791cf459283e96ecb5de072814aa62233483fbbe16",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-011-20261103",
+      "input_tokens_estimate": 3748,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1855,
+      "request_sha256": "58af5ac7b8075ffdb2b410cc46b050f2910a90ea258af2466d9e8b06d723f4e7",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-012-20261103",
+      "input_tokens_estimate": 3320,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1804,
+      "request_sha256": "24eb4383ecb918e9aabf20d526ea6be6c189c0b73bcd4489f1e0947bbb1144f8",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-013-20261103",
+      "input_tokens_estimate": 3680,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1847,
+      "request_sha256": "fe747b034fe92762fbe7a0732abb72cb5b1de5612d621a96d8120d8805df91b2",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-04-014-20261103",
+      "input_tokens_estimate": 3545,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1831,
+      "request_sha256": "5855e0bbb18498607cabb5bf2c8ad229e1fd51d76420a3c005313c828c450cf6",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-000-20261103",
+      "input_tokens_estimate": 3461,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1821,
+      "request_sha256": "b11acd80487126d6da734f85d984975fa13fc13a14ee1cd71cb75451ff252e95",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-001-20261103",
+      "input_tokens_estimate": 3742,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1854,
+      "request_sha256": "18e01eca33393a4e828638b4aabf3308ba0dfcf1fbbb2b0b51dde9d130334bd2",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-002-20261103",
+      "input_tokens_estimate": 3310,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1802,
+      "request_sha256": "33bf4fc47bbf87028d9ae54ba652a1af2e75f72693c0f4daaf4e5ee9d1eb196b",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-003-20261103",
+      "input_tokens_estimate": 3674,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1846,
+      "request_sha256": "dce28ed18fc155f3c276bc3c404df16990023574bf5160ec68023f0140096ad8",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-004-20261103",
+      "input_tokens_estimate": 3539,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1830,
+      "request_sha256": "bfa2d348faba97677b9a7bbd95bad08361eef49c28a3c025462a294032b3a88f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-005-20261103",
+      "input_tokens_estimate": 3461,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1821,
+      "request_sha256": "b59c05d81f7ac1f980fc269b7d04a398ce023a68f40d53adc8b6b1e0dc26e86e",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-006-20261103",
+      "input_tokens_estimate": 3742,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1854,
+      "request_sha256": "6d05feb0ba248647e4d626ef485aa7f63c68cde5aafdd0630043688aae271b9c",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-007-20261103",
+      "input_tokens_estimate": 3189,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1788,
+      "request_sha256": "b9ab04f41c0f0689ecc502ccdd1ea5170376b4141101c014a5fc730027812706",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-008-20261103",
+      "input_tokens_estimate": 3674,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1846,
+      "request_sha256": "89847e5df592843f3e89ca4f7f965c0dc869151ef6183aa795ab55eead46f8c8",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-009-20261103",
+      "input_tokens_estimate": 3539,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1830,
+      "request_sha256": "d0960ca280da768eacb4fc6f0afc4177f4234f0229cb857d08177623edbc0b4a",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-010-20261103",
+      "input_tokens_estimate": 3461,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1821,
+      "request_sha256": "e643419ab685e9d68f34228e20116856bd002a1e4e8137951241bad63b69d97d",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-011-20261103",
+      "input_tokens_estimate": 3742,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1854,
+      "request_sha256": "d3a3dcb4a07a2682077148c622a93c6dd11918beac64274a885e247ff50b7bbb",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-012-20261103",
+      "input_tokens_estimate": 3270,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1798,
+      "request_sha256": "64033bf355715ab9394fff7d0e601a740c0bfeab5c2f12cf74b0eac0c234077f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-013-20261103",
+      "input_tokens_estimate": 3674,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1846,
+      "request_sha256": "12e3c80db8ce7d185a65456f8983d4232217fd6d20e2df6155df01b307aaa643",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-05-014-20261103",
+      "input_tokens_estimate": 3539,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1830,
+      "request_sha256": "1bc5e670d96f7f4f3fcd33f843ac0161cb31abe46e39631f87e5b5c26c5aa258",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-000-20261103",
+      "input_tokens_estimate": 3472,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1822,
+      "request_sha256": "02b6caacf229cf2e2059fc6443a3c9e871b88b33a6a66c193449d9fc3f0c3f7e",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-001-20261103",
+      "input_tokens_estimate": 3753,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1856,
+      "request_sha256": "608fe08f2b5eae8315cb3e08227919876d1ea0912ac7b9e0009faca427be92c4",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-002-20261103",
+      "input_tokens_estimate": 3279,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1799,
+      "request_sha256": "2fc08d90149d915b0837a79ebcb550f5202462d16fd5ede6ee0b8c4711cb1685",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-003-20261103",
+      "input_tokens_estimate": 3685,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1847,
+      "request_sha256": "2407b033584a200a6c2515ade43843eded1d47a7eb931e0f60a7cf7f9ea65800",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-004-20261103",
+      "input_tokens_estimate": 3549,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1831,
+      "request_sha256": "3e3aa54edac8e3e359d23df9c39afece6a4c14af89d1fb494084030265a84a6d",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-005-20261103",
+      "input_tokens_estimate": 3472,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1822,
+      "request_sha256": "11c19984f93d7d359875c450fa1b4daa8c6eb37e55a378bf13386287d9f34881",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-006-20261103",
+      "input_tokens_estimate": 3753,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1856,
+      "request_sha256": "9ef57a0606c321c9c2778298cff0be50018f03fe88fef3dd7fa9be1fe3f30c58",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-007-20261103",
+      "input_tokens_estimate": 3199,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1789,
+      "request_sha256": "70c616756599622296d56f9ca2eb65ae25a96e9056766edc3cf6009176a4388c",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-008-20261103",
+      "input_tokens_estimate": 3685,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1847,
+      "request_sha256": "080f35bb68c6d3ceac582af7c832fe9dcefc1405a668a1381fecb9f06651fc5f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-009-20261103",
+      "input_tokens_estimate": 3549,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1831,
+      "request_sha256": "bc521fcd5802392ba4949c40f65861df2f3e33217298fac0b978d01a3817d399",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-010-20261103",
+      "input_tokens_estimate": 3472,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1822,
+      "request_sha256": "11ee20653cb7ad146a9d50b315368200dc42c3cb24553ba6c94b167811ba6ace",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-011-20261103",
+      "input_tokens_estimate": 3753,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1856,
+      "request_sha256": "3ec04b452f34377d1de9fae3bc9a9c5aa7aab7ecf9178a8d90322a74a9a7967a",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-012-20261103",
+      "input_tokens_estimate": 3201,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1789,
+      "request_sha256": "436112b240b84dae3e0eea2ae09e38f13be23cda652257153f3df140cf0b6b0c",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-013-20261103",
+      "input_tokens_estimate": 3685,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1847,
+      "request_sha256": "bd2c53c98a9ef831665a0c0057b72644fe54a6683149f6e005b0394ab747328f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-06-014-20261103",
+      "input_tokens_estimate": 3549,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1831,
+      "request_sha256": "fce8023a0f90e3760e359d3fce319d2150fd83a6d879302f8cea5cdc6dfdc9ef",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-000-20261103",
+      "input_tokens_estimate": 3466,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1821,
+      "request_sha256": "759e82d88516f8620bb304b08709763e0ba5f371997547fc997130ca0b489bf5",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-001-20261103",
+      "input_tokens_estimate": 3747,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1855,
+      "request_sha256": "cc09f47f6c72f8e9e68bd32de8bcdbcabbe129f05c4f1837dc7cde845f9d7b33",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-002-20261103",
+      "input_tokens_estimate": 3318,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1803,
+      "request_sha256": "937e5ea6e4c0391ec8685abd746f20aa2bb7e0511aae7026f87278053bc6a5a2",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-003-20261103",
+      "input_tokens_estimate": 3679,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1847,
+      "request_sha256": "8e5344fb75ca5861c262f54766344ca179ef34d1448c55b0520d4fdd37e128da",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-004-20261103",
+      "input_tokens_estimate": 3543,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1830,
+      "request_sha256": "5e93c788aaea7f792721d74d531c30f91c53055127c604e2bf767d12184a43d4",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-005-20261103",
+      "input_tokens_estimate": 3466,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1821,
+      "request_sha256": "94b69bad99dacb40a58fa13b544809c7203de6e8946c060b6d40db9555c5f5fc",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-006-20261103",
+      "input_tokens_estimate": 3747,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1855,
+      "request_sha256": "075b64e1f60ae2bb208cef2d478f3c89329abaaf538d2a20d5493a6e6a8c5f11",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-007-20261103",
+      "input_tokens_estimate": 3314,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1803,
+      "request_sha256": "bf24af20124a751b715c8d0c1e96981818125d5cdc082c636113ed4a36e8112f",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-008-20261103",
+      "input_tokens_estimate": 3679,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1847,
+      "request_sha256": "806a9e22de9153de208e315a124446410d6f8e668cfcf14f5d032a29abadd49b",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-009-20261103",
+      "input_tokens_estimate": 3543,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1830,
+      "request_sha256": "64a6003ad1bf4855190dd35f50a4aa2364eb74965b4482f24b52350a2187f536",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-010-20261103",
+      "input_tokens_estimate": 3466,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1821,
+      "request_sha256": "906cf1e925e06b0e1d2a46b403ba1200a693335eb2a15fad33a407fe20f682db",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-011-20261103",
+      "input_tokens_estimate": 3747,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1855,
+      "request_sha256": "908c71d850bd5bfd66e377f8fe65b184089b527fb064bbe2c2586600a38d1838",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-012-20261103",
+      "input_tokens_estimate": 3193,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1788,
+      "request_sha256": "309e6d49e7864d06ea0dd7f2103a8d58022f68443f04ad8c2fbbfa22cbb51a03",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-013-20261103",
+      "input_tokens_estimate": 3679,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1847,
+      "request_sha256": "1020e25705063ec3ad667f878120767cbaa2ce6a9154b70f2a62ce8651d1cd22",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    },
+    {
+      "task_id": "IX-07-014-20261103",
+      "input_tokens_estimate": 3543,
+      "maximum_output_tokens": 2400,
+      "credit_cost_upper_estimate_micro_usd": 1830,
+      "request_sha256": "247f980cc3590a254785b831d867bbc1469d03e3135e10f8abd850596ead78ad",
+      "financial_transactions": 0,
+      "inference_calls": 0
+    }
+  ],
+  "chain_id": 63825,
+  "existing_wallet_spendable_base_units": "0",
+  "funding_balance_covers_proposed_qualification": true,
+  "funding_native_balance_positive": true,
+  "quote_micro_usdz": 10000,
+  "quote_sha256": "017766837651e5c40ca689db6282220f8362e28e091bb7ac1ceded40860739c6",
+  "quote_expires_at": 1794294836.519,
+  "max_primary_calls": 180,
+  "provider_cost_at_quote_micro_usdz": 1800000,
+  "internal_simulated_check_allowance_micro_usd": 180000,
+  "execution_authorized": false,
+  "operator_credit_availability_confirmed": true,
+  "credit_spend_cap_approved": false,
+  "assurance": "Token counts and published-rate estimates are not a billing reconciliation.",
+  "complete": true,
+  "estimated_credit_upper_micro_usd": 335524
+}

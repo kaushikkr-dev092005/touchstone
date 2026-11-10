@@ -1,0 +1,16 @@
+{
+  "state": "UNKNOWN",
+  "confirmed_nonpayment": true,
+  "assurance": "PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP",
+  "pending_invoice": false,
+  "historical_payments": 1,
+  "new_receipt_ids": [],
+  "transactions_sent": 0,
+  "inference_requests_sent": 0,
+  "label": "MEASURED",
+  "observed_at": 1794296185.173756,
+  "key": "752db936219b00708720b2532b037008875e5e7402e83cb6c36e64ef3431b307",
+  "task_id": "IX-00-001-20261103",
+  "retry_sent": false,
+  "provider_spend_micro_usdz": 0
+}

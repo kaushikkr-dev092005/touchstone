@@ -1,0 +1,48 @@
+{
+  "label": "MEASURED",
+  "phase": "STOPPED_NO_RETRY",
+  "plan_sha256": "5ace2304e27d7d31459377e084a0a31d1d5e645ecc8df769a69c9f1d8e83cf48",
+  "calibration_deposited_micro_usdz": 1320000,
+  "holdout_deposited_micro_usdz": 0,
+  "actual_provider_spend_micro_usdz": 10000,
+  "published_rate_api_credit_estimate_micro_usd": 656,
+  "additional_unreported_credit_exposure_micro_usd": 11200,
+  "new_hosted_cash_spend": 0,
+  "delivered_model_calls": 1,
+  "failed_requests_without_payment": 1,
+  "remaining_sources_not_requested": 178,
+  "holdout_model_calls": 0,
+  "confirmed_nonpayment": {
+    "state": "UNKNOWN",
+    "confirmed_nonpayment": true,
+    "assurance": "PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP",
+    "pending_invoice": false,
+    "historical_payments": 1,
+    "new_receipt_ids": [],
+    "transactions_sent": 0,
+    "inference_requests_sent": 0,
+    "label": "MEASURED",
+    "observed_at": 1794296185.173756,
+    "key": "752db936219b00708720b2532b037008875e5e7402e83cb6c36e64ef3431b307",
+    "task_id": "IX-00-001-20261103",
+    "retry_sent": false,
+    "provider_spend_micro_usdz": 0
+  },
+  "balance": {
+    "account": "0x03af938b8a3f6ac4d23cab2ffdcfcd199de97442cb2e8bc7a5b465dd074d32a8ea",
+    "spendable_base_units": "1310000000000000000",
+    "historical_payments": 1,
+    "pending_invoice": false,
+    "assurance": "operator-estimate",
+    "finalized": false
+  },
+  "audit": {
+    "valid": true,
+    "events": 14,
+    "head": "5ca69ef2bf1894ea3c9fd893c74e058fa4e42beaf2f920cd975dc44aafea5bed"
+  },
+  "qualification_complete": false,
+  "eligible": false,
+  "billing_reconciled": false,
+  "final_settlement_verified": false
+}

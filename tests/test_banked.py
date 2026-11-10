@@ -17,6 +17,7 @@ class FixtureRail:
         self.result = None
         self.payments = 0
         self.deposits = 0
+        self.withdrawals = 0
         self.price = 10000
         self.output = {'total_cents': 2000}
         self.lose_pay = False
@@ -55,6 +56,7 @@ class FixtureRail:
             'invoice': {'id': 'fixture_prefix:receipt1', 'amount': str(quote.price*10**12), 'network': 'eip155:63825',
                 'recipient': 'fixture_seller', 'asset': 'fixture_usdz', 'settlement': 'fixture_settlement'}, 'status': 'FIXTURE'},
             'output': {'ok': True, 'status': 200, 'body': {'output': self.output}}}
+        self.spendable -= quote.price
         if self.lose_pay:
             self.lose_pay = False
             raise PaymentPending('Fixture lost response after durable payment')
@@ -64,6 +66,7 @@ class FixtureRail:
         return copy.deepcopy(self.result)
 
     def withdraw(self):
+        self.withdrawals += 1
         return copy.deepcopy(self.withdrawal)
 
 
@@ -95,6 +98,52 @@ class BankedJobs(unittest.TestCase):
         self.assertEqual(self.run_job(), report)
         self.assertEqual(self.rail.payments, 1)
         self.assertEqual(len(self.bank.calls), before)
+
+    def test_prefunded_only_never_deposits_when_float_is_short(self):
+        self.rail.spendable=0
+        result=self.run_job(allow_funding=False,return_float=False)
+        self.assertEqual(result['phase'],'AWAITING_EXISTING_FLOAT')
+        self.assertEqual((self.rail.deposits,self.rail.payments,self.rail.withdrawals),(0,0,0))
+
+    def test_explicit_retention_closes_customer_without_withdrawing_or_claiming_refund(self):
+        result=self.run_job(allow_funding=False,return_float=False)
+        self.assertEqual(result['phase'],'CLOSED_FLOAT_RETAINED')
+        self.assertTrue(result['customer_closed'])
+        self.assertTrue(result['reconciliation']['retained_balance_matches'])
+        self.assertFalse(result['float_returned_confirmed'])
+        self.assertEqual(result['retained_float_base_units'],str(90000*10**12))
+        self.assertEqual((self.rail.deposits,self.rail.payments,self.rail.withdrawals),(0,1,0))
+        self.assertEqual(self.run_job(allow_funding=False,return_float=False),result)
+        with self.assertRaises(ValueError):self.run_job()
+
+    def test_invoice_demo_cannot_authorize_or_purchase_without_measured_qualification(self):
+        from touchstone.invoice_dataset import build
+        task=Task(**build()[0][0]['task'])
+        with self.assertRaisesRegex(ValueError,'current measured qualification'):
+            self.workflow.run('invoice-demo',task,'http://127.0.0.1:8093',integration_probe=True,
+                              allow_funding=False,return_float=False)
+        self.assertEqual(self.bank.calls,[])
+        self.assertEqual(self.rail.payments,0)
+
+    def test_unified_receipt_keeps_fiat_tokens_and_quality_separate(self):
+        self.run_job(allow_funding=False,return_float=False)
+        receipt=self.store.receipt('banked-fixture')
+        self.assertEqual(receipt['fiat']['currency'],'USD')
+        self.assertEqual(receipt['token']['currency'],'USDZ')
+        self.assertEqual(receipt['fiat']['captured_micro_usd'],10000)
+        self.assertEqual(receipt['token']['provider_spend_micro_usdz'],10000)
+        self.assertIsNone(receipt['token']['onchain_payment_transaction_id'])
+        self.assertFalse(receipt['bridge_or_fx_executed'])
+        self.assertFalse(receipt['token']['final_settlement_verified'])
+        self.assertTrue(receipt['verification']['passed'])
+        self.assertFalse(receipt['invoice_payment_authorized'])
+        self.assertTrue(receipt['audit']['valid'])
+
+    def test_retained_balance_uses_original_float_when_larger_than_allocation(self):
+        self.rail.spendable=200000
+        result=self.run_job(allow_funding=False,return_float=False)
+        self.assertEqual(result['phase'],'CLOSED_FLOAT_RETAINED')
+        self.assertEqual(result['retained_float_base_units'],str(190000*10**12))
 
     def test_lost_payment_response_recovers_without_another_purchase(self):
         self.rail.lose_pay = True

@@ -1,0 +1,36 @@
+{
+  "label": "SIMULATED",
+  "dataset_version": "invoice-prospective-v2-202611102",
+  "holdout_seed": 202611102,
+  "sources": 180,
+  "unique_sources": 180,
+  "partition_counts": {
+    "calibration": 120,
+    "holdout": 60
+  },
+  "templates": {
+    "calibration": [
+      "layout-00",
+      "layout-01",
+      "layout-02",
+      "layout-03",
+      "layout-04",
+      "layout-05",
+      "layout-06",
+      "layout-07"
+    ],
+    "holdout": [
+      "prospective-arrow-record",
+      "prospective-equals-record",
+      "prospective-value-parenthesis",
+      "prospective-wrapped-value"
+    ]
+  },
+  "sources_sha256": "12c5cebe505d0e279d2670a26be234a613ffb0f700c70ceb3b7f1aeba439b321",
+  "offline_truth_sha256": "d672bc1e47a92bc62f9152925158b18cab0b9781248c3e099827315d0d22315e",
+  "frozen_at": 1794296591.5875556,
+  "model_calls_at_freeze": 0,
+  "offline_truth_never_sent_to_models": true,
+  "provenance": "Synthetic implementer-authored holdout; new layout families; no model outputs used to tune it. Not independent vendor data.",
+  "qualification_thresholds_changed": false
+}

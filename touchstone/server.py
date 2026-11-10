@@ -197,7 +197,8 @@ def serve(port=8088, data_dir="data", live=None):
                 return self.respond(200, summary())
             if path == '/api/invoice-study':
                 from .invoice_study import dashboard
-                return self.respond(200, dashboard(ROOT/'bench/results/m3'))
+                current=ROOT/'bench/results/m3-v2'
+                return self.respond(200, dashboard(current if (current/'report.json').exists() else ROOT/'bench/results/m3'))
             if path == "/api/banked-jobs":
                 from .banked import BankedStore
                 from .treasury_job import read_treasury_jobs

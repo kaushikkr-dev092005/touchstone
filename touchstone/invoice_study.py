@@ -10,8 +10,8 @@ from .invoice_dataset import DATASET_VERSION, build, save
 from .invoice_extraction import VERSION, deterministic, duplicate_reference, verify
 from .workload import Task
 
-CODE = ('invoice_dataset.py','invoice_extraction.py','invoice_study.py','invoice_profile.py',
-        'providers.py','local_tools.py','eligibility.py','verifier.py')
+CODE = ('invoice_dataset.py','invoice_corpus.py','invoice_extraction.py','invoice_roles.py','invoice_study.py','invoice_profile.py',
+        'providers.py','hosted_cost.py','local_tools.py','eligibility.py','verifier.py')
 
 
 def digest(path):
@@ -63,20 +63,38 @@ def score(records,truth,rows):
                 raise ValueError('Costs and latencies must be nonnegative integers')
         if reference is not None:
             correct=correct and reference==truth[identity]['output']
+        candidate=verdict['passed'] and verdict['decision']=='candidate'
+        from .invoice_roles import parse_supported
+        from .invoice_extraction import ROW
+        tool_draft=parse_supported(task.source['text'],list(ROW.finditer(task.source['text'])))
+        tool_grammar_supported=tool_draft is not None
+        tool_draft_correct=tool_draft==truth[identity]['output']
         out.append({**row,'partition':record['partition'],'template_id':record['template_id'],
             'source_key':source_key(task),'strict_correct':correct,'verifier_passed':verdict['passed'],
-            'decision':verdict['decision'],'false_accept':verdict['passed'] and not correct,
+            'decision':verdict['decision'],'false_accept':candidate and not correct,
+            'structurally_valid':verdict.get('structurally_valid',False),
+            'semantic_role_binding_verified':verdict.get('semantic_role_binding_verified',False),
+            'arithmetic_valid':verdict.get('arithmetic_valid'),
             'tool_resolved':deterministic(task) is not None,
-            'adds_value_over_tool':correct and verdict['passed'] and deterministic(task) is None,
+            'tool_grammar_supported':tool_grammar_supported,
+            'tool_draft_strict_correct':tool_draft_correct,
+            'adds_value_over_tool':correct and candidate and not tool_draft_correct,
+            'correct_review_draft_beyond_tools':correct and verdict['decision']=='review' and not tool_draft_correct,
             'reference_cost_micro_usd':refcost})
     return out
 
 
 def metrics(rows):
     lat=sorted(r['latency_ms'] for r in rows if type(r.get('latency_ms')) is int)
-    accepted=sum(r['verifier_passed'] for r in rows)
+    accepted=sum(r['verifier_passed'] and r['decision']=='candidate' for r in rows)
     return {'sources_scored':len(rows),'strict_correct':sum(r['strict_correct'] for r in rows),
-        'accepted':accepted,'false_accepts':sum(r['false_accept'] for r in rows),
+        'candidates':accepted,'review':sum(r['decision']=='review' for r in rows),
+        'rejected':sum(r['decision']=='rejected' for r in rows),
+        'accepted':accepted,'accepted_definition':'passed AND decision=candidate; never payment authorization',
+        'structurally_valid':sum(r.get('structurally_valid',False) for r in rows),
+        'semantic_role_binding_verified':sum(r.get('semantic_role_binding_verified',False) for r in rows),
+        'arithmetic_valid':sum(r.get('arithmetic_valid') is True for r in rows),
+        'false_accepts':sum(r['false_accept'] for r in rows),
         'false_accept_rate_among_accepted':sum(r['false_accept'] for r in rows)/accepted if accepted else None,
         'refusals_or_review':sum(not r['verifier_passed'] or r['decision']=='review' for r in rows),
         'provider_cost_micro_usd':sum(r.get('provider_cost_micro_usd',0) for r in rows),
@@ -85,13 +103,17 @@ def metrics(rows):
         'latency_samples':len(lat),
         'latency_p50_ms':statistics.median(lat) if lat else None,
         'latency_p95_ms':lat[max(0,(__import__('math').ceil(len(lat)*.95)-1))] if lat else None,
-        'correct_beyond_tools':sum(r['adds_value_over_tool'] for r in rows)}
+        'correct_beyond_tools':sum(r['adds_value_over_tool'] for r in rows),
+        'tool_draft_strict_correct':sum(r.get('tool_draft_strict_correct',False) for r in rows),
+        'correct_review_drafts_beyond_tools':sum(r.get('correct_review_draft_beyond_tools',False) for r in rows)}
 
 
-def evaluate_profile(records,truth,raw):
-    if (raw.get('label')!='MEASURED' or raw.get('dataset_version')!=DATASET_VERSION
+def evaluate_profile(records,truth,raw,*,dataset_version=DATASET_VERSION,corpus_sha256=None):
+    if (raw.get('label')!='MEASURED' or raw.get('dataset_version')!=dataset_version
             or raw.get('code_sha256')!=code_hashes() or raw.get('verifier_version')!=VERSION):
         raise ValueError('Profile must be measured and match current corpus/checker provenance')
+    if corpus_sha256 is not None and raw.get('corpus_sources_sha256')!=corpus_sha256:
+        raise ValueError('Profile is not bound to the frozen corpus')
     rows=score(records,truth,raw['rows'])
     calibration=[r for r in rows if r['partition']=='calibration']
     holdout=[r for r in rows if r['partition']=='holdout']
@@ -119,8 +141,12 @@ def showcase(qualified=None):
          'reason':'Conflicting records share a payment reference; no purchase or payment is authorized'}]}
 
 
-def report(directory,profile_dir=None):
-    directory=Path(directory);manifest=save(directory/'dataset');records,truth=build()
+def report(directory,profile_dir=None,corpus=None):
+    directory=Path(directory)
+    if corpus:
+        from .invoice_corpus import load
+        manifest,records,truth=load(corpus,include_truth=True)
+    else:manifest=save(directory/'dataset');records,truth=build()
     rows=[]
     for record in records:
         task=Task(**record['task']);started=time.perf_counter();output=deterministic(task)
@@ -130,15 +156,18 @@ def report(directory,profile_dir=None):
     profiles=[];rejected=[];profile_hashes={}
     for path in sorted(Path(profile_dir or directory/'profiles').glob('*.json')):
         try:
-            profiles.append(evaluate_profile(records,truth,json.loads(path.read_text(encoding='utf-8'))))
+            profiles.append(evaluate_profile(records,truth,json.loads(path.read_text(encoding='utf-8')),
+                dataset_version=manifest['dataset_version'],corpus_sha256=manifest['sources_sha256'] if corpus else None))
             profile_hashes[path.name]=digest(path)
         except (ValueError,KeyError,TypeError,OSError):rejected.append({'file':path.name,'label':'BLOCKED','reason':'Profile provenance/schema invalid or stale'})
     qualified=next((p for p in profiles if p['eligible']),None)
     result={'label':'MEASURED','dataset':manifest,'code_sha256':code_hashes(),
         'baseline':{'label':'MEASURED','financial_cost_label':'SIMULATED','metrics':metrics(baseline),
             'coverage':sum(r['output'] is not None for r in baseline)/len(records),
+            'tool_draft_strict_correct':sum(r['tool_draft_strict_correct'] for r in baseline),
             'note':'Synthetic sources; CPU/review costs unpriced, no model calls or payments'},
         'profiles':profiles,'profile_files_sha256':profile_hashes,'rejected_profiles':rejected,'showcase':showcase(qualified),
+        'corpus_directory':str(Path(corpus)) if corpus else None,
         'qualification_status':'OFFLINE_MODEL_AVAILABLE' if qualified else 'BLOCKED_NO_ELIGIBLE_MODEL',
         'threshold_changed':False,'models_measured':len(profiles),
         'hosted_funding_source':'PARTNER_CREDITS_UNVERIFIED_UNTIL_CONFIGURED',
@@ -154,7 +183,8 @@ def dashboard(directory):
         result=json.loads((Path(directory)/'report.json').read_text(encoding='utf-8'))
         if result['code_sha256']!=code_hashes():
             raise ValueError('Stale study')
-        if digest(Path(directory)/'dataset/sources.jsonl')!=result['dataset']['sources_sha256']:
+        corpus=Path(result.get('corpus_directory') or Path(directory)/'dataset')
+        if digest(corpus/'sources.jsonl')!=result['dataset']['sources_sha256']:
             raise ValueError('Corpus changed')
         for name,expected_digest in result['profile_files_sha256'].items():
             if Path(name).name!=name or digest(Path(directory)/'profiles'/name)!=expected_digest:

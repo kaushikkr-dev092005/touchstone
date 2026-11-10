@@ -1,0 +1,52 @@
+{
+  "label": "MEASURED",
+  "scope": "CURRENT_SELLER_FAULT_REVIEW_NO_FINANCIAL_OPERATION",
+  "state": "ACKNOWLEDGED_REJECTED",
+  "detail": "Refund/credit policy does not authorize a credit",
+  "root": "eea405c2ee8f3845a33491304f6a5d409a7408da1d1e8a011b0887a00b3c50cc",
+  "acknowledgement": {
+    "created_at": "2026-11-10T07:09:15.094Z",
+    "credit_base_units": "0",
+    "credit_status": "NONE",
+    "decision": "REJECTED",
+    "fault_root": "eea405c2ee8f3845a33491304f6a5d409a7408da1d1e8a011b0887a00b3c50cc",
+    "invoice_id": "0x937af3a9f4cd51b0f2b01ab160ac576fc598c13d351420a358c0708a6829a227:44d29d52-956e-4521-bfcd-7d9675de9d4b",
+    "original_charge_base_units": "10000000000000000",
+    "reason": "Refund/credit policy does not authorize a credit",
+    "refund_executed": false,
+    "signature": "0x60a0014b42627bdcb667db884445b09b2878d78c165dcf1b888574e7823b34d913345b4d28bdc2702f5992d83ef6a08a9a8fc5dfa8215e17cc97d7d562a5559e",
+    "signer": "0x025519787048fbec01a1ef112f9a7c18a9ad694fcf0ee0d0d875ecaf581fdfbe82",
+    "version": 1
+  },
+  "original_paid_micro_usdz": 10000,
+  "original_paid_answer": 1400,
+  "independent_expected_answer": 2000,
+  "original_receipt_id": "0x937af3a9f4cd51b0f2b01ab160ac576fc598c13d351420a358c0708a6829a227:44d29d52-956e-4521-bfcd-7d9675de9d4b",
+  "new_payments": 0,
+  "new_model_calls": 0,
+  "refund_executed": false,
+  "credit_transfers": 0,
+  "independent_final_settlement_verified": false,
+  "audit": {
+    "valid": true,
+    "events": 10,
+    "head": "12f5bf5f1364133e79d25a3b19a502ee49a124edb725dce8fd7074b16736640f"
+  },
+  "provider_delivery_attestation_present": true,
+  "buyer_fault_signature_present": true,
+  "seller_ack_signature_verified": true,
+  "idempotent_local_replay_identical": true,
+  "independent_receipt_check": {
+    "payer_signature_verified": true,
+    "invoice_and_task_bound": true,
+    "operator_signature_verified": true,
+    "trust_anchor": "READ_ONLY_ONCHAIN_CONTEXT_AND_OPERATOR_JOURNAL",
+    "operator_public_key": "0x03404275cafbcd3b027dabd0a1fb48e017a04c4a1e0f89dea457de8bd4fd0f7bb3",
+    "provider_output_signature_verified": true,
+    "provider_output_attribution": "SIGNED_BY_INVOICE_RECIPIENT",
+    "receipt_status": "preconfirmed",
+    "final_settlement_verified": false,
+    "transactions_sent": 0,
+    "fault_signature_verified": true
+  }
+}

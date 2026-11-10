@@ -111,3 +111,24 @@ python tools/prove_m4.py
 ```
 
 The last command uses only temporary MOCK adapters. It copies labelled implementation evidence into `bench/results/m4/mock/`; no wallet, provider, credentials or network is used. It cannot pass the live gate.
+# Current matched-workload support, 10 November 2026
+
+`python -m touchstone compare prepare` now accepts `--corpus` for a frozen difficult
+workload, `--qualification-corpus` for current model provenance, and
+`--hosted-credit-cap-usd` for a separate prepaid-credit ceiling. A frozen workload
+must use its manifest seed. `bench/results/m4-v2/dataset` was frozen with seed
+202611102 before model output; it is separate from the qualification corpus.
+
+The report separates candidates, review and rejected; strictly correct review
+drafts; USDZ provider cost per strictly correct output; and published-rate API
+credit estimates. Failed calls stay charged. Pending calls retain exposure and
+prevent a final unit-cost claim. API billing remains unreconciled. The live runner
+refuses missing credit approval or an unpriced hosted model.
+
+No new live comparison is approved or executed. Finish qualification first, then
+prepare a fresh plan, verify an existing dedicated wallet and provider readiness,
+estimate funding/API costs and obtain specific final approval. Qualification's
+caps cannot fund this separate experiment. Historical MOCK reports below are
+implementation evidence only. See [current review](REVIEW_20261110.md).
+
+---

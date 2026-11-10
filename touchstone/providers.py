@@ -185,4 +185,6 @@ def anthropic_inference(task, opener=None):
                 "usage": counts, "latency_ms": round((time.perf_counter() - started) * 1000)}
     metadata['funding_source'] = ('PARTNER_CREDITS_OPERATOR_DECLARED'
         if os.environ.get('TOUCHSTONE_HOSTED_FUNDING_SOURCE') == 'PARTNER_CREDITS' else 'UNVERIFIED')
+    from .hosted_cost import estimate_usage
+    metadata['hosted_api_cost']=estimate_usage(metadata['provider_model'],counts)
     return output, metadata["latency_ms"], metadata

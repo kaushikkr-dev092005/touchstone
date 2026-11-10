@@ -251,6 +251,7 @@ footer{padding-block:24px;font-size:10px}
 <section class="panel" id="planning" style="margin-top:22px">
 <h2>Three tasks, three spending decisions</h2>
 <p class="panel-description" id="invoice-study-summary">BLOCKED — invoice model qualification has not been loaded.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Invoice qualification results"><table class="ledger-table"><thead><tr><th>Model / split</th><th>Scored / strict correct</th><th>Candidate / review / rejected</th><th>False accepts</th><th>Qualification</th></tr></thead><tbody id="invoice-model-rows"><tr><td colspan="5">No current model measurement.</td></tr></tbody></table></div>
 <div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable evidence table"><table class="ledger-table"><thead><tr><th>Task</th><th>Decision</th><th>Evidence</th><th>Reason</th></tr></thead><tbody id="invoice-showcase-rows"><tr><td colspan="4">BLOCKED — no qualification evidence.</td></tr></tbody></table></div>
 <p class="callout">Synthetic invoice sources. Exact citations and integer checks support review; they do not authorize an invoice payment. No live model purchase is triggered here.</p>
 <h2>Should this task buy inference?</h2>
@@ -425,7 +426,15 @@ $('refresh-issuing').onclick=async()=>{const button=$('refresh-issuing');button.
 $('refresh-fx').onclick=async()=>{const button=$('refresh-fx');button.disabled=true;try{const response=await fetch('/api/fx-quote',{method:'POST',headers:{'Content-Type':'application/json','X-Touchstone-Token':document.querySelector('meta[name="touchstone-token"]').content},body:'{}'});const body=await response.json();if(!response.ok)throw Error(body.error||'Reference quote unavailable');renderFx(body);}catch(error){$('fx-status').textContent='BLOCKED — '+error.message;}finally{button.disabled=false;}};
 
 
-function renderInvoiceStudy(data){const current=data.label==='MEASURED',baseline=data.baseline,profiles=data.profiles||[];$('invoice-study-summary').textContent=current?'MEASURED tool extraction coverage: '+((baseline?.coverage||0)*100).toFixed(1)+'% on SIMULATED sources. '+(data.models_measured||0)+' measured model profiles. '+String(data.qualification_status):'BLOCKED — invoice evidence is missing, stale or unavailable.';$('invoice-showcase-rows').innerHTML=(data.showcase?.tasks||[]).map(row=>`<tr><td>${esc(row.task)}</td><td>${esc(row.decision)}</td><td>${esc(row.label)}</td><td>${esc(row.reason)}</td></tr>`).join('')||'<tr><td colspan="4">BLOCKED — no qualified invoice evidence.</td></tr>';}
+function renderInvoiceStudy(data){
+const current=data.label==='MEASURED',baseline=data.baseline,profiles=data.profiles||[];
+$('invoice-study-summary').textContent=current?'MEASURED tool candidate coverage: '+((baseline?.coverage||0)*100).toFixed(1)+'% on SIMULATED sources. '+(data.models_measured||0)+' model profiles, including incomplete studies. '+String(data.qualification_status):'BLOCKED — invoice evidence is missing, stale or unavailable.';
+$('invoice-model-rows').innerHTML=profiles.flatMap(profile=>['calibration','holdout'].map(split=>{
+const m=profile[split]||{};
+return `<tr><td>${esc(profile.model_id)} / ${esc(split)}</td><td>${esc(m.sources_scored??0)} / ${esc(m.strict_correct??0)}</td><td>${esc(m.candidates??0)} / ${esc(m.review??0)} / ${esc(m.rejected??0)}</td><td>${esc(m.false_accepts??0)}</td><td>${profile.eligible?'OFFLINE ELIGIBLE':'INCOMPLETE OR INELIGIBLE'}</td></tr>`;
+})).join('')||'<tr><td colspan="5">No current model measurement.</td></tr>';
+$('invoice-showcase-rows').innerHTML=(data.showcase?.tasks||[]).map(row=>`<tr><td>${esc(row.task)}</td><td>${esc(row.decision)}</td><td>${esc(row.label)}</td><td>${esc(row.reason)}</td></tr>`).join('')||'<tr><td colspan="4">BLOCKED — no qualified invoice evidence.</td></tr>';
+}
 
 
 fetch('/api/invoice-study').then(r=>{if(!r.ok)throw Error('unavailable');return r.json();}).then(renderInvoiceStudy).catch(()=>renderInvoiceStudy({label:'BLOCKED'}));

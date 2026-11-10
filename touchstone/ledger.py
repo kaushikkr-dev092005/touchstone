@@ -308,7 +308,7 @@ class Ledger:
             metadata = receipt.get("provider_metadata")
             metadata_json = None
             if metadata is not None:
-                allowed_fields = {"provider_type", "provider_model", "usage", "latency_ms", "chaos_mode", "funding_source"}
+                allowed_fields = {"provider_type", "provider_model", "usage", "latency_ms", "chaos_mode", "funding_source", "hosted_api_cost"}
                 allowed_usage = {"input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens"}
                 usage = metadata.get("usage", {}) if isinstance(metadata, dict) else None
                 valid = (isinstance(metadata, dict) and not set(metadata) - allowed_fields
@@ -321,6 +321,12 @@ class Ledger:
                               type(metadata["latency_ms"]) is int and metadata["latency_ms"] >= 0)
                          and metadata.get("chaos_mode") in {None, "quality-drop"}
                          and metadata.get('funding_source') in {None, 'UNVERIFIED', 'PARTNER_CREDITS_OPERATOR_DECLARED'})
+                if valid and 'hosted_api_cost' in metadata:
+                    # Retain only reproducible usage-based estimates, never a
+                    # seller's arbitrary charge or a claim of reconciled billing.
+                    from .hosted_cost import estimate_usage
+                    valid = (metadata.get('provider_type') == 'ANTHROPIC_API'
+                             and metadata['hosted_api_cost'] == estimate_usage(metadata.get('provider_model'), usage))
                 if valid:
                     metadata_json = canonical(metadata)
                 else:

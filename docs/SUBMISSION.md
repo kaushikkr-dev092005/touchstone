@@ -1,5 +1,13 @@
 # Touchstone — submission draft, 6 November 2026
 
+**10 November correction:** use the [current review](REVIEW_20261110.md) and
+[README](../README.md) for present claims. Semantic role binding and review metrics
+are fixed; historical 24/180 tool coverage is obsolete. Hosted inference has one
+correct paid result, but full qualification and the fresh holdout are incomplete.
+The current seller fault acknowledgement is signed and verified; it rejected credit
+and moved no refund. A live integrated useful-model run, matched comparison and
+final evidence recording/submission remain pending. Historical prose follows.
+
 ## One sentence
 
 The financial trust layer for autonomous agents: pay for proof, not promises.

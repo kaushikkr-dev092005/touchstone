@@ -85,6 +85,39 @@ class BankedStore:
         with self.ledger.connect() as db:
             return [json.loads(r[0]) for r in db.execute('SELECT state FROM banked_jobs ORDER BY rowid DESC')]
 
+    def receipt(self, scope):
+        """Portable journal receipt. Fiat and tokens are never summed or bridged."""
+        with self.ledger.connect() as db:
+            row=db.execute('SELECT mandate,state FROM banked_jobs WHERE scope=?',(scope,)).fetchone()
+        if row is None:raise ValueError('Unknown integrated job scope')
+        mandate,state=json.loads(row['mandate']),json.loads(row['state'])
+        provider=state.get('receipt') or {}
+        body=((state.get('result') or {}).get('output') or {}).get('body') or {}
+        if not isinstance(body,dict):body={}
+        from .study_costs import published_cost
+        return {'version':1,'scope':scope,'mode':state['mode'],'phase':state['phase'],
+            'assurance':'WORKFLOW_JOURNAL_NOT_INDEPENDENT_SETTLEMENT',
+            'mandate_sha256':hashlib.sha256(canonical(mandate).encode()).hexdigest(),
+            'task_sha256':hashlib.sha256(canonical(mandate['task']).encode()).hexdigest(),
+            'qualification':mandate.get('qualification'),
+            'fiat':{'currency':'USD','environment':'AIRWALLEX_SANDBOX',
+                'authorization_id':(state.get('authorization') or {}).get('id'),
+                'approved_micro_usd':mandate['hold'],'captured_micro_usd':state['captured_micro_usd'],
+                'unused_authorization_micro_usd':state.get('unused_authorization_micro_usd'),
+                'customer_closed':state['customer_closed'],'issuer_release_verified':False},
+            'token':{'currency':'USDZ','chain_id':63825,'environment':'METAL_TESTNET',
+                'provider_spend_micro_usdz':state['spent_micro_usd'],'receipt_id':provider.get('id'),
+                'receipt_status':provider.get('status'),'onchain_payment_transaction_id':provider.get('transaction'),
+                'unused_float_policy':mandate.get('unused_float_policy','RETURN_WHEN_CLAIMABLE'),
+                'retained_float_base_units':state.get('retained_float_base_units'),
+                'returned_float_micro_usdz':state.get('float_returned_micro_usd',0),
+                'return_confirmed':state['float_returned_confirmed'],'final_settlement_verified':False},
+            'provider_metadata':body.get('provider_metadata'),
+            'hosted_api_credit_estimate':published_cost(body.get('provider_metadata')),
+            'verification':state.get('verdict'),
+            'reconciliation':state.get('reconciliation'),'audit':self.ledger.audit(),
+            'bridge_or_fx_executed':False,'invoice_payment_authorized':False}
+
     def assert_dispatch(self):
         with self.ledger.connect() as db:
             if db.execute('SELECT halted FROM control').fetchone()[0]:
@@ -96,19 +129,41 @@ class BankedWorkflow:
         self.store, self.treasury, self.rail_factory = store, treasury, rail_factory
 
     def run(self, scope, task, origin, hold=1000000, allocation=100000, price_cap=50000, recover=False, integration_probe=False,
-            treasury_request_id=None):
+            treasury_request_id=None, allow_funding=True, return_float=True,
+            qualification_profile=None, qualification_corpus=None):
         if not integration_probe:
             raise ValueError("This command requires --integration-probe; no model is approved for autonomous paid procurement")
         if not re.fullmatch(r'[A-Za-z0-9_-]{1,48}', scope):
             raise ValueError("Invalid scope")
         if any(type(v) is not int or v <= 0 for v in (hold, allocation, price_cap)) or not price_cap <= allocation <= hold <= 10000000 or hold % 10000:
             raise ValueError("Require positive cap <= allocation <= hold <= USD 10, with a whole-cent hold")
-        if not isinstance(task.id, str) or not isinstance(task.kind, str) or task.kind not in {'invoice','arithmetic','classification'}:
+        if type(allow_funding) is not bool or type(return_float) is not bool:
+            raise ValueError('Funding and unused-float policies must be explicit booleans')
+        if not isinstance(task.id, str) or not isinstance(task.kind, str) or task.kind not in {'invoice','arithmetic','classification','invoice_extraction'}:
             raise ValueError("Unsupported probe task")
         url = resource_url(origin, task)
         mandate = {"task": task.public(), "provider_url": url, "hold": hold, "allocation": allocation,
                    "price_cap": price_cap, "purpose": "INTEGRATION_PROBE", "checking_fee": 0,
                    "fractional_cent_policy": "merchant absorbs; capture rounds down", "network": 63825}
+        # Preserve immutable historical mandates when the legacy policy is used.
+        if not allow_funding:mandate['funding_policy']='EXISTING_FLOAT_ONLY'
+        if not return_float:mandate['unused_float_policy']='RETAIN_IN_ORIGINAL_WALLET'
+        qualified_model=None
+        if task.kind=='invoice_extraction':
+            from .invoice_extraction import supported
+            if not supported(task):raise ValueError('Unsupported invoice source; no authorization sent')
+            if not qualification_profile or not qualification_corpus:
+                raise ValueError('Invoice demonstration requires current measured qualification and its frozen corpus')
+            from .invoice_corpus import load
+            from .invoice_study import evaluate_profile
+            manifest,records,truth=load(qualification_corpus,include_truth=True)
+            raw=json.loads(Path(qualification_profile).read_text(encoding='utf-8'))
+            result=evaluate_profile(records,truth,raw,dataset_version=manifest['dataset_version'],corpus_sha256=manifest['sources_sha256'])
+            if not result['eligible'] or raw['label']!='MEASURED' or raw['tier']!='hosted-premium':
+                raise ValueError('Invoice model did not pass the unchanged qualification gate')
+            qualified_model=raw['model_id']
+            mandate['qualification']={'profile_sha256':hashlib.sha256(canonical(raw).encode()).hexdigest(),
+                                      'model_id':qualified_model,'corpus_sha256':manifest['sources_sha256']}
         from .treasury_job import read_treasury_jobs
         funding = next((job for job in read_treasury_jobs(self.store.ledger) if job['scope'] == scope), None)
         if funding and not treasury_request_id:
@@ -121,7 +176,7 @@ class BankedWorkflow:
             state = self.store.bind(scope, mandate)
             if funding and 'treasury_funding' not in state:
                 state = self.store.update(scope, state, treasury_funding=funding)
-            if state['phase'] == 'COMPLETED':
+            if state['phase'] in {'COMPLETED','CLOSED_FLOAT_RETAINED'}:
                 return state
             rail = self.rail_factory(scope, url, price_cap, allocation)
             try:
@@ -136,6 +191,9 @@ class BankedWorkflow:
                         raise ValueError("Existing wallet history is outside this new banked mandate")
                     spendable = int(balance['spendable_base_units'])
                     if spendable < allocation * 10**12:
+                        if not allow_funding:
+                            return self.store.update(scope,state,phase='AWAITING_EXISTING_FLOAT',
+                                funding_policy='NO_DEPOSIT_AUTHORIZED')
                         if state['phase'] in {'FUNDING', 'AWAITING_SPENDABLE_DEPOSIT'}:
                             return self.store.update(scope, state, phase='AWAITING_SPENDABLE_DEPOSIT')
                         status = rail.invoke('funding-status')
@@ -147,7 +205,8 @@ class BankedWorkflow:
                         if int(balance['spendable_base_units']) < allocation * 10**12:
                             return self.store.update(scope, state, phase='AWAITING_SPENDABLE_DEPOSIT')
                     state = self.store.update(scope, state, phase='FUNDED', funding={"account": balance['account'],
-                        "allocation_micro_usd": allocation, "assurance": balance['assurance']})
+                        "allocation_micro_usd": allocation, "assurance": balance['assurance'],
+                        "starting_spendable_base_units":str(balance['spendable_base_units'])})
                 if 'quote' not in state:
                     quote = rail.quote()
                     if quote.price > min(price_cap, allocation, hold):
@@ -205,6 +264,11 @@ class BankedWorkflow:
                 if 'verdict' not in state:
                     body = state['result'].get('output', {}).get('body')
                     output = body.get('output') if isinstance(body, dict) else None
+                    metadata=body.get('provider_metadata') if isinstance(body,dict) else None
+                    if qualified_model and (not isinstance(metadata,dict)
+                        or metadata.get('provider_type')!='ANTHROPIC_API' or metadata.get('provider_model')!=qualified_model):
+                        return self.store.update(scope,state,phase='DELIVERY_IDENTITY_MISMATCH',
+                            recovery_required=False,qualification_identity_verified=False)
                     state = self.store.update(scope, state, phase='VERIFIED', output=output, verdict=check(task, output))
                 if not state['customer_closed']:
                     capture = state['spent_micro_usd'] // 10000 * 10000
@@ -215,6 +279,20 @@ class BankedWorkflow:
                     state = self.store.update(scope, state, phase='CUSTOMER_CLOSED', customer_closed=True,
                         captured_micro_usd=capture, merchant_rounding_micro_usd=state['spent_micro_usd']-capture,
                         unused_authorization_micro_usd=hold-capture, capture=settled['intent'])
+                if not return_float:
+                    balance=rail.balance()
+                    retained=int(balance['spendable_base_units'])
+                    start=int(state['funding'].get('starting_spendable_base_units',allocation*10**12))
+                    expected=start-state['spent_micro_usd']*10**12
+                    matched=retained==expected and not balance.get('pending_invoice',False)
+                    # A deliberately retained balance is not a refund or final settlement.
+                    return self.store.update(scope,state,phase='CLOSED_FLOAT_RETAINED' if matched else 'CLOSED_RECONCILIATION_PENDING',
+                        unused_float_policy='RETAIN_IN_ORIGINAL_WALLET',withdrawal=None,
+                        retained_float_base_units=str(retained),float_returned_confirmed=False,recovery_required=False,
+                        reconciliation={'receipt_matches_quote':True,'provider_spend_micro_usdz':state['spent_micro_usd'],
+                            'customer_capture_micro_usd':state['captured_micro_usd'],'bridge_or_fx_executed':False,
+                            'bank_and_token_balances_separate':True,'retained_balance_matches':matched,
+                            'final_settlement_verified':False})
                 withdrawal = rail.withdraw()
                 claims = dict(state['confirmed_claims'])
                 for claim in withdrawal.get('claimed', []):

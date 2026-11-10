@@ -16,6 +16,7 @@ import urllib.error
 from .config import ROOT
 from .engine import Engine
 from .invoice_dataset import build, DATASET_VERSION
+from .invoice_corpus import load as load_corpus
 from .invoice_extraction import deterministic, duplicate_reference, verify, VERSION
 from .invoice_profile import save
 from .invoice_study import evaluate_profile
@@ -26,10 +27,24 @@ from .payments import MetalEngineRail
 from .treasury import NoRedirect
 from .verifier import VERIFY_COST
 from .workload import Task
+from .study_costs import published_cost,RESERVATIONS
 
 POLICIES = ('tools-only', 'always-cheapest', 'always-premium', 'touchstone-ladder')
 TIERS = ('local-gpu', 'hosted-premium')
 PENDING = {'RESERVED', 'DISPATCHING', 'PAID'}
+HOSTED_RESERVE = 11200 # Haiku 5.5: full short-input window + 2,400 output tokens.
+
+
+def credit_exposure(calls):
+    total=0
+    for call in calls.values():
+        if call.get('provider')!='hosted-premium':continue
+        metadata=call.get('provider_metadata') or {}
+        cost=published_cost(metadata) or {}
+        amount=cost.get('estimated_credit_micro_usd')
+        reserve=RESERVATIONS.get(call.get('expected_model') or metadata.get('provider_model'),max(RESERVATIONS.values()))
+        total+=amount if type(amount) is int and 0<=amount<=reserve else reserve
+    return total
 
 
 def fingerprint(value):
@@ -37,17 +52,18 @@ def fingerprint(value):
 
 
 def implementation():
-    paths = ['touchstone/comparison.py', 'touchstone/invoice_dataset.py',
-             'touchstone/invoice_extraction.py', 'touchstone/ledger.py',
+    paths = ['touchstone/comparison.py', 'touchstone/invoice_dataset.py', 'touchstone/invoice_corpus.py',
+             'touchstone/invoice_extraction.py', 'touchstone/invoice_roles.py', 'touchstone/ledger.py',
              'touchstone/invoice_study.py', 'touchstone/eligibility.py', 'touchstone/providers.py',
-             'touchstone/payments.py', 'touchstone/metal.py',
+             'touchstone/payments.py', 'touchstone/metal.py', 'touchstone/study_costs.py', 'touchstone/hosted_cost.py',
              'integrations/metal/provider.mjs', 'integrations/metal/provider-core.mjs', 'integrations/metal/m4-chaos.mjs',
              'integrations/metal/package-lock.json']
     return {p: hashlib.sha256((ROOT/p).read_bytes().replace(b'\r\n', b'\n')).hexdigest() for p in paths}
 
 
 def prepare(scope, origins, budget, price_cap, max_purchases=40, steps=12,
-            seeds=(20261120,), outage_index=3, quality_index=7, profiles=None):
+            seeds=(20261120,), outage_index=3, quality_index=7, profiles=None,
+            corpus=None, qualification_corpus=None, hosted_credit_cap=0):
     if not isinstance(scope, str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,36}', scope):
         raise ValueError('Use a dedicated existing-wallet scope of 1–36 safe characters')
     if (any(type(n) is not int for n in (budget, price_cap, max_purchases, steps, outage_index, quality_index))
@@ -57,6 +73,8 @@ def prepare(scope, origins, budget, price_cap, max_purchases=40, steps=12,
         raise ValueError('Invalid budget, call count, step count or fault indices')
     if not seeds or len(set(seeds)) != len(seeds) or len(seeds) > 5 or any(type(s) is not int or not 0 <= s < 2**31 for s in seeds):
         raise ValueError('Use one to five distinct nonnegative integer seeds')
+    if type(hosted_credit_cap) is not int or hosted_credit_cap<0:
+        raise ValueError('Hosted credit budget must be integer micro-USD')
     if set(origins) != set(TIERS) or len(set(origins.values())) != 2:
         raise ValueError('Two distinct named provider origins are required')
     origins = {tier: origins[tier].rstrip('/') for tier in TIERS}
@@ -64,21 +82,38 @@ def prepare(scope, origins, budget, price_cap, max_purchases=40, steps=12,
     for origin in origins.values():
         task_resource_url(origin, dummy)
     qualifications = {}
-    records, truth = build()
+    qualification_kwargs = {}
+    if qualification_corpus:
+        qualification_manifest, records, truth = load_corpus(qualification_corpus, include_truth=True)
+        qualification_kwargs = {'dataset_version':qualification_manifest['dataset_version'],
+                                'corpus_sha256':qualification_manifest['sources_sha256']}
+    else:
+        records, truth = build()
     for tier, path in (profiles or {}).items():
         if tier not in TIERS:
             raise ValueError('Unknown qualification tier')
         raw = json.loads(Path(path).read_text(encoding='utf-8'))
-        result = evaluate_profile(records, truth, raw)
+        result = evaluate_profile(records, truth, raw, **qualification_kwargs)
         if tier == 'local-gpu' and raw['tier'] not in {'economy', 'balanced'} or tier == 'hosted-premium' and raw['tier'] != tier:
             raise ValueError('Qualification profile belongs to another tier')
         qualifications[tier] = {'eligible': result['eligible'], 'model_id': raw['model_id'],
                                 'profile_sha256': fingerprint(raw), 'model_sha256': raw.get('model_sha256')}
     tasks = []
+    workload_binding = {}
+    if corpus:
+        manifest, frozen_records, _ = load_corpus(corpus)
+        if list(seeds) != [manifest['holdout_seed']]:
+            raise ValueError('A frozen comparison uses exactly its manifest seed')
+        workload_binding = {'corpus':str(corpus), 'corpus_sources_sha256':manifest['sources_sha256'],
+                            'dataset_version':manifest['dataset_version']}
     for seed in seeds:
-        records, _ = build(seed)
+        if corpus:
+            records = frozen_records
+        else:
+            records, _ = build(seed)
         rng = random.Random(seed)
-        candidates = records[1:]
+        # Keep one familiar control, then new layouts the tool cannot parse.
+        candidates = [r for r in records if r['partition']=='holdout'] if corpus else records[1:]
         rng.shuffle(candidates)
         selected = [records[0], *candidates[:steps-1]]
         for index, row in enumerate(selected):
@@ -95,11 +130,13 @@ def prepare(scope, origins, budget, price_cap, max_purchases=40, steps=12,
     plan = {'version': 1, 'label': 'SIMULATED', 'execution_status': 'BLOCKED_PENDING_APPROVAL_AND_PREFLIGHT',
             'scope': scope, 'origins': origins, 'aggregate_cap_micro_usdz': budget,
             'per_call_cap_micro_usdz': price_cap, 'max_purchases': max_purchases,
+            'hosted_credit_cap_micro_usd':hosted_credit_cap,'new_hosted_cash_micro_usd':0,
             'steps_per_policy_per_seed': steps, 'seeds': list(seeds), 'policies': list(POLICIES),
             'outage_index': outage_index, 'quality_index': quality_index, 'fault_target': 'local-gpu',
             'tasks': tasks, 'task_digest': fingerprint(tasks), 'schedule': schedule,
             'schedule_sha256': fingerprint(schedule), 'qualifications': qualifications,
             'code_sha256': implementation(), 'dataset_version': DATASET_VERSION, 'verifier_version': VERSION,
+            **workload_binding,
             'verification_fee_micro_usd': VERIFY_COST, 'verification_fee_label': 'SIMULATED',
             'upstream_dollars': 'UNMEASURED_PARTNER_CREDITS_SEPARATE_FROM_USDZ'}
     return {**plan, 'plan_sha256': fingerprint(plan)}
@@ -116,6 +153,13 @@ def validate(plan):
         raise ValueError('Implementation changed; prepare a new plan and approval')
     if plan.get('policies') != list(POLICIES) or fingerprint(plan['tasks']) != plan['task_digest']:
         raise ValueError('Comparison plan is not a matched four-policy workload')
+    if plan.get('corpus'):
+        manifest, records, _ = load_corpus(plan['corpus'])
+        sources = {r['task']['id']:r['task'] for r in records}
+        if (manifest['sources_sha256']!=plan['corpus_sources_sha256']
+                or manifest['dataset_version']!=plan['dataset_version']
+                or any(sources.get(r['source_id'])!=r['task'] for r in plan['tasks'])):
+            raise ValueError('Frozen matched sources changed after approval')
 
 
 def read_health(origin):
@@ -191,6 +235,9 @@ class Comparison:
             except Exception:
                 checks[tier] = False
         checks['existing_wallet'] = not self.live or (ROOT/'data/metal'/p['scope']/'wallet.sqlite').is_file()
+        hosted_model=health.get('hosted-premium',{}).get('provider_model')
+        checks['hosted_credit_budget'] = not self.live or (hosted_model in RESERVATIONS
+            and p.get('hosted_credit_cap_micro_usd',0)>=RESERVATIONS[hosted_model])
         checks['rpc_chain_63825'] = False
         if all(checks[k] for k in (*TIERS, 'existing_wallet')):
             try:
@@ -314,8 +361,13 @@ class Comparison:
                 offer = min(offers, key=lambda q: (q.price, q.provider)) if tier == 'cheapest' and offers else next((q for q in offers if q.provider == tier), None)
                 if offer is None:
                     continue
+                reserve=RESERVATIONS.get(readiness['health'][offer.provider]['provider_model'],max(RESERVATIONS.values()))
+                if self.live and offer.provider=='hosted-premium' and (credit_exposure(state['calls'])+reserve
+                        > self.plan.get('hosted_credit_cap_micro_usd',0)):
+                    raise PolicyError('Hosted credit cap cannot cover another inference; no purchase sent')
                 key = ledger.reserve(job['id'], task, len(result['calls']), offer, VERIFY_COST, expected_version=job['mandate_version'])
                 state['calls'][key] = {'label': self.label, 'reservation_key': key, 'provider': offer.provider, 'status': 'RESERVED',
+                                        'expected_model':readiness['health'][offer.provider]['provider_model'],
                                         'policy': policy, 'task_id': task.id, 'seed': row['seed'], 'index': row['index'],
                                         'price_micro_usdz': offer.price, 'latency_ms': None}
                 save(journal, state)
@@ -324,6 +376,12 @@ class Comparison:
                     receipt = rail.pay(key, offer)
                     ledger.record_paid(key, receipt)
                     metadata = receipt.get('provider_metadata') or {}
+                    if self.live and offer.provider=='hosted-premium':
+                        cost=published_cost(metadata) or {}
+                        amount=cost.get('estimated_credit_micro_usd')
+                        if (cost.get('status')!='PROVIDER_USAGE_AT_PUBLISHED_PRICES'
+                                or type(amount) is not int or not 0<=amount<=reserve):
+                            raise PolicyError('Hosted usage unavailable or over reservation; charge and credit exposure retained')
                     expected = readiness['health'][offer.provider]
                     if metadata.get('provider_model') != expected['provider_model'] or metadata.get('provider_type') != ('LOCAL_MODEL' if offer.provider == 'local-gpu' else 'ANTHROPIC_API'):
                         raise RuntimeError('Delivery model identity differs; retain charge and stop')
@@ -382,7 +440,8 @@ class Comparison:
                   'confirmed_provider_micro_usdz': sum(a['price'] for a in attempts if a['receipt']),
                   'simulated_check_fee_micro_usd': sum(a['verify_cost'] for a in attempts if a['passed'] is not None),
                   'control_violations': violations, 'reconciliation': reconciliation, 'audit': ledger.audit(),
-                  'upstream_api_dollars': 'UNMEASURED_PARTNER_CREDITS_NOT_INCLUDED',
+                  'upstream_api_dollars': 'SEPARATE_USAGE_ESTIMATE_WHEN_REPORTED_NOT_BILLING_RECONCILED',
+                  'hosted_credit_exposure_micro_usd':credit_exposure(calls),
                   'cost_labels': {'provider_micro_usdz': self.label, 'check_micro_usd': 'SIMULATED',
                                   'mixed_cost_per_verified_correct': 'SIMULATED_DEMO_RATE_NOT_SETTLEMENT'},
                   'customer_holds': 'SIMULATED_NO_CAPTURE', 'airwallex': 'SEPARATE_NOT_USED',
@@ -413,7 +472,13 @@ class Comparison:
 
 def offline_score(plan, rows):
     """Called after dispatch. Never supplies labels to the rail or policy."""
-    truths = {seed: build(seed)[1] for seed in plan['seeds']}
+    if plan.get('corpus'):
+        manifest, _, truth = load_corpus(plan['corpus'], include_truth=True)
+        if manifest['sources_sha256']!=plan['corpus_sources_sha256']:
+            raise ValueError('Frozen sources changed before offline scoring')
+        truths = {seed:truth for seed in plan['seeds']}
+    else:
+        truths = {seed: build(seed)[1] for seed in plan['seeds']}
     return [{**r, 'strict_correct': r['output'] == truths[r['seed']][r['source_id']]['output'],
              'false_accept': r['accepted'] and r['output'] != truths[r['seed']][r['source_id']]['output']}
             for r in rows]
@@ -426,7 +491,8 @@ def summarize(report, seed=None):
         calls = [c for c in report['calls'].values() if c.get('policy') == policy and (seed is None or c['seed'] == seed)]
         # Unfinished calls remain outside a successful row but must still be charged.
         known = {k for r in report['rows'] for k in r['calls']}
-        orphan = [c for k, c in report['calls'].items() if k not in known and c.get('policy') == policy]
+        orphan = [c for k, c in report['calls'].items() if k not in known and c.get('policy') == policy
+                  and (seed is None or c['seed']==seed)]
         latencies = sorted([r['latency_ms'] for r in rows if r['latency_ms'] is not None] +
                            [c['latency_ms'] for c in orphan if c.get('latency_ms') is not None])
         accepted = sum(r['accepted'] for r in rows)
@@ -434,13 +500,29 @@ def summarize(report, seed=None):
         cost = sum(c['price_micro_usdz'] for c in calls if c.get('receipt_id'))
         checks = sum(c['check_fee_micro_usd'] for c in calls)
         unresolved = any(c['status'] in PENDING for c in calls)
+        strict_correct = sum(r['strict_correct'] for r in rows)
+        hosted_calls = [c for c in calls if c.get('provider')=='hosted-premium']
+        hosted_costs = [published_cost(c.get('provider_metadata')) or {} for c in hosted_calls]
+        credit_known = all(type(c.get('estimated_credit_micro_usd')) is int
+                           and c.get('status')=='PROVIDER_USAGE_AT_PUBLISHED_PRICES' for c in hosted_costs)
+        credits = sum(c['estimated_credit_micro_usd'] for c in hosted_costs) if credit_known else None
         summary.append({'policy': policy, 'completed_steps': len(rows), 'n_seeds': len({r['seed'] for r in rows}),
-            'accepted': accepted, 'verified_correct': correct, 'refusals': sum(not r['accepted'] for r in rows),
+            'accepted': accepted,'candidates':accepted,'review':sum(r['decision']=='review' for r in rows),
+            'rejected':sum(r['decision']=='rejected' for r in rows),
+            'strict_correct':strict_correct,
+            'strict_correct_review_drafts':sum(r['strict_correct'] and r['decision']=='review' for r in rows),
+            'verified_correct': correct, 'refusals': sum(not r['accepted'] for r in rows),
             'false_accepts': sum(r['false_accept'] for r in rows),
             'false_accept_rate': sum(r['false_accept'] for r in rows)/accepted if accepted else None,
             'provider_micro_usdz': cost, 'simulated_check_micro_usd': checks,
             'mixed_cost_per_verified_correct': (cost+checks)/correct if correct and not unresolved else None,
             'provider_micro_usdz_per_verified_correct': cost/correct if correct and not unresolved else None,
+            'provider_micro_usdz_per_strict_correct':cost/strict_correct if strict_correct and not unresolved else None,
+            'estimated_hosted_credit_micro_usd':credits,
+            'hosted_credit_micro_usd_per_strict_correct':credits/strict_correct if credits is not None and strict_correct and not unresolved else None,
+            'hosted_credit_status':'LOWER_BOUND_PENDING' if unresolved else 'PROVIDER_USAGE_AT_PUBLISHED_PRICES' if credit_known else 'UNMEASURED',
+            'hosted_billing_reconciled':False,
+            'unresolved_calls':sum(c['status'] in PENDING for c in calls),
             'cost_status': 'LOWER_BOUND_PENDING' if unresolved else 'CONFIRMED_INVOICE_AMOUNTS',
             'latency_samples': len(latencies), 'latency_p50_ms': latencies[(len(latencies)-1)//2] if latencies else None,
             'latency_p95_ms': latencies[math.ceil(len(latencies)*.95)-1] if latencies else None,
@@ -451,7 +533,7 @@ def summarize(report, seed=None):
 
 def table(report):
     lines = ['# M4 policy comparison', '', f"**{report['label']}** · complete={report['complete']} · n={len(report['seeds'])} seeds",
-        '', 'USDZ service spend and SIMULATED micro-USD check fees are separate. Upstream API dollars, CPU and human review are unpriced.', '',
+        '', 'USDZ service spend, published-rate API credit estimates and SIMULATED micro-USD check fees are separate. API billing is not reconciled. CPU and human review are unpriced.', '',
         '| Policy | Steps | Verified correct | Refusals | False accepts / accepted | Provider USDZ | USDZ / verified correct | Demo check USD | p50 / p95 ms |',
         '|---|---:|---:|---:|---|---:|---|---:|---|']
     for r in report['summary']:
@@ -459,6 +541,12 @@ def table(report):
         lines.append(f"| {r['policy']} | {r['completed_steps']} | {r['verified_correct']} | {r['refusals']} | {r['false_accepts']} / {r['accepted']} | {r['provider_micro_usdz']/1e6:.6f} | {unit} | {r['simulated_check_micro_usd']/1e6:.6f} | {r['latency_p50_ms']} / {r['latency_p95_ms']} |")
     lines += ['', f"Pending: {report['pending_attempts']}; control violations: {report['control_violations']}; audit head: `{report['audit']['head']}`.", '',
               'Raw failures and unresolved exposure remain in report.json and the ledger. No null metric is a measured zero.', '']
+    lines += ['| Policy | Strictly correct outputs | Correct review drafts | Candidate / review / rejected | USDZ / strict correct | API credit estimate USD |',
+              '|---|---:|---:|---|---|---|']
+    for r in report['summary']:
+        unit=r['provider_micro_usdz_per_strict_correct'];credit=r['estimated_hosted_credit_micro_usd']
+        lines.append(f"| {r['policy']} | {r['strict_correct']} | {r['strict_correct_review_drafts']} | {r['candidates']} / {r['review']} / {r['rejected']} | {unit/1e6 if unit is not None else 'UNMEASURED'} | {credit/1e6 if credit is not None else 'UNMEASURED'} |")
+    lines += ['', 'A strictly correct review draft still requires human review. Every charged failure remains in both cost denominators; unresolved costs are lower bounds.','']
     return '\n'.join(lines)
 
 
@@ -480,6 +568,9 @@ def main(argv=None):
     prep.add_argument('--quality-index', type=int, default=7)
     prep.add_argument('--local-profile')
     prep.add_argument('--premium-profile')
+    prep.add_argument('--corpus', help='Frozen difficult matched workload; its seed must match --seeds')
+    prep.add_argument('--qualification-corpus', help='Frozen corpus bound to supplied qualification profiles')
+    prep.add_argument('--hosted-credit-cap-usd',default='0',help='Separate approved prepaid-credit budget; $0 new cash')
     prep.add_argument('--output', required=True)
     for name in ('preflight', 'run', 'report'):
         stage = sub.add_parser(name)
@@ -497,7 +588,9 @@ def main(argv=None):
             profiles = {tier: path for tier, path in zip(TIERS, (args.local_profile, args.premium_profile)) if path}
             result = prepare(args.scope, dict(zip(TIERS, (args.local_origin, args.premium_origin))),
                 micro_usd(args.aggregate_cap_usdz), micro_usd(args.price_cap_usdz), args.max_purchases,
-                args.steps, args.seeds, args.outage_index, args.quality_index, profiles)
+                args.steps, args.seeds, args.outage_index, args.quality_index, profiles,
+                corpus=args.corpus, qualification_corpus=args.qualification_corpus,
+                hosted_credit_cap=micro_usd(args.hosted_credit_cap_usd))
             target = Path(args.output)
             schedule_path = target.with_name(target.stem+'-seller-schedule.json')
             if target.exists() or schedule_path.exists():

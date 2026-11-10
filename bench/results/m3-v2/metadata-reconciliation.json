@@ -1,0 +1,14 @@
+{
+  "observed_at": 1794295644.3313122,
+  "plan_sha256": "5ace2304e27d7d31459377e084a0a31d1d5e645ecc8df769a69c9f1d8e83cf48",
+  "reason": "Ledger whitelist omitted reproducible hosted_api_cost metadata; original delivery restored",
+  "restored_original_keys": [
+    "50e7bb79b3b6914b2789916edbb253fd101b3dc4eecb1a61765d73f0b405e3c8"
+  ],
+  "new_payments": 0,
+  "new_model_calls": 0,
+  "new_funding": 0,
+  "criteria_changed": false,
+  "caps_changed": false,
+  "ledger_sha256": "c00992f19cd720076795be02d97320b3d1437d83d73bf0faf25b11904edd6573"
+}

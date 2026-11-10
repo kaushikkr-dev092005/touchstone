@@ -29,6 +29,23 @@ try {
       client.readContract({address: USDZ.address, abi: erc20Abi, functionName: 'balanceOf', args: [account.address]})]);
     result = { mode: 'READ_ONLY', chain_id: 63825, address: account.address,
       native_balance_base_units: gas.toString(), usdz_balance_base_units: tokens.toString(), transactions_sent: 0 };
+  } else if (request.command === 'inspect-purchase') {
+    const wallet = openWallet(config.directory);
+    try {
+      const row = wallet.db.prepare('SELECT state,before_ids,result FROM purchases WHERE id=?').get(request.id);
+      if (!row) throw Error('No original purchase');
+      const state = await wallet.store.load();
+      const before = JSON.parse(row.before_ids);
+      const ids = Object.keys(state?.payments || {});
+      // Pinned SDK durably writes pending before its first send, then clears
+      // it only after a verified receipt or authoritative non-payment.
+      const unpaid = !state?.pending && ids.length === before.length && ids.every(id => before.includes(id));
+      result = { state: row.state, confirmed_nonpayment: unpaid,
+        assurance: 'PINNED_SDK_LOCAL_PROTOCOL_STATE_NOT_EMPTY_REMOTE_LOOKUP',
+        pending_invoice: Boolean(state?.pending), historical_payments: ids.length,
+        new_receipt_ids: ids.filter(id => !before.includes(id)), transactions_sent: 0,
+        inference_requests_sent: 0 };
+    } finally { wallet.close(); }
   } else if (request.command === 'lookup') {
     const wallet = openWallet(config.directory);
     try {

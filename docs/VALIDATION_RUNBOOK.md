@@ -1,5 +1,14 @@
 # Release validation and live gates
 
+Current financial authorization and evidence are recorded in
+[the 10 November review](REVIEW_20261110.md). The user approved the hash-bound
+1.98 USDZ qualification funding plan and then a credit-only continuation within
+a $1 aggregate prepaid-credit ceiling. Only one 1.32 USDZ deposit and one 0.01 USDZ
+purchase occurred; the next request was confirmed unpaid and was not retried.
+No new comparison, integrated-demo funding, card issuance or merchant payment is
+authorized by those qualification caps. The older proposed-limit section below is
+historical and does not supersede the approved scope-bound plans.
+
 ## Reproduce validation without spending
 
 From the repository root, PowerShell, macOS and Linux use the same command:

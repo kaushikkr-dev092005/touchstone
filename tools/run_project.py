@@ -84,14 +84,18 @@ def ensure(port, path, valid, command, env, start, seconds=40):
     return {'label': 'BLOCKED', 'status': 'STARTING_OR_UNAVAILABLE', 'pid': process.pid}
 
 
-def run(start=True, tier='balanced', ctx_size=8192):
+def run(start=True, tier='balanced', ctx_size=8192, start_model=True):
     env = environment()
     services = {}
     services['dashboard'] = ensure(8088, '/api/state', lambda r: isinstance(r.get('jobs'), list),
         [sys.executable, '-m', 'touchstone', 'serve'], child_environment(env, 'dashboard'), start)
     manifest_path = ROOT/'.tools/models'/f'{tier}-manifest.json'
     manifest = json.loads(manifest_path.read_text(encoding='utf-8')) if manifest_path.exists() else {}
-    if manifest and all(Path(manifest.get(k, '')).is_file() for k in ('executable', 'model_path')):
+    if not start_model:
+        running=health(8080,'/health').get('status')=='ok'
+        services['model']={'label':'MEASURED' if running else 'BLOCKED',
+            'status':'RUNNING' if running else 'SKIPPED_BY_REQUEST','existing_service_kept':running}
+    elif manifest and all(Path(manifest.get(k, '')).is_file() for k in ('executable', 'model_path')):
         services['model'] = ensure(8080, '/health', lambda r: r.get('status') == 'ok',
             [sys.executable, str(ROOT/'tools/run_local.py'), '--tier', tier, '--ctx-size', str(ctx_size)],
             child_environment(env, 'model'), start)
@@ -106,7 +110,7 @@ def run(start=True, tier='balanced', ctx_size=8192):
         if name == 'premium' and not env.get('ANTHROPIC_API_KEY'):
             services[name] = {'label': 'BLOCKED', 'status': 'HOSTED_CREDENTIALS_REQUIRED'}
             continue
-        if name == 'local_seller' and services['model']['status'] != 'RUNNING':
+        if name == 'local_seller' and services['model']['status'] != 'RUNNING' and start_model:
             services[name] = {'label': 'BLOCKED', 'status': 'LOCAL_MODEL_NOT_READY'}
             continue
         if not env.get('METAL_RPC_URL'):
@@ -125,11 +129,15 @@ def run(start=True, tier='balanced', ctx_size=8192):
                 LOCAL_MODEL=manifest['model'], LOCAL_MODEL_SHA256=manifest['model_sha256'])
         from touchstone.metal import node_executable
         services[name] = ensure(port, '/health', lambda r, p=provider, m=mode:
-            r.get('provider_id') == p and r.get('provider_type') == m and r.get('inference_ready') is True,
+            r.get('provider_id') == p and r.get('provider_type') == m and
+            (r.get('inference_ready') is True or (m=='model' and not start_model)),
             [node_executable(), str(ROOT/'integrations/metal/provider.mjs')], seller_env, start)
     return {'label': 'MEASURED', 'observed_at': time.time(), 'scope': 'LOCAL_STARTUP_ONLY',
         'services': services, 'dashboard_url': 'http://127.0.0.1:8088/',
         'local_stack_running': all(services[k]['status'] == 'RUNNING' for k in ('dashboard', 'model', 'local_seller')),
+        'requested_services_running':all(services[k]['status']=='RUNNING' for k in
+            (('dashboard','model','local_seller') if start_model else ('dashboard','local_seller'))),
+        'model_start_requested':start_model,
         'dashboard_mode': 'SIMULATED', 'live_paid_integration': 'NOT_CHECKED_BY_STARTUP',
         'money_moved': False, 'payments_sent': 0,
         'notice': 'Seller health is not RPC authentication, funded-wallet, model-quality or paid-delivery proof.'}
@@ -141,12 +149,13 @@ def main():
     parser.add_argument('--tier', choices=('economy', 'balanced'), default='balanced')
     parser.add_argument('--ctx-size', type=int, default=8192)
     parser.add_argument('--no-browser', action='store_true')
+    parser.add_argument('--skip-model',action='store_true',help='Start dashboard/sellers without starting a model; existing models are kept')
     parser.add_argument('--output', default='tmp/project-runtime.json')
     args = parser.parse_args()
     if not 512 <= args.ctx_size <= 16384:
         parser.error('--ctx-size must be between 512 and 16384')
     try:
-        report = run(not args.status, args.tier, args.ctx_size)
+        report = run(not args.status, args.tier, args.ctx_size,start_model=not args.skip_model)
     except Exception as error:
         report = {'label': 'BLOCKED', 'failure_type': type(error).__name__, 'money_moved': False, 'payments_sent': 0}
     from tools.configure_airwallex import save_status
@@ -154,7 +163,7 @@ def main():
     print(json.dumps(report, indent=2))
     if not args.status and not args.no_browser and report.get('services', {}).get('dashboard', {}).get('status') == 'RUNNING':
         webbrowser.open(report['dashboard_url'])
-    return 0 if report.get('local_stack_running') else 2
+    return 0 if report.get('requested_services_running',report.get('local_stack_running')) else 2
 
 
 if __name__ == '__main__':

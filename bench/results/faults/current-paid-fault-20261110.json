@@ -1,0 +1,126 @@
+{
+  "body": {
+    "contract": {
+      "code_sha256": {
+        "local_tools.py": "ed1b617ab702c7a7773e615c8fd77b850103d895392ca66ec83d32c2e5928052",
+        "verifier.py": "5e31d7e313f566bc4411ff2f0217c24a55766a98d50a0a927b22516738ea3e7a",
+        "workload.py": "af42df6367bbca65dd76dfa7397b1a712db3022999968a8f3dc26b9f3133a90b"
+      },
+      "provenance": "RECONSTRUCTED_FROM_PUBLIC_TASK_AND_CURRENT_RULES",
+      "scope": "Bounded integer USD invoice/arithmetic only; not a semantic correctness oracle",
+      "verifier_version": "source-rules-v4-source-gating"
+    },
+    "counterexample": {
+      "claimed_total_minor": 1400,
+      "currency": "USD",
+      "decision": "VERIFIED_FAIL",
+      "error_code": "INVOICE_TOTAL_MISMATCH",
+      "expected_output": {
+        "total_cents": 2000
+      },
+      "minor_unit_scale": 100,
+      "recomputed_total_minor": 2000,
+      "verdict": {
+        "passed": false,
+        "reason": "Source evidence or numeric checks failed",
+        "score": 0
+      }
+    },
+    "created_at": "2026-11-10T07:04:29.508958+00:00",
+    "delivery_attestation": {
+      "output_sha256": "b6952bae73939b37d007fd1af65e48aa2861383cd3f365c92be4d37cc417e729",
+      "payment_id": "eip155:63825:bajillion:0xab3cc15a5ad1812d0bfea239bbcf076d2437ec22:0x33d75d443003079f5365d70151432a3d5e9a1bf8206571f5e83fbd07fa3cdccb",
+      "resource": "http://127.0.0.1:8092/inference/f27a8c21acb424d263d611f66fd09165e4e690a571f2199d88b9f8771bac0104?task=eyJpZCI6ImFwcHJvdmFsLWxvY2FsLXByb2JlLTAwMSIsImtpbmQiOiJhcml0aG1ldGljIiwibWluX3F1YWxpdHkiOjEuMCwic291cmNlIjp7ImFtb3VudHNfY2VudHMiOlsxMjUwLDc3NV0sImRpc2NvdW50X2NlbnRzIjoyNX19",
+      "signature": "0x0a369188a0eb31219dc3783a0bfdd12fc8cd228cf6cd3baf03e05438ce1df5cf427ee43117271ad753075b392b8b5c802ba80b48cdaf72e8ec1d26cfe0aeec90",
+      "signer": "0x025519787048fbec01a1ef112f9a7c18a9ad694fcf0ee0d0d875ecaf581fdfbe82",
+      "task_sha256": "37f6490992c1db4b140d73104fd9d2a09ad80a20c2cad8df5809838029aca09d",
+      "version": 1
+    },
+    "nonce": "7d4927a7c817475f86c9e65597f1944a",
+    "original_charge_base_units": "10000000000000000",
+    "output": {
+      "total_cents": 1400
+    },
+    "payment": {
+      "entries": [
+        {
+          "count": "1",
+          "cumulative": "10000",
+          "recipient": "0x025519787048fbec01a1ef112f9a7c18a9ad694fcf0ee0d0d875ecaf581fdfbe82"
+        }
+      ],
+      "invoice": {
+        "amount": "10000000000000000",
+        "asset": "0x000000000000000000000000000000000000B5d5",
+        "id": "0x937af3a9f4cd51b0f2b01ab160ac576fc598c13d351420a358c0708a6829a227:44d29d52-956e-4521-bfcd-7d9675de9d4b",
+        "network": "eip155:63825",
+        "recipient": "0x025519787048fbec01a1ef112f9a7c18a9ad694fcf0ee0d0d875ecaf581fdfbe82",
+        "settlement": "0xab3cC15A5Ad1812D0BfEA239bbcF076d2437Ec22"
+      },
+      "invoiceSignature": "0xe8ae26d1fbd383fb83422b2ebed328fe5c98f00b00d06165018ae36639fbf8f14488ff20602e69714125c5da80a0b546f5daefeef0f5fb775e27edde04d9d771",
+      "receipt": {
+        "body": "0xe6c40d4a0c4b848b0221e0a6237ee4b25ed460aa4534c10475ea0b222ba05bb30000000000031bf10240a959a67536815356c3b11910b79d020bbf25fb5294f965365eb65118ef22ad0000000000000000000000000000271079af0438f46e436850f4bafe25f23bccbaabb19465b1644fa7ed8b40c0f03657",
+        "operatorSignature": "0x6aba87dcb12d739fcfb5e2cce063fb54327c1a1d7e23d0ec800db07f054b7c2c2f980edb0c2eab7c4ffd25772d47cb402d23095c81ab5018a4216e193b8cd4a3",
+        "payerSignature": "0x1c3d9ce631c67d3955b124c22493cc1ee901724105979a01041147f1fd22b75322e89656ed383ff63ed1638c9f60cd463ebab9421e76fb14af4e248058cff827"
+      }
+    },
+    "requirements": {
+      "amount": "10000000000000000",
+      "asset": "0x000000000000000000000000000000000000B5d5",
+      "extra": {
+        "invoicePrefix": "0x937af3a9f4cd51b0f2b01ab160ac576fc598c13d351420a358c0708a6829a227",
+        "serviceUrl": "https://clearing-testnet.metalntwx.com",
+        "settlement": "0xab3cC15A5Ad1812D0BfEA239bbcF076d2437Ec22"
+      },
+      "maxTimeoutSeconds": 60,
+      "network": "eip155:63825",
+      "payTo": "0x025519787048fbec01a1ef112f9a7c18a9ad694fcf0ee0d0d875ecaf581fdfbe82",
+      "scheme": "bajillion"
+    },
+    "resource": "http://127.0.0.1:8092/inference/f27a8c21acb424d263d611f66fd09165e4e690a571f2199d88b9f8771bac0104?task=eyJpZCI6ImFwcHJvdmFsLWxvY2FsLXByb2JlLTAwMSIsImtpbmQiOiJhcml0aG1ldGljIiwibWluX3F1YWxpdHkiOjEuMCwic291cmNlIjp7ImFtb3VudHNfY2VudHMiOlsxMjUwLDc3NV0sImRpc2NvdW50X2NlbnRzIjoyNX19",
+    "source_evidence_sha256": "ff1f27c4ced6bb9b7a5941729373d080d7293fe85117351fc5ee00fa2b68826e",
+    "task": {
+      "id": "approval-local-probe-001",
+      "kind": "arithmetic",
+      "min_quality": 1,
+      "source": {
+        "amounts_cents": [
+          1250,
+          775
+        ],
+        "discount_cents": 25
+      }
+    },
+    "version": "touchstone-inferential-fault-v1"
+  },
+  "commitment": {
+    "algorithm": "SHA-256-domain-separated-binary-tree",
+    "leaves": {
+      "contract": "a2ee2d61b33b73ab871f7eed41f3b8e86570ffe3cfc0bb01d5d055ec26c0af0a",
+      "counterexample": "b6c463c78e0440c1cfdf6b5890d20475a2189c0a54fcfe4d2a47a4da9f64eb1c",
+      "created_at": "20198af10357205e3805b4f449174014ef405e5e8d171ce9faf3f5d8297a424d",
+      "delivery_attestation": "5a74a6758bd37244393d740806b0d5e24748c27dd50f956a53a5501314be3051",
+      "nonce": "c67139da1d6b3e96ca36d7f27639cdabd9c482d9c601022ec95c0fb60b6b078d",
+      "original_charge_base_units": "aa3c93fde9acb36f0da550e0d90b4236c68041b8d8cdb2729489e00f0e7e3a3b",
+      "output": "3cfa5848bc8d7f86b270869df938b8b3d34e55a208d90a08666e02504cdcb9ad",
+      "payment": "550ce6d62300973365ddac71e1b137fb2606ecc9463bf6c72c3ab7de79834e35",
+      "requirements": "2928534d18d0548098b4d777f828dcd0a5ace9ee445fdb3caf7836a86194f00c",
+      "resource": "f0e64706ddbb35abdd85dc658505ad464562cabdc794a4e90ca143f515898aad",
+      "source_evidence_sha256": "4e58aec24d148458a369ca4cd8f71542d66496123878f6d2b8375f171e52665e",
+      "task": "d5d096687f746b748d255becacd1ea9e95e3179ae4573c8869f7593e39fee898",
+      "version": "fefcc655ff0d0e0a5b65f00f2368cd4397ade8ed53e100ed81b0814c2f3d8353"
+    },
+    "root": "eea405c2ee8f3845a33491304f6a5d409a7408da1d1e8a011b0887a00b3c50cc"
+  },
+  "fault_signature": {
+    "signature": "0x3052213b64d8f897ddcfc23ea5e84e57fd5d0e183aa68d99c5aa4b00f818a13d595a9718c2592e391adc95d141d30a4257e3243ae80482084aded95c91b9a18c",
+    "signer": "0x0240a959a67536815356c3b11910b79d020bbf25fb5294f965365eb65118ef22ad"
+  },
+  "label": "MEASURED",
+  "limits": {
+    "credit_issued": false,
+    "historical_unsigned_output_is_not_provider_attributed": true,
+    "refund_executed": false,
+    "signature_alone_is_not_proof_of_fault": true
+  }
+}

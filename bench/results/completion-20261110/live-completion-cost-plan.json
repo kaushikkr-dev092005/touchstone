@@ -1,0 +1,53 @@
+{
+  "label": "MEASURED",
+  "observed_at": 1794252160.9647942,
+  "purpose": "COST_AND_PREREQUISITES_ONLY",
+  "financial_transactions": 0,
+  "model_inference_calls": 0,
+  "gpu_model_started": false,
+  "quote": {
+    "provider": "hosted-premium",
+    "price_micro_usdz": 10000,
+    "expires_at": 1794252188.065,
+    "quote_sha256": "62395a8097792d7d92a6270d6f64f49047a82ae861196e4b318cec60e46b9438",
+    "task_id": "IX-00-000-20261103",
+    "payment_sent": false
+  },
+  "qualification": {
+    "calibration_calls": 120,
+    "holdout_calls": 60,
+    "maximum_primary_calls": 180,
+    "required_calibration_successes": 119,
+    "required_holdout_successes": 57,
+    "maximum_false_accepts": 0,
+    "provider_cost_at_current_price_micro_usdz": 1800000,
+    "internal_simulated_check_allowance_micro_usd": 180000,
+    "hosted_api_credit_usage": "UNVERIFIED_NOT_AUTHORIZED"
+  },
+  "m4_comparison": {
+    "planned_steps_per_policy": 16,
+    "paid_baseline_calls_if_no_ladder_eligible": 32,
+    "paid_calls_if_every_ladder_step_buys_once": 48,
+    "minimum_calls_required": 30,
+    "maximum_calls_per_seed": 50,
+    "additional_provider_cost_for_32_calls_at_quoted_price_micro_usdz": 320000,
+    "additional_provider_cost_for_48_calls_at_quoted_price_micro_usdz": 480000,
+    "local_seller_ready": false,
+    "note": "This is a scenario estimate, not a local-provider quote or a completed comparison."
+  },
+  "existing_restrictions": {
+    "proposed_aggregate_cap_micro_usdz": 1000000,
+    "per_call_cap_micro_usdz": 10000,
+    "hosted_paid_dollar_cap": 0,
+    "no_topups_or_transfers": true,
+    "previous_one_call_allowance_consumed": true
+  },
+  "wallet": {
+    "scope": "m2-live-single-20261105-j1",
+    "spendable_base_units": "0",
+    "pending_invoice": false
+  },
+  "qualification_fits_existing_aggregate_proposal": false,
+  "execution_authorized": false,
+  "reason": "FUNDING_CREDIT_VERIFICATION_AND_FINAL_OPERATION_APPROVAL_REQUIRED"
+}

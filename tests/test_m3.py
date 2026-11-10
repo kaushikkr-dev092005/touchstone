@@ -77,7 +77,11 @@ class CorpusTests(unittest.TestCase):
             for record in self.records:
                 task=Task(**record['task']);expected=self.truth[task.id]
                 result=verify(task,expected['output'])
-                self.assertEqual(result['passed'],not bool(expected['missing_fields']),task.id)
+                self.assertEqual(result['passed'],record['scenario'] in {'clean','ocr_noise'},task.id)
+                if not expected['missing_fields']:
+                    self.assertTrue(result['structurally_valid'],task.id)
+                    self.assertTrue(result['semantic_role_binding_verified'],task.id)
+                    self.assertTrue(result['arithmetic_valid'],task.id)
                 self.assertFalse(result['payment_authorized'])
 
     def test_tools_have_measured_coverage_and_no_false_accepts(self):
@@ -86,7 +90,7 @@ class CorpusTests(unittest.TestCase):
             task=Task(**record['task'])
             rows.append({'task_id':task.id,'output':deterministic(task),'latency_ms':0})
         scored=score(self.records,self.truth,rows)
-        self.assertEqual(sum(r['output'] is not None for r in scored),24)
+        self.assertEqual(sum(r['output'] is not None for r in scored),72)
         self.assertEqual(sum(r['false_accept'] for r in scored),0)
 
     def test_missing_fields_cannot_be_invented_or_accepted(self):
@@ -162,6 +166,15 @@ class PremiumClient(FixtureClient):
         quote=super().quote(url);terms={**quote.terms,'provider_id':'hosted-premium'}
         identity=hashlib.sha256(json.dumps(terms,sort_keys=True).encode()).hexdigest()
         return MetalQuote(identity,'hosted-premium',10000,quote.expires_at,terms,mode='MOCK')
+
+    def pay(self,key,quote):
+        self.factory.events.append(('pay',self.wallet))
+        with self.rail.connect() as db:
+            db.execute('INSERT OR IGNORE INTO terms VALUES(?,?)',(key,json.dumps(quote.terms)))
+        # A schema-valid abstention needs review; a malformed answer is rejected
+        # and should not trigger a paid second opinion.
+        self.rail.pay(key,quote,lambda:{'fields':dict.fromkeys(FIELDS),'items':[]})
+        return self._result(key)
 
 
 class PremiumFactory(FixtureFactory):

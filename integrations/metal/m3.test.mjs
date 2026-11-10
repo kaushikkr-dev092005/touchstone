@@ -16,7 +16,7 @@ test('same x402 resource contract accepts unstructured invoice extraction withou
 test('three-task panel preserves BLOCKED state and escapes evidence', () => {
   const html=readFileSync(new URL('../../apps/dashboard/index.html',import.meta.url),'utf8');
   const start=html.indexOf('function renderInvoiceStudy('),end=html.indexOf("fetch('/api/invoice-study')",start);
-  const nodes={'invoice-study-summary':{},'invoice-showcase-rows':{}};
+  const nodes={'invoice-study-summary':{},'invoice-showcase-rows':{},'invoice-model-rows':{}};
   const context=vm.createContext({$:id=>nodes[id],esc:value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')});
   vm.runInContext(html.slice(start,end),context);
   context.renderInvoiceStudy({label:'MEASURED',models_measured:0,qualification_status:'BLOCKED_NO_ELIGIBLE_MODEL',baseline:{coverage:24/180},
@@ -27,6 +27,12 @@ test('three-task panel preserves BLOCKED state and escapes evidence', () => {
   assert.match(nodes['invoice-showcase-rows'].innerHTML,/BLOCKED/);
   assert.match(nodes['invoice-showcase-rows'].innerHTML,/HUMAN_REVIEW/);
   assert.doesNotMatch(nodes['invoice-showcase-rows'].innerHTML,/<script>/);
+  context.renderInvoiceStudy({label:'MEASURED',profiles:[{model_id:'<unsafe>',eligible:false,
+    calibration:{sources_scored:3,strict_correct:2,candidates:1,review:2,rejected:0,false_accepts:0},
+    holdout:{sources_scored:0,strict_correct:0,candidates:0,review:0,rejected:0,false_accepts:0}}]});
+  assert.match(nodes['invoice-model-rows'].innerHTML,/1 \/ 2 \/ 0/);
+  assert.match(nodes['invoice-model-rows'].innerHTML,/INCOMPLETE OR INELIGIBLE/);
+  assert.doesNotMatch(nodes['invoice-model-rows'].innerHTML,/<unsafe>/);
   context.renderInvoiceStudy({label:'BLOCKED'});
   assert.match(nodes['invoice-study-summary'].textContent,/stale or unavailable/);
   assert.doesNotMatch(nodes['invoice-showcase-rows'].innerHTML,/2000 cents/);

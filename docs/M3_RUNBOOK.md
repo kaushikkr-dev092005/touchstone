@@ -87,3 +87,29 @@ To collect the held-out partition use a different approved wallet scope/cap and 
 The paid profiler records quote-bound reservation keys, receipt IDs, output, model/usage metadata, check charges, audit heads, and pending accounting in its output and ignored local ledger. Original invoices, signed receipts and deliveries remain in the Metal wallet's existing journal. An uncertain payment preserves its reservation and blocks a repeated invocation; it is never automatically retried or replaced. Use the M2 recovery procedure only with the original invoice and appropriate authorization. A stopped study cannot qualify a model. The profile's provider-reported latency covers inference only; upstream API dollar cost is UNMEASURED, even with declared partner credits.
 
 After measurements, run `python tools/m3.py report`. The unchanged Wilson screen uses calibration sources only; all 120 calibration and all 60 held-out cases are required. The separately reported held-out exact-match threshold is 95% with zero false accepts. No demo-tier relaxation is enabled. Passing remains offline evidence and does not itself authorize a purchase, customer capture, banking action or representative business claim.
+# Current v2 workflow, 10 November 2026
+
+Read [the review](REVIEW_20261110.md) before using the historical commands below.
+The role-aware checker changed profile provenance. Old profiles cannot qualify a
+model. The new immutable corpus is `bench/results/m3-v2/dataset`.
+
+```text
+python tools/m3.py report --directory bench/results/m3-v2 --corpus bench/results/m3-v2/dataset
+python tools/qualify_hosted_direct.py run
+```
+
+Both commands above perform no inference or financial transaction. The second
+prints the required approval phrase and concrete limits. The original paid plan
+stopped after one delivered 0.01 USDZ call and a confirmed-unpaid request; do not
+restart it, fund again or repeat a source. The credit-only continuation requires
+its own final approval and exact `--execute --approval` phrase. It keeps the $1
+aggregate prepaid-credit ceiling and sends no Metal transaction. Its failed API
+outcomes remain reserved and never automatically restart. A failed calibration
+leaves the prospective holdout untouched. See the frozen plan and cost preflight
+in `bench/results/m3-v2/`.
+
+Candidate, review and rejected are separate. Strict correctness is scored offline;
+no extraction result is permission to pay an invoice. The calibration confidence
+target and complete holdout requirement are unchanged.
+
+---

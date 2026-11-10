@@ -1,0 +1,33 @@
+{
+  "label": "MEASURED",
+  "scope": "READ_ONLY_FUNDING_RECEIPTS",
+  "observed_at": 1794297173.3980052,
+  "chain_id": 63825,
+  "transactions": [
+    {
+      "purpose": "TOKEN_APPROVAL",
+      "transaction_id": "0xfabec27629c6d5db10e1d2fb337f09d31ac4126db50bc4d912d4058684a2c6af",
+      "status": 1,
+      "block_number": 23109812,
+      "gas_used": 46389,
+      "effective_gas_price_wei": "1",
+      "native_fee_wei": "46389"
+    },
+    {
+      "purpose": "CLEARING_DEPOSIT",
+      "transaction_id": "0x5d5fc6467383a25c620ae629ab1fb7918b1acf52acc577087f283bd85b538057",
+      "status": 1,
+      "block_number": 23109875,
+      "gas_used": 405425,
+      "effective_gas_price_wei": "1",
+      "native_fee_wei": "405425"
+    }
+  ],
+  "actual_native_fee_wei": "451814",
+  "approved_native_fee_per_wallet_cap_wei": "1000000000000000",
+  "native_fee_cap_respected": true,
+  "deposited_micro_usdz": 1320000,
+  "holdout_deposit_sent": false,
+  "transactions_sent_by_this_check": 0,
+  "clearing_payment_final_settlement_verified": false
+}

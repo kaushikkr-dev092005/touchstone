@@ -29,3 +29,22 @@ in `dist/bundle-manifest.json` records an exact Git commit and file hashes; the
 archive excludes dirty working-tree files, private configuration and wallet data.
 That artifact is local, not uploaded or submitted. A clean-checkout report records
 the exact packaged revision separately.
+# Latest review evidence, 10 November 2026
+
+- [Completed Haiku calibration, ineligible; holdout untouched](../bench/results/m3-v2/haiku-qualification-result.json)
+- [Sonnet zero-cost preflight](../bench/results/m3-v2/sonnet-cost-preflight.json) and [new approval plan](../bench/results/m3-v2/sonnet-qualification-plan.json)
+
+- [Semantic verifier review and remaining gates](REVIEW_20261110.md)
+- [Current role-aware study report](../bench/results/m3-v2/report.json)
+- [Frozen untouched prospective holdout](../bench/results/m3-v2/dataset/manifest.json)
+- [Historical outputs re-scored, no new calls](../bench/results/m3-v2/historical-rescore.json)
+- [Approved paid attempt and safe stop](../bench/results/m3-v2/paid-qualification-status.json)
+- [Credit-only continuation plan, separate final approval required](../bench/results/m3-v2/direct-continuation-plan.json)
+- [Current signed fault proof](../bench/results/faults/current-paid-fault-20261110.json)
+- [Current signed seller acknowledgement; no refund](../bench/results/completion-20261110/current-seller-fault-acknowledgement.json)
+- [Separate frozen difficult comparison corpus, not executed](../bench/results/m4-v2/dataset/manifest.json)
+
+Historical dated evidence follows. A re-score, frozen source or MOCK test is not a
+new live model/payment result.
+
+---

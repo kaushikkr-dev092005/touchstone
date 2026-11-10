@@ -42,7 +42,15 @@ def raw_profile(tier,model_id,rows,**extra):
             'verifier_version':VERSION,'code_sha256':code_hashes(),'rows':rows,**extra}
 
 
-def local(tier,partition,max_calls,output):
+def corpus_records(corpus):
+    if corpus:
+        from .invoice_corpus import load
+        manifest,records,_=load(corpus,include_truth=False)
+        return records,{'dataset_version':manifest['dataset_version'],'corpus_sources_sha256':manifest['sources_sha256']}
+    return build()[0],{'dataset_version':DATASET_VERSION,'corpus_sources_sha256':None}
+
+
+def local(tier,partition,max_calls,output,*,corpus=None):
     if tier not in {'economy','balanced'}:
         raise ValueError('Only the installed 0.5B and 1.5B tiers are profiled; 3B needs a separate fit proof')
     manifest=json.loads((ROOT/'.tools/models'/f'{tier}-manifest.json').read_text(encoding='utf-8'))
@@ -64,11 +72,12 @@ def local(tier,partition,max_calls,output):
     if actual!=manifest['model_sha256']:
         raise RuntimeError('Model file hash differs from the installed manifest')
     from .providers import local_inference
-    records,_=build();rows=[];samples=[hardware()];provenance=code_hashes()
+    records,corpus_binding=corpus_records(corpus);rows=[];samples=[hardware()];provenance=code_hashes()
     if Path(output).exists():
         previous=json.loads(Path(output).read_text(encoding='utf-8'))
         if (previous.get('label')!='MEASURED' or previous.get('code_sha256')!=provenance
-                or previous.get('model_sha256')!=actual or previous.get('tier')!=tier):
+                or previous.get('model_sha256')!=actual or previous.get('tier')!=tier
+                or any(previous.get(key)!=value for key,value in corpus_binding.items())):
             raise ValueError('Existing profile has different provenance; preserve it and use a fresh output')
         rows=previous['rows']
         samples=previous.get('hardware_samples',[])+samples
@@ -77,7 +86,7 @@ def local(tier,partition,max_calls,output):
             if r['task']['id'] in {row['task_id'] for row in rows}}),model_sha256=actual,
             code_sha256=provenance,runtime_archive_sha256=manifest.get('runtime_archive_sha256'),
             hardware_samples=samples,decoding='temperature-0-json-schema',
-            financial_cost_label='LOCAL_UNPRICED',payments_sent=0,**extra)
+            financial_cost_label='LOCAL_UNPRICED',payments_sent=0,**corpus_binding,**extra)
     seen={row['task_id'] for row in rows}
     for record in [r for r in records if r['partition']==partition and r['task']['id'] not in seen][:max_calls]:
         task=Task(**record['task']);started=time.perf_counter()
@@ -122,7 +131,8 @@ def save(path,report):
 
 
 def paid(scope,origin,budget,cap,max_calls,output,execute=False,reference_scope=None,reference_budget=0,
-         partition='calibration',client_factory=MetalRail,health=None,directory=None):
+         partition='calibration',client_factory=MetalRail,health=None,directory=None,corpus=None,
+         before_purchase=None,after_purchase=None):
     if not execute:
         raise ValueError('Paid profiling requires --execute and written approval for its aggregate cap and call count')
     if not isinstance(scope,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,36}',scope) or reference_scope==scope:
@@ -134,12 +144,13 @@ def paid(scope,origin,budget,cap,max_calls,output,execute=False,reference_scope=
             or bool(reference_scope)!=bool(reference_budget) or cap+VERIFY_COST>budget-reference_budget):
         raise ValueError('Caps must include check costs and reference allocation within the aggregate budget')
     directory=Path(directory or ROOT/'data/invoice-profiles');directory.mkdir(parents=True,exist_ok=True)
-    records,_=build();records=[r for r in records if r['partition']==partition][:max_calls]
+    records,corpus_binding=corpus_records(corpus)
+    records=[r for r in records if r['partition']==partition][:max_calls]
     tasks=[Task(**r['task']) for r in records]
     ref_tasks=[Task('REF-'+t.id,t.kind,t.source) for t in tasks]
     terms={'scope':scope,'origin':origin,'budget':budget,'cap':cap,'max_calls':max_calls,
            'reference_scope':reference_scope,'reference_budget':reference_budget,'partition':partition,
-           'dataset_version':DATASET_VERSION,'code_sha256':code_hashes()}
+           **corpus_binding,'code_sha256':code_hashes()}
     evidence_label='MEASURED' if client_factory is MetalRail else 'MOCK'
     # Readiness never invokes a provider inference request.
     if client_factory is MetalRail:
@@ -163,7 +174,7 @@ def paid(scope,origin,budget,cap,max_calls,output,execute=False,reference_scope=
         previous=json.loads(Path(output).read_text(encoding='utf-8')) if Path(output).exists() else None
         if previous:
             expected={'label':evidence_label,'tier':'hosted-premium','model_id':model_id,
-                      'dataset_version':DATASET_VERSION,'verifier_version':VERSION,'code_sha256':terms['code_sha256']}
+                      **corpus_binding,'verifier_version':VERSION,'code_sha256':terms['code_sha256']}
             if any(previous.get(k)!=v for k,v in expected.items()):
                 raise ValueError('Existing profile has different provenance; use a fresh output')
             ids={row['task_id'] for row in previous['rows']}
@@ -206,7 +217,7 @@ def paid(scope,origin,budget,cap,max_calls,output,execute=False,reference_scope=
                 'audit':ledger.audit()}
             runs=prior_runs+[current]
             return raw_profile('hosted-premium',model_id,retained+rows,label=evidence_label,
-                code_sha256=terms['code_sha256'],run_id=run,runs=runs,
+                code_sha256=terms['code_sha256'],run_id=run,runs=runs,**corpus_binding,
                 upstream_funding='PARTNER_CREDITS_OPERATOR_DECLARED',upstream_dollar_cost='UNMEASURED',
                 verification_cost_label='SIMULATED',latency_source='PROVIDER_REPORTED_INFERENCE_ONLY',
                 stop_reason=next((r['stop_reason'] for r in runs if r.get('stop_reason')),None),audit=ledger.audit(),
@@ -224,10 +235,13 @@ def paid(scope,origin,budget,cap,max_calls,output,execute=False,reference_scope=
             with ledger.worker(job['id']) as owner:
                 offers=rail.quote_for_task(task)
                 if len(offers)!=1:raise RuntimeError('A valid premium quote is required')
-                offer=offers[0];key=ledger.reserve(job['id'],task,0,offer,VERIFY_COST,expected_version=job['mandate_version'])
+                offer=offers[0]
+                if before_purchase:before_purchase(task,offer)
+                key=ledger.reserve(job['id'],task,0,offer,VERIFY_COST,expected_version=job['mandate_version'])
                 ledger.assert_can_pay(key,owner)
                 receipt=rail.pay(key,offer)
                 ledger.record_paid(key,receipt);ledger.finish_attempt(key,receipt['output'],verify(task,receipt['output']))
+                if after_purchase:after_purchase(task,offer,receipt)
             return next(a for a in ledger.attempts(job['id']) if a['key']==key)
         for index,task in enumerate(tasks):
             row=None

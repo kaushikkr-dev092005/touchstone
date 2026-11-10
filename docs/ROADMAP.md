@@ -1,5 +1,13 @@
 # Build roadmap, M0 review 2 November 2026
 
+Current status: [10 November serious review](REVIEW_20261110.md). Semantic role
+binding and candidate/review/rejected accounting are implemented and tested.
+The new holdout is frozen. One hosted inference was correct; qualification stopped
+after a subsequent confirmed-unpaid request, with no retry. The next concrete
+credit-only plan awaits separate final approval. Current real signed seller
+acknowledgement is verified, with zero refund/credit. Integrated useful inference,
+live matched comparison, final live recording and portal submission remain open.
+
 The official event page (fetched 2 November 2026) lists build completion on **15 November, 18:29 UTC**; earlier notes cited 13 November. **Internal deadline: 13 November 18:29 UTC / 23:59 IST**, submitting well before it. Confirm the personal deadline in the portal. Registration is listed as closed on 25 October; verify accepted participation in the signed-in portal now. No registration or submission has been performed by this agent.
 
 ## Official kit mapping

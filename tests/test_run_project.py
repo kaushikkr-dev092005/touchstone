@@ -1,4 +1,5 @@
 import os
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -10,6 +11,24 @@ from tools import run_local
 
 
 class RuntimeTests(unittest.TestCase):
+    def test_read_only_sellers_can_start_without_launching_a_gpu_model(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);models=root/'.tools/models';models.mkdir(parents=True)
+            (models/'balanced-manifest.json').write_text(json.dumps({'model':'fixture-model','model_sha256':'a'*64}))
+            for provider in ('local-gpu','hosted-premium'):
+                path=root/'data/metal'/('provider-'+provider)/'wallet.sqlite'
+                path.parent.mkdir(parents=True);path.touch()
+            with patch.object(runner,'ROOT',root),patch.object(runner,'environment',return_value={
+                'METAL_RPC_URL':'https://fixture.invalid','ANTHROPIC_API_KEY':'fixture-key'}),\
+                patch.object(runner,'health',return_value={}),\
+                patch.object(runner,'ensure',return_value={'status':'RUNNING'}) as ensure,\
+                patch('touchstone.metal.node_executable',return_value='node'):
+                result=runner.run(start=True,start_model=False)
+            self.assertEqual(result['services']['model']['status'],'SKIPPED_BY_REQUEST')
+            self.assertTrue(result['requested_services_running']);self.assertFalse(result['local_stack_running'])
+            self.assertEqual(ensure.call_count,3)
+            self.assertFalse(any('run_local.py' in ' '.join(call.args[3]) for call in ensure.call_args_list))
+
     def test_service_environments_keep_secrets_in_their_own_process(self):
         env = {'AIRWALLEX_API_KEY': 'PRIVATE_BANK', 'AGENT_PRIVATE_KEY': 'PRIVATE_WALLET',
                'ANTHROPIC_API_KEY': 'PRIVATE_HOSTED', 'METAL_RPC_URL': 'PRIVATE_RPC'}

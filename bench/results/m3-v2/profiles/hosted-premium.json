@@ -1,0 +1,168 @@
+{
+  "label": "MEASURED",
+  "tier": "hosted-premium",
+  "model_id": "claude-haiku-5-5",
+  "dataset_version": "invoice-prospective-v2-202611101",
+  "verifier_version": "invoice-extraction-v2-role-bound",
+  "code_sha256": {
+    "invoice_dataset.py": "f940bd9db9df3472f33f81543bd3eed8a0822ca2d54a768c2142a985c0a00908",
+    "invoice_corpus.py": "5644dbfd47d0ce3d2fcb9f975dc7d45196eb19df2b216a4b114cd1de760dac1c",
+    "invoice_extraction.py": "08a8b52d4911599129296f4572b7fdfc08a2c79710e643370d81fd0ecae55ce4",
+    "invoice_roles.py": "716a5ebd849e9fbe8fb5cd6daeaf7bfbed5445d7bddcd047df3efb6bb8cdee47",
+    "invoice_study.py": "4262952223055e8181735beaa04d58beae0bb47bc75363d799d3a8d99f9ba043",
+    "invoice_profile.py": "bbb4abaac530c5d8742d1d8e047bc53914aaf59b31fc93803f3cb46cf94c55dd",
+    "providers.py": "1d0ab5878ad2dc596c73228792756b30c1c4148562cc6a47329f100498d0a497",
+    "hosted_cost.py": "f91405d67e20ffea6fa0ce70190877f8a35fe1d2a73c094d7c28a0ae55c1db35",
+    "local_tools.py": "ed1b617ab702c7a7773e615c8fd77b850103d895392ca66ec83d32c2e5928052",
+    "eligibility.py": "6c026a6a0d0ca50f904e0c191498892b7904a855fcf38767f500815d5ec37033",
+    "verifier.py": "5e31d7e313f566bc4411ff2f0217c24a55766a98d50a0a927b22516738ea3e7a"
+  },
+  "rows": [
+    {
+      "task_id": "IX-00-000-20261103",
+      "output": {
+        "fields": {
+          "currency": {
+            "end": 134,
+            "start": 131,
+            "value": "USD"
+          },
+          "invoice_id": {
+            "end": 67,
+            "start": 49,
+            "value": "IX-00-000-20261103"
+          },
+          "purchase_order_id": {
+            "end": 120,
+            "start": 111,
+            "value": "PO-00-000"
+          },
+          "subtotal_cents": {
+            "end": 154,
+            "start": 145,
+            "value": "USD 77.34"
+          },
+          "supplier_name": {
+            "end": 94,
+            "start": 78,
+            "value": "Vendor 00 Supply"
+          },
+          "tax_cents": {
+            "end": 168,
+            "start": 160,
+            "value": "USD 1.98"
+          },
+          "total_cents": {
+            "end": 189,
+            "start": 180,
+            "value": "USD 79.32"
+          }
+        },
+        "items": [
+          {
+            "line": {
+              "end": 246,
+              "start": 190,
+              "value": "ITEM-01 | quantity=2 | unit=USD 24.52 | amount=USD 49.04"
+            },
+            "line_total_cents": {
+              "end": 246,
+              "start": 237,
+              "value": "USD 49.04"
+            },
+            "quantity": {
+              "end": 210,
+              "start": 209,
+              "value": "2"
+            },
+            "unit_price_cents": {
+              "end": 227,
+              "start": 218,
+              "value": "USD 24.52"
+            }
+          },
+          {
+            "line": {
+              "end": 303,
+              "start": 247,
+              "value": "ITEM-02 | quantity=2 | unit=USD 14.15 | amount=USD 28.30"
+            },
+            "line_total_cents": {
+              "end": 303,
+              "start": 294,
+              "value": "USD 28.30"
+            },
+            "quantity": {
+              "end": 267,
+              "start": 266,
+              "value": "2"
+            },
+            "unit_price_cents": {
+              "end": 284,
+              "start": 275,
+              "value": "USD 14.15"
+            }
+          }
+        ]
+      },
+      "receipt": "0x5d63e52634b89c33bc97687161914770a34163f10c75063ac594f6090c26609c:43cc81ad-8874-41d1-900b-420b0092eece",
+      "run_id": "06a830a3c779",
+      "provider_metadata": {
+        "funding_source": "PARTNER_CREDITS_OPERATOR_DECLARED",
+        "hosted_api_cost": {
+          "additional_hosted_cash_spend_measured": false,
+          "billing_reconciled": false,
+          "estimated_credit_micro_usd": 656,
+          "long_prompt_pricing": false,
+          "price_checked_date": "2026-11-10",
+          "price_reference": "https://platform.claude.com/docs/en/about-claude/pricing",
+          "status": "PROVIDER_USAGE_AT_PUBLISHED_PRICES"
+        },
+        "latency_ms": 3678,
+        "provider_model": "claude-haiku-5-5",
+        "provider_type": "ANTHROPIC_API",
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "input_tokens": 4080,
+          "output_tokens": 495
+        }
+      },
+      "reservation_key": "50e7bb79b3b6914b2789916edbb253fd101b3dc4eecb1a61765d73f0b405e3c8",
+      "provider_cost_micro_usd": 10000,
+      "verification_cost_micro_usd": 1000,
+      "latency_ms": 3678
+    }
+  ],
+  "run_id": "06a830a3c779",
+  "runs": [
+    {
+      "run_id": "06a830a3c779",
+      "scope": "m3v2-20261110-cal",
+      "partition": "calibration",
+      "stop_reason": "PaymentPending",
+      "pending_attempts": 1,
+      "confirmed_provider_spend_including_failed_calls_micro_usd": 10000,
+      "verification_cost_micro_usd": 1000,
+      "audit": {
+        "valid": true,
+        "events": 13,
+        "head": "cfe899f246437a5a6fb73f1bf0aae67fa0ffcb68ed0da50055bfed2ac72d301b"
+      }
+    }
+  ],
+  "corpus_sources_sha256": "5ef414704acbbb540bd889b99dd1c2498ebf805caa4b70abbb29dd2e2b95209f",
+  "upstream_funding": "PARTNER_CREDITS_OPERATOR_DECLARED",
+  "upstream_dollar_cost": "UNMEASURED",
+  "verification_cost_label": "SIMULATED",
+  "latency_source": "PROVIDER_REPORTED_INFERENCE_ONLY",
+  "stop_reason": "PaymentPending",
+  "audit": {
+    "valid": true,
+    "events": 13,
+    "head": "cfe899f246437a5a6fb73f1bf0aae67fa0ffcb68ed0da50055bfed2ac72d301b"
+  },
+  "pending_attempts": 1,
+  "confirmed_provider_spend_including_failed_calls_micro_usd": 10000,
+  "verification_cost_micro_usd": 1000
+}

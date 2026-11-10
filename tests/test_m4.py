@@ -108,6 +108,52 @@ class M4Tests(unittest.TestCase):
         other = prepare('m4-fixture', ORIGINS, 2040000, 50000, 40, 12)
         self.assertEqual(plan['plan_sha256'], other['plan_sha256'])
 
+    def test_frozen_difficult_sources_are_bound_without_offline_labels_in_dispatch(self):
+        from touchstone.invoice_corpus import freeze,load
+        from touchstone.comparison import offline_score
+        directory=self.root/'frozen';manifest=freeze(directory,202611102)
+        plan=prepare('frozen',ORIGINS,2040000,50000,40,16,(202611102,),corpus=directory)
+        self.assertEqual(sum(r['partition']=='holdout' for r in plan['tasks']),15)
+        self.assertEqual(plan['corpus_sources_sha256'],manifest['sources_sha256'])
+        self.assertNotIn('offline_truth',json.dumps(plan['tasks']))
+        validate(plan)
+        _,_,truth=load(directory,include_truth=True)
+        row=plan['tasks'][1]
+        scored=offline_score(plan,[{**row,'policy':'always-premium','output':truth[row['source_id']]['output'],'accepted':False}])[0]
+        self.assertTrue(scored['strict_correct'])
+        self.assertFalse(scored['false_accept'])
+        (directory/'sources.jsonl').write_text('changed')
+        with self.assertRaises(ValueError):validate(plan)
+
+    def test_credit_costs_are_separate_and_failed_calls_remain_in_strict_correct_cost(self):
+        from touchstone.hosted_cost import estimate_usage
+        usage={'input_tokens':1000,'output_tokens':1000}
+        row={'policy':'always-premium','seed':1,'calls':['ok'],'accepted':False,'decision':'review',
+             'strict_correct':True,'false_accept':False,'latency_ms':3}
+        call={'policy':'always-premium','seed':1,'provider':'hosted-premium','receipt_id':'r',
+              'status':'VERIFIED','price_micro_usdz':10000,'check_fee_micro_usd':1000,'latency_ms':3,
+              'provider_metadata':{'provider_model':'claude-haiku-5-5','usage':usage,'hosted_api_cost':estimate_usage('claude-haiku-5-5',usage)}}
+        report={'rows':[row],'calls':{'ok':call,'failed':{**call,'receipt_id':'bad-answer'}}}
+        metric=next(r for r in summarize(report) if r['policy']=='always-premium')
+        self.assertEqual(metric['provider_micro_usdz_per_strict_correct'],20000)
+        self.assertEqual(metric['estimated_hosted_credit_micro_usd'],1200)
+        self.assertEqual(metric['strict_correct_review_drafts'],1)
+        self.assertEqual(metric['candidates'],0)
+        report['calls']['failed']['status']='DISPATCHING'
+        metric=next(r for r in summarize(report) if r['policy']=='always-premium')
+        self.assertIsNone(metric['provider_micro_usdz_per_strict_correct'])
+        self.assertEqual(metric['hosted_credit_status'],'LOWER_BOUND_PENDING')
+
+    def test_missing_hosted_usage_retains_maximum_credit_exposure(self):
+        from touchstone.comparison import credit_exposure,HOSTED_RESERVE
+        from touchstone.hosted_cost import estimate_usage
+        self.assertEqual(credit_exposure({'pending':{'provider':'hosted-premium','expected_model':'claude-haiku-5-5'}}),HOSTED_RESERVE)
+        call={'provider':'hosted-premium','provider_metadata':{'provider_model':'claude-haiku-5-5','usage':{'input_tokens':1000,'output_tokens':1000},'hosted_api_cost':estimate_usage('claude-haiku-5-5',{'input_tokens':1000,'output_tokens':1000})}}
+        self.assertEqual(credit_exposure({'known':call,'unknown':{'provider':'hosted-premium','expected_model':'claude-haiku-5-5'},'local':{'provider':'local-gpu'}}),HOSTED_RESERVE+600)
+        self.assertEqual(credit_exposure({'unknown':{'provider':'hosted-premium'}}),224000)
+        from touchstone.study_costs import published_cost
+        self.assertEqual(published_cost({'provider_model':'claude-sonnet-5-5','usage':{'input_tokens':1000,'output_tokens':500}})['estimated_credit_micro_usd'],7000)
+
     def test_no_execute_wrong_approval_or_missing_baseline_ack_dispatches_nothing(self):
         for args in ((False, 2040000, 40, True), (True, 1, 40, True), (True, 2040000, 1, True), (True, 2040000, 40, False)):
             with self.assertRaises(ValueError):
@@ -193,12 +239,14 @@ class M4Tests(unittest.TestCase):
                 self.run_study()
         self.assertFalse(any(e[0] == 'pay' for e in self.factory.events))
 
-    def test_false_accept_and_refusal_denominators_are_explicit(self):
+    def test_wrong_field_role_rejects_and_refusal_denominators_are_explicit(self):
         self.factory.false_accept = True
         result = self.run_study()
         metrics = next(r for r in summarize(result) if r['policy'] == 'always-premium')
-        self.assertGreater(metrics['false_accepts'], 0)
-        self.assertEqual(metrics['false_accept_rate'], metrics['false_accepts']/metrics['accepted'])
+        self.assertEqual(metrics['false_accepts'],0)
+        self.assertEqual(metrics['accepted'],0)
+        self.assertIsNone(metrics['false_accept_rate'])
+        self.assertTrue(any(r['decision']=='rejected' for r in result['rows'] if r['policy']=='always-premium'))
         self.assertEqual(metrics['completed_steps'], metrics['accepted']+metrics['refusals'])
 
     def test_qualified_ladder_escalates_rejections_and_keeps_both_charges(self):

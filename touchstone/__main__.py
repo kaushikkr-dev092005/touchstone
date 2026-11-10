@@ -21,6 +21,9 @@ def main():
     commands.add_parser("rpc-smoke", help="Read Metal chain ID and current block; no transactions")
     commands.add_parser("metal-funding", help="Read testnet wallet gas and USDZ balances; no transactions")
     commands.add_parser("banked-status", help="Read integrated sandbox/testnet job journal")
+    banked_receipt=commands.add_parser('banked-receipt',help='Read one unified receipt; fiat and USDZ stay separate')
+    banked_receipt.add_argument('--scope',required=True)
+    banked_receipt.add_argument('--output')
     commands.add_parser("banked-halt", help="Stop new integrated testnet purchases; allow recovery")
     commands.add_parser("banked-resume", help="Release the integrated purchase halt without changing limits")
     banked = commands.add_parser("banked-job", help="Run one recoverable Airwallex sandbox/Metal testnet integration probe")
@@ -34,6 +37,10 @@ def main():
     banked.add_argument("--integration-probe", action="store_true", help="Explicitly test payments; does not claim model eligibility")
     banked.add_argument("--execute", action="store_true", help="Allow sandbox/testnet money movement within the stated limits")
     banked.add_argument("--treasury-request-id", help="Require reconciled FX funding for this job scope; Metal funds stay separate")
+    banked.add_argument('--prefunded-only',action='store_true',help='Never deposit or top up testnet float')
+    banked.add_argument('--retain-unused-float',action='store_true',help='Close the customer hold and retain unused tokens; never withdraw')
+    banked.add_argument('--qualification-profile',help='Current eligible measured hosted invoice profile')
+    banked.add_argument('--qualification-corpus',help='Frozen corpus bound to the invoice qualification')
     evidence = commands.add_parser("procurement-evidence", help="Screen measured profiles and evaluate bounded tools; no payments")
     evidence.add_argument("--profiles", default="bench/results")
     evidence.add_argument("--output", default="bench/results")
@@ -216,11 +223,17 @@ def main():
             result = MetalRail('funding-readiness', 'http://127.0.0.1:8092').invoke('funding-status')
             (ROOT / 'data/metal-funding-readiness.json').write_text(json.dumps(result), encoding='utf-8')
             print(json.dumps(result, indent=2))
-        elif args.command in {'banked-status', 'banked-halt', 'banked-resume', 'banked-job'}:
+        elif args.command in {'banked-status', 'banked-halt', 'banked-resume', 'banked-job','banked-receipt'}:
             from .banked import BankedStore, BankedWorkflow
             from .config import ROOT
             store = BankedStore(ROOT / 'data/banked/ledger.sqlite', ROOT / 'data/metal/funding-owner.sqlite')
-            if args.command == 'banked-status':
+            if args.command=='banked-receipt':
+                result=store.receipt(args.scope)
+                if args.output:
+                    from .invoice_profile import save
+                    save(args.output,result)
+                print(json.dumps(result,indent=2))
+            elif args.command == 'banked-status':
                 print(json.dumps({"mode": "SANDBOX_TESTNET", "jobs": store.jobs(), "audit": store.ledger.audit()}, indent=2))
             elif args.command in {'banked-halt', 'banked-resume'}:
                 store.ledger.halt() if args.command == 'banked-halt' else store.ledger.resume()
@@ -238,9 +251,11 @@ def main():
                 workflow = BankedWorkflow(store, treasury, lambda scope, url, cap, budget: MetalRail(scope, url, cap, budget, execute=args.execute))
                 result = workflow.run(args.scope, task, args.provider_origin, micro_usd(args.hold_usd),
                     micro_usd(args.allocation_usd), micro_usd(args.price_cap_usd), args.recover, args.integration_probe,
-                    treasury_request_id=args.treasury_request_id)
+                    treasury_request_id=args.treasury_request_id,allow_funding=not args.prefunded_only,
+                    return_float=not args.retain_unused_float,qualification_profile=args.qualification_profile,
+                    qualification_corpus=args.qualification_corpus)
                 print(json.dumps(result, indent=2))
-                return 0 if result['phase'] == 'COMPLETED' else 2
+                return 0 if result['phase'] in {'COMPLETED','CLOSED_FLOAT_RETAINED'} else 2
         elif args.command == "procurement-evidence":
             from .procurement_evidence import build, save
             report = build(args.profiles)

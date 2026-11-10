@@ -170,6 +170,25 @@ class Controls(unittest.TestCase):
         with self.assertRaises(PolicyError):
             self.ledger.record_paid(key,{**receipt,"amount":receipt["amount"]+1})
 
+    def test_hosted_cost_metadata_is_recomputed_and_can_be_restored_without_repaying(self):
+        from touchstone.hosted_cost import estimate_usage
+        job = self.job()
+        offer = quotes(42,0)[0]
+        key = self.ledger.reserve(job,self.tasks[0],0,offer,1000)
+        receipt = self.rail.pay(key,offer,lambda: {})
+        self.ledger.record_paid(key,receipt)
+        usage = {'input_tokens':4080,'output_tokens':495}
+        metadata = {'provider_type':'ANTHROPIC_API','provider_model':'claude-haiku-5-5',
+                    'usage':usage,'hosted_api_cost':estimate_usage('claude-haiku-5-5',usage)}
+        forged = {**metadata,'hosted_api_cost':{**metadata['hosted_api_cost'],'estimated_credit_micro_usd':0}}
+        self.ledger.record_paid(key,{**receipt,'provider_metadata':forged})
+        self.assertIsNone(self.ledger.attempts(job)[0]['provider_metadata'])
+        self.ledger.record_paid(key,{**receipt,'provider_metadata':metadata})
+        self.assertEqual(json.loads(self.ledger.attempts(job)[0]['provider_metadata']),metadata)
+        self.assertEqual(self.ledger.get_job(job)['rail_spent'],offer.price)
+        self.assertEqual(len(self.rail.receipts()),1)
+        self.assertTrue(self.ledger.audit()['valid'])
+
     def test_global_reconciliation_detects_orphan_receipt(self):
         self.rail.pay("orphan-purchase",quotes(42,0)[0],lambda: {})
         report = self.engine.reconcile()
