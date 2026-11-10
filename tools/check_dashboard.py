@@ -68,9 +68,17 @@ def main():
                 refused = page.request.post(BASE + "/api/demo", data={})
                 assert refused.status == 403
                 token = page.locator('meta[name="touchstone-token"]').get_attribute("content")
-                page.wait_for_function("() => document.getElementById('fault-summary').textContent.includes('1250')")
+                page.wait_for_function("() => document.getElementById('fault-summary').textContent.includes('1400')")
                 assert '2000' in page.locator('#fault-summary').inner_text()
-                assert 'UNSIGNED_HISTORICAL_DELIVERY' in page.locator('#fault-limits').text_content()
+                assert 'SIGNED_BY_INVOICE_RECIPIENT' in page.locator('#fault-limits').text_content()
+                assert 'Seller signed REJECTED' in page.locator('#fault-summary').text_content()
+                assert 'No refund' in page.locator('#fault-summary').text_content()
+                page.wait_for_function("() => document.getElementById('completion-credit').textContent.includes('2.919117')")
+                assert '120/120' in page.locator('#completion-quality').text_content()
+                assert '59/60' in page.locator('#completion-quality').text_content()
+                assert 'CLOSED_FLOAT_RETAINED' in page.locator('#completion-status').text_content()
+                assert page.locator('#completion-comparison').text_content() == 'Stopped · incomplete'
+                assert 'No savings claim' in page.locator('#completion-limits').text_content()
                 assert 'No card created' in page.locator('#card-status').inner_text()
                 assert page.locator('a[href="https://www.sandbox.airwallex.com/app/"]').count()==1
                 assert page.request.post(BASE+'/api/issuing-readiness',data={}).status==403
@@ -138,6 +146,7 @@ def main():
                           "planning_tool_and_review_cases": "passed", "provider_evidence_rows": 6,
                           "testnet_proof_disclosure": "passed",
                           "fault_fx_telemetry_rail_panels": "passed",
+                          "current_signed_fault_and_capped_completion_proofs": "passed",
                           "credential_isolation_and_blocked_fx": "passed",
                           "issuing_settings_recheck_and_session_controls": "passed",
                           "merchant_absorbs_sse_and_capture": "passed",
