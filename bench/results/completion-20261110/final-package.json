@@ -1,8 +1,8 @@
 {
   "label": "MEASURED",
   "file": "dist/touchstone-release.zip",
-  "sha256": "7f4bc1a7c17126e04b93af48c01f6e889c20ee900908513ac7568df9796f4dd8",
-  "bytes": 24584143,
+  "sha256": "77a40989c7dbf879f8f420f076a0073d51c1009c21e0bb9fdddc7c6f0b9fe6fd",
+  "bytes": 24584225,
   "application_source_commit": "27e0a2ee1a06c51405e89868c24e005fe45164cb",
   "verified_members": 546,
   "python_tests": 376,

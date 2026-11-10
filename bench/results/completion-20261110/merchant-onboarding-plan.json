@@ -1,5 +1,5 @@
 {
-  "label": "PREPARED_NOT_EXECUTED",
+  "label": "EXECUTED_SANDBOX_CONFIGURATION_APPROVAL",
   "approved": true,
   "plan": {
     "mode": "SANDBOX_CONFIGURATION_ONLY",
@@ -28,5 +28,9 @@
   },
   "plan_sha256": "2ce5ecc382199fff92f4366789caef26b0d8f18af9ea764d6c488b8d358680ef",
   "approval_source": "EXPLICIT_USER_RESPONSE",
-  "approved_at": "2026-11-10T19:14:59.314687+00:00"
+  "approved_at": "2026-11-10T19:14:59.314687+00:00",
+  "approval_consumed": true,
+  "onboarding_posts_observed": 1,
+  "catalog_upserts_observed": 1,
+  "execution_evidence": "bench/results/completion-20261110/merchant-onboarding.json"
 }
