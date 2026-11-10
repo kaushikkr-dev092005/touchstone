@@ -91,11 +91,12 @@ class CardRail:
         return result
 
     @staticmethod
-    def body(scope, cardholder_id, created_by, cap_micro, currency, expires_at, *, read_only=False):
+    def body(scope, cardholder_id, created_by, cap_micro, currency, expires_at, *, read_only=False, personalized=True):
         if not re.fullmatch(r'[A-Za-z0-9_-]{1,48}',scope) or not re.fullmatch(r'[A-Za-z0-9_-]{1,80}',cardholder_id):
             raise ValueError('Valid issuing scope and existing cardholder ID required')
         if not isinstance(created_by,str) or not created_by.strip() or len(created_by)>100:
             raise ValueError('Issuer requires the requesting user name')
+        if type(personalized) is not bool:raise ValueError('Personalization must be an explicit boolean')
         if type(cap_micro) is not int or not 0<cap_micro<=1000000 or currency not in {'USD','EUR','SGD'}:
             raise ValueError('Sandbox card cap must be positive, at most one currency unit and whole cents')
         amount=api_usd(cap_micro)
@@ -103,22 +104,23 @@ class CardRail:
         if expiry.tzinfo is None or (not read_only and not 0<(expiry-datetime.now(timezone.utc)).total_seconds()<=3600):
             raise ValueError('Card controls must expire within one hour')
         return {'cardholder_id':cardholder_id,'created_by':created_by,'form_factor':'VIRTUAL',
-                'is_personalized':True,'program':{'purpose':'COMMERCIAL'},'client_data':scope,
+                'is_personalized':personalized,'program':{'purpose':'COMMERCIAL'},'client_data':scope,
                 'authorization_controls':{'allowed_transaction_count':'SINGLE','allowed_currencies':[currency],
                     'active_to':expires_at,'blocked_transaction_usages':[{'transaction_scope':'CASH_WITHDRAWAL','usage_scope':'ALL'}],
                     'transaction_limits':{'currency':currency,'limits':[{'interval':'PER_TRANSACTION','amount':amount},
                                                                         {'interval':'ALL_TIME','amount':amount}]}}}
 
-    def issue(self, scope, cardholder_id, created_by, cap_micro, currency, expires_at, *, execute=False):
+    def issue(self, scope, cardholder_id, created_by, cap_micro, currency, expires_at, *, execute=False, personalized=True):
         if not execute:
             raise ValueError('Issuing requires --execute and separate written approval with a stated card cap')
-        body=self.body(scope,cardholder_id,created_by,cap_micro,currency,expires_at)
+        body=self.body(scope,cardholder_id,created_by,cap_micro,currency,expires_at,personalized=personalized)
         account=getattr(self.client,'account_id',None)
         if not account:raise ValueError('An explicit sandbox account context is required')
         holder=self._request('GET','/api/v1/issuing/cardholders/'+cardholder_id)
         if (not isinstance(holder,dict) or holder.get('cardholder_id')!=cardholder_id
-                or holder.get('status')!='READY' or holder.get('type')!='INDIVIDUAL'):
-            raise PolicyError('Personalized card creation requires the approved READY individual cardholder; no create sent')
+                or holder.get('status')!='READY' or holder.get('type') not in (
+                    {'INDIVIDUAL'} if personalized else {'INDIVIDUAL','DELEGATE'})):
+            raise PolicyError('Card creation requires an approved READY compatible cardholder; no create sent')
         digest_body={**body,'account_context_sha256':hashlib.sha256(account.encode()).hexdigest()}
         self._bind_mandate(scope, digest_body)
         request_id,prior=self.journal.begin(scope,'issue','/api/v1/issuing/cards/create',digest_body)
@@ -145,7 +147,7 @@ class CardRail:
         controls=expected['authorization_controls']
         if (raw.get('card_id')!=card_id or raw.get('request_id')!=request_id
                 or raw.get('card_status') not in {'PENDING','FAILED','INACTIVE','ACTIVE','LOST','STOLEN','CLOSED','BLOCKED','EXPIRED','UNKNOWN'}
-                or raw.get('form_factor')!='VIRTUAL' or raw.get('is_personalized') is not True
+                or raw.get('form_factor')!='VIRTUAL' or raw.get('is_personalized') is not expected['is_personalized']
                 or raw.get('created_by')!=expected['created_by']
                 or not isinstance(raw.get('program'),dict) or raw['program'].get('purpose')!='COMMERCIAL'
                 or raw.get('client_data')!=expected['client_data'] or not isinstance(actual,dict)
@@ -159,8 +161,8 @@ class CardRail:
                 'status':raw['card_status'],'controls_verified':True,'sensitive_card_details_requested':False,
                 'authorization_controls':controls,'merchant_payment_completed':False,'visa_approved_agent':False}
 
-    def reconcile(self, scope, cardholder_id, created_by, cap_micro, currency, expires_at):
-        expected=self.body(scope,cardholder_id,created_by,cap_micro,currency,expires_at,read_only=True)
+    def reconcile(self, scope, cardholder_id, created_by, cap_micro, currency, expires_at, *, personalized=True):
+        expected=self.body(scope,cardholder_id,created_by,cap_micro,currency,expires_at,read_only=True,personalized=personalized)
         row=self.journal.get(scope,'issue')
         if not row:raise ValueError('No original issuing operation to reconcile')
         bound={**expected,'account_context_sha256':hashlib.sha256(self.client.account_id.encode()).hexdigest()}

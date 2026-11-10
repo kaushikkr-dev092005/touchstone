@@ -10,6 +10,7 @@
 - [Latest exact-source release validation](../bench/results/m3-v2/release-validation.json)
 - [Issuing, merchant and Visa completion steps](EXTERNAL_ACCESS.md)
 - [Current read-only account access](../bench/results/completion-20261110/external-access.json)
+- [Prepared issuing proof and cap](ISSUING_PROOF_PLAN.md)
 - [Recording and submission material](DEMO_SCRIPT.md), [submission draft](SUBMISSION.md)
 
 The dated snapshots below retain their original observations. They do not supersede

@@ -44,6 +44,15 @@ class CardRailTests(unittest.TestCase):
         self.assertFalse(any(m=='POST' for m,_ in self.client.calls))
         self.assertIsNone(self.rail.journal.get('scope','issue'))
 
+    def test_delegate_can_only_receive_an_explicitly_non_personalized_card(self):
+        self.client.holder_type='DELEGATE'
+        result=self.rail.issue(*self.args,execute=True,personalized=False)
+        self.assertTrue(result['controls_verified'])
+        self.assertFalse(self.client.card['is_personalized'])
+        with self.assertRaises((PolicyError,ValueError)):
+            self.rail.issue(*self.args,execute=True,personalized=True)
+        self.assertEqual(sum(m=='POST' for m,_ in self.client.calls),1)
+
     def test_capped_single_use_currency_expiry_and_readback(self):
         result=self.rail.issue(*self.args,execute=True)
         self.assertEqual(result['label'],'MOCK');self.assertTrue(result['controls_verified'])

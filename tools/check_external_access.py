@@ -44,13 +44,21 @@ def main():
               'issuing': CardRail(client, OperationJournal(ROOT/'data/issuing.sqlite')).doctor(diagnose=True),
               'merchant': inspect_merchant(client),
               'visa': {'status': 'APPROVAL_NOT_VERIFIED', 'registered_agent_verified': False,
-                       'registration_submitted': False, 'source': 'NO_VISA_ONBOARDING_EVIDENCE'},
+                       'registration_submitted_by_this_check': False, 'source': 'NO_VERIFIED_VISA_APPROVAL'},
               'references': {
                   'scopes': 'https://www.airwallex.com/docs/developer-tools/api/api-key-scopes',
                   'issuing': 'https://www.airwallex.com/docs/issuing/test-and-go-live/integration-checklist',
                   'merchant': 'https://airwallexdev.com/agentic-commerce/',
                   'enablement': 'https://airwallexdev.com/guide',
                   'visa': 'https://developer.visa.com/docs/trusted-agent-protocol'}}
+    updates = ROOT/'bench/results/completion-20261110/operator-access-updates.json'
+    if updates.is_file():
+        raw = json.loads(updates.read_text(encoding='utf-8'))
+        if raw.get('issuing_write_scopes') == 'ENABLED_USER_REPORTED':
+            report['issuing']['write_scopes_user_reported'] = 'ENABLED_NOT_WRITE_TESTED'
+        if raw.get('visa_application') == 'SUBMITTED_APPROVAL_PENDING_USER_REPORTED':
+            report['visa'].update(status='APPROVAL_PENDING_USER_REPORTED',
+                                  source='USER_REPORT_NOT_VERIFIED_WITH_VISA')
     path = ROOT/args.output
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')

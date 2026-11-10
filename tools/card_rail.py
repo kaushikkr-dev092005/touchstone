@@ -17,6 +17,7 @@ def main():
     parser.add_argument('--scope');parser.add_argument('--cardholder-id');parser.add_argument('--created-by')
     parser.add_argument('--cap');parser.add_argument('--currency',choices=['USD','EUR','SGD'],default='USD')
     parser.add_argument('--expires-at');parser.add_argument('--output')
+    parser.add_argument('--non-personalized',action='store_true',help='Bind a non-personalized commercial card; supports approved READY delegates')
     args=parser.parse_args()
     if args.diagnose and args.action!='doctor':parser.error('--diagnose is read-only and applies only to doctor')
     if args.action=='issue' and (not args.execute or not all([args.scope,args.cardholder_id,args.created_by,args.cap,args.expires_at])):
@@ -28,8 +29,8 @@ def main():
         environment()
         rail=CardRail(AirwallexSandbox(),OperationJournal('data/issuing.sqlite'))
         if args.action=='doctor':result=rail.doctor(diagnose=args.diagnose)
-        elif args.action=='reconcile':result=rail.reconcile(args.scope,args.cardholder_id,args.created_by,micro_usd(args.cap),args.currency,args.expires_at)
-        else:result=rail.issue(args.scope,args.cardholder_id,args.created_by,micro_usd(args.cap),args.currency,args.expires_at,execute=args.execute)
+        elif args.action=='reconcile':result=rail.reconcile(args.scope,args.cardholder_id,args.created_by,micro_usd(args.cap),args.currency,args.expires_at,personalized=not args.non_personalized)
+        else:result=rail.issue(args.scope,args.cardholder_id,args.created_by,micro_usd(args.cap),args.currency,args.expires_at,execute=args.execute,personalized=not args.non_personalized)
     except Exception as error:
         result={'label':'BLOCKED','error_type':type(error).__name__,'reason':'Issuing setup or read-back failed; preserve any unknown operation',
                 'operation':args.action,'cards_created_unverified':args.action=='issue'}

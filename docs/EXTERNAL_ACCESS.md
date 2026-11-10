@@ -7,6 +7,11 @@ endpoint returned HTTP 404 `MERCHANT_CONFIG_NOT_FOUND`. This is a missing mercha
 configuration, not the earlier issuing HTTP 401. Card creation and Visa approval
 have not been demonstrated.
 
+The operator subsequently confirmed enabling Cards and Cardholders Write and
+reported that the Visa application is submitted with approval pending. These are
+user reports; issuing writes and Visa approval still need their own evidence.
+[Prepared capped issuing proof](ISSUING_PROOF_PLAN.md).
+
 [Measured account check](../bench/results/completion-20261110/external-access.json).
 Repeat without spending or starting the GPU:
 
@@ -30,11 +35,10 @@ create cannot send another create request.
 [API contract](https://www.airwallex.com/docs/api/issuing/cards/create),
 [list limitations](https://www.airwallex.com/docs/issuing/get-started/create-cards).
 
-The account owner must enable **Issuing / Cards / Write** on the selected scoped
-sandbox key. Because this account has no cardholder, either provision an approved
-individual test cardholder through the account's supported flow or enable
-**Cardholders / Write** for a separately reviewed creation. The existing adapter
-creates personalized cards, so a delegate cardholder is insufficient. Keep Config
+The account owner reports **Issuing / Cards / Write** and **Cardholders / Write**
+enabled on the selected scoped sandbox key. Because this account has no cardholder,
+a cardholder creation still needs approval. Personalized cards require an individual
+cardholder. The explicit `--non-personalized` path also supports a READY delegate. Keep Config
 at Read; creating a card does not require Config / Write.
 [Sandbox](https://sandbox.airwallex.com/),
 [scope reference](https://www.airwallex.com/docs/developer-tools/api/api-key-scopes),
@@ -109,6 +113,7 @@ Prepared request for the operator's Visa/hackathon partner channel:
 > onboarding instructions, supported TAP profile and merchant verification test.
 > We do not yet claim Visa approval, VIC access or a real Visa merchant payment.
 
-This is an unsent draft. No Visa registration has been submitted by this project.
+This is an unsent draft. The operator reports a submitted application awaiting
+approval; this project has not submitted another application or verified approval.
 Further hosted inference remains stopped: conservative exposure is $2.919117
 against the user's $3 total ceiling. Account setup must not trigger model calls.

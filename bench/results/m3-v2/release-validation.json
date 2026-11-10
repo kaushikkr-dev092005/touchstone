@@ -1,9 +1,9 @@
 {
   "label": "MEASURED",
   "scope": "COMMITTED_SOURCE_WITH_CONTROLLED_FINANCIAL_ADAPTERS",
-  "commit": "e51b8c8c784fb5ab3586493a42506a69bd85ddff",
-  "archive_sha256": "b854b52ee1179f3833e333618ac46d57c274fcc2ed6a42b60f43a96df8a2c59f",
-  "source_files_verified": 503,
+  "commit": "68d6ed863a00d3743e325ac2c446a39aa5313802",
+  "archive_sha256": "829b413ae7af15ccc4c3a095b5c938580bd6ed01affb292f98c34940e988fe33",
+  "source_files_verified": 508,
   "source_mode": "COMMITTED_TREE",
   "changed_files": [],
   "working_tree_edits_included": false,
@@ -19,47 +19,47 @@
   "stages": {
     "npm-ci": {
       "exit_code": 0,
-      "log_sha256": "5ed9616280c44a1ac4c93a28f6d2752393401ece0b433f578aee59001e686bef"
+      "log_sha256": "ffdbd7063467606475706d555b77d0988e9933d7c68ad36fd484331e9bed16c9"
     },
     "python-tests": {
       "exit_code": 0,
-      "log_sha256": "61e01bca78ee02f8b3facb6c88bf9dcb71720fc26abed1709ebe159f83f63058"
+      "log_sha256": "f65ca12864005555e1af7f48b035a3d9fa6defa677b4381963fbdd4664618332"
     },
     "node-tests": {
       "exit_code": 0,
-      "log_sha256": "726fe1d4df0aed5da379211d8c69353f9e5b1c66d883162cc5398f8af9e46c4b"
+      "log_sha256": "55ace21de24188f7ac4c9e0dcd409e8c945d56007235c9e3aa034833ff3959ba"
     },
     "m1-controlled": {
       "exit_code": 0,
-      "log_sha256": "e58e5f91c675158770996c1583b71692f01bdc1ecc5b7cb2142218bed4a0cc38"
+      "log_sha256": "52b244a6c34c53b68a210867d6ca8ba227a4f43c8f0a7bf6c840c25f28aa0276"
     },
     "m2-controlled": {
       "exit_code": 0,
-      "log_sha256": "f4bce3761ea16d122ec3e98cea5f6ad08104144cc7fec4eff98b89b3f334a3d8"
+      "log_sha256": "ad15272a23ac0352e3b5e31aa0ddb3665e3fedd718c4d1b27ca1ae45818aca60"
     },
     "m3-controlled": {
       "exit_code": 0,
-      "log_sha256": "cc7027c65f18f8f6b91fad1685c23efa83ef91923ba36185ace384bddc9c9147"
+      "log_sha256": "357b815f964bba9a3fef6c6a15816e1e062d3d9d5a563f36412afab2e96ccd70"
     },
     "m4-controlled": {
       "exit_code": 0,
-      "log_sha256": "ed0b9406b00f4521d8aac93fb8a0dd0d9e23b90db93886b9b371b130126e76b0"
+      "log_sha256": "83d2c63e3101a1fc1781981de75b33b170f5e7d2d366c7b78b7289701841e338"
     },
     "m5-controlled": {
       "exit_code": 0,
-      "log_sha256": "2ec2272ad37333bccae8cc6b2f6c380f616ae83ac99aa26da8465b2a7279b524"
+      "log_sha256": "854e8850bdaeca623ef5bf1fad8cbb780578f1fda6b4137a3249c40f03f09f67"
     },
     "bun-install-frozen": {
       "exit_code": 0,
-      "log_sha256": "43b4880689da3ecb59a6b3a8a5dc68341281aaf9bc9e2b4c37eab92e16a5dddd"
+      "log_sha256": "e33d9cef5cdee8ccb7aa2fbddcd9a77c00e885d9c03e3011fd52c1b7d9cb976d"
     },
     "frontend-build": {
       "exit_code": 0,
-      "log_sha256": "5ae08930d2d8f2f593122fb1fe734e66361505660a6243a4998810becada25b0"
+      "log_sha256": "2951b4c0419cf9ba0e60bc7066aa7e5eab5be602fd2daa2e0e9fc93d2e0158c8"
     },
     "procurement-evidence": {
       "exit_code": 0,
-      "log_sha256": "26b0deeb02be7e3849b48396dcd18234f6b5092678b9ec2af00937d8831c8053"
+      "log_sha256": "5661c6c9ddd1c8f9ef790fca849df9bb108c5abd5523edc4b7dc1536af2a972e"
     },
     "dashboard-browser": {
       "exit_code": 0,
@@ -67,15 +67,15 @@
     },
     "motion-browser": {
       "exit_code": 0,
-      "log_sha256": "cb037c71fe5ae99bcdda54e2f157a99e1a1231633ae956c9d088fe850802003f"
+      "log_sha256": "98b17b36cf8585e1913d65075bd2a8873f6f7068c4ac34721b0e06a571b8def2"
     },
     "release-browser": {
       "exit_code": 0,
       "log_sha256": "5ef7c9c6122e560cf4920591edc175870eed7b49f63cbe9a28b474ef2dccffba"
     }
   },
-  "logs_directory": "tmp/release-validation-cxdc8_mu/logs",
-  "python_tests": 354,
+  "logs_directory": "tmp/release-validation-ki8w48hf/logs",
+  "python_tests": 361,
   "node_tests": 53,
   "functional_browser": {
     "desktop": "passed",
@@ -132,7 +132,7 @@
     ],
     "particle_preview": {
       "fps": "60.0",
-      "render_ms": "1.22",
+      "render_ms": "1.97",
       "quality": "full",
       "particles": 5200
     },

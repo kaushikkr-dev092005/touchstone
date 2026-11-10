@@ -1,0 +1,46 @@
+{
+  "plan": {
+    "mode": "AIRWALLEX_SANDBOX_ISSUING_ONLY",
+    "scope": "issuing-proof-20261110-v1",
+    "account_fingerprint": "d155423c58483e6d78feb62d489101bf7acc838f2d04223b06401027e3b51a3c",
+    "api_version": "2024-03-31",
+    "cardholder": {
+      "type": "DELEGATE",
+      "email": "touchstone-issuing-20261110-v1@example.com"
+    },
+    "card": {
+      "created_by": "Alex Example",
+      "synthetic_requester": true,
+      "personalized": false,
+      "form_factor": "VIRTUAL",
+      "purpose": "COMMERCIAL",
+      "currency": "USD",
+      "cap_micro_usd": 10000,
+      "lifetime_seconds": 1800,
+      "single_use": true,
+      "cash_withdrawal_blocked": true
+    },
+    "maximum_business_writes": {
+      "delegate_create": 1,
+      "card_create": 1
+    },
+    "merchant_charges_authorized": 0,
+    "funding_transfers_authorized": 0,
+    "sensitive_card_details_authorized": false,
+    "hosted_inference_calls_authorized": 0,
+    "production_requests_authorized": 0,
+    "new_cash_usd_authorized": "0.00",
+    "claude_total_ceiling_usd": "3.00",
+    "gpu_start_authorized": false,
+    "automatic_retries_authorized": false,
+    "additional_scopes_authorized": false,
+    "source_sha256": {
+      "touchstone/card_rail.py": "8045c01521989fd964e34c9b4752ce6a1db812cf5b7990a5dcc78131ce283ac2",
+      "touchstone/holds.py": "8dfb72a64770d3eb4318d02bb8d3a6a6435fb4efaec8b37f3c16289cbf685d3d",
+      "touchstone/treasury.py": "62cf97a37d0c05c64c6af50a5bedde668adb5640ec4d44b334aae006cc342de0",
+      "tools/run_issuing_proof.py": "ea2105656f5794774e2d8072d3808cae122a123f21fa43fdaa844b3ae4e2e6ba"
+    }
+  },
+  "plan_sha256": "047d1243edb1eefc9098de7cb43358dceb9a5cfc0bbe973cb52760db6c2d8760",
+  "approved": false
+}

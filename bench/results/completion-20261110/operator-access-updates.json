@@ -1,0 +1,9 @@
+{
+  "label": "USER_REPORTED",
+  "recorded_at": "2026-11-10T18:30:15.139008+00:00",
+  "issuing_write_scopes": "ENABLED_USER_REPORTED",
+  "visa_application": "SUBMITTED_APPROVAL_PENDING_USER_REPORTED",
+  "issuing_write_api_tested": false,
+  "visa_approval_verified": false,
+  "source": "User confirmations in this conversation"
+}

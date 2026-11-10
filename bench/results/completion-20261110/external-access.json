@@ -1,6 +1,6 @@
 {
   "label": "MEASURED",
-  "observed_at": "2026-11-10T18:19:28.624300+00:00",
+  "observed_at": "2026-11-10T18:31:10.650278+00:00",
   "mode": "SANDBOX",
   "financial_transactions": 0,
   "cards_created": 0,
@@ -56,7 +56,8 @@
     "required_write_scopes": [
       "Issuing / Cards / Write"
     ],
-    "api_version": "2024-03-31"
+    "api_version": "2024-03-31",
+    "write_scopes_user_reported": "ENABLED_NOT_WRITE_TESTED"
   },
   "merchant": {
     "configuration_read": false,
@@ -68,10 +69,10 @@
     "code": "MERCHANT_CONFIG_NOT_FOUND"
   },
   "visa": {
-    "status": "APPROVAL_NOT_VERIFIED",
+    "status": "APPROVAL_PENDING_USER_REPORTED",
     "registered_agent_verified": false,
-    "registration_submitted": false,
-    "source": "NO_VISA_ONBOARDING_EVIDENCE"
+    "registration_submitted_by_this_check": false,
+    "source": "USER_REPORT_NOT_VERIFIED_WITH_VISA"
   },
   "references": {
     "scopes": "https://www.airwallex.com/docs/developer-tools/api/api-key-scopes",
