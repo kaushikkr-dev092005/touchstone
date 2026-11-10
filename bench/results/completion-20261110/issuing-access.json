@@ -1,0 +1,38 @@
+{
+  "label": "MEASURED",
+  "issuing_read": true,
+  "issuing_write_verified": false,
+  "merchant_payment_supported": false,
+  "cards_created": 0,
+  "transactions_sent": 0,
+  "visa_tap_identity": "NOT_VERIFIED",
+  "diagnosis": "ISSUING_READ_AVAILABLE",
+  "read_probes": {
+    "balances": {
+      "allowed": true,
+      "status": "PASS"
+    },
+    "cardholders": {
+      "allowed": true,
+      "status": "PASS"
+    },
+    "issuing_config": {
+      "allowed": true,
+      "status": "PASS"
+    }
+  },
+  "account_context_configured": true,
+  "required_read_scopes": [
+    "Issuing / Cards / Read",
+    "Issuing / Cardholders / Read",
+    "Issuing / Config / Read"
+  ],
+  "remediation": [
+    "Select the configured sandbox account under the current scoped API key.",
+    "In Settings > Developer > API keys, enable the required account-level issuing read scopes.",
+    "If issuing scopes are unavailable, ask the account owner or Airwallex to enable Issuing APIs.",
+    "Recheck access. Creating a card or spending still requires its own explicit approval."
+  ],
+  "scope_reference": "https://www.airwallex.com/docs/developer-tools/api/api-key-scopes",
+  "enablement_reference": "https://www.airwallex.com/docs/issuing/test-and-go-live/integration-checklist"
+}

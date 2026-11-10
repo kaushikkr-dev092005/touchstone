@@ -1,0 +1,83 @@
+{
+  "label": "MEASURED",
+  "observed_at": "2026-11-10T18:19:28.624300+00:00",
+  "mode": "SANDBOX",
+  "financial_transactions": 0,
+  "cards_created": 0,
+  "hosted_inference_calls": 0,
+  "issuing": {
+    "label": "MEASURED",
+    "issuing_read": true,
+    "issuing_write_verified": false,
+    "merchant_payment_supported": false,
+    "cards_created": 0,
+    "transactions_sent": 0,
+    "visa_tap_identity": "NOT_VERIFIED",
+    "cards_sample": {
+      "count": 0,
+      "has_more": false,
+      "scope": "FIRST_PAGE_ONLY"
+    },
+    "diagnosis": "ISSUING_READ_AVAILABLE",
+    "read_probes": {
+      "balances": {
+        "allowed": true,
+        "status": "PASS"
+      },
+      "cardholders": {
+        "allowed": true,
+        "status": "PASS",
+        "sample": {
+          "count": 0,
+          "has_more": false,
+          "ready_individual_count": 0,
+          "scope": "FIRST_PAGE_ONLY"
+        }
+      },
+      "issuing_config": {
+        "allowed": true,
+        "status": "PASS"
+      }
+    },
+    "account_context_configured": true,
+    "required_read_scopes": [
+      "Issuing / Cards / Read",
+      "Issuing / Cardholders / Read",
+      "Issuing / Config / Read"
+    ],
+    "remediation": [
+      "Issuing reads pass. An account owner must enable Cards / Write on the selected scoped sandbox key.",
+      "Use an existing READY individual cardholder for the personalized commercial card; Cardholders / Write is needed only if a cardholder must be created.",
+      "Confirm the allowed card program and creation limit with Airwallex; Config / Write is not required to create a card.",
+      "Approve a fresh card scope, amount, currency and expiry before creation. Issuing and merchant payment are separate operations."
+    ],
+    "scope_reference": "https://www.airwallex.com/docs/developer-tools/api/api-key-scopes",
+    "enablement_reference": "https://www.airwallex.com/docs/issuing/test-and-go-live/integration-checklist",
+    "required_write_scopes": [
+      "Issuing / Cards / Write"
+    ],
+    "api_version": "2024-03-31"
+  },
+  "merchant": {
+    "configuration_read": false,
+    "onboarding_verified": false,
+    "writes_performed": false,
+    "payment_submitted": false,
+    "status": "NOT_CONFIGURED",
+    "http_status": 404,
+    "code": "MERCHANT_CONFIG_NOT_FOUND"
+  },
+  "visa": {
+    "status": "APPROVAL_NOT_VERIFIED",
+    "registered_agent_verified": false,
+    "registration_submitted": false,
+    "source": "NO_VISA_ONBOARDING_EVIDENCE"
+  },
+  "references": {
+    "scopes": "https://www.airwallex.com/docs/developer-tools/api/api-key-scopes",
+    "issuing": "https://www.airwallex.com/docs/issuing/test-and-go-live/integration-checklist",
+    "merchant": "https://airwallexdev.com/agentic-commerce/",
+    "enablement": "https://airwallexdev.com/guide",
+    "visa": "https://developer.visa.com/docs/trusted-agent-protocol"
+  }
+}

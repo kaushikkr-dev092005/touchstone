@@ -1,9 +1,9 @@
 {
   "label": "MEASURED",
   "scope": "COMMITTED_SOURCE_WITH_CONTROLLED_FINANCIAL_ADAPTERS",
-  "commit": "2a49f67c8cbadcf7ad1ca89f073b2e3a3a3ef981",
-  "archive_sha256": "99f0b977369a61190762f5873be0e16b28279c0d857d0de7424dbf973354af71",
-  "source_files_verified": 499,
+  "commit": "e51b8c8c784fb5ab3586493a42506a69bd85ddff",
+  "archive_sha256": "b854b52ee1179f3833e333618ac46d57c274fcc2ed6a42b60f43a96df8a2c59f",
+  "source_files_verified": 503,
   "source_mode": "COMMITTED_TREE",
   "changed_files": [],
   "working_tree_edits_included": false,
@@ -19,62 +19,62 @@
   "stages": {
     "npm-ci": {
       "exit_code": 0,
-      "log_sha256": "79b3df0c76d62f68779848b56dd009b2fd29a3e61e518fa411a45e362c4ac6e7"
+      "log_sha256": "5ed9616280c44a1ac4c93a28f6d2752393401ece0b433f578aee59001e686bef"
     },
     "python-tests": {
       "exit_code": 0,
-      "log_sha256": "300764f546465aff22b6de6615a8d25e6091398f697c81d656b2deb036b81859"
+      "log_sha256": "61e01bca78ee02f8b3facb6c88bf9dcb71720fc26abed1709ebe159f83f63058"
     },
     "node-tests": {
       "exit_code": 0,
-      "log_sha256": "cc66277e8f2229cfa6ebfd0549d3f2d2e78e33c9431f48ac9f4238a6c5f66ee0"
+      "log_sha256": "726fe1d4df0aed5da379211d8c69353f9e5b1c66d883162cc5398f8af9e46c4b"
     },
     "m1-controlled": {
       "exit_code": 0,
-      "log_sha256": "848ba66ae9b3951d7a65837bd1b589f5308ee7af83bfa0d248217c531a199ac3"
+      "log_sha256": "e58e5f91c675158770996c1583b71692f01bdc1ecc5b7cb2142218bed4a0cc38"
     },
     "m2-controlled": {
       "exit_code": 0,
-      "log_sha256": "c7c6ca78e07eca39473457f7f2bc9eb5c07801b318383b959713e4ef2ef2230a"
+      "log_sha256": "f4bce3761ea16d122ec3e98cea5f6ad08104144cc7fec4eff98b89b3f334a3d8"
     },
     "m3-controlled": {
       "exit_code": 0,
-      "log_sha256": "aa8de45c0acd3f6724194b8aa327c616d72613a5edb2f17330c899049af8004a"
+      "log_sha256": "cc7027c65f18f8f6b91fad1685c23efa83ef91923ba36185ace384bddc9c9147"
     },
     "m4-controlled": {
       "exit_code": 0,
-      "log_sha256": "12aa34bb3cf06ee4876f40a7a3d8041e08e096293e4a36ac49900b7ab9c9edd5"
+      "log_sha256": "ed0b9406b00f4521d8aac93fb8a0dd0d9e23b90db93886b9b371b130126e76b0"
     },
     "m5-controlled": {
       "exit_code": 0,
-      "log_sha256": "a98e4ab712e9a3a43751bb646534ef471af17d1dda3c2c746aa2dd563aab706f"
+      "log_sha256": "2ec2272ad37333bccae8cc6b2f6c380f616ae83ac99aa26da8465b2a7279b524"
     },
     "bun-install-frozen": {
       "exit_code": 0,
-      "log_sha256": "2458748434ead73b7e24173894bffa29964a8e692c592530f7575f097e456177"
+      "log_sha256": "43b4880689da3ecb59a6b3a8a5dc68341281aaf9bc9e2b4c37eab92e16a5dddd"
     },
     "frontend-build": {
       "exit_code": 0,
-      "log_sha256": "4dc44166104c35bb08461b288af240c62796c1e02c6fcc2dcfc932949b39fe77"
+      "log_sha256": "5ae08930d2d8f2f593122fb1fe734e66361505660a6243a4998810becada25b0"
     },
     "procurement-evidence": {
       "exit_code": 0,
-      "log_sha256": "7bcd9aa5f8aa88bed1dce95f2477c98ab1fbf4dcf9036e76d436e3d0f85582f6"
+      "log_sha256": "26b0deeb02be7e3849b48396dcd18234f6b5092678b9ec2af00937d8831c8053"
     },
     "dashboard-browser": {
       "exit_code": 0,
-      "log_sha256": "4e7c96673843a5bbad038aed7456776ed4b2953f4527de4aaf64b5062b3f002c"
+      "log_sha256": "8e71ecdc959c434e06b42e0e3d8c7b927ded6ead552fb233cf3b2b99f4f446cc"
     },
     "motion-browser": {
       "exit_code": 0,
-      "log_sha256": "40f446f93673e7ec1a593db8326410bf54fab9bcd8ba1ff4576d6ca79938e0fc"
+      "log_sha256": "cb037c71fe5ae99bcdda54e2f157a99e1a1231633ae956c9d088fe850802003f"
     },
     "release-browser": {
       "exit_code": 0,
       "log_sha256": "5ef7c9c6122e560cf4920591edc175870eed7b49f63cbe9a28b474ef2dccffba"
     }
   },
-  "logs_directory": "tmp/release-validation-41eo739f/logs",
+  "logs_directory": "tmp/release-validation-cxdc8_mu/logs",
   "python_tests": 354,
   "node_tests": 53,
   "functional_browser": {
@@ -105,7 +105,7 @@
     "merchant_absorbs_sse_and_capture": "passed",
     "particle_field_stops_on_confirmed_halt": "passed",
     "transactions_explorer": {
-      "rows": 129,
+      "rows": 128,
       "runs": 2,
       "confirmed_spend_micro_usd": 2908000,
       "search_filters_sort_pagination": "passed",
@@ -132,7 +132,7 @@
     ],
     "particle_preview": {
       "fps": "60.0",
-      "render_ms": "1.58",
+      "render_ms": "1.22",
       "quality": "full",
       "particles": 5200
     },

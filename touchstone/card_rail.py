@@ -3,6 +3,7 @@ import hashlib
 import json
 from datetime import datetime, timezone
 import re
+from urllib.parse import urlencode
 
 from .holds import OperationJournal, OutcomeUnknown, api_usd
 from .ledger import PolicyError, canonical
@@ -11,11 +12,15 @@ from .treasury import AirwallexHTTPError
 
 class CardRail:
     mode = 'AIRWALLEX_SANDBOX_CARD'
+    api_version = '2024-03-31'
 
     def __init__(self, client, journal: OperationJournal):
         self.client, self.journal = client, journal
         with journal.connect() as db:
             db.execute('CREATE TABLE IF NOT EXISTS card_mandates(scope TEXT PRIMARY KEY, body TEXT NOT NULL)')
+
+    def _request(self, method, path, body=None):
+        return self.client.request(method, path, body, api_version=self.api_version)
 
     def _bind_mandate(self, scope, body):
         encoded = canonical(body)
@@ -31,9 +36,13 @@ class CardRail:
             'merchant_payment_supported':False,'cards_created':0,'transactions_sent':0,
             'visa_tap_identity':'NOT_VERIFIED'}
         try:
-            raw=self.client.request('GET','/api/v1/issuing/cards?page_size=10')
+            raw=self._request('GET','/api/v1/issuing/cards?page_size=10')
             readable=isinstance(raw,dict) and isinstance(raw.get('items'),list)
             result.update(label=getattr(self.client,'evidence_label','MOCK') if readable else 'BLOCKED',issuing_read=readable)
+            if readable:
+                result['cards_sample']={'count':len(raw['items']),
+                    'has_more':raw.get('has_more') if type(raw.get('has_more')) is bool else None,
+                    'scope':'FIRST_PAGE_ONLY'}
         except AirwallexHTTPError as error:
             result.update(http_status=error.status,code=error.code,reason='Issuing access/scope not enabled or unavailable')
         if not diagnose:return result
@@ -41,10 +50,16 @@ class CardRail:
         for name,path in [('balances','/api/v1/balances/current'),
             ('cardholders','/api/v1/issuing/cardholders?page_size=10'),('issuing_config','/api/v1/issuing/config')]:
             try:
-                raw=self.client.request('GET',path)
+                raw=self._request('GET',path) if '/issuing/' in path else self.client.request('GET',path)
                 valid=(isinstance(raw,list) if name=='balances' else
                     isinstance(raw,dict) and (name=='issuing_config' or isinstance(raw.get('items'),list)))
                 probes[name]={'allowed':valid,'status':'PASS' if valid else 'INVALID_RESPONSE'}
+                if valid and name=='cardholders':
+                    probes[name]['sample']={'count':len(raw['items']),
+                        'has_more':raw.get('has_more') if type(raw.get('has_more')) is bool else None,
+                        'ready_individual_count':sum(isinstance(item,dict) and item.get('status')=='READY'
+                            and item.get('type')=='INDIVIDUAL' for item in raw['items']),
+                        'scope':'FIRST_PAGE_ONLY'}
             except AirwallexHTTPError as error:
                 probes[name]={'allowed':False,'http_status':error.status,'code':error.code}
             except (OSError,ValueError,RuntimeError):probes[name]={'allowed':False,'status':'UNAVAILABLE'}
@@ -65,6 +80,14 @@ class CardRail:
                 'Recheck access. Creating a card or spending still requires its own explicit approval.'],
             scope_reference='https://www.airwallex.com/docs/developer-tools/api/api-key-scopes',
             enablement_reference='https://www.airwallex.com/docs/issuing/test-and-go-live/integration-checklist')
+        if result['issuing_read']:
+            result['required_write_scopes']=['Issuing / Cards / Write']
+            result['remediation']=[
+                'Issuing reads pass. An account owner must enable Cards / Write on the selected scoped sandbox key.',
+                'Use an existing READY individual cardholder for the personalized commercial card; Cardholders / Write is needed only if a cardholder must be created.',
+                'Confirm the allowed card program and creation limit with Airwallex; Config / Write is not required to create a card.',
+                'Approve a fresh card scope, amount, currency and expiry before creation. Issuing and merchant payment are separate operations.']
+        result['api_version']=self.api_version
         return result
 
     @staticmethod
@@ -92,26 +115,40 @@ class CardRail:
         body=self.body(scope,cardholder_id,created_by,cap_micro,currency,expires_at)
         account=getattr(self.client,'account_id',None)
         if not account:raise ValueError('An explicit sandbox account context is required')
+        holder=self._request('GET','/api/v1/issuing/cardholders/'+cardholder_id)
+        if (not isinstance(holder,dict) or holder.get('cardholder_id')!=cardholder_id
+                or holder.get('status')!='READY' or holder.get('type')!='INDIVIDUAL'):
+            raise PolicyError('Personalized card creation requires the approved READY individual cardholder; no create sent')
         digest_body={**body,'account_context_sha256':hashlib.sha256(account.encode()).hexdigest()}
         self._bind_mandate(scope, digest_body)
         request_id,prior=self.journal.begin(scope,'issue','/api/v1/issuing/cards/create',digest_body)
         if prior:
-            return self._read_and_validate(prior['id'],body)
+            return self._read_and_validate(prior['id'],body,request_id=request_id)
         try:
-            raw=self.client.request('POST','/api/v1/issuing/cards/create',{**body,'request_id':request_id})
-            if not isinstance(raw,dict) or not re.fullmatch(r'[A-Za-z0-9_-]{1,100}',raw.get('id','')):
+            raw=self._request('POST','/api/v1/issuing/cards/create',{**body,'request_id':request_id})
+            card_id=raw.get('card_id') if isinstance(raw,dict) else None
+            if not isinstance(card_id,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,100}',card_id):
                 raise ValueError('Issuing response has no safe object ID')
-            self.journal.observe(scope,'issue',{'id':raw['id'],'status':raw.get('status')})
-            return self._read_and_validate(raw['id'],body)
+            result=self._read_and_validate(card_id,body,request_id=request_id)
+            self.journal.observe(scope,'issue',{'id':card_id,'status':result['status']})
+            return result
         except Exception:
             self.journal.uncertain(scope,'issue')
             raise OutcomeUnknown('Card creation outcome needs read-only reconciliation; never create another card') from None
 
-    def _read_and_validate(self, card_id, expected):
-        raw=self.client.request('GET','/api/v1/issuing/cards/'+card_id)
+    def _read_and_validate(self, card_id, expected, *, request_id):
+        if not isinstance(card_id,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,100}',card_id):
+            raise ValueError('Invalid card identifier; no request sent')
+        raw=self._request('GET','/api/v1/issuing/cards/'+card_id)
+        if not isinstance(raw,dict):raise ValueError('Invalid card read-back')
         actual=raw.get('authorization_controls',{})
         controls=expected['authorization_controls']
-        if (raw.get('id')!=card_id or raw.get('form_factor')!='VIRTUAL' or raw.get('client_data')!=expected['client_data']
+        if (raw.get('card_id')!=card_id or raw.get('request_id')!=request_id
+                or raw.get('card_status') not in {'PENDING','FAILED','INACTIVE','ACTIVE','LOST','STOLEN','CLOSED','BLOCKED','EXPIRED','UNKNOWN'}
+                or raw.get('form_factor')!='VIRTUAL' or raw.get('is_personalized') is not True
+                or raw.get('created_by')!=expected['created_by']
+                or not isinstance(raw.get('program'),dict) or raw['program'].get('purpose')!='COMMERCIAL'
+                or raw.get('client_data')!=expected['client_data'] or not isinstance(actual,dict)
                 or actual.get('allowed_transaction_count')!='SINGLE' or actual.get('transaction_limits')!=controls['transaction_limits']
                 or actual.get('allowed_currencies')!=controls['allowed_currencies']
                 or raw.get('cardholder_id')!=expected['cardholder_id']
@@ -119,7 +156,7 @@ class CardRail:
                 or datetime.fromisoformat(actual.get('active_to','').replace('Z','+00:00'))!=datetime.fromisoformat(controls['active_to'].replace('Z','+00:00'))):
             raise ValueError('Issued card controls do not match the immutable approved cap, currency or expiry')
         return {'label':getattr(self.client,'evidence_label','MOCK'),'mode':self.mode,'card_id':card_id,
-                'status':raw.get('status'),'controls_verified':True,'sensitive_card_details_requested':False,
+                'status':raw['card_status'],'controls_verified':True,'sensitive_card_details_requested':False,
                 'authorization_controls':controls,'merchant_payment_completed':False,'visa_approved_agent':False}
 
     def reconcile(self, scope, cardholder_id, created_by, cap_micro, currency, expires_at):
@@ -132,16 +169,30 @@ class CardRail:
         prior=json.loads(row['response']) if row['response'] else {}
         card_id=prior.get('id')
         if not card_id:
-            found=[]
+            found=set()
             for page in range(10):
-                result=self.client.request('GET',f'/api/v1/issuing/cards?page_size=100&page_num={page}')
-                if not isinstance(result,dict) or not isinstance(result.get('items'),list):raise ValueError('Incomplete issuing read-back')
-                found.extend(item for item in result['items'] if item.get('client_data')==scope and item.get('cardholder_id')==cardholder_id)
-                if not result.get('has_more'):break
+                query=urlencode({'page_size':100,'page_num':page,'cardholder_id':cardholder_id})
+                result=self._request('GET','/api/v1/issuing/cards?'+query)
+                if (not isinstance(result,dict) or not isinstance(result.get('items'),list)
+                        or len(result['items'])>100 or type(result.get('has_more')) is not bool):
+                    raise OutcomeUnknown('Incomplete issuing read-back')
+                for item in result['items']:
+                    if not isinstance(item,dict):raise OutcomeUnknown('Invalid card list')
+                    candidate=item.get('card_id')
+                    if not isinstance(candidate,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,100}',candidate):
+                        raise OutcomeUnknown('Card list has no safe identifier')
+                    if item.get('cardholder_id')!=cardholder_id:continue
+                    # Lists omit client_data, request_id and authorization controls.
+                    detail=self._request('GET','/api/v1/issuing/cards/'+candidate)
+                    if not isinstance(detail,dict) or detail.get('card_id')!=candidate:
+                        raise OutcomeUnknown('Invalid card detail read-back')
+                    if detail.get('request_id')==row['request_id'] and detail.get('client_data')==scope:
+                        found.add(candidate)
+                if not result['has_more']:break
             else:raise OutcomeUnknown('Issuing read-back exceeds the bounded page limit')
             if len(found)!=1:raise OutcomeUnknown('No unique issued card found; retain the original request and do not recreate')
-            card_id=found[0]['id']
-        result=self._read_and_validate(card_id,expected)
+            card_id=next(iter(found))
+        result=self._read_and_validate(card_id,expected,request_id=row['request_id'])
         self._bind_mandate(scope, bound)
         self.journal.observe(scope,'issue',{'id':card_id,'status':result['status']})
         return result
@@ -171,7 +222,7 @@ class CardRail:
                 or hashlib.sha256(canonical(expected).encode()).hexdigest() != issued['digest']):
             raise PolicyError('Card account or immutable issuing mandate differs')
         card_id = json.loads(issued['response'])['id']
-        card = self._read_and_validate(card_id, expected)
+        card = self._read_and_validate(card_id, expected, request_id=issued['request_id'])
         controls = card['authorization_controls']
         limits = controls.get('transaction_limits', {})
         currency = (controls.get('allowed_currencies') or [None])[0]

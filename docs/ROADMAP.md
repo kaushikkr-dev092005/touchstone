@@ -8,7 +8,8 @@ Visa onboarding and portal submission remain external gates. See the
 [final live review](LIVE_PROOFS_20261110.md); dated plans below are historical and
 do not authorize further spending.
 
-Current status: [10 November serious review](REVIEW_20261110.md). Semantic role
+Earlier 10 November snapshot, superseded by the current status above:
+[serious review](REVIEW_20261110.md). Semantic role
 binding and candidate/review/rejected accounting are implemented and tested.
 The new holdout is frozen. One hosted inference was correct; qualification stopped
 after a subsequent confirmed-unpaid request, with no retry. The next concrete

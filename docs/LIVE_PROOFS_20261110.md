@@ -89,7 +89,10 @@ cannot guarantee a hardware temperature under every condition.
 ## Remaining external steps
 
 Issuing Cards/Cardholders/Config reads pass; write scopes and a real merchant are
-not available. Visa registered-agent onboarding/trust remains unverified. The
+not verified. A new read-only check found no cards or cardholders and HTTP 404
+`MERCHANT_CONFIG_NOT_FOUND` for Agentic Commerce configuration. See the
+[exact account setup and prepared support requests](EXTERNAL_ACCESS.md).
+Visa registered-agent onboarding/trust remains unverified. The
 signed-in hackathon portal must provide registration/submission access and confirm
 required fields/video limits. The local recording, source archive and submission
 draft are reviewable deliverables, not a confirmed portal submission. A future
