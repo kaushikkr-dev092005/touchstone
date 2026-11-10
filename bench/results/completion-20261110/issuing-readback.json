@@ -1,0 +1,52 @@
+{
+  "label": "MEASURED",
+  "business_writes": 0,
+  "response_keys": [
+    "has_more",
+    "items"
+  ],
+  "has_more": false,
+  "items": [
+    {
+      "keys": [
+        "cardholder_id",
+        "email",
+        "status",
+        "type"
+      ],
+      "cardholder_id": "ffc9b47e-7ade-419e-9616-f64b5bf79ba3",
+      "status": "READY",
+      "type": "DELEGATE"
+    }
+  ],
+  "email_matches": [
+    true
+  ],
+  "journal": {
+    "approved_plan": {
+      "state": "OBSERVED",
+      "response_present": true
+    },
+    "delegate_create": {
+      "state": "OBSERVED",
+      "response_present": true
+    },
+    "issue": {
+      "state": "UNKNOWN",
+      "response_present": false
+    }
+  },
+  "details": [
+    {
+      "keys": [
+        "cardholder_id",
+        "email",
+        "status",
+        "type"
+      ],
+      "cardholder_id": "ffc9b47e-7ade-419e-9616-f64b5bf79ba3",
+      "status": "READY",
+      "type": "DELEGATE"
+    }
+  ]
+}

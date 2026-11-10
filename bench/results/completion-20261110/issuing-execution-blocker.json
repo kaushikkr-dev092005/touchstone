@@ -1,0 +1,9 @@
+{
+  "label": "BLOCKED",
+  "observed_at": "2026-11-10T18:40:12.169969+00:00",
+  "plan_sha256": "047d1243edb1eefc9098de7cb43358dceb9a5cfc0bbe973cb52760db6c2d8760",
+  "error_type": "OutcomeUnknown",
+  "automatic_retry": false,
+  "merchant_payments": 0,
+  "hosted_inference_calls": 0
+}

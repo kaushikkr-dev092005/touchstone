@@ -2,9 +2,10 @@
 
 Status key: **IMPLEMENTED** code and tests exist and ran against controlled adapters only;
 **MEASURED** a real local observation exists; **BLOCKED** an external credential, grant or spend
-approval is required. The 10 November follow-up verified sandbox issuing reads and
-one approved testnet inference. Issuing writes, Visa services and fiat merchant
-settlement remain unverified.
+approval is required. The follow-up verified sandbox issuing reads, one approved
+synthetic delegate and a single-use USD 0.01 sandbox card, with no merchant payment.
+Visa approval is pending; merchant Agentic Commerce config and fiat merchant
+settlement remain unverified. [Current evidence](EXTERNAL_ACCESS.md).
 
 Implementation is local Python stdlib plus the existing pinned Metal SDK and viem.
 No runtime dependency was added. Tests use controlled adapters; none purchases a
@@ -198,7 +199,7 @@ FX refusal, both simulated billing policies, kill/resume and reconciliation.
 See [validation](VALIDATION.md) and the [evidence index](EVIDENCE_INDEX.md).
 
 M3 useful synthetic review drafting and one integrated customer sandbox proof are now measured.
-M4 remains incomplete after clearing refusals and the credit-cap stop. Issuing write access,
-Visa credentials/trust, a funded fiat merchant, independent final settlement and signed-in portal
+M4 remains incomplete after clearing refusals and the credit-cap stop. Sandbox issuing creation
+and controls are verified. Visa credentials/trust, merchant enablement, independent final settlement and signed-in portal
 submission remain gates. A captioned local recording is available in the release package. The implementation does not turn those
 missing observations into completion claims.

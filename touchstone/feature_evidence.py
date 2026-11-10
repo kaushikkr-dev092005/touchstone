@@ -132,6 +132,19 @@ def summary():
         card={'label':'BLOCKED','issuing_read':False,'historical_issuing_read':bool(card.get('issuing_read')),
             'reason':'Saved issuing evidence is not bound to the configured account. Recheck access.',
             'cards_created':0,'transactions_sent':0}
+    issued=load(ROOT/'bench/results/completion-20261110/issuing-proof.json')
+    approved=load(ROOT/'bench/results/completion-20261110/issuing-plan.json')
+    if issued.get('label')=='MEASURED' and issued.get('card_controls_verified') is True and approved.get('approved') is True:
+        from .ledger import canonical
+        plan=approved.get('plan',{})
+        digest=hashlib.sha256(canonical(plan).encode()).hexdigest()
+        if digest==approved.get('plan_sha256')==issued.get('original_plan_sha256'):
+            saved_card=issued.get('card',{})
+            card={**card,'saved_creation':{'label':'MEASURED','scope':'SAVED_SANDBOX_ISSUING',
+                'controls_verified':True,'card_status_at_readback':saved_card.get('status'),
+                'authorization_controls':saved_card.get('authorization_controls',{}),
+                'current_account_matches':bool(account and plan.get('account_fingerprint')==hashlib.sha256(account.encode()).hexdigest()),
+                'merchant_payment_completed':False,'visa_approved_agent':False}}
     return {'completion':load(ROOT/'bench/results/completion-20261110/final-proof-status.json'),
             'fault':fault_summary,'fx':{'label':'MEASURED' if rate else 'BLOCKED','rate':rate,
              'quote_current':bool(rate and rate.get('expires_at',0)>time.time()),'preview':preview(rate)},

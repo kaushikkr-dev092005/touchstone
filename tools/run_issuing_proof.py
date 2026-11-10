@@ -140,14 +140,23 @@ def main():
         saved = json.loads(path.read_text(encoding='utf-8'))
         plan = saved['plan']
         if fingerprint(plan) != saved['plan_sha256']:raise PolicyError('Saved plan integrity failed')
-        if plan != prepare_plan(client):raise PolicyError('Plan account or code binding differs')
         if args.action == 'execute':
+            if plan != prepare_plan(client):raise PolicyError('Plan account or code binding differs')
             report = execute(client, journal, plan, args.approval)
             save(PUBLIC/'issuing-proof.json', report)
         else:
+            if plan['account_fingerprint'] != hashlib.sha256(client.account_id.encode()).hexdigest():
+                raise PolicyError('Read-only reconciliation account differs from the original plan')
+            approved=journal.get(plan['scope'],'approved_plan')
+            if approved and approved['digest'] != hashlib.sha256(canonical({'plan_sha256': saved['plan_sha256']}).encode()).hexdigest():
+                raise PolicyError('Read-only plan differs from the original recorded approval')
             holder = reconcile_delegate(client, journal, plan)
             report = {'label': 'MEASURED', 'delegate': holder, 'business_writes': 0,
-                      'card_controls_verified': False, 'visa_approved_agent': False}
+                      'card_controls_verified': False, 'visa_approved_agent': False,
+                      'original_plan_sha256': saved['plan_sha256'],
+                      'source_changed_since_approval': plan != prepare_plan(client),
+                      'merchant_payments': 0, 'hosted_inference_calls': 0, 'funding_transfers': 0,
+                      'sensitive_card_details_requested': False}
             row = journal.get(plan['scope'], 'approved_plan')
             issued = journal.get(plan['scope'], 'issue')
             if row and issued and holder:
@@ -156,6 +165,9 @@ def main():
                 report['card'] = CardRail(client, journal).reconcile(plan['scope'], holder['cardholder_id'],
                     card['created_by'], card['cap_micro_usd'], card['currency'], runtime['expires_at'], personalized=False)
                 report['card_controls_verified'] = report['card']['controls_verified']
+                report['phase'] = 'CARD_CONTROLS_VERIFIED_READ_ONLY_RECONCILIATION'
+                report['original_creation_operations_observed'] = 2
+                save(PUBLIC/'issuing-proof.json', report)
     print(json.dumps(report, indent=2))
 
 

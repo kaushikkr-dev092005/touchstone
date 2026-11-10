@@ -3,8 +3,8 @@
 **10 November current status:** Sonnet qualification and the integrated customer
 sandbox proof are complete. The matched study stopped at its conservative credit
 guard after clearing refusals: 12/64 policy outcomes, no pending invoice, no savings
-claim. Total Claude exposure remains $2.919117 within the $3 ceiling. Issuing writes,
-Visa onboarding and portal submission remain external gates. See the
+claim. Total Claude exposure remains $2.919117 within the $3 ceiling. Issuing creation
+is verified; merchant onboarding, Visa approval and portal submission remain external gates. See the
 [final live review](LIVE_PROOFS_20261110.md); dated plans below are historical and
 do not authorize further spending.
 

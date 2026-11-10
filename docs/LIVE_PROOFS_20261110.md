@@ -1,8 +1,9 @@
 # Final live proof review, 10 November 2026
 
 The qualified-model sandbox integration completed. The matched comparison stopped
-at its credit guard after repeated clearing refusals. Issuing writes, Visa
-onboarding and signed-in portal submission remain external requirements.
+at its credit guard after repeated clearing refusals. Capped issuing creation is
+now verified. Merchant onboarding, Visa approval and signed-in portal submission
+remain external requirements.
 
 ## Completed evidence
 
@@ -88,8 +89,9 @@ cannot guarantee a hardware temperature under every condition.
 
 ## Remaining external steps
 
-Issuing Cards/Cardholders/Config reads pass; write scopes and a real merchant are
-not verified. A new read-only check found no cards or cardholders and HTTP 404
+Issuing reads and the approved one-delegate/one-card writes are verified. The
+single-use USD 0.01 card has its original controls and an earlier server-truncated
+expiry. There was no merchant charge. Merchant configuration still returns HTTP 404
 `MERCHANT_CONFIG_NOT_FOUND` for Agentic Commerce configuration. See the
 [exact account setup and prepared support requests](EXTERNAL_ACCESS.md).
 Visa registered-agent onboarding/trust remains unverified. The

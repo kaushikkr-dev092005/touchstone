@@ -71,7 +71,7 @@ def record_demo(browser, base, folder):
     page.locator('#close').click()
     idle()
     scene('SIMULATED SETTLEMENT: close accounts for every attempt, captures the agreed cost, and releases the unused hold.','#financial-story',5000)
-    scene('Reproducible controls and saved measured proofs. Issuing writes, Visa onboarding and signed-in portal submission remain external requirements.', 'footer',5000)
+    scene('Sandbox issuing is verified with a single-use USD 0.01 cap. Merchant enablement, Visa approval and signed-in portal submission remain external requirements.', 'footer',5000)
     context.close()
     video.save_as(str(folder/'touchstone-demo.webm'))
     assert not errors and not external, 'Recording contains a script error or external asset request'

@@ -58,8 +58,10 @@ settlement. [Evidence index](docs/EVIDENCE_INDEX.md) · [Serious review and rema
 - Responsive dashboard, transaction search/export, live/simulated disclosures and
   conservative GPU temperature supervision.
 
-Issuing reads now pass; issuing writes/merchant access and Visa onboarding remain
-external gates. The matched comparison and submission status are recorded in the
+Issuing creation is verified: one READY synthetic delegate and one capped sandbox
+card, without a merchant charge. Merchant access and pending Visa approval remain
+external gates. [Current issuing proof and account setup](docs/EXTERNAL_ACCESS.md).
+The matched comparison and submission status are recorded in the
 [current review](docs/REVIEW_20261110.md). [Detailed feature boundaries](docs/FEATURES.md).
 
 ## Operator and developer paths

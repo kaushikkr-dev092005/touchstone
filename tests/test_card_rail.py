@@ -118,6 +118,23 @@ class CardRailTests(unittest.TestCase):
             with self.assertRaises(OutcomeUnknown):self.rail.reconcile(*self.args)
         self.assertEqual(sum(m=='POST' for m,_ in self.client.calls),1)
 
+    def test_server_millisecond_truncation_is_accepted_but_expiry_extension_is_rejected(self):
+        args=list(self.args)
+        expiry=(datetime.now(timezone.utc)+timedelta(minutes=5)).replace(microsecond=123456)
+        args[-1]=expiry.isoformat()
+        self.rail.issue(*args,execute=True)
+        self.client.card['authorization_controls']['active_to']=expiry.isoformat(timespec='milliseconds')
+        result=self.rail.reconcile(*args)
+        self.assertTrue(result['controls_verified'])
+        self.assertTrue(result['expiry_precision_normalized'])
+        self.assertEqual(result['authorization_controls']['active_to'],expiry.isoformat(timespec='milliseconds'))
+        self.assertEqual(result['approved_active_to'],expiry.isoformat())
+        self.client.card['authorization_controls']['active_to']=(expiry+timedelta(microseconds=1)).isoformat()
+        with self.assertRaises(ValueError):self.rail.reconcile(*args)
+        self.client.card['authorization_controls']['active_to']=(expiry-timedelta(milliseconds=1)).isoformat()
+        with self.assertRaises(ValueError):self.rail.reconcile(*args)
+        self.assertEqual(sum(m=='POST' for m,_ in self.client.calls),1)
+
     def test_read_only_doctor_does_not_claim_issuing_write_or_visa_identity(self):
         result=self.rail.doctor()
         self.assertFalse(result['issuing_write_verified']);self.assertEqual(result['cards_created'],0)

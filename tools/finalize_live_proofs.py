@@ -89,8 +89,11 @@ def finalize():
             'start_refusal_c':65,'automatic_thermal_restart':False,'model_stopped_after_study':not bool(health(8080,'/health')),
             'hardware_temperature_guarantee':False},
         'paid_and_failed_call_log':calls,'wallets':wallets,'refund_executed':False,'final_settlement_verified':False,
-        'issuing_reads':'PASS','issuing_writes_and_merchant':'EXTERNAL_ACCESS_REQUIRED',
-        'visa_onboarding':'EXTERNAL_APPROVAL_REQUIRED','portal_submission':'OPERATOR_ACCESS_REQUIRED',
+        'issuing_reads':'PASS',
+        'issuing_creation':{'status':'SEE_SEPARATE_SAVED_PROOF',
+            'evidence':'bench/results/completion-20261110/issuing-proof.json'},
+        'merchant_configuration':'NOT_CONFIGURED_AT_LAST_READ',
+        'visa_onboarding':'APPROVAL_PENDING_USER_REPORTED','portal_submission':'OPERATOR_ACCESS_REQUIRED',
         'financial_transactions_in_this_check':0,'inference_calls_in_this_check':0}
     save(ROOT/'bench/results/completion-20261110/final-proof-status.json',status)
     return {'controls':checks,'costs':status['costs'],'comparison_complete':comparison['complete']}

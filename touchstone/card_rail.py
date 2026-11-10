@@ -145,6 +145,10 @@ class CardRail:
         if not isinstance(raw,dict):raise ValueError('Invalid card read-back')
         actual=raw.get('authorization_controls',{})
         controls=expected['authorization_controls']
+        expected_expiry=datetime.fromisoformat(controls['active_to'].replace('Z','+00:00'))
+        # Airwallex returns millisecond precision. Truncation is earlier than the
+        # approved ceiling; accept that representation, never a later expiry.
+        truncated_expiry=expected_expiry.replace(microsecond=(expected_expiry.microsecond//1000)*1000)
         if (raw.get('card_id')!=card_id or raw.get('request_id')!=request_id
                 or raw.get('card_status') not in {'PENDING','FAILED','INACTIVE','ACTIVE','LOST','STOLEN','CLOSED','BLOCKED','EXPIRED','UNKNOWN'}
                 or raw.get('form_factor')!='VIRTUAL' or raw.get('is_personalized') is not expected['is_personalized']
@@ -155,11 +159,14 @@ class CardRail:
                 or actual.get('allowed_currencies')!=controls['allowed_currencies']
                 or raw.get('cardholder_id')!=expected['cardholder_id']
                 or actual.get('blocked_transaction_usages')!=controls['blocked_transaction_usages']
-                or datetime.fromisoformat(actual.get('active_to','').replace('Z','+00:00'))!=datetime.fromisoformat(controls['active_to'].replace('Z','+00:00'))):
+                or datetime.fromisoformat(actual.get('active_to','').replace('Z','+00:00')) not in {expected_expiry,truncated_expiry}):
             raise ValueError('Issued card controls do not match the immutable approved cap, currency or expiry')
         return {'label':getattr(self.client,'evidence_label','MOCK'),'mode':self.mode,'card_id':card_id,
                 'status':raw['card_status'],'controls_verified':True,'sensitive_card_details_requested':False,
-                'authorization_controls':controls,'merchant_payment_completed':False,'visa_approved_agent':False}
+                'authorization_controls':{**controls,'active_to':actual['active_to']},
+                'approved_active_to':controls['active_to'],
+                'expiry_precision_normalized':datetime.fromisoformat(actual['active_to'].replace('Z','+00:00'))!=expected_expiry,
+                'merchant_payment_completed':False,'visa_approved_agent':False}
 
     def reconcile(self, scope, cardholder_id, created_by, cap_micro, currency, expires_at, *, personalized=True):
         expected=self.body(scope,cardholder_id,created_by,cap_micro,currency,expires_at,read_only=True,personalized=personalized)

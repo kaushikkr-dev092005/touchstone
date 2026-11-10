@@ -1,6 +1,6 @@
 {
   "label": "MEASURED",
-  "observed_at": "2026-11-10T18:31:10.650278+00:00",
+  "observed_at": "2026-11-10T18:43:05.951971+00:00",
   "mode": "SANDBOX",
   "financial_transactions": 0,
   "cards_created": 0,
@@ -14,7 +14,7 @@
     "transactions_sent": 0,
     "visa_tap_identity": "NOT_VERIFIED",
     "cards_sample": {
-      "count": 0,
+      "count": 1,
       "has_more": false,
       "scope": "FIRST_PAGE_ONLY"
     },
@@ -28,7 +28,7 @@
         "allowed": true,
         "status": "PASS",
         "sample": {
-          "count": 0,
+          "count": 1,
           "has_more": false,
           "ready_individual_count": 0,
           "scope": "FIRST_PAGE_ONLY"

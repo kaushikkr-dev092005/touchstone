@@ -1,0 +1,105 @@
+{
+  "label": "MEASURED",
+  "business_writes": 0,
+  "response_keys": [
+    "has_more",
+    "items"
+  ],
+  "has_more": false,
+  "cards": [
+    {
+      "card_id": "c7037f04-d0ee-422d-9eb3-a299a45aca79",
+      "card_status": "ACTIVE",
+      "request_id": "6462c960-a5b6-41dc-9521-8ee4d4005e5c",
+      "client_data": "issuing-proof-20261110-v1",
+      "is_personalized": false,
+      "form_factor": "VIRTUAL",
+      "created_by": "Alex Example",
+      "authorization_controls": {
+        "active_to": "2026-11-10T19:10:10.454+00:00",
+        "allowed_currencies": [
+          "USD"
+        ],
+        "allowed_merchant_brands": {
+          "categories": [],
+          "ids": [],
+          "subcategories": []
+        },
+        "allowed_merchant_categories": [],
+        "allowed_merchant_countries": [],
+        "allowed_transaction_count": "SINGLE",
+        "blocked_transaction_usages": [
+          {
+            "transaction_scope": "CASH_WITHDRAWAL",
+            "usage_scope": "ALL"
+          }
+        ],
+        "transaction_limits": {
+          "currency": "USD",
+          "limits": [
+            {
+              "amount": 0.01,
+              "interval": "PER_TRANSACTION"
+            },
+            {
+              "amount": 0.01,
+              "interval": "ALL_TIME"
+            }
+          ]
+        }
+      },
+      "response_keys": [
+        "alert_settings",
+        "all_card_versions",
+        "authorization_controls",
+        "brand",
+        "card_id",
+        "card_number",
+        "card_status",
+        "card_version",
+        "cardholder_id",
+        "client_data",
+        "created_at",
+        "created_by",
+        "delivery_details",
+        "form_factor",
+        "is_personalized",
+        "name_on_card",
+        "program",
+        "purpose",
+        "request_id",
+        "updated_at"
+      ],
+      "program_purpose": "COMMERCIAL",
+      "request_id_matches": true,
+      "expected_authorization_controls": {
+        "active_to": "2026-11-10T19:10:10.454914+00:00",
+        "allowed_currencies": [
+          "USD"
+        ],
+        "allowed_transaction_count": "SINGLE",
+        "blocked_transaction_usages": [
+          {
+            "transaction_scope": "CASH_WITHDRAWAL",
+            "usage_scope": "ALL"
+          }
+        ],
+        "transaction_limits": {
+          "currency": "USD",
+          "limits": [
+            {
+              "amount": 0.01,
+              "interval": "PER_TRANSACTION"
+            },
+            {
+              "amount": 0.01,
+              "interval": "ALL_TIME"
+            }
+          ]
+        }
+      },
+      "cardholder_matches": true
+    }
+  ],
+  "original_request_id": "6462c960-a5b6-41dc-9521-8ee4d4005e5c"
+}

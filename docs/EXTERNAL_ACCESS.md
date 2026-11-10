@@ -1,5 +1,27 @@
 # Issuing, merchant and Visa completion
 
+**Current outcome:** the approved plan created one READY synthetic delegate and
+one ACTIVE non-personalized sandbox virtual card. Its USD 0.01 per-transaction and
+all-time limits, USD-only currency, single-use policy, cash-withdrawal block and
+expiry were verified through read-only reconciliation. Exactly the original two
+creation operations were observed. No merchant payment, transfer, PAN/CVC retrieval
+or model call occurred. [Verified proof](../bench/results/completion-20261110/issuing-proof.json).
+
+The server truncated the approved expiry to milliseconds, slightly earlier than
+requested. The verifier accepts only the exact expiry or that earlier millisecond
+truncation, never an extension. The approved writing code was not re-executed; the
+correction reconciled the original card with GET calls. Both creation approvals are
+consumed. The authorization window ends at `2026-11-10T19:10:10.454Z`; this is not a
+card cancellation or a merchant payment.
+
+Merchant Agentic Commerce config still returns HTTP 404
+`MERCHANT_CONFIG_NOT_FOUND`. Its required public checkout and OAuth endpoints are
+not configured in this local project. This separate integration does not invalidate
+the completed hosted customer checkout proof. Visa application is submitted and
+approval is pending, as reported by the operator. No Visa approval is claimed.
+
+## Earlier read-only diagnosis
+
 Read-only account check, 10 November 2026: authentication and Issuing Cards,
 Cardholders and Config reads pass. The account returned no cards and no
 cardholders, with `has_more=false` on both lists. The merchant configuration
@@ -9,7 +31,8 @@ have not been demonstrated.
 
 The operator subsequently confirmed enabling Cards and Cardholders Write and
 reported that the Visa application is submitted with approval pending. These are
-user reports; issuing writes and Visa approval still need their own evidence.
+user reports. Issuing writes were subsequently verified above; Visa approval still
+needs independent evidence.
 [Prepared capped issuing proof](ISSUING_PROOF_PLAN.md).
 
 [Measured account check](../bench/results/completion-20261110/external-access.json).

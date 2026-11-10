@@ -74,6 +74,30 @@ class ReadinessAccountTests(unittest.TestCase):
 
 
 class IssuingEvidenceTests(unittest.TestCase):
+    def test_saved_creation_remains_historical_and_binds_the_original_account(self):
+        from touchstone.ledger import canonical
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            folder=root/'bench/results/completion-20261110';folder.mkdir(parents=True)
+            plan={'account_fingerprint':hashlib.sha256(b'acct_original').hexdigest()}
+            digest=hashlib.sha256(canonical(plan).encode()).hexdigest()
+            (folder/'issuing-plan.json').write_text(json.dumps({'plan':plan,'plan_sha256':digest,'approved':True}))
+            (folder/'issuing-proof.json').write_text(json.dumps({'label':'MEASURED','card_controls_verified':True,
+                'original_plan_sha256':digest,'card':{'status':'ACTIVE','authorization_controls':{}}}))
+            with patch.object(feature_evidence,'ROOT',root),patch.dict(os.environ,{'AIRWALLEX_ACCOUNT_ID':'acct_original'},clear=True):
+                saved=feature_evidence.summary()['card']['saved_creation']
+                self.assertTrue(saved['current_account_matches'])
+                self.assertFalse(saved['merchant_payment_completed'])
+                self.assertFalse(saved['visa_approved_agent'])
+            with patch.object(feature_evidence,'ROOT',root),patch.dict(os.environ,{'AIRWALLEX_ACCOUNT_ID':'acct_other'},clear=True):
+                saved=feature_evidence.summary()['card']['saved_creation']
+                self.assertFalse(saved['current_account_matches'])
+                self.assertEqual(saved['scope'],'SAVED_SANDBOX_ISSUING')
+            (folder/'issuing-proof.json').write_text(json.dumps({'label':'MEASURED','card_controls_verified':True,
+                'original_plan_sha256':'tampered'}))
+            with patch.object(feature_evidence,'ROOT',root):
+                self.assertNotIn('saved_creation',feature_evidence.summary()['card'])
+
     def test_refresh_saves_only_read_diagnostics_and_binds_selected_account(self):
         from types import SimpleNamespace
         from unittest.mock import Mock

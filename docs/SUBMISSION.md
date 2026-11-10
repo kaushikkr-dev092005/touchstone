@@ -60,7 +60,8 @@ frontend build, browser security, mobile layout and offline asset checks.
 
 This is prepared material, not a submitted entry. The signed-in portal must confirm
 registration, team identity, category, video requirements and submission receipt.
-Airwallex issuing writes/merchant access and Visa onboarding/trust are external
-access requirements. [Current account checks and prepared requests](EXTERNAL_ACCESS.md)
-identify the missing cardholder and merchant configuration. Kit 12's inference-sourcing story is the target; no completed
+Sandbox issuing creation and card controls are verified. Merchant configuration
+and Visa onboarding/trust remain external requirements.
+[Current account checks and completed issuing proof](EXTERNAL_ACCESS.md)
+separate those results. Kit 12's inference-sourcing story is the target; no completed
 Kit 11 settlement, real Visa merchant payment or production certification is claimed.

@@ -1,8 +1,16 @@
-# Sandbox issuing proof awaiting approval
+# Completed sandbox issuing proof
 
 Plan `047d1243edb1eefc9098de7cb43358dceb9a5cfc0bbe973cb52760db6c2d8760`
-is prepared for the configured sandbox account. It is not an executed proof.
+was explicitly approved and executed for the configured sandbox account.
 [Exact terms and source hashes](../bench/results/completion-20261110/issuing-plan.json).
+
+One READY delegate and one ACTIVE virtual card were created. The original card was
+reconciled with GET requests after correcting millisecond expiry handling; no
+creation was retried. [Verified result](../bench/results/completion-20261110/issuing-proof.json).
+All writes under this approval are consumed. Do not prepare or execute this scope
+again. `status` remains available for read-only reconciliation with the original
+plan/account and journal. The saved source hashes identify the approved writing
+code; the later correction only reconciled the existing card.
 
 It permits one synthetic DELEGATE cardholder with reserved `example.com` email and
 one non-personalized commercial virtual card. The synthetic requester name is
@@ -19,10 +27,9 @@ additional scope is permitted. The controller binds the account and financial
 source hashes before any write. A changed source or expired original card window
 stops execution instead of extending the approval.
 
-Prepare/read status without creating anything:
+Read status without creating anything:
 
 ```text
-python tools/run_issuing_proof.py prepare
 python tools/run_issuing_proof.py status
 ```
 
