@@ -47,6 +47,7 @@
   "merchant_tools_invoked": 1,
   "read_only_catalog_tool": "render_products",
   "catalog_read_succeeded": true,
+  "catalog_products_returned": 3,
   "payment_operations": 0,
   "model_calls": 0,
   "visa_approved": false

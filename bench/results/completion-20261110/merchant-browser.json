@@ -1,0 +1,14 @@
+{
+  "label": "MEASURED_ANONYMOUS_PUBLIC_BROWSER",
+  "origin": "https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site",
+  "viewports": [
+    1440,
+    390
+  ],
+  "catalog_products": 100,
+  "application_health_status": 200,
+  "page_errors": [],
+  "external_requests": [],
+  "payment_operations": 0,
+  "model_calls": 0
+}

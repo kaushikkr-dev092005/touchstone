@@ -1,9 +1,9 @@
 {
   "label": "MEASURED",
   "scope": "COMMITTED_SOURCE_WITH_CONTROLLED_FINANCIAL_ADAPTERS",
-  "commit": "334df9af368b9502a9bc1b4ac9246b85c744e0fb",
-  "archive_sha256": "5f63fc52d35d03066bc997ddd635454a52df49cb972fa97c5e3e808e38d56153",
-  "source_files_verified": 525,
+  "commit": "27e0a2ee1a06c51405e89868c24e005fe45164cb",
+  "archive_sha256": "16a6c3de56ae5647f86a1fb336fe14d5084a20dd44950938383ed26cd30888b4",
+  "source_files_verified": 534,
   "source_mode": "COMMITTED_TREE",
   "changed_files": [],
   "working_tree_edits_included": false,
@@ -19,54 +19,164 @@
   "stages": {
     "npm-ci": {
       "exit_code": 0,
-      "log_sha256": "ad23709d93a92beae71af6215030189f8ad6bf58a4d642e56e4c2d47d0e61cc4"
+      "log_sha256": "f886a0aea47a3243f0ca9698990cad0725d870fb672591d455f02468bf34fd91"
     },
     "python-tests": {
       "exit_code": 0,
-      "log_sha256": "ec6c3ba1693d98d2a4b0449ea8a11c8c53104f909f4ab73c9e3d925111232c39"
+      "log_sha256": "66fa3039ddb13861e217c4bc7baa45614923b677a33a3b673ff44a87ccab5eb9"
     },
     "node-tests": {
       "exit_code": 0,
-      "log_sha256": "71da383fcc9a2f67769a354b5a8402242ca1f1e400a5c30f0a7fe6f373b57f75"
+      "log_sha256": "587464ed0e66ba3d36e72ccb5d8e95d9ee5f833b53df1d17f0348894a7a8e406"
     },
     "m1-controlled": {
       "exit_code": 0,
-      "log_sha256": "5f83046abfcc31155948404676d9520ba9a152e2fcf1542a2313150045e44f09"
+      "log_sha256": "afab37622721c9353d049aeab40de3021e42e12d089e98f4cbef9b7b2bdb2b29"
     },
     "m2-controlled": {
       "exit_code": 0,
-      "log_sha256": "230439c108f17ecb3e0f928503515c863f8eb2c715c9c2ca09dcd13930a13f3c"
+      "log_sha256": "5c47d6df963485cd4aa0e2a518e66420ba1a681dcfdb8e7d634194fc5a424204"
     },
     "m3-controlled": {
       "exit_code": 0,
-      "log_sha256": "4d212d6fc212900dfedfcbfdd1e653166e7c9143110676fa1b7989fe7e188f0b"
+      "log_sha256": "63d2f3f6b43123c5f0c5f946daf44886803d3054c56d105617d244bd2ee174ca"
     },
     "m4-controlled": {
       "exit_code": 0,
-      "log_sha256": "92d9a19290d31ba5ec99f5dcdea6d147dec38c6aa77d6198af5d53d043f4301b"
+      "log_sha256": "001cbdc5007295b9a019b3a886ce516f763e96a2542d46885a40b1bbf1c9464d"
     },
     "m5-controlled": {
       "exit_code": 0,
-      "log_sha256": "3fadc8869e90ca363930e5ee5866bf3acc1bec6d86dc3027d67df8ea8d79cb63"
+      "log_sha256": "a5d17e2b9a25fdba6e5fd784fe56020bc483d66ffa772072a2a284ebae53270c"
     },
     "bun-install-frozen": {
       "exit_code": 0,
-      "log_sha256": "590478547fdead01a130d32dd596beb9abd061116213bedd4af4852fd8e1110a"
+      "log_sha256": "7b6b38e3c9c44a1e8cd6f83fdfba01ac1f3e80fe8354487cdc2e3ab9b3fcb2e1"
     },
     "frontend-build": {
       "exit_code": 0,
-      "log_sha256": "655599246cc7202d38a857738827a6467bc671f3c859f950f3fe9bea34744f8e"
+      "log_sha256": "3cbbc8888b666d5f452a22e6fd6f0daf3d28c801c64493c06fa3a85622cff28c"
     },
     "procurement-evidence": {
       "exit_code": 0,
-      "log_sha256": "67e5c3d0363a1d3e2f9c6e19388c9454d6b595c219f9e787370ae11a887a9b78"
+      "log_sha256": "6b5c11d262b2829dd4934846323774b47b47a8e7a12839c8caa156d000d5fafb"
     },
     "dashboard-browser": {
-      "exit_code": 1,
-      "log_sha256": "c61a09b9e6c013927516ed6022cda738226557089e0d08808593f1746500644e"
+      "exit_code": 0,
+      "log_sha256": "8e71ecdc959c434e06b42e0e3d8c7b927ded6ead552fb233cf3b2b99f4f446cc"
+    },
+    "motion-browser": {
+      "exit_code": 0,
+      "log_sha256": "f5914229a70671feca9e900fe0ceccc58434d8001dbf2310860e30f2d484c137"
+    },
+    "release-browser": {
+      "exit_code": 0,
+      "log_sha256": "5ef7c9c6122e560cf4920591edc175870eed7b49f63cbe9a28b474ef2dccffba"
     }
   },
-  "logs_directory": "tmp/release-validation-y0b86jb1/logs",
-  "passed": false,
-  "failure_type": "RuntimeError"
+  "logs_directory": "tmp/release-validation-qbwkadtp/logs",
+  "python_tests": 376,
+  "node_tests": 53,
+  "functional_browser": {
+    "desktop": "passed",
+    "mobile_width": 390,
+    "horizontal_overflow": false,
+    "browser_errors": [],
+    "start_halt_resume_close": "passed",
+    "host_origin_session_controls": "passed",
+    "reconciliation": {
+      "matched": true,
+      "ledger_provider_total": 2780000,
+      "rail_total": 2780000,
+      "verification_total": 128000,
+      "customer_captured": 2698000,
+      "pending": 0,
+      "mismatches": [],
+      "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+      "mode": "SIMULATED"
+    },
+    "planning_tool_and_review_cases": "passed",
+    "provider_evidence_rows": 6,
+    "testnet_proof_disclosure": "passed",
+    "fault_fx_telemetry_rail_panels": "passed",
+    "current_signed_fault_and_capped_completion_proofs": "passed",
+    "credential_isolation_and_blocked_fx": "passed",
+    "issuing_settings_recheck_and_session_controls": "passed",
+    "merchant_absorbs_sse_and_capture": "passed",
+    "particle_field_stops_on_confirmed_halt": "passed",
+    "transactions_explorer": {
+      "rows": 128,
+      "runs": 2,
+      "confirmed_spend_micro_usd": 2908000,
+      "search_filters_sort_pagination": "passed",
+      "keyboard_drawer": "passed",
+      "csv_totals": "passed"
+    },
+    "screenshots": [
+      "desktop-ready.png",
+      "desktop-paused.png",
+      "desktop-completed.png",
+      "mobile-completed.png"
+    ]
+  },
+  "motion_browser": {
+    "label": "MEASURED",
+    "scope": "ISOLATED_SIMULATED_DASHBOARD",
+    "desktop": [
+      1440,
+      900
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "particle_preview": {
+      "fps": "60.0",
+      "render_ms": "1.29",
+      "quality": "full",
+      "particles": 5200
+    },
+    "fps_environment": "HEADLESS_CHROMIUM_WINDOWS_NOT_A_HARDWARE_GUARANTEE",
+    "pause_replay_offscreen_reduced_motion": "passed",
+    "dark_light_toggle": "passed",
+    "horizontal_overflow": false,
+    "page_errors": [],
+    "external_requests": [],
+    "financial_transactions": 0
+  },
+  "release_browser": {
+    "label": "MEASURED",
+    "scope": "ISOLATED_SIMULATED_RELEASE",
+    "sse_restart_reconnect": "passed",
+    "old_process_token_rejected": true,
+    "fresh_process_token_accepted": true,
+    "viewports": [
+      [
+        1440,
+        900
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "reduced_motion_on_and_off": "passed",
+    "landing_built_and_checked": true,
+    "offline_loaded_page": "passed",
+    "external_requests": [],
+    "page_errors": [],
+    "screenshots": [
+      "dashboard-1440-motion.png",
+      "landing-1440-motion.png",
+      "dashboard-390-motion.png",
+      "landing-390-motion.png",
+      "dashboard-1440-reduced.png",
+      "landing-1440-reduced.png",
+      "dashboard-390-reduced.png",
+      "landing-390-reduced.png"
+    ],
+    "financial_transactions": 0
+  },
+  "passed": true,
+  "failure_type": null
 }

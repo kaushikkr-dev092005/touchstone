@@ -1,0 +1,21 @@
+{
+  "label": "MEASURED_PUBLIC_SANDBOX_DEPLOYMENT",
+  "origin": "https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site",
+  "site_project_id": "appgprj_6af368c6a8c08191ae7cf258968836db",
+  "site_version_id": "appgprj_6af368c6a8c08191ae7cf258968836db~appgver_cfc3ab88b66c8191a385f4461ad4e20e",
+  "deployment_id": "appgdep_6af3719d4b7c81919132673ad335ee23",
+  "source_commit": "27e0a2ee1a06c51405e89868c24e005fe45164cb",
+  "environment_revision": 2,
+  "audience": "public",
+  "audience_change_approval": "2ce5ecc382199fff",
+  "status": "succeeded",
+  "updated_at": "2026-11-10T19:34:06.907331+00:00",
+  "application_health_path": "/api/merchant-health",
+  "anonymous_application_health_status": 200,
+  "guest_oauth_gateway_verified": true,
+  "catalog_shortlist_products_returned": 3,
+  "payment_operations_in_verification": 0,
+  "model_calls_in_verification": 0,
+  "bank_or_model_provider_credentials_hosted": false,
+  "visa_approval_verified": false
+}
