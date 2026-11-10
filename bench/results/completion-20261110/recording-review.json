@@ -1,0 +1,47 @@
+{
+  "label": "MEASURED",
+  "scope": "ISOLATED_SIMULATED_RELEASE",
+  "sse_restart_reconnect": "passed",
+  "old_process_token_rejected": true,
+  "fresh_process_token_accepted": true,
+  "viewports": [
+    [
+      1440,
+      900
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "reduced_motion_on_and_off": "passed",
+  "landing_built_and_checked": true,
+  "offline_loaded_page": "passed",
+  "external_requests": [],
+  "page_errors": [],
+  "screenshots": [
+    "dashboard-1440-motion.png",
+    "landing-1440-motion.png",
+    "dashboard-390-motion.png",
+    "landing-390-motion.png",
+    "dashboard-1440-reduced.png",
+    "landing-1440-reduced.png",
+    "dashboard-390-reduced.png",
+    "landing-390-reduced.png"
+  ],
+  "financial_transactions": 0,
+  "demo_recording": {
+    "file": "touchstone-demo.webm",
+    "transcript": "demo-transcript.md",
+    "scenes": 15,
+    "mode": "SIMULATED_UI_WITH_SEPARATELY_LABELLED_SAVED_PROOFS",
+    "financial_transactions": 0,
+    "hosted_inference_calls": 0,
+    "page_errors": [],
+    "external_requests": []
+  },
+  "video_sha256": "7a2ac26ee80117f72fd707a04cc960bf7e2bdeb11e92002503ad65a7b292eb3d",
+  "video_bytes": 7712586,
+  "portal_uploaded": false,
+  "submission_confirmed": false
+}

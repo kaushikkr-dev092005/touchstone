@@ -3,6 +3,10 @@
 The final local recording shows saved measured proofs and new simulated dashboard
 actions with explicit labels. It sends no financial transaction or hosted inference.
 
+Repository assets: [captioned WebM](recordings/touchstone-demo.webm) and
+[transcript](recordings/demo-transcript.md). These are reviewable recording files;
+they are not a portal upload or confirmed entry submission.
+
 ```text
 python tools/check_release_browser.py --include-landing --record-demo --output tmp/final-live-demo-20261110
 ```

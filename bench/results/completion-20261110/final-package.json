@@ -1,0 +1,15 @@
+{
+  "label": "MEASURED",
+  "file": "dist/touchstone-release.zip",
+  "sha256": "3dc5c80ae43ecf003916002799d2f07def3401342f35b69ba71cd933e07764b2",
+  "bytes": 24453909,
+  "application_source_commit": "2a49f67c8cbadcf7ad1ca89f073b2e3a3a3ef981",
+  "verified_members": 509,
+  "python_tests": 354,
+  "node_tests": 53,
+  "recording_scenes": 15,
+  "financial_transactions": 0,
+  "hosted_inference_calls": 0,
+  "private_wallets_included": false,
+  "portal_submission": false
+}

@@ -1,9 +1,9 @@
 {
   "label": "MEASURED",
   "scope": "COMMITTED_SOURCE_WITH_CONTROLLED_FINANCIAL_ADAPTERS",
-  "commit": "349a6b13c6e5a45faad782046a76220de9dfba32",
-  "archive_sha256": "a444b56bc03fcc6c00aa9aae029bbc64cfaa2522b614ba2ce80ab8a1c601bdfb",
-  "source_files_verified": 470,
+  "commit": "2a49f67c8cbadcf7ad1ca89f073b2e3a3a3ef981",
+  "archive_sha256": "99f0b977369a61190762f5873be0e16b28279c0d857d0de7424dbf973354af71",
+  "source_files_verified": 499,
   "source_mode": "COMMITTED_TREE",
   "changed_files": [],
   "working_tree_edits_included": false,
@@ -19,63 +19,63 @@
   "stages": {
     "npm-ci": {
       "exit_code": 0,
-      "log_sha256": "ad23709d93a92beae71af6215030189f8ad6bf58a4d642e56e4c2d47d0e61cc4"
+      "log_sha256": "79b3df0c76d62f68779848b56dd009b2fd29a3e61e518fa411a45e362c4ac6e7"
     },
     "python-tests": {
       "exit_code": 0,
-      "log_sha256": "d71dc7ed8065e49d2afe805560a690530aa89ef74cbced4f79798e4b04d84ad2"
+      "log_sha256": "300764f546465aff22b6de6615a8d25e6091398f697c81d656b2deb036b81859"
     },
     "node-tests": {
       "exit_code": 0,
-      "log_sha256": "0a8cdce48e6c525c51c8496d99e7283d9919022be7582b5bcc072c09b2fe10f3"
+      "log_sha256": "cc66277e8f2229cfa6ebfd0549d3f2d2e78e33c9431f48ac9f4238a6c5f66ee0"
     },
     "m1-controlled": {
       "exit_code": 0,
-      "log_sha256": "f7e8732bbb5726416135f4c67b67a529b47d3e436859768785110c65ed6f36ae"
+      "log_sha256": "848ba66ae9b3951d7a65837bd1b589f5308ee7af83bfa0d248217c531a199ac3"
     },
     "m2-controlled": {
       "exit_code": 0,
-      "log_sha256": "6810decf53852e2f8857d19c20288a648e6141fdf28ff6e076653d8ee72e108e"
+      "log_sha256": "c7c6ca78e07eca39473457f7f2bc9eb5c07801b318383b959713e4ef2ef2230a"
     },
     "m3-controlled": {
       "exit_code": 0,
-      "log_sha256": "791188aa00a9f50dbc79e88932cd6a46521704ea29fcd3ca5788d52a660d0c08"
+      "log_sha256": "aa8de45c0acd3f6724194b8aa327c616d72613a5edb2f17330c899049af8004a"
     },
     "m4-controlled": {
       "exit_code": 0,
-      "log_sha256": "40fb876917252de53146e090b5cf81eb0218678509d5c4d8017eec3f57b9cafc"
+      "log_sha256": "12aa34bb3cf06ee4876f40a7a3d8041e08e096293e4a36ac49900b7ab9c9edd5"
     },
     "m5-controlled": {
       "exit_code": 0,
-      "log_sha256": "8a92bcc0fdaae49e81850108b5ab9ddbc833d54dfd1ae96da88019a1fc46ec93"
+      "log_sha256": "a98e4ab712e9a3a43751bb646534ef471af17d1dda3c2c746aa2dd563aab706f"
     },
     "bun-install-frozen": {
       "exit_code": 0,
-      "log_sha256": "fd07a0cc26b161b375f250fcc47fdf12095577e36082499683416cbc02b27c32"
+      "log_sha256": "2458748434ead73b7e24173894bffa29964a8e692c592530f7575f097e456177"
     },
     "frontend-build": {
       "exit_code": 0,
-      "log_sha256": "c8653d86d0cf2e661e364193b5d75513fb7e5b76882f747a86b18a7f8b817fc3"
+      "log_sha256": "4dc44166104c35bb08461b288af240c62796c1e02c6fcc2dcfc932949b39fe77"
     },
     "procurement-evidence": {
       "exit_code": 0,
-      "log_sha256": "46a9795401712df3d01ec84446b4e2697cc574d0e80e4f7e14eb566b4e091c71"
+      "log_sha256": "7bcd9aa5f8aa88bed1dce95f2477c98ab1fbf4dcf9036e76d436e3d0f85582f6"
     },
     "dashboard-browser": {
       "exit_code": 0,
-      "log_sha256": "c90e031cfac717480bd5be7c008d88d4b035a494856560cf84e936936be1cd14"
+      "log_sha256": "4e7c96673843a5bbad038aed7456776ed4b2953f4527de4aaf64b5062b3f002c"
     },
     "motion-browser": {
       "exit_code": 0,
-      "log_sha256": "a0789b9154099f029ea571128ebcf02d8e28f8b15a4382d9be006170bbd6682e"
+      "log_sha256": "40f446f93673e7ec1a593db8326410bf54fab9bcd8ba1ff4576d6ca79938e0fc"
     },
     "release-browser": {
       "exit_code": 0,
       "log_sha256": "5ef7c9c6122e560cf4920591edc175870eed7b49f63cbe9a28b474ef2dccffba"
     }
   },
-  "logs_directory": "tmp/release-validation-059km0vd/logs",
-  "python_tests": 347,
+  "logs_directory": "tmp/release-validation-41eo739f/logs",
+  "python_tests": 354,
   "node_tests": 53,
   "functional_browser": {
     "desktop": "passed",
@@ -99,12 +99,13 @@
     "provider_evidence_rows": 6,
     "testnet_proof_disclosure": "passed",
     "fault_fx_telemetry_rail_panels": "passed",
+    "current_signed_fault_and_capped_completion_proofs": "passed",
     "credential_isolation_and_blocked_fx": "passed",
     "issuing_settings_recheck_and_session_controls": "passed",
     "merchant_absorbs_sse_and_capture": "passed",
     "particle_field_stops_on_confirmed_halt": "passed",
     "transactions_explorer": {
-      "rows": 128,
+      "rows": 129,
       "runs": 2,
       "confirmed_spend_micro_usd": 2908000,
       "search_filters_sort_pagination": "passed",
@@ -131,7 +132,7 @@
     ],
     "particle_preview": {
       "fps": "60.0",
-      "render_ms": "1.42",
+      "render_ms": "1.58",
       "quality": "full",
       "particles": 5200
     },

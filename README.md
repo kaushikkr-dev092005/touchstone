@@ -6,6 +6,10 @@ every attempt. A rejected answer can still cost money.
 
 ## For judges
 
+Watch the [captioned demonstration](docs/recordings/touchstone-demo.webm)
+([transcript](docs/recordings/demo-transcript.md)): saved measured proofs and a
+separately labelled simulated workflow. No new live purchase is made in the video.
+
 Run the dashboard without accounts, keys, model downloads or spending. Python 3.11+
 is sufficient:
 
