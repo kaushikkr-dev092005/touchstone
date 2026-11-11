@@ -61,7 +61,7 @@ settlement. [Evidence index](docs/EVIDENCE_INDEX.md) · [Serious review and rema
 Issuing creation is verified: one READY synthetic delegate and one capped sandbox
 card, without a merchant charge. Agentic Commerce merchant configuration is active,
 100 synthetic products are uploaded, and guest OAuth/MCP discovery passes.
-[Open the sandbox merchant](https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site).
+[Open the sandbox merchant](https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site/merchant).
 Visa approval remains pending. [Proofs and boundaries](docs/EXTERNAL_ACCESS.md).
 The matched comparison and submission status are recorded in the
 [current review](docs/REVIEW_20261110.md). [Detailed feature boundaries](docs/FEATURES.md).
@@ -95,8 +95,16 @@ Financial execution requires a concrete, explicitly approved scope and caps.
 Qualification approval is not approval for a comparison, card issuance or merchant
 payment. [Invoice qualification](docs/M3_RUNBOOK.md) · [Policy comparison](docs/M4_RUNBOOK.md).
 
-The optional landing page is at `/site/` after `bun install --frozen-lockfile` and
-`bun run build` in `apps/web`. The dashboard requires no frontend build.
+The [public website](https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site)
+shares its landing page, dashboard and ledger on one origin. The original isometric
+vault opens before workspace entry; the animated Touchstone identity and glass dock
+follow the supplied visual references. Public views show saved evidence only.
+
+For the same interface locally, run `bun install --frozen-lockfile` and `bun run build`
+in `apps/web`, start the Python server, and open `/site/`. `/dashboard` and `/ledger`
+embed the existing local operator console with its session protections. `/console`
+and the legacy root dashboard still work without a frontend build.
+[Website behavior and checks](docs/WEBSITE.md).
 
 Built for Airwallex Agentic Banking Hackathon Kit 12. [Submission draft](docs/SUBMISSION.md)
 · [Demo script](docs/DEMO_SCRIPT.md) · [MIT license](LICENSE).

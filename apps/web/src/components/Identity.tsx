@@ -1,0 +1,11 @@
+export function Icon({ name, size = 20 }: { name: string; size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{name === "home" ? <path d="m3 10 9-7 9 7v11h-6v-8H9v8H3Z" /> : name === "dashboard" ? <><rect x="3" y="3" width="18" height="18" rx="4" /><path d="M7 14v-4m5 7V7m5 8V9" /></> : name === "ledger" ? <path d="m3 7 9-4 9 4-9 4-9-4Zm0 5 9 4 9-4M3 17l9 4 9-4" /> : name === "arrow" ? <path d="M5 12h14m-6-6 6 6-6 6" /> : name === "check" ? <><rect x="4" y="3" width="16" height="18" rx="1" /><path d="m8 11 3 3 6-6" /></> : name === "grid" ? <><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></> : name === "close" ? <path d="m6 6 12 12M6 18 18 6" /> : name === "shield" ? <><path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6l8-4Z" /><path d="m8 11 3 3 5-6" /></> : <><ellipse cx="12" cy="5" rx="8" ry="3" /><path d="M4 5v14c0 4 16 4 16 0V5M4 12c0 4 16 4 16 0" /></>}</svg>;
+}
+
+export function Brand() {
+  return <span className="brand-lockup" aria-label="Touchstone"><span className="brand-flower" aria-hidden="true">{[0, 1, 2, 3].map(i => <i key={i} />)}</span><span className="wordmark" aria-hidden="true">touchstone</span></span>;
+}
+
+export function LogoStudy() {
+  return <div className="logo-study" aria-label="Animated Touchstone identity"><div className="logo-study-dots" aria-hidden="true">{[0, 1, 2, 3].map(i => <i key={i} />)}</div><svg className="logo-study-word" viewBox="0 0 760 180" aria-hidden="true"><g className="logo-construction" fill="none" stroke="currentColor" strokeWidth=".6">{[37, 81, 138].map(y => <path key={y} d={"M15 " + y + "H745"} />)}{Array.from({ length: 11 }, (_, i) => <g key={i}><path d={"M" + (35 + i * 68) + " 20v140"} /><circle cx={35 + i * 68} cy="81" r="42" /></g>)}</g><text x="380" y="132" textAnchor="middle" textLength="700" lengthAdjust="spacingAndGlyphs">touchstone</text></svg><span className="logo-study-label mono">ONE IDENTITY. THROUGH EVERY STATE.</span></div>;
+}

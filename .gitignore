@@ -11,3 +11,4 @@ __pycache__/
 *.log
 *.pending
 node_modules/
+apps/web/public/data/evidence.json

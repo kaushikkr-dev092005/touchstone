@@ -1,5 +1,6 @@
 // Sandbox-only merchant callbacks and guest OAuth. No bank, model or payment dispatcher.
 import productImage from './product-image.mjs';
+import siteAssets from './site-assets.mjs';
 const encoder = new TextEncoder();
 const unbase64 = value => Uint8Array.from(atob(value.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0));
 const base64 = value => btoa(String.fromCharCode(...new Uint8Array(value))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
@@ -74,18 +75,27 @@ export async function handle(request,env,{now=Date.now()}={}){
   try{
     const origin=originOf(env),url=new URL(request.url),path=url.pathname,db=env.DB;
     requireThat(url.origin===origin,'Origin differs from configured merchant');
+    if(path==='/api/site-context'&&request.method==='GET')return json({operator_console:false,mode:'SAVED_PUBLIC_EVIDENCE',financial_dispatch:false});
+    if(request.method==='GET'&&siteAssets['/site/index.html']){
+      if(path==='/'||path==='/site')return new Response(null,{status:302,headers:{location:'/site/','cache-control':'no-store'}});
+      const asset=siteAssets[['/site/','/dashboard','/ledger'].includes(path)?'/site/index.html':path];
+      if(asset)return new Response(unbase64(asset.body),{headers:{'content-type':asset.type,
+        'cache-control':path.startsWith('/site/assets/')?'public,max-age=31536000,immutable':'no-cache',
+        'x-content-type-options':'nosniff',
+        'content-security-policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'none'; base-uri 'none'"}});
+    }
     if(['/health','/api/merchant-health'].includes(path)&&request.method==='GET')return json({mode:'SANDBOX_ONLY',payment_dispatch:false,hosted_inference:false,catalog_products:catalog.length,oauth_ready:!!env.OAUTH_PRIVATE_JWK,checkout_secret_configured:!!env.CHECKOUT_HMAC_SECRET});
     if(path==='/.well-known/openid-configuration'&&request.method==='GET')return json({issuer:origin,authorization_endpoint:origin+'/oauth/authorize',token_endpoint:origin+'/oauth/token',registration_endpoint:origin+'/oauth/register',jwks_uri:origin+'/.well-known/jwks.json',response_types_supported:['code'],grant_types_supported:['authorization_code'],code_challenge_methods_supported:['S256'],token_endpoint_auth_methods_supported:['none'],scopes_supported:['openid','email'],subject_types_supported:['public'],id_token_signing_alg_values_supported:['RS256']});
     if(path==='/.well-known/jwks.json'&&request.method==='GET'){
       const key=jwkOf(env);return json({keys:[{kty:'RSA',kid:key.kid,n:key.n,e:key.e,alg:'RS256',use:'sig'}]});
     }
-    if(path==='/'&&request.method==='GET')return html('<h1>Touchstone sandbox merchant</h1><p>Practice documents for testing source verification. Synthetic catalog; no model calls or real invoice payments.</p><p><a href="/catalog.json">Catalog data</a> · <a href="/.well-known/openid-configuration">OAuth discovery</a></p><ul>'+catalog.map(p=>'<li><a href="/products/'+p.id+'">'+escape(p.title)+'</a> · USD 0.01 · '+(p.stock?'Available':'Unavailable')+'</li>').join('')+'</ul>');
+    if((path==='/'||path==='/merchant')&&request.method==='GET')return html('<h1>Touchstone sandbox merchant</h1><p>Practice documents for testing source verification. Synthetic catalog; no model calls or real invoice payments.</p><p><a href="/site/">Touchstone platform</a> · <a href="/catalog.json">Catalog data</a> · <a href="/.well-known/openid-configuration">OAuth discovery</a></p><ul>'+catalog.map(p=>'<li><a href="/products/'+p.id+'">'+escape(p.title)+'</a> · USD 0.01 · '+(p.stock?'Available':'Unavailable')+'</li>').join('')+'</ul>');
     if(path==='/catalog.json'&&request.method==='GET')return json({mode:'SYNTHETIC_SANDBOX',products:catalog.map(p=>({id:p.id,title:p.title,description:p.description,link:origin+'/products/'+p.id,image_link:origin+'/product-image.png',availability:p.stock?'in_stock':'out_of_stock',price:'0.01 USD',condition:'new'}))});
     if(path==='/product-image.png'&&request.method==='GET')return new Response(unbase64(productImage),{headers:{'content-type':'image/png','cache-control':'public,max-age=86400'}});
     if(path==='/product-image.svg'&&request.method==='GET')return new Response('<svg xmlns="http://www.w3.org/2000/svg" width="480" height="480" viewBox="0 0 480 480"><rect width="480" height="480" fill="#e6f3ee"/><rect x="110" y="60" width="260" height="360" rx="16" fill="white" stroke="#156a5b" stroke-width="8"/><path d="M155 140h170M155 200h170M155 260h120M155 320h80" stroke="#156a5b" stroke-width="12"/><text x="240" y="385" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#156a5b">SYNTHETIC</text></svg>',{headers:{'content-type':'image/svg+xml','cache-control':'public,max-age=86400'}});
     if(path.startsWith('/products/')&&request.method==='GET'){
       const item=catalog.find(p=>p.id===path.split('/')[2]);if(!item)return json({error:'not_found'},404);
-      return html('<h1>'+escape(item.title)+'</h1><p>'+escape(item.description)+'</p><p>USD 0.01 · '+(item.stock?'Available':'Unavailable')+'</p><p>Checkout is available through the configured Airwallex sandbox merchant connection. This page does not submit a payment.</p><a href="/">Catalog</a>');
+      return html('<h1>'+escape(item.title)+'</h1><p>'+escape(item.description)+'</p><p>USD 0.01 · '+(item.stock?'Available':'Unavailable')+'</p><p>Checkout is available through the configured Airwallex sandbox merchant connection. This page does not submit a payment.</p><a href="/merchant">Catalog</a>');
     }
     if(path==='/oauth/register'&&request.method==='POST'){
       const input=JSON.parse(await bodyOf(request));

@@ -23,6 +23,14 @@ test('discovery and JWKS contain public signing fields, not private material',as
   const image=await call('/product-image.png');assert.equal(image.headers.get('content-type'),'image/png');
   assert.deepEqual([...new Uint8Array(await image.arrayBuffer()).slice(0,8)],[137,80,78,71,13,10,26,10]);
 });
+
+test('public website context cannot dispatch the private operator API',async t=>{
+  const {call}=await fixture(t);
+  const context=await (await call('/api/site-context')).json();
+  assert.equal(context.operator_console,false);assert.equal(context.financial_dispatch,false);
+  for(const path of ['/api/demo','/api/resume','/console'])assert.equal((await call(path,{method:'POST',body:'{}'})).status,404);
+  assert.equal((await call('/merchant')).status,200);
+});
 test('dynamic registration refuses arbitrary remote redirect and implicit clients',async t=>{
   const {call}=await fixture(t);
   const response=await call('/oauth/register',{method:'POST',body:JSON.stringify({redirect_uris:['https://attacker.test/callback']})});

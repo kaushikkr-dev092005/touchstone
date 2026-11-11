@@ -159,10 +159,26 @@ def serve(port=8088, data_dir="data", live=None):
             if not self.allowed():
                 return self.respond(403, {"error": "Loopback host required"})
             path = urlparse(self.path).path
-            if path == "/site" or path.startswith("/site/"):
-                return self.serve_site(path)
-            if path == "/":
+            if path == "/site" or path.startswith("/site/") or path in {"/dashboard", "/ledger"}:
+                return self.serve_site(path if path.startswith('/site') else '/site/')
+            if path == "/api/site-context":
+                return self.respond(200, {"operator_console": True, "mode": live_state()['mode']})
+            if path == '/merchant':
+                self.send_response(302)
+                self.send_header('Location', 'https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site/merchant')
+                self.send_header('Content-Length', '0')
+                self.send_header('Connection', 'close')
+                self.end_headers()
+                self.close_connection = True
+                return
+            if path in {"/", "/console"}:
                 page = (ROOT / "apps/dashboard/index.html").read_text(encoding="utf-8").replace("{{TOKEN}}", token)
+                if path == '/console':
+                    if urlparse(self.path).query == 'embedded=1':
+                        page = page.replace('<body', '<body data-embedded="true"', 1)
+                        page = page.replace('</head>', '<style>body[data-embedded] .ledger-nav,body[data-embedded] .cinematic-hero{display:none}body[data-embedded] main,body[data-embedded] dialog{--text:#f2efe6;--surface:#090a08;--muted:#adb0a4;--line:#303329;--gold:#d8b65a;--green:#8ac595;--amber:#d8b65a;--red:#f07868;color-scheme:dark}</style></head>')
+                    csp = f"default-src 'self'; script-src 'nonce-{token}'; style-src 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'self'"
+                    return self.send_bytes(200, page.encode(), 'text/html; charset=utf-8', csp)
                 return self.send_bytes(200, page.encode(), "text/html; charset=utf-8")
             if path == "/api/state":
                 return self.respond(200, {**engine.snapshot(), "worker_error": last_error,

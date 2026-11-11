@@ -122,13 +122,16 @@ def main():
             if args.frontend:
                 command.append('--include-landing')
             stage('release-browser', command)
+            if args.frontend:
+                stage('shared-site-browser', [sys.executable, 'tools/check_site_design.py'])
         python_log = (logs / 'python-tests.log').read_text(encoding='utf-8')
         node_log = (logs / 'node-tests.log').read_text(encoding='utf-8')
         report['python_tests'] = int(re.search(r'Ran (\d+) tests', python_log).group(1))
         report['node_tests'] = int(re.search(r'# tests (\d+)', node_log).group(1))
         for name, relative in (('functional_browser', 'tmp/browser/validation.json'),
                                ('motion_browser', 'tmp/dashboard-redesign/review.json'),
-                               ('release_browser', 'tmp/release-browser/review.json')):
+                               ('release_browser', 'tmp/release-browser/review.json'),
+                               ('shared_site_browser', 'tmp/site-design/report.json')):
             path = source / relative
             if path.exists():
                 report[name] = json.loads(path.read_text(encoding='utf-8'))

@@ -1,0 +1,21 @@
+{
+  "label": "MEASURED_OFFLINE_SITE_QA",
+  "viewports": [
+    320,
+    390,
+    768,
+    1024,
+    1440
+  ],
+  "vault_opening_and_cancel": "passed",
+  "same_origin_dashboard_and_ledger": "passed",
+  "history_navigation": "passed",
+  "public_ledger_filters_and_receipt": "passed",
+  "touch_dock_and_mobile_menu": "passed",
+  "reduced_motion": "passed",
+  "operator_iframe_and_csrf": "passed",
+  "page_errors": [],
+  "external_requests": [],
+  "financial_transactions": 0,
+  "model_calls": 0
+}

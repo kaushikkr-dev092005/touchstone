@@ -1,24 +1,41 @@
 """Package the dependency-free sandbox Worker from one exact Git commit."""
 import argparse
+import base64
 import hashlib
 import io
 import json
+import mimetypes
 from pathlib import Path
 import subprocess
+import shutil
 import tarfile
 
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def build(commit='HEAD', output='dist/merchant-site.tar.gz', unpack_directory=None):
+def build(commit='HEAD', output='dist/merchant-site.tar.gz', unpack_directory=None, include_site=False):
     sha = subprocess.check_output(['git', 'rev-parse', '--verify', commit+'^{commit}'], cwd=ROOT, text=True).strip()
     files = {
         '.openai/hosting.json': '.openai/hosting.json',
         'dist/server/index.js': 'apps/merchant/worker.mjs',
         'dist/server/product-image.mjs': 'apps/merchant/product-image.mjs',
+        'dist/server/site-assets.mjs': 'apps/merchant/site-assets.mjs',
     }
     contents = {target: subprocess.check_output(['git', 'show', sha+':'+source], cwd=ROOT)
                 for target, source in files.items()}
+    if include_site:
+        if subprocess.run(['git','diff','--quiet',sha,'--','apps/web','tools/build_site_evidence.py','bench/results/completion-20261110'],cwd=ROOT).returncode:
+            raise ValueError('Commit frontend inputs before packaging an exact source build')
+        subprocess.run([shutil.which('bun') or 'bun','run','build'],cwd=ROOT/'apps/web',check=True)
+        assets={}
+        for path in sorted((ROOT/'apps/web/dist').rglob('*')):
+            if path.is_file():
+                mime=mimetypes.guess_type(path.name)[0] or 'application/octet-stream'
+                if path.suffix=='.js':mime='application/javascript'
+                assets['/site/'+path.relative_to(ROOT/'apps/web/dist').as_posix()]={
+                    'type':mime,'body':base64.b64encode(path.read_bytes()).decode()}
+        if '/site/index.html' not in assets:raise ValueError('Landing build incomplete')
+        contents['dist/server/site-assets.mjs']=('export default '+json.dumps(assets,separators=(',',':'))+';\n').encode()
     config = json.loads(contents['.openai/hosting.json'])
     if not config.get('project_id') or config.get('d1') != 'DB' or config.get('r2') is not None:
         raise ValueError('Expected the existing Sites project and only a DB binding')
@@ -50,5 +67,6 @@ if __name__ == '__main__':
     parser.add_argument('--commit', default='HEAD')
     parser.add_argument('--output', default='dist/merchant-site.tar.gz')
     parser.add_argument('--unpack-directory',help='Emit only the committed Worker/manifest tree for Sites packaging')
+    parser.add_argument('--include-site',action='store_true',help='Build and embed the matching landing/dashboard/ledger frontend')
     args = parser.parse_args()
-    print(json.dumps(build(args.commit, args.output, args.unpack_directory), indent=2))
+    print(json.dumps(build(args.commit, args.output, args.unpack_directory, args.include_site), indent=2))
