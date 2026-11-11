@@ -1,0 +1,207 @@
+{
+  "label": "MEASURED",
+  "scope": "COMMITTED_SOURCE_WITH_CONTROLLED_FINANCIAL_ADAPTERS",
+  "commit": "70aaa0b659f781b7ed718431fabe1ca32b447409",
+  "archive_sha256": "ef0c9f576a8a517f5a617e00c2377a302013a60cbfad8544f900cfa072521978",
+  "source_files_verified": 545,
+  "source_mode": "COMMITTED_TREE",
+  "changed_files": [],
+  "working_tree_edits_included": false,
+  "untracked_files_included": false,
+  "added_files": [],
+  "private_data_copied": false,
+  "credentials_forwarded": false,
+  "external_financial_transactions": 0,
+  "node_modules_copied": false,
+  "tools_directory_symlinked": false,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.10",
+  "stages": {
+    "npm-ci": {
+      "exit_code": 0,
+      "log_sha256": "ffdbd7063467606475706d555b77d0988e9933d7c68ad36fd484331e9bed16c9"
+    },
+    "python-tests": {
+      "exit_code": 0,
+      "log_sha256": "ea60d6ec01c167008c48d0fb0f837fb15a64acd2823d9522d05351bf3d5cde2e"
+    },
+    "node-tests": {
+      "exit_code": 0,
+      "log_sha256": "255d1129fcd3a888c92606fd8c1eb28d2d02a5026581707946f3d8b7db7d8825"
+    },
+    "m1-controlled": {
+      "exit_code": 0,
+      "log_sha256": "b179221b044b9889cab88b62f41fe52b6ab30c78aa57a93b02baa90808de6d48"
+    },
+    "m2-controlled": {
+      "exit_code": 0,
+      "log_sha256": "faa14a6e4c0f8d8302393f0d14b33d075c9c02ec5fd9290c9f00742da4f9ed4b"
+    },
+    "m3-controlled": {
+      "exit_code": 0,
+      "log_sha256": "97ce39660e884ef23e4251832430736368ff872bd50d76114c7cd157612463eb"
+    },
+    "m4-controlled": {
+      "exit_code": 0,
+      "log_sha256": "37431d93bf145ece143b3ed84c65b0d908a632531c3fe13ec0823348c56b70cb"
+    },
+    "m5-controlled": {
+      "exit_code": 0,
+      "log_sha256": "df2c7f70074a0b05dced75a8edd8fa6c5123c7119c507a4d8049eab9a27ed51c"
+    },
+    "bun-install-frozen": {
+      "exit_code": 0,
+      "log_sha256": "32c42fee24c7afaecdbcd57fd8b94bfcee199eb10c3ca2aaa56796f5470cb62a"
+    },
+    "frontend-build": {
+      "exit_code": 0,
+      "log_sha256": "fea7a9fc81a5158d1a6a6921db9a5c65e8802f98fcdd216a7125fc8020072886"
+    },
+    "procurement-evidence": {
+      "exit_code": 0,
+      "log_sha256": "3adbb01ae6f1225822848a5927830f5653b62701afac74621d4220b93bb09c5a"
+    },
+    "dashboard-browser": {
+      "exit_code": 0,
+      "log_sha256": "8e71ecdc959c434e06b42e0e3d8c7b927ded6ead552fb233cf3b2b99f4f446cc"
+    },
+    "motion-browser": {
+      "exit_code": 0,
+      "log_sha256": "c538b67790067a98c922d8d2a064b28c4d3f34c36bf66af4cb927328bf5f7daa"
+    },
+    "release-browser": {
+      "exit_code": 0,
+      "log_sha256": "5ef7c9c6122e560cf4920591edc175870eed7b49f63cbe9a28b474ef2dccffba"
+    },
+    "shared-site-browser": {
+      "exit_code": 0,
+      "log_sha256": "292f42c216bf4d9171e5efd37758ee03f8d5c65663d81b37d4c544d10c93a5c2"
+    }
+  },
+  "logs_directory": "tmp/release-validation-0_36h5mh/logs",
+  "python_tests": 376,
+  "node_tests": 53,
+  "functional_browser": {
+    "desktop": "passed",
+    "mobile_width": 390,
+    "horizontal_overflow": false,
+    "browser_errors": [],
+    "start_halt_resume_close": "passed",
+    "host_origin_session_controls": "passed",
+    "reconciliation": {
+      "matched": true,
+      "ledger_provider_total": 2780000,
+      "rail_total": 2780000,
+      "verification_total": 128000,
+      "customer_captured": 2698000,
+      "pending": 0,
+      "mismatches": [],
+      "airwallex": "NOT_RECONCILED: customer holds/captures are simulated; no fiat-token bridge",
+      "mode": "SIMULATED"
+    },
+    "planning_tool_and_review_cases": "passed",
+    "provider_evidence_rows": 6,
+    "testnet_proof_disclosure": "passed",
+    "fault_fx_telemetry_rail_panels": "passed",
+    "current_signed_fault_and_capped_completion_proofs": "passed",
+    "credential_isolation_and_blocked_fx": "passed",
+    "issuing_settings_recheck_and_session_controls": "passed",
+    "merchant_absorbs_sse_and_capture": "passed",
+    "particle_field_stops_on_confirmed_halt": "passed",
+    "transactions_explorer": {
+      "rows": 128,
+      "runs": 2,
+      "confirmed_spend_micro_usd": 2908000,
+      "search_filters_sort_pagination": "passed",
+      "keyboard_drawer": "passed",
+      "csv_totals": "passed"
+    },
+    "screenshots": [
+      "desktop-ready.png",
+      "desktop-paused.png",
+      "desktop-completed.png",
+      "mobile-completed.png"
+    ]
+  },
+  "motion_browser": {
+    "label": "MEASURED",
+    "scope": "ISOLATED_SIMULATED_DASHBOARD",
+    "desktop": [
+      1440,
+      900
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "particle_preview": {
+      "fps": "59.9",
+      "render_ms": "1.45",
+      "quality": "full",
+      "particles": 5200
+    },
+    "fps_environment": "HEADLESS_CHROMIUM_WINDOWS_NOT_A_HARDWARE_GUARANTEE",
+    "pause_replay_offscreen_reduced_motion": "passed",
+    "dark_light_toggle": "passed",
+    "horizontal_overflow": false,
+    "page_errors": [],
+    "external_requests": [],
+    "financial_transactions": 0
+  },
+  "release_browser": {
+    "label": "MEASURED",
+    "scope": "ISOLATED_SIMULATED_RELEASE",
+    "sse_restart_reconnect": "passed",
+    "old_process_token_rejected": true,
+    "fresh_process_token_accepted": true,
+    "viewports": [
+      [
+        1440,
+        900
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "reduced_motion_on_and_off": "passed",
+    "landing_built_and_checked": true,
+    "offline_loaded_page": "passed",
+    "external_requests": [],
+    "page_errors": [],
+    "screenshots": [
+      "dashboard-1440-motion.png",
+      "landing-1440-motion.png",
+      "dashboard-390-motion.png",
+      "landing-390-motion.png",
+      "dashboard-1440-reduced.png",
+      "landing-1440-reduced.png",
+      "dashboard-390-reduced.png",
+      "landing-390-reduced.png"
+    ],
+    "financial_transactions": 0
+  },
+  "shared_site_browser": {
+    "label": "MEASURED_OFFLINE_SITE_QA",
+    "viewports": [
+      320,
+      390,
+      768,
+      1024,
+      1440
+    ],
+    "vault_opening_and_cancel": "passed",
+    "same_origin_dashboard_and_ledger": "passed",
+    "history_navigation": "passed",
+    "public_ledger_filters_and_receipt": "passed",
+    "touch_dock_and_mobile_menu": "passed",
+    "reduced_motion": "passed",
+    "operator_iframe_and_csrf": "passed",
+    "page_errors": [],
+    "external_requests": [],
+    "financial_transactions": 0,
+    "model_calls": 0
+  },
+  "passed": true,
+  "failure_type": null
+}
