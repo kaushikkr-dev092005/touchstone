@@ -1,5 +1,10 @@
 # M4 matched comparison runbook
 
+**12 November update:** the live matched comparison now has 64/64 outcomes and 32
+actual paid Metal testnet receipts. See [completion and measured costs](POLICY_LIVE_CONTINUATION.md).
+The dated approval and readiness sections below are historical; they are not fresh
+authority for another purchase or a new study.
+
 **Implementation ready; live gate BLOCKED.** The earlier approval covered exactly one purchase up to 0.05 USDZ. It does not authorize this experiment, funding, withdrawals or upstream hosted usage. Commands work from the repository root in PowerShell and Bash unless specified.
 
 ## Prepared experiment

@@ -20,7 +20,7 @@ format/length is required. A local file is not an uploaded submission.
 |---|---|
 | Saved Metal proof | Paid rejected answer and receipt replay without another purchase |
 | Qualification and closure | Sonnet 120/120 calibration, 59/60 holdout; integrated USD 1 hold / USD 0.01 capture; separate 0.01 USDZ service charge |
-| Comparison boundary | Clearing refusals and credit-cap stop, incomplete study, no savings claim |
+| Comparison boundary | Current live study: 64/64 outcomes, 32 paid receipts; premium 7/16 strict correct, ladder 3/16; no general savings claim. The earlier recording preserves its original incomplete-study observation. |
 | Signed fault | Current seller rejected credit; acknowledgement is not refund |
 | Tools and review | Deterministic supported cases, unfamiliar roles require review |
 | Three-job scenario | SIMULATED short float, halt/resume, immutable limits |

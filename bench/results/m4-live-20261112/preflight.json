@@ -1,0 +1,56 @@
+{
+  "label": "MEASURED",
+  "ready": true,
+  "checks": {
+    "local-gpu": true,
+    "hosted-premium": true,
+    "existing_wallet": true,
+    "hosted_credit_budget": true,
+    "rpc_chain_63825": true,
+    "clearing_balance": true,
+    "both_valid_quotes": true
+  },
+  "health": {
+    "local-gpu": {
+      "chain": 63825,
+      "provider_id": "local-gpu",
+      "provider_type": "model",
+      "provider_model": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+      "provider_model_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+      "inference_ready": true,
+      "upstream_funding": "UNVERIFIED",
+      "chaos": "none",
+      "chaos_schedule_sha256": "42bff647f2b0e1e22b1259c3b1938f3e5e0e7b4f636d6e98f09cdd3426319444"
+    },
+    "hosted-premium": {
+      "chain": 63825,
+      "provider_id": "hosted-premium",
+      "provider_type": "anthropic",
+      "provider_model": "claude-sonnet-5-5",
+      "provider_model_sha256": null,
+      "inference_ready": true,
+      "upstream_funding": "PARTNER_CREDITS_OPERATOR_DECLARED",
+      "chaos": "none",
+      "chaos_schedule_sha256": "42bff647f2b0e1e22b1259c3b1938f3e5e0e7b4f636d6e98f09cdd3426319444"
+    }
+  },
+  "payments_sent": 0,
+  "required_chain_id": 63825,
+  "verified_chain_id": 63825,
+  "plan_sha256": "2362c665ccf5467fa6eead1a09d945c1a2a57103a65608b5071141e7b9a1ab25",
+  "wallet_balance_assurance": "OPERATOR_ESTIMATE_NOT_FINALITY",
+  "qualification_status": {
+    "local-gpu": false,
+    "hosted-premium": true
+  },
+  "clearing": {
+    "label": "MEASURED",
+    "http_status": 200,
+    "ready": true,
+    "financial_transactions": 0,
+    "inference_requests": 0,
+    "epoch": "231937",
+    "context_matches_chain": true,
+    "seconds_before_admission_deadline": 296
+  }
+}

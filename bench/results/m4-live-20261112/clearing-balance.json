@@ -1,0 +1,8 @@
+{
+  "account": "0x0241c27790c4c08e54ad9d18e7cd9e90710c5a63220fb5336e5424575e5e6d09dd",
+  "spendable_base_units": "286610000000000000",
+  "historical_payments": 32,
+  "pending_invoice": false,
+  "assurance": "operator-estimate",
+  "finalized": false
+}

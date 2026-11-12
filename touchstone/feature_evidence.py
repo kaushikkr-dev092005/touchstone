@@ -21,6 +21,13 @@ def load(path):
     except (OSError,ValueError):return {}
 
 
+def completion_summary():
+    latest=load(ROOT/'bench/results/m4-live-20261112/completion-status.json')
+    if latest.get('label')=='MEASURED' and latest.get('comparison',{}).get('actual_paid_receipts',0)>=30:
+        return latest
+    return load(ROOT/'bench/results/completion-20261110/final-proof-status.json')
+
+
 def preview(rate, now=None):
     offers=[{'provider':'local-gpu','rail':'AIRWALLEX_CARD','price_micro':10000,'currency':'USD'},
             {'provider':'hosted-premium','rail':'AIRWALLEX_CARD','price_micro':7000,'currency':'EUR'}]
@@ -145,7 +152,7 @@ def summary():
                 'authorization_controls':saved_card.get('authorization_controls',{}),
                 'current_account_matches':bool(account and plan.get('account_fingerprint')==hashlib.sha256(account.encode()).hexdigest()),
                 'merchant_payment_completed':False,'visa_approved_agent':False}}
-    return {'completion':load(ROOT/'bench/results/completion-20261110/final-proof-status.json'),
+    return {'completion':completion_summary(),
             'fault':fault_summary,'fx':{'label':'MEASURED' if rate else 'BLOCKED','rate':rate,
              'quote_current':bool(rate and rate.get('expires_at',0)>time.time()),'preview':preview(rate)},
             'card':card,

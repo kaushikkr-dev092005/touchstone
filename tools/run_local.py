@@ -65,7 +65,10 @@ def main():
     parser.add_argument('--tier', choices=['economy', 'balanced'], default='balanced')
     parser.add_argument('--port', type=int, default=8080)
     parser.add_argument('--ctx-size', type=int, default=2048)
+    parser.add_argument('--log-name', default='provider-model', help='Log stem; lets two tiers run side by side')
     args = parser.parse_args()
+    if not re.fullmatch(r'[A-Za-z0-9_-]{1,40}', args.log_name):
+        parser.error('--log-name must be 1-40 safe characters')
     if not 512 <= args.ctx_size <= 16384:
         parser.error('--ctx-size must be between 512 and 16384; profiling checks actual VRAM headroom')
     observation=sample()
@@ -84,13 +87,13 @@ def main():
     command = [manifest['executable'], '-m', manifest['model_path'], '--host', '127.0.0.1', '--port', str(args.port),
                '--ctx-size', str(args.ctx_size), '--parallel', '1', '--n-gpu-layers', '99', '--device', selected[1],
                '--split-mode', 'none', '--jinja']
-    log_path = ROOT / 'tmp/inference/provider-model.log'
+    log_path = ROOT / 'tmp/inference' / f'{args.log_name}.log'
     log_path.parent.mkdir(parents=True, exist_ok=True)
     print(json.dumps({'mode': 'LOCAL_MODEL', 'tier': args.tier, 'device': selected[0],
                       'url': f'http://127.0.0.1:{args.port}', 'model_sha256': manifest['model_sha256'],
                       'gpu_start_limit_c':START_LIMIT_C,'gpu_stop_limit_c':STOP_LIMIT_C}), flush=True)
     def record(value):
-        path=log_path.with_name('gpu-guard.json')
+        path=log_path.with_name('gpu-guard.json' if args.log_name=='provider-model' else f'{args.log_name}-gpu-guard.json')
         temporary=path.with_suffix('.pending')
         temporary.write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8');temporary.replace(path)
     with log_path.open('w', encoding='utf-8') as log:

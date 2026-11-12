@@ -1,11 +1,15 @@
-# Current evidence, 10 November 2026
+# Current evidence, 12 November 2026
+
+- [Completed live comparison: 64/64 outcomes, 32 actual paid receipts](POLICY_LIVE_CONTINUATION.md)
+- [Actual comparison costs and verified completion controls](../bench/results/m4-live-20261112/actual-financial-results.json)
+- [Current aggregate costs, paid/failed call log and $4.50 ceiling](../bench/results/m4-live-20261112/completion-status.json)
 
 - [Final live review and incomplete comparison](LIVE_PROOFS_20261110.md)
 - [Final caps, actual charges, funding transaction IDs, balances and native fees](../bench/results/completion-20261110/final-proof-status.json)
 - [Qualified Sonnet result, unchanged criteria](../bench/results/m3-v2/sonnet-qualification-result.json)
 - [Raw Sonnet profile](../bench/results/m3-v2/profiles/sonnet-hosted-premium.json)
 - [Integrated customer closure receipt](../bench/results/m3-v2/integrated-receipt.json)
-- [Matched comparison: incomplete, no savings claim](../bench/results/m4-v2/live-report.json)
+- [Historical 12/64 comparison stop, preserved](../bench/results/m4-v2/live-report.json)
 - [Sampled GPU temperatures and stop limits](../bench/results/m4-v2/gpu-monitor.json)
 - [Latest exact-source release validation](../bench/results/m3-v2/release-validation.json)
 - [Issuing, merchant and Visa completion steps](EXTERNAL_ACCESS.md)
@@ -17,7 +21,8 @@
 - [Recording and submission material](DEMO_SCRIPT.md), [submission draft](SUBMISSION.md)
 
 The dated snapshots below retain their original observations. They do not supersede
-the current results above. Earlier $8 approval was lowered to $3; it is historical.
+the current results above. The historical $8 ceiling was lowered to $3, then the
+user approved a $4.50 total ceiling and the specific 12 November continuation.
 
 ---
 

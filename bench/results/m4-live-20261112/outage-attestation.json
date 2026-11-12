@@ -1,0 +1,16 @@
+{
+  "label": "MEASURED_POSTRUN_READ_ONLY_INJECTED_OUTAGE_ATTESTATION",
+  "observed_at": 1794472967.424465,
+  "approval_plan_sha256": "a0fc98ba53aae0bd72725d4e406129adebc8eaf950ff3f74e0050878ed58c5d8",
+  "schedule_sha256": "42bff647f2b0e1e22b1259c3b1938f3e5e0e7b4f636d6e98f09cdd3426319444",
+  "task_id": "M4-202611102-3-1",
+  "http_status": 503,
+  "fault": "outage",
+  "response_schedule_sha256": "42bff647f2b0e1e22b1259c3b1938f3e5e0e7b4f636d6e98f09cdd3426319444",
+  "provider_id": "local-gpu",
+  "health_schedule_sha256": "42bff647f2b0e1e22b1259c3b1938f3e5e0e7b4f636d6e98f09cdd3426319444",
+  "verification_passed": true,
+  "during_original_paid_trial": false,
+  "financial_transactions": 0,
+  "inference_calls": 0
+}

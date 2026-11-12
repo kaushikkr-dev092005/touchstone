@@ -199,7 +199,8 @@ FX refusal, both simulated billing policies, kill/resume and reconciliation.
 See [validation](VALIDATION.md) and the [evidence index](EVIDENCE_INDEX.md).
 
 M3 useful synthetic review drafting and one integrated customer sandbox proof are now measured.
-M4 remains incomplete after clearing refusals and the credit-cap stop. Sandbox issuing creation
+M4 now has 64/64 matched outcomes and 32 actual paid receipts; the 12 November
+[live continuation report](POLICY_LIVE_CONTINUATION.md) supersedes its earlier stop. Sandbox issuing creation
 and controls are verified. Merchant configuration and guest OAuth/MCP pass. Visa credentials/trust, independent final settlement and signed-in portal
 submission remain gates. A captioned local recording is available in the release package. The implementation does not turn those
 missing observations into completion claims.

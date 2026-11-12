@@ -1,5 +1,11 @@
 # Build roadmap, M0 review 2 November 2026
 
+**12 November current status:** the live comparison is complete at 64/64 outcomes
+with 32 actual paid receipts and no pending invoice. Conservative API exposure is
+$4.229541 under the approved $4.50 total ceiling. See [measured continuation](POLICY_LIVE_CONTINUATION.md).
+The prior dated status below remains historical; Visa approval and portal access
+remain external requirements.
+
 **10 November current status:** Sonnet qualification and the integrated customer
 sandbox proof are complete. The matched study stopped at its conservative credit
 guard after clearing refusals: 12/64 policy outcomes, no pending invoice, no savings

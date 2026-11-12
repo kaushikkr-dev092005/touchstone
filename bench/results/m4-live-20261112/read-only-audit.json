@@ -1,0 +1,195 @@
+{
+  "label": "MEASURED_READ_ONLY_LIVE_COMPARISON_AUDIT",
+  "observed_at": 1794470800.4005535,
+  "original_plan_sha256": "f9252a61e04736f3597bf9fe0bd38f81a21297972b515dc3001f802e6c63a721",
+  "live_completed": 12,
+  "live_expected": 64,
+  "missing_outcomes": 52,
+  "complete": false,
+  "old_stop": "PolicyError",
+  "approved_total_claude_ceiling_micro_usd": 4500000,
+  "prior_conservative_credit_exposure_micro_usd": 2919117,
+  "available_credit_headroom_micro_usd": 1580883,
+  "old_pending_attempts": 0,
+  "new_funding_authorized": false,
+  "financial_transactions": 0,
+  "inference_calls": 0,
+  "paid_operations": 0,
+  "readiness": {
+    "rpc": {
+      "mode": "READ_ONLY",
+      "connected": true,
+      "chain_id": 63825,
+      "block_number": 25813720,
+      "client_version": "reth/v2.4.0-VERGEN_/x86_64-unknown-linux-gnu",
+      "endpoint_disclosed": false,
+      "transactions_sent": 0
+    },
+    "wallet": {
+      "account": "0x0241c27790c4c08e54ad9d18e7cd9e90710c5a63220fb5336e5424575e5e6d09dd",
+      "spendable_base_units": "525000000000000000",
+      "historical_payments": 3,
+      "pending_invoice": false,
+      "assurance": "operator-estimate",
+      "finalized": false
+    },
+    "clearing": {
+      "label": "MEASURED",
+      "operation": "READ_ONLY_EPOCH_INSPECTION",
+      "registered": true,
+      "admitted": "231873",
+      "epoch": "231873",
+      "fault": 0,
+      "seconds_before_admission_deadline": 298,
+      "context_matches_chain": true,
+      "ready": true,
+      "financial_transactions": 0,
+      "inference_requests": 0
+    },
+    "anthropic_model": {
+      "id": "claude-sonnet-5-5",
+      "display_name": "Claude Sonnet 5.5",
+      "type": "model"
+    }
+  },
+  "gpu": {
+    "label": "MEASURED",
+    "source": "LOCAL_NVIDIA_SMI",
+    "device_index": 0,
+    "gpu_uuid": "GPU-fafa143a-ced0-8e1e-7367-b61c6c01e506",
+    "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "observed_at": 1794470814.6333091,
+    "temperature_c": 38.0,
+    "gpu_utilization_percent": 0.0,
+    "vram_used_mib": 0.0,
+    "vram_total_mib": 4096.0,
+    "power_w": 11.84,
+    "sm_clock_mhz": 1500.0,
+    "max_sm_clock_mhz": 2100.0,
+    "thermal_throttling_active": false,
+    "throughput_tokens_per_second": null,
+    "throughput_status": "UNMEASURED",
+    "pricing_coefficients_status": "UNMEASURED_NO_CAPACITY_MARKUP",
+    "temperature_alone_changes_price": false,
+    "remote_hardware_attestation": false,
+    "sample_id": "bf79862a15dd6c2f3a405d93"
+  },
+  "seller_health": {
+    "local-gpu": {},
+    "hosted-premium": {}
+  },
+  "free_token_counts": [
+    {
+      "source_id": "H2-202611102-2-11",
+      "input_tokens": 4251,
+      "request_sha256": "7e441b19204d7e1e4cd3c8276a8acad32dadd8bb3c8ab14c251073dc7999dad6",
+      "maximum_output_tokens": 2400,
+      "possible_hosted_calls": 3,
+      "upper_estimated_credit_micro_usd_per_call": 38300
+    },
+    {
+      "source_id": "H2-202611102-0-12",
+      "input_tokens": 3777,
+      "request_sha256": "652bb9e0a361a8c6b347e7908afb23a709174a123b8269418732470885b59d67",
+      "maximum_output_tokens": 2400,
+      "possible_hosted_calls": 2,
+      "upper_estimated_credit_micro_usd_per_call": 37162
+    },
+    {
+      "source_id": "H2-202611102-0-11",
+      "input_tokens": 4223,
+      "request_sha256": "e30378573300c5ce3398c68c1206cb172f072e06ce41deeac7760a2614c82876",
+      "maximum_output_tokens": 2400,
+      "possible_hosted_calls": 2,
+      "upper_estimated_credit_micro_usd_per_call": 38232
+    },
+    {
+      "source_id": "H2-202611102-1-13",
+      "input_tokens": 4268,
+      "request_sha256": "ec83c30782639d1f44dbb6d6bed7afbda2f5688c8076670999b9d4b9b0466886",
+      "maximum_output_tokens": 2400,
+      "possible_hosted_calls": 2,
+      "upper_estimated_credit_micro_usd_per_call": 38340
+    },
+    {
+      "source_id": "H2-202611102-1-08",
+      "input_tokens": 4268,
+      "request_sha256": "5f69639a1cec775bbd461c2d209bebc9f1dee764ad27ae85ed48e27471631703",
+      "maximum_output_tokens": 2400,
+      "possible_hosted_calls": 2,
+      "upper_estimated_credit_micro_usd_per_call": 38340
+    },
+    {
+      "source_id": "H2-202611102-3-14",
+      "input_tokens": 4153,
+      "request_sha256": "948bff283f6839f0698fb1f2c428b4b8795760ef3530dcee4cb9497a889e8160",
+      "maximum_output_tokens": 2400,
+      "possible_hosted_calls": 2,
+      "upper_estimated_credit_micro_usd_per_call": 38064
+    },
+    {
+      "source_id": "H2-202611102-1-01",
+      "input_tokens": 4235,
+      "request_sha256": "c96fda6fa1ccd1c24c5ea4e0cc92b75a7acd7474aae9a59ed76873087ef63bb0",
+      "maximum_output_tokens": 2400,
+      "possible_hosted_calls": 2,
+      "upper_estimated_credit_micro_usd_per_call": 38260
+    },
+    {
+      "source_id": "H2-202611102-2-08",
+      "input_tokens": 4284,
+      "request_sha256": "2cc99d2b130adb68747674e7a0efa50588ce817420a9407b8cc08b272800a789",
+      "maximum_output_tokens": 2400,
+      "possible_hosted_calls": 2,
+      "upper_estimated_credit_micro_usd_per_call": 38378
+    },
+    {
+      "source_id": "H2-202611102-3-08",
+      "input_tokens": 4206,
+      "request_sha256": "6d8290fd06101753ebd900f93cdde0de3a774b56767878de64fbce63468a7a77",
+      "maximum_output_tokens": 2400,
+      "possible_hosted_calls": 2,
+      "upper_estimated_credit_micro_usd_per_call": 38192
+    },
+    {
+      "source_id": "H2-202611102-0-04",
+      "input_tokens": 4053,
+      "request_sha256": "0aebdb70a3a903cb50745b135c76d87980d114f7c76a0c255fef24d700493e67",
+      "maximum_output_tokens": 2400,
+      "possible_hosted_calls": 2,
+      "upper_estimated_credit_micro_usd_per_call": 37824
+    },
+    {
+      "source_id": "H2-202611102-0-06",
+      "input_tokens": 4223,
+      "request_sha256": "fdbfdb93ff45f5fbdd243d233bb0510b956a527339dd5c7328858b0264eb50a9",
+      "maximum_output_tokens": 2400,
+      "possible_hosted_calls": 2,
+      "upper_estimated_credit_micro_usd_per_call": 38232
+    },
+    {
+      "source_id": "H2-202611102-2-14",
+      "input_tokens": 4244,
+      "request_sha256": "835cf3f3b2735f3c2a72271593b8535f9d90893ef04607abd390718ddf5da18d",
+      "maximum_output_tokens": 2400,
+      "possible_hosted_calls": 2,
+      "upper_estimated_credit_micro_usd_per_call": 38282
+    },
+    {
+      "source_id": "H2-202611102-2-13",
+      "input_tokens": 4284,
+      "request_sha256": "4fb1f3dc0cfb7095fae296dc1590e88bc5d729610e3f0bcc8a1716ffd279412e",
+      "maximum_output_tokens": 2400,
+      "possible_hosted_calls": 2,
+      "upper_estimated_credit_micro_usd_per_call": 38378
+    }
+  ],
+  "cost_preflight_complete": true,
+  "maximum_new_hosted_calls": 27,
+  "maximum_new_hosted_credit_estimate_micro_usd": 1030268,
+  "estimated_total_credit_exposure_micro_usd": 3949385,
+  "within_new_ceiling": true,
+  "pricing_reference": "https://platform.claude.com/docs/en/about-claude/pricing",
+  "token_count_reference": "https://platform.claude.com/docs/en/build-with-claude/token-counting",
+  "pricing_checked_date": "2026-11-12"
+}

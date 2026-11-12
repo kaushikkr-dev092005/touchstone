@@ -31,9 +31,10 @@ this path are SIMULATED. Saved sandbox/testnet proofs have separate labels.
   seller acknowledgement. The seller rejected credit; no refund moved.
 - Earlier hard-kill/recovery evidence shows one paid receipt recovered twice
   without another purchase. Clearing preconfirmation is not final settlement.
-- The matched four-policy study stopped safely after clearing refusals and the
-  conservative credit guard: 12/64 policy outcomes, 3 actual charges, 5 confirmed
-  unpaid failures, no pending invoice. It supports no savings claim.
+- The matched four-policy study completed 64/64 outcomes on 16 sources: 32 actual
+  paid receipts, 10 confirmed-unpaid failures and no pending invoice. Real provider
+  spend was 0.263390 USDZ. Premium scored 7/16 strictly correct, ladder 3/16; this
+  does not support a general savings claim. [Current results](POLICY_LIVE_CONTINUATION.md).
 
 [Final review](LIVE_PROOFS_20261110.md), [raw evidence](EVIDENCE_INDEX.md),
 [controls and costs](../bench/results/completion-20261110/final-proof-status.json).
@@ -46,10 +47,10 @@ accounting, atomic reservations, idempotency conflicts and a hash-chained audit
 preserve charges and uncertain exposure. Per-call, aggregate, API-credit and native
 fee caps are separate. No automatic top-up or withdrawal occurred in final proofs.
 
-The $3 total Claude ceiling is enforced; conservative exposure is $2.919117,
-including $0.9072 of uncertainty allowances. New hosted cash was $0. GPU startup
+The updated $4.50 total Claude ceiling is enforced; conservative exposure is $4.229541,
+including $2.027200 of retained uncertainty allowances. New hosted cash was $0. GPU startup
 is refused at 65°C and owned inference stops at 75°C/throttling/missing telemetry.
-The sampled run peak was 51°C and the model was stopped afterwards.
+The sampled continuation peak was 60°C and the model was stopped afterwards.
 
 [Release validation](../bench/results/m3-v2/release-validation.json) records the
 exact tested source revision, Python/Node tests, controlled financial proofs,

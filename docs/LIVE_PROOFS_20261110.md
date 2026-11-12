@@ -1,5 +1,9 @@
 # Final live proof review, 10 November 2026
 
+**12 November update:** the matched comparison now has 64/64 outcomes and 32 actual
+paid receipts. [Current comparison results and $4.50 guard](POLICY_LIVE_CONTINUATION.md)
+supersede the incomplete comparison and credit totals in this historical snapshot.
+
 The qualified-model sandbox integration completed. The matched comparison stopped
 at its credit guard after repeated clearing refusals. Capped issuing creation is
 now verified. Merchant onboarding, Visa approval and signed-in portal submission

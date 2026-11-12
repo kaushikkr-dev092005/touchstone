@@ -22,6 +22,9 @@ def main():
         probe.bind(('127.0.0.1',0));port=probe.getsockname()[1]
     base='http://127.0.0.1:'+str(port)
     errors=[];external=[]
+    records=json.loads((ROOT/'apps/web/public/data/evidence.json').read_text())['records']
+    charged_count=sum((r['costMicro'] or 0)>0 for r in records)
+    unpaid_count=sum(r['state']=='Confirmed unpaid' for r in records)
     with tempfile.TemporaryDirectory(prefix='site-qa-',dir=folder) as data:
         process=subprocess.Popen([sys.executable,'tools/run_mock.py','--port',str(port),'--data-dir',data],cwd=ROOT,
             stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
@@ -54,11 +57,11 @@ def main():
                 page.wait_for_timeout(700);after=page.locator('.vault-portal .vault-focus').get_attribute('cx')
                 assert before!=after,'Original vault door did not animate'
                 page.wait_for_url('**/dashboard');assert page.get_by_role('heading',name='The control room.').is_visible()
-                assert page.locator('.record-table tbody tr').count()==9
+                assert page.locator('.record-table tbody tr').count()==len(records)
                 page.screenshot(path=str(folder/'dashboard-1440.png'))
                 page.get_by_role('button',name='Transaction ledger',exact=True).click();page.wait_for_url('**/ledger')
-                page.get_by_role('button',name='Charged',exact=True).click();assert page.locator('.record-table tbody tr').count()==4
-                page.get_by_role('button',name='Unpaid',exact=True).click();assert page.locator('.record-table tbody tr').count()==5
+                page.get_by_role('button',name='Charged',exact=True).click();assert page.locator('.record-table tbody tr').count()==charged_count
+                page.get_by_role('button',name='Unpaid',exact=True).click();assert page.locator('.record-table tbody tr').count()==unpaid_count
                 page.get_by_role('button',name='All attempts',exact=True).click()
                 page.get_by_role('textbox',name='Search ledger').fill('no-such-receipt');assert page.locator('.record-table tbody tr').count()==0
                 page.get_by_role('textbox',name='Search ledger').fill('')

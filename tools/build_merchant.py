@@ -24,7 +24,7 @@ def build(commit='HEAD', output='dist/merchant-site.tar.gz', unpack_directory=No
     contents = {target: subprocess.check_output(['git', 'show', sha+':'+source], cwd=ROOT)
                 for target, source in files.items()}
     if include_site:
-        if subprocess.run(['git','diff','--quiet',sha,'--','apps/web','tools/build_site_evidence.py','bench/results/completion-20261110'],cwd=ROOT).returncode:
+        if subprocess.run(['git','diff','--quiet',sha,'--','apps/web','tools/build_site_evidence.py','touchstone/study_costs.py','touchstone/hosted_cost.py','bench/results/completion-20261110','bench/results/m4-live-20261112'],cwd=ROOT).returncode:
             raise ValueError('Commit frontend inputs before packaging an exact source build')
         subprocess.run([shutil.which('bun') or 'bun','run','build'],cwd=ROOT/'apps/web',check=True)
         assets={}

@@ -1,0 +1,106 @@
+{
+  "label": "MEASURED_CACHED_DELIVERY_METADATA_RECONCILIATION",
+  "restored": [
+    {
+      "reservation_key": "f3adb0ae2de9dc3463c3f189463a54ca1395ffeed3d1d4f0786ee2f72e830e59",
+      "receipt_id": "0x4c3503de9e33f8f17d6083146181c36cdb5f220b2ee3c82fe3434485cdfb9336:6cdef667-c548-415c-9a6a-6c7f9f4c0693",
+      "chaos_mode": null,
+      "output_changed": false,
+      "cost_changed": false
+    },
+    {
+      "reservation_key": "ddd4450548f9ab16e6aadfbcd5f8c814d060212c19b623662f805832243022a9",
+      "receipt_id": "0xb1b954b34aafa2a0d4c1807401ad184baae04c4f263a911e4e760c8aa302954c:9ca0d16e-d0e1-4b13-9009-371e5757d382",
+      "chaos_mode": null,
+      "output_changed": false,
+      "cost_changed": false
+    },
+    {
+      "reservation_key": "5943be1b0ce469eb077674437c3ff6e2e1c58591e60cc8f86bf4c67399a2174a",
+      "receipt_id": "0x118f51d0a869553589594af9a3b7d42780407c520a23eff2e905d718395dafda:1bce071f-fc8b-4797-9ebf-7d320651ed11",
+      "chaos_mode": null,
+      "output_changed": false,
+      "cost_changed": false
+    },
+    {
+      "reservation_key": "a07bac0c3a7eb37fe7346ddede743957f4cf9ee0efd586f23b8fd4aed7b8085f",
+      "receipt_id": "0x85cbe451d5a8e02ee1e2a6e421d056ad5fd5cde4aed54f9fc41e3806bccfd351:da58994e-e44e-46f5-9297-d79a066a849f",
+      "chaos_mode": null,
+      "output_changed": false,
+      "cost_changed": false
+    },
+    {
+      "reservation_key": "8ce365ca3a533999cfcc2ecdfc282af87ee676fc317e732816a745433c8b8ee6",
+      "receipt_id": "0x1b3bf33bd55c929f7264ebd77af51c54531aba521ffa579482efae6086321f06:a92b7863-ba17-4b7d-b803-b81dfc96167d",
+      "chaos_mode": "quality-drop",
+      "output_changed": false,
+      "cost_changed": false
+    },
+    {
+      "reservation_key": "780ba3b09a4a80ffd02fbf9ff333aec2355c9e8caf3571462cfe5a48f9fced0a",
+      "receipt_id": "0x5ccfb010df17f4771bf44d342a438677698551c17e448559004de971e0b76ff2:73f7ca78-0154-4c08-be90-996d3a1efb71",
+      "chaos_mode": null,
+      "output_changed": false,
+      "cost_changed": false
+    },
+    {
+      "reservation_key": "38b4db0996aff1a8697512ec5d914b00edc825e0aff66c12fa64db53c43bc60b",
+      "receipt_id": "0xc6e9054a0670310b10d29e5e25bf490a60ba7fbd53bdd42b4fdd53c7635f76ad:20f7f537-6984-4b02-93ae-402eb1566107",
+      "chaos_mode": null,
+      "output_changed": false,
+      "cost_changed": false
+    },
+    {
+      "reservation_key": "1c7d47d3eb3e1dd39a4be1eb8a8fe5bfd526b1581ae55e381ef2c1a2ad2ca3fc",
+      "receipt_id": "0x516142146819664387ae84681843570deda01fdd259c9e6b91f7fdbe1baf64cf:dd317191-61f9-4694-9739-1ec480a7256c",
+      "chaos_mode": null,
+      "output_changed": false,
+      "cost_changed": false
+    },
+    {
+      "reservation_key": "ba704b39166f16f593382f5c576785993feb23cc3ac403a22923d2229257cb90",
+      "receipt_id": "0xdd1f572d2b6faa9c4a5e1831afef85a89c8bc78ecabe99355ff65ee8ba0a7558:6e99cb6e-1d1a-4d48-8120-c70fd0ab2618",
+      "chaos_mode": null,
+      "output_changed": false,
+      "cost_changed": false
+    },
+    {
+      "reservation_key": "ac8cf97750844821f4ac54806381937de99252c21a8ae7365380d5fdd8c16f05",
+      "receipt_id": "0x1831f9fe56ee76c9cf707abfa44c040e5289d2eb8d7ea5917ae58180873309cd:221fcb09-22a6-4ad9-8e05-291e5c6ccff9",
+      "chaos_mode": null,
+      "output_changed": false,
+      "cost_changed": false
+    },
+    {
+      "reservation_key": "2920f012e36958ee25bdc093f160177e9856313e76df004e878f196c52b059fd",
+      "receipt_id": "0x967912f74cfe9955bcba5145ac9b1313e00ffc1e45c0f8ebff64824a9c9222eb:6f5a9cf3-cc0f-43c3-a4a9-0a9cc7518d40",
+      "chaos_mode": null,
+      "output_changed": false,
+      "cost_changed": false
+    },
+    {
+      "reservation_key": "2f427450a6bbae52208461855820c7f55d903ee6155d6d7dc88753785e6c458b",
+      "receipt_id": "0x6586d153f26eb4d467ab900038a195eaf7bfe95c3f2a018f606e93ff776aa0a8:59b37bed-d4b6-44c7-b758-46e50b9455cd",
+      "chaos_mode": null,
+      "output_changed": false,
+      "cost_changed": false
+    },
+    {
+      "reservation_key": "9bb7d16bdcca405f9dfd2e1a363135d141c4c5afcc90d02efcfcd98dbce25915",
+      "receipt_id": "0x88305b7fc9ba4a850a5ef9be3572798af1d5f760ca3a2928fcd50c72ce4d4c60:7dd3e999-1ad3-4018-81d7-d103890d856e",
+      "chaos_mode": null,
+      "output_changed": false,
+      "cost_changed": false
+    }
+  ],
+  "audit": {
+    "valid": true,
+    "events": 209,
+    "head": "7ce5c2ef2caa90ac95c77c6b45df986aa673ff0290309b6b379029eae1540882"
+  },
+  "reason": "Local source-selection/throughput fields exceeded the ledger metadata allowlist; retained core measurements restored from exact original cache",
+  "financial_transactions": 0,
+  "inference_calls": 0,
+  "source_answers_changed": false,
+  "charges_changed": false
+}

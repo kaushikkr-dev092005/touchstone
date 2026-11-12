@@ -33,7 +33,7 @@ The dashboard does not silently turn a failed live service into a simulation.
 | [Role-aware verifier review](docs/REVIEW_20261110.md) | Labels selected as field values now fail semantic checks independently of arithmetic | Bounded source grammar; unfamiliar/ambiguous roles require review |
 | [Current qualification](bench/results/m3-v2/sonnet-qualification-result.json) | Sonnet 5.5: 120/120 calibration, 59/60 untouched holdout trials strictly correct | Eligible for synthetic review drafts; interrupted trial counted incorrect, zero false accepts |
 | [Integrated financial proof](bench/results/m3-v2/integrated-receipt.json) | One qualified paid draft, sandbox USD 1 hold / USD 0.01 capture, 0.01 USDZ provider charge, customer closed | Correct draft requires human review; unused tokens retained; no fiat/token bridge |
-| [Matched comparison](bench/results/m4-v2/live-report.json) | 12/64 policy outcomes; 3 actual charges and 5 confirmed-unpaid failures | Clearing refusals and credit-cap stop; incomplete, no savings claim |
+| [Matched live comparison](bench/results/m4-live-20261112/actual-financial-results.json) | 64/64 outcomes; 32 actual paid receipts and 10 confirmed-unpaid failures; 0.263390 USDZ | Real model calls and testnet payments; premium scored 7/16 strict correct, ladder 3/16; no general savings claim |
 | [Paid qualification status](bench/results/m3-v2/paid-qualification-status.json) | 1.32 USDZ deposited; 0.01 USDZ bought one correct hosted result; next request confirmed unpaid | Stopped without retry; API usage estimate separate from USDZ |
 
 **Candidate, review and rejected are separate outcomes.** A candidate is a checked
@@ -65,6 +65,9 @@ card, without a merchant charge. Agentic Commerce merchant configuration is acti
 Visa approval remains pending. [Proofs and boundaries](docs/EXTERNAL_ACCESS.md).
 The matched comparison and submission status are recorded in the
 [current review](docs/REVIEW_20261110.md). [Detailed feature boundaries](docs/FEATURES.md).
+The [12 November comparison completion](docs/POLICY_LIVE_CONTINUATION.md) supersedes
+the earlier 12/64 stop. Conservative total Claude exposure is $4.229541 against the
+user's updated $4.50 ceiling; estimated reported usage and uncertainty stay separate.
 
 ## Operator and developer paths
 
