@@ -1,5 +1,18 @@
 # Decide whether to buy inference
 
+Current evidence, 13 November: Sonnet 5.5 is qualified for synthetic invoice review
+drafts under unchanged criteria. Its untouched holdout produced 59/60 strictly
+correct drafts, **0 candidates and 60 review cases**. Offline truth scoring does
+not replace runtime semantic verification or authorize invoice payment. The
+completed matched live comparison favors premium over the ladder on strict-correct
+count and provider cost per correct output; it does not demonstrate an adaptive
+routing advantage. See the [current qualification](../bench/results/m3-v2/sonnet-qualification-result.json)
+and [live comparison](POLICY_LIVE_CONTINUATION.md).
+
+The sections below preserve the earlier preflight experiments and their original
+status. Statements about no qualified model or no paid result describe those
+earlier experiments, not the current Sonnet qualification and integrated proof.
+
 M3 update, 3 November: the new `invoice_extraction` contract accepts raw text plus typed PO/payment records, with no pre-supplied extraction labels. `python tools/m3.py build` generates 180 synthetic sources and measures tool-only coverage before model calls. The separate offline scorer uses known generated truth; the online checker uses exact spans and integer arithmetic only. Current result: 24/180 tool extractions, zero model measurements and no qualified M3 model. Historical model profiles do not qualify this domain. See [M3 report](M3_REPORT.md) and [runbook](M3_RUNBOOK.md).
 
 M3 retains the existing deduplicated Wilson lower-bound target (95%, at least 20 sources), requires the complete 120-source calibration set and a separate complete 60-source held-out validation with at least 95% exact extraction and zero observed false accepts. Neither MOCK profiles, stale provenance nor an incomplete/stopped profile can qualify. No demo-tier relaxation is enabled. The Planning panel is a no-payment preview. Explicit engine/paid-profiler integration tools remain operator tests requiring their own spend mandate; offline eligibility never grants financial permission.

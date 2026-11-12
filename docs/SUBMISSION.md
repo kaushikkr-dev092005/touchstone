@@ -22,8 +22,11 @@ this path are SIMULATED. Saved sandbox/testnet proofs have separate labels.
 
 - Sonnet 5.5 qualified with unchanged criteria: 120/120 strictly correct calibration
   trials and 59/60 fresh holdout trials. An interrupted request counts incorrect.
-  The 59 correct review drafts exceed the bounded parser's coverage. Synthetic
-  sources; no automatic invoice payment or real-world accuracy claim.
+  All 60 holdout cases required human review: 0 automatically accepted candidates.
+  The 59 correct drafts exceed the bounded parser's coverage, but offline truth
+  scoring is separate from runtime verification. Synthetic sources; no automatic
+  invoice payment or real-world accuracy claim. Zero false accepts with no
+  candidates does not establish acceptance precision.
 - One integrated run linked a customer-approved Airwallex sandbox USD 1 hold,
   qualified 0.01 USDZ model result, review verdict, USD 0.01 capture and controlled
   closure. Unused tokens stayed in their original wallet. No fiat/token bridge.
@@ -35,6 +38,13 @@ this path are SIMULATED. Saved sandbox/testnet proofs have separate labels.
   paid receipts, 10 confirmed-unpaid failures and no pending invoice. Real provider
   spend was 0.263390 USDZ. Premium scored 7/16 strictly correct, ladder 3/16; this
   does not support a general savings claim. [Current results](POLICY_LIVE_CONTINUATION.md).
+
+The live `real-touchstone` router uses fixed local-first escalation after verifier
+rejection, not learned quality selection. The separate comparison's ladder tries
+tools, defers known duplicates and uses only qualified tiers; it skipped the
+unqualified local model. Premium beat the ladder on strict-correct count and
+provider USDZ per correct output in this study. Implemented sampling/quality-based
+strategies have no demonstrated live financial advantage here.
 
 [Final review](LIVE_PROOFS_20261110.md), [raw evidence](EVIDENCE_INDEX.md),
 [controls and costs](../bench/results/completion-20261110/final-proof-status.json).

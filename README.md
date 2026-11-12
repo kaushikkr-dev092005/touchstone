@@ -31,7 +31,7 @@ The dashboard does not silently turn a failed live service into a simulation.
 | [Metal recovery](bench/results/m2/live-single-call-final.json) | A 0.01 USDZ purchase survived process death and recovered without another charge | Testnet; purchased answer failed verification |
 | [Current fault acknowledgement](bench/results/completion-20261110/current-seller-fault-acknowledgement.json) | Real signed delivery, reproduced wrong answer, signed seller response | Seller rejected credit; no refund moved |
 | [Role-aware verifier review](docs/REVIEW_20261110.md) | Labels selected as field values now fail semantic checks independently of arithmetic | Bounded source grammar; unfamiliar/ambiguous roles require review |
-| [Current qualification](bench/results/m3-v2/sonnet-qualification-result.json) | Sonnet 5.5: 120/120 calibration, 59/60 untouched holdout trials strictly correct | Eligible for synthetic review drafts; interrupted trial counted incorrect, zero false accepts |
+| [Current qualification](bench/results/m3-v2/sonnet-qualification-result.json) | Sonnet 5.5: 120/120 calibration, 59/60 untouched holdout trials strictly correct | Holdout: 0 candidates, 60 review cases; useful synthetic review drafts, no automatic invoice payments |
 | [Integrated financial proof](bench/results/m3-v2/integrated-receipt.json) | One qualified paid draft, sandbox USD 1 hold / USD 0.01 capture, 0.01 USDZ provider charge, customer closed | Correct draft requires human review; unused tokens retained; no fiat/token bridge |
 | [Matched live comparison](bench/results/m4-live-20261112/actual-financial-results.json) | 64/64 outcomes; 32 actual paid receipts and 10 confirmed-unpaid failures; 0.263390 USDZ | Real model calls and testnet payments; premium scored 7/16 strict correct, ladder 3/16; no general savings claim |
 | [Paid qualification status](bench/results/m3-v2/paid-qualification-status.json) | 1.32 USDZ deposited; 0.01 USDZ bought one correct hosted result; next request confirmed unpaid | Stopped without retry; API usage estimate separate from USDZ |
@@ -39,6 +39,27 @@ The dashboard does not silently turn a failed live service into a simulation.
 **Candidate, review and rejected are separate outcomes.** A candidate is a checked
 extraction, not authorization to pay an invoice. Statistical qualification criteria
 have not been lowered. Re-scoring old answers is never presented as a fresh model run.
+
+**The live routing strategy is fixed escalation.** In `touchstone/router.py`,
+`real-touchstone` prefers local GPU quotes and can escalate to hosted premium after
+verifier rejection, within spending limits. That branch does not use learned
+quality estimates or Thompson sampling. Those other strategies exist in code;
+their presence is not evidence of improved live financial outcomes.
+
+The completed comparison's ladder has a separate implementation in
+`touchstone/comparison.py`: tools first, defer known duplicate references, then
+qualified model tiers. The unqualified local tier was skipped by the ladder. Premium
+produced 7/16 strictly correct outputs at 0.018571 USDZ per correct output; the ladder
+produced 3/16 at 0.020000 USDZ. Lower total ladder spend does not establish better
+cost effectiveness. These provider-only costs exclude separately reported API
+credits and unpriced review. Adaptive routing superiority remains unproven.
+
+**59/60 means correct human-review drafts, not automated invoice payments.**
+Offline scoring compares outputs with the synthetic dataset's known truth; the
+runtime verifier has no access to that truth and cannot certify unfamiliar source
+roles. All 60 holdout trials required review, including the interrupted trial
+counted incorrect. Zero false accepts with zero candidates does not establish
+acceptance precision. Even a checked candidate never authorizes invoice payment.
 
 Airwallex fiat and Metal USDZ stay separately accounted. This project performs no
 fiat-to-token bridge. Metal receipt preconfirmation is not independent proof of final
