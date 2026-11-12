@@ -42,6 +42,11 @@ a separately timed **post-run read-only outage attestation**, plus metadata rest
 from the exact cached paid quality-drop delivery. No answer, charge or score changed;
 no model was rerun. The raw flag and supplemental timing remain visible.
 
+`tools/run_live_policy.py` is the live-only entrypoint that installs the unsigned
+fresh-context wait before invoking the bound runner. It requires the exact approved
+plan and `--execute`; it never launches the demo. Reopening this completed scope
+returns its cached report without dispatching another purchase.
+
 The local mandate initially expired before the first new purchase. Its continuation
 copy received one audited, one-hour local renewal under the approved scope. The
 original journal and all monetary limits stayed unchanged. Fresh-epoch waiting
