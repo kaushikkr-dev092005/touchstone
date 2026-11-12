@@ -1,4 +1,4 @@
-"""Offline browser QA for the shared site, vault entry and private console embedding."""
+"""Offline browser QA for the shared site, cinematic intro, vault entry and private console embedding."""
 import argparse
 import json
 from pathlib import Path
@@ -42,21 +42,37 @@ def main():
                     elif urlsplit(r.request.url).path=='/api/site-context':r.fulfill(json={'operator_console':False,'mode':'SAVED_PUBLIC_EVIDENCE'})
                     else:r.continue_()
                 context.route('**/*',route)
+                # Full intro once: plays from black, can be skipped smoothly, and unmounts the vault.
+                intro=context.new_page();intro.on('pageerror',lambda e:errors.append(str(e)))
+                intro.goto(base+'/site/?intro=force',wait_until='domcontentloaded')
+                assert intro.evaluate("() => document.documentElement.dataset.intro")=='full'
+                intro.locator('.vault-sequence').wait_for(state='attached')
+                intro.get_by_role('button',name='Skip intro').wait_for(state='visible',timeout=5000)
+                intro.screenshot(path=str(folder/'intro-vault.png'))
+                intro.keyboard.press('Escape')
+                intro.wait_for_function("() => document.documentElement.dataset.intro==='done'",timeout=8000)
+                assert intro.locator('.vault-sequence').count()==0,'Vault remains mounted after the intro'
+                assert not intro.locator('.lp-hero').evaluate('e=>e.inert')
+                intro.close()
+                context.add_init_script("sessionStorage.setItem('ts-intro','1')")
                 page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
                 page.goto(base+'/site/',wait_until='networkidle')
+                page.wait_for_function("() => document.documentElement.dataset.intro==='done'",timeout=8000)
                 for width,height in [(1440,1000),(1024,900),(768,1024),(390,844),(320,740)]:
-                    page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(80)
+                    page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(120)
                     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),f'Overflow at {width}'
-                    assert page.locator('.hero-locker .vault-svg').is_visible()
+                    assert page.get_by_role('heading',name='Buy inference. Prove it passes.').is_visible()
+                    assert page.locator('.vault-sequence').count()==0
                     page.screenshot(path=str(folder/('landing-'+str(width)+'.png')))
                 page.set_viewport_size({'width':1440,'height':1000})
-                page.get_by_role('button',name='Open dashboard',exact=True).click()
-                portal=page.get_by_role('dialog',name='Opening dashboard');portal.wait_for(state='visible')
-                page.wait_for_timeout(500);before=page.locator('.vault-portal .vault-focus').get_attribute('cx')
+                page.get_by_role('button',name='Open Dashboard',exact=True).click()
+                page.locator('.vault-sequence').wait_for(state='attached')
+                page.wait_for_timeout(2300);before=page.locator('#door-assembly').get_attribute('transform')
                 page.screenshot(path=str(folder/'vault-opening.png'))
-                page.wait_for_timeout(700);after=page.locator('.vault-portal .vault-focus').get_attribute('cx')
-                assert before!=after,'Original vault door did not animate'
-                page.wait_for_url('**/dashboard');assert page.get_by_role('heading',name='The control room.').is_visible()
+                page.wait_for_timeout(500);after=page.locator('#door-assembly').get_attribute('transform')
+                assert before!=after,'Vault door did not animate'
+                page.wait_for_url('**/dashboard',timeout=8000);page.locator('.vault-sequence').wait_for(state='detached',timeout=8000)
+                assert page.get_by_role('heading',name='The control room.').is_visible()
                 assert page.locator('.record-table tbody tr').count()==len(records)
                 page.screenshot(path=str(folder/'dashboard-1440.png'))
                 page.get_by_role('button',name='Transaction ledger',exact=True).click();page.wait_for_url('**/ledger')
@@ -72,20 +88,27 @@ def main():
                 page.get_by_role('button',name='Expand quick navigation',exact=True).click()
                 page.wait_for_function("() => document.querySelector('.glass-dock').getBoundingClientRect().width>300")
                 page.get_by_role('navigation',name='Quick navigation').get_by_role('link',name='Home',exact=True).click()
-                page.wait_for_url('**/site/')
+                page.wait_for_url('**/site/');page.wait_for_function("() => document.documentElement.dataset.intro==='done'",timeout=8000)
                 page.get_by_role('button',name='Open navigation',exact=True).click();assert page.locator('#primary-nav').is_visible()
                 page.keyboard.press('Escape');assert not page.locator('#primary-nav').is_visible()
-                page.get_by_role('button',name='Explore the ledger',exact=True).click();portal=page.get_by_role('dialog',name='Opening ledger');portal.wait_for(state='visible')
-                page.keyboard.press('Escape');assert page.url.endswith('/site/') and not page.locator('.vault-portal').count()
+                # Escape fast-forwards the Dashboard transition instead of cutting it.
+                page.set_viewport_size({'width':1440,'height':1000})
+                page.get_by_role('button',name='Open Dashboard',exact=True).click();page.locator('.vault-sequence').wait_for(state='attached')
+                page.get_by_role('button',name='Skip',exact=True).wait_for(state='visible',timeout=4000)
+                page.keyboard.press('Escape');page.wait_for_url('**/dashboard',timeout=4000)
+                page.locator('.vault-sequence').wait_for(state='detached',timeout=4000)
+                page.go_back();page.wait_for_function("() => document.documentElement.dataset.intro==='done'",timeout=8000)
+                assert page.locator('.vault-sequence').count()==0
                 page.emulate_media(reduced_motion='reduce')
-                page.get_by_role('button',name='Open dashboard',exact=True).click();page.wait_for_url('**/dashboard')
-                assert not page.locator('.vault-portal').count()
-                page.go_back();assert page.locator('.hero-locker').is_visible()
+                page.get_by_role('button',name='Open Dashboard',exact=True).click();page.wait_for_url('**/dashboard')
+                assert not page.locator('.vault-sequence').count()
+                page.go_back();page.wait_for_function("() => document.documentElement.dataset.intro==='done'",timeout=8000)
+                assert page.locator('.lp-hero').is_visible()
                 context.close()
                 touch=browser.new_context(viewport={'width':390,'height':844},has_touch=True,is_mobile=True,reduced_motion='reduce')
                 touch.route('**/*',route)
                 phone=touch.new_page();phone.on('pageerror',lambda e:errors.append(str(e)))
-                phone.goto(base+'/site/',wait_until='networkidle')
+                phone.goto(base+'/dashboard',wait_until='networkidle')
                 phone.get_by_role('button',name='Expand quick navigation').tap()
                 assert phone.get_by_role('navigation',name='Quick navigation').get_by_role('link',name='Ledger',exact=True).is_visible()
                 phone.get_by_role('navigation',name='Quick navigation').get_by_role('link',name='Ledger',exact=True).tap()
@@ -114,7 +137,7 @@ def main():
                 local.close();browser.close()
             assert not errors and not external
             report={'label':'MEASURED_OFFLINE_SITE_QA','viewports':[320,390,768,1024,1440],
-                'vault_opening_and_cancel':'passed','same_origin_dashboard_and_ledger':'passed',
+                'intro_skip_and_vault_unmount':'passed','vault_opening_and_skip':'passed','same_origin_dashboard_and_ledger':'passed',
                 'history_navigation':'passed','public_ledger_filters_and_receipt':'passed',
                 'touch_dock_and_mobile_menu':'passed','reduced_motion':'passed','operator_iframe_and_csrf':'passed',
                 'page_errors':errors,'external_requests':external,'financial_transactions':0,'model_calls':0}

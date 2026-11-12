@@ -1,0 +1,531 @@
+{
+  "version": 1,
+  "kind": "ISOLATED_POLICY_STUDY",
+  "labels": {
+    "model_outputs": "MEASURED",
+    "call_latency": "MEASURED",
+    "payments": "SIMULATED",
+    "prices": "ASSUMED",
+    "verification_fee": "SIMULATED",
+    "truth": "OFFLINE_SYNTHETIC_CORPUS"
+  },
+  "source_plan_sha256": "f9252a61e04736f3597bf9fe0bd38f81a21297972b515dc3001f802e6c63a721",
+  "corpus": "bench/results/m4-v2/dataset",
+  "corpus_sources_sha256": "12c5cebe505d0e279d2670a26be234a613ffb0f700c70ceb3b7f1aeba439b321",
+  "tasks": [
+    {
+      "seed": 202611102,
+      "index": 0,
+      "source_id": "IX-00-000-20261103",
+      "template_id": "layout-00",
+      "partition": "calibration",
+      "task": {
+        "id": "IX-00-000-20261103",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Invoice receiving record / layout 00\nInvoice ID: IX-00-000-20261103\nSupplier: Vendor 00 Supply\nPurchase order: PO-00-000\nCurrency: USD\nSubtotal: USD 77.34\nTax: USD 1.98\nTotal due: USD 79.32\nITEM-01 | quantity=2 | unit=USD 24.52 | amount=USD 49.04\nITEM-02 | quantity=2 | unit=USD 14.15 | amount=USD 28.30\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-000",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 31728
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 1,
+      "source_id": "H2-202611102-2-00",
+      "template_id": "prospective-arrow-record",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-2-00",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nInvoice ID \u2192 IX-00-000-202613102\nSupplier \u2192 Vendor 00 Supply\nPurchase order \u2192 PO-00-000\nCurrency \u2192 USD\nSubtotal \u2192 USD 328.94\nTax \u2192 USD 0.02\nTotal due \u2192 USD 328.96\nITEM-01 | quantity=2 | unit=USD 53.19 | amount=USD 106.38\nITEM-02 | quantity=4 | unit=USD 55.64 | amount=USD 222.56\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-000",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 131584
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 2,
+      "source_id": "H2-202611102-1-05",
+      "template_id": "prospective-value-parenthesis",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-1-05",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nIX-00-005-202612102 (Invoice ID)\nVendor 00 Supply (Supplier)\nPO-00-005 (Purchase order)\nUSD (Currency)\nUSD 87.03 (Subtotal)\nUSD 1.70 (Tax)\nUSD 88.73 (Total due)\nITEM-01 | quantity=9 | unit=USD 3.50 | amount=USD 31.50\nITEM-02 | quantity=1 | unit=USD 55.53 | amount=USD 55.53\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-005",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 35492
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 3,
+      "source_id": "H2-202611102-2-11",
+      "template_id": "prospective-arrow-record",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-2-11",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nScanned c0py \u2014 receiv1ng n0tes [OCR]\nInvoice ID \u2192 IX-00-011-202613102\nSupplier \u2192 Vendor 00 Supply\nPurchase order \u2192 PO-00-011\nCurrency \u2192 USD\nSubtotal \u2192 USD 178.08\nTax \u2192 USD 1.66\nTotal due \u2192 USD 179.74\nITEM-01 | quantity=1 | unit=USD 56.04 | amount=USD 56.04\nITEM-02 | quantity=3 | unit=USD 40.68 | amount=USD 122.04\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-011",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 71896
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 4,
+      "source_id": "H2-202611102-0-12",
+      "template_id": "prospective-equals-record",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-0-12",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nInvoice ID = IX-00-012-202611102\nSupplier = Vendor 00 Supply\nPurchase order = PO-00-012\nCurrency = USD\nSubtotal = USD 164.98\nTotal due = USD 166.95\nITEM-01 | quantity=1 | unit=USD 87.38 | amount=USD 87.38\nITEM-02 | quantity=5 | unit=USD 15.52 | amount=USD 77.60\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-012",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 66780
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 5,
+      "source_id": "H2-202611102-0-11",
+      "template_id": "prospective-equals-record",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-0-11",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nScanned c0py \u2014 receiv1ng n0tes [OCR]\nInvoice ID = IX-00-011-202611102\nSupplier = Vendor 00 Supply\nPurchase order = PO-00-011\nCurrency = USD\nSubtotal = USD 879.15\nTax = USD 7.35\nTotal due = USD 886.50\nITEM-01 | quantity=9 | unit=USD 85.95 | amount=USD 773.55\nITEM-02 | quantity=5 | unit=USD 21.12 | amount=USD 105.60\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-011",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 354600
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 6,
+      "source_id": "H2-202611102-1-13",
+      "template_id": "prospective-value-parenthesis",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-1-13",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nIX-00-013-202612102 (Invoice ID)\nVendor 00 Supply (Supplier)\nPO-00-013 (Purchase order)\nUSD (Currency)\nUSD 151.97 (Subtotal)\nUSD 3.75 (Tax)\nUSD 155.72 (Total due)\nITEM-01 | quantity=1 | unit=USD 22.12 | amount=USD 22.12\nITEM-02 | quantity=5 | unit=USD 25.97 | amount=USD 129.85\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-013",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 62288
+          },
+          "payments": [
+            {
+              "payment_id": "PAY-IX-00-013-202612102",
+              "invoice_id": "IX-00-013-202612102",
+              "purchase_order_id": "PO-00-013",
+              "supplier_name": "Vendor 00 Supply",
+              "currency": "USD",
+              "amount_cents": 15572,
+              "status": "in_progress"
+            },
+            {
+              "payment_id": "PAY-IX-00-013-202612102",
+              "invoice_id": "IX-00-013-202612102",
+              "purchase_order_id": "PO-00-013",
+              "supplier_name": "Vendor 00 Supply",
+              "currency": "USD",
+              "amount_cents": 15572,
+              "status": "settled"
+            }
+          ]
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 7,
+      "source_id": "H2-202611102-1-08",
+      "template_id": "prospective-value-parenthesis",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-1-08",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nIX-00-008-202612102 (Invoice ID)\nVendor 00 Supply (Supplier)\nPO-00-008 (Purchase order)\nUSD (Currency)\nUSD 242.46 (Subtotal)\nUSD 1.47 (Tax)\nUSD 243.93 (Total due)\nITEM-01 | quantity=7 | unit=USD 32.00 | amount=USD 224.00\nITEM-02 | quantity=2 | unit=USD 9.23 | amount=USD 18.46\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-008",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 97572
+          },
+          "payments": [
+            {
+              "payment_id": "PAY-IX-00-008-202612102",
+              "invoice_id": "IX-00-008-202612102",
+              "purchase_order_id": "PO-00-008",
+              "supplier_name": "Vendor 00 Supply",
+              "currency": "USD",
+              "amount_cents": 24393,
+              "status": "in_progress"
+            },
+            {
+              "payment_id": "PAY-IX-00-008-202612102",
+              "invoice_id": "IX-00-008-202612102",
+              "purchase_order_id": "PO-00-008",
+              "supplier_name": "Vendor 00 Supply",
+              "currency": "USD",
+              "amount_cents": 24393,
+              "status": "settled"
+            }
+          ]
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 8,
+      "source_id": "H2-202611102-3-14",
+      "template_id": "prospective-wrapped-value",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-3-14",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nInvoice ID\n    IX-00-014-202614102\nSupplier\n    Vendor 00 Supply\nPurchase order\n    PO-00-014-OTHER\nCurrency\n    USD\nSubtotal\n    USD 187.86\nTax\n    USD 7.29\nTotal due\n    USD 195.15\nInvoice ID\n    AMBIG-202611102-3-14\nITEM-01 | quantity=1 | unit=USD 89.64 | amount=USD 89.64\nITEM-02 | quantity=2 | unit=USD 49.11 | amount=USD 98.22\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-014",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 78060
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 9,
+      "source_id": "H2-202611102-1-01",
+      "template_id": "prospective-value-parenthesis",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-1-01",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nScanned c0py \u2014 receiv1ng n0tes [OCR]\nIX-00-001-202612102 (Invoice ID)\nVendor 00 Supply (Supplier)\nPO-00-001 (Purchase order)\nUSD (Currency)\nUSD 127.05 (Subtotal)\nUSD 5.63 (Tax)\nUSD 132.68 (Total due)\nITEM-01 | quantity=1 | unit=USD 72.21 | amount=USD 72.21\nITEM-02 | quantity=3 | unit=USD 18.28 | amount=USD 54.84\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-001",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 53072
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 10,
+      "source_id": "H2-202611102-2-08",
+      "template_id": "prospective-arrow-record",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-2-08",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nInvoice ID \u2192 IX-00-008-202613102\nSupplier \u2192 Vendor 00 Supply\nPurchase order \u2192 PO-00-008\nCurrency \u2192 USD\nSubtotal \u2192 USD 388.08\nTax \u2192 USD 1.15\nTotal due \u2192 USD 389.23\nITEM-01 | quantity=9 | unit=USD 35.90 | amount=USD 323.10\nITEM-02 | quantity=2 | unit=USD 32.49 | amount=USD 64.98\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-008",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 155692
+          },
+          "payments": [
+            {
+              "payment_id": "PAY-IX-00-008-202613102",
+              "invoice_id": "IX-00-008-202613102",
+              "purchase_order_id": "PO-00-008",
+              "supplier_name": "Vendor 00 Supply",
+              "currency": "USD",
+              "amount_cents": 38923,
+              "status": "in_progress"
+            },
+            {
+              "payment_id": "PAY-IX-00-008-202613102",
+              "invoice_id": "IX-00-008-202613102",
+              "purchase_order_id": "PO-00-008",
+              "supplier_name": "Vendor 00 Supply",
+              "currency": "USD",
+              "amount_cents": 38923,
+              "status": "settled"
+            }
+          ]
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 11,
+      "source_id": "H2-202611102-3-08",
+      "template_id": "prospective-wrapped-value",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-3-08",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nInvoice ID\n    IX-00-008-202614102\nSupplier\n    Vendor 00 Supply\nPurchase order\n    PO-00-008\nCurrency\n    USD\nSubtotal\n    USD 295.23\nTax\n    USD 5.07\nTotal due\n    USD 300.30\nITEM-01 | quantity=3 | unit=USD 69.03 | amount=USD 207.09\nITEM-02 | quantity=2 | unit=USD 44.07 | amount=USD 88.14\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-008",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 120120
+          },
+          "payments": [
+            {
+              "payment_id": "PAY-IX-00-008-202614102",
+              "invoice_id": "IX-00-008-202614102",
+              "purchase_order_id": "PO-00-008",
+              "supplier_name": "Vendor 00 Supply",
+              "currency": "USD",
+              "amount_cents": 30030,
+              "status": "in_progress"
+            },
+            {
+              "payment_id": "PAY-IX-00-008-202614102",
+              "invoice_id": "IX-00-008-202614102",
+              "purchase_order_id": "PO-00-008",
+              "supplier_name": "Vendor 00 Supply",
+              "currency": "USD",
+              "amount_cents": 30030,
+              "status": "settled"
+            }
+          ]
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 12,
+      "source_id": "H2-202611102-0-04",
+      "template_id": "prospective-equals-record",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-0-04",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nInvoice ID = IX-00-004-202611102\nSupplier = Vendor 00 Supply\nPurchase order = PO-00-004-OTHER\nCurrency = USD\nSubtotal = USD 65.42\nTax = USD 7.65\nTotal due = USD 73.07\nITEM-01 | quantity=6 | unit=USD 8.09 | amount=USD 48.54\nITEM-02 | quantity=1 | unit=USD 16.88 | amount=USD 16.88\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-004",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 29228
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 13,
+      "source_id": "H2-202611102-0-06",
+      "template_id": "prospective-equals-record",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-0-06",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nScanned c0py \u2014 receiv1ng n0tes [OCR]\nInvoice ID = IX-00-006-202611102\nSupplier = Vendor 00 Supply\nPurchase order = PO-00-006\nCurrency = USD\nSubtotal = USD 432.39\nTax = USD 7.75\nTotal due = USD 440.14\nITEM-01 | quantity=3 | unit=USD 66.33 | amount=USD 198.99\nITEM-02 | quantity=5 | unit=USD 46.68 | amount=USD 233.40\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-006",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 176056
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 14,
+      "source_id": "H2-202611102-2-14",
+      "template_id": "prospective-arrow-record",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-2-14",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nInvoice ID \u2192 IX-00-014-202613102\nSupplier \u2192 Vendor 00 Supply\nPurchase order \u2192 PO-00-014-OTHER\nCurrency \u2192 USD\nSubtotal \u2192 USD 307.59\nTax \u2192 USD 3.76\nTotal due \u2192 USD 311.35\nInvoice ID \u2192 AMBIG-202611102-2-14\nITEM-01 | quantity=2 | unit=USD 71.82 | amount=USD 143.64\nITEM-02 | quantity=3 | unit=USD 54.65 | amount=USD 163.95\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-014",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 124540
+          },
+          "payments": []
+        },
+        "min_quality": 1.0
+      }
+    },
+    {
+      "seed": 202611102,
+      "index": 15,
+      "source_id": "H2-202611102-2-13",
+      "template_id": "prospective-arrow-record",
+      "partition": "holdout",
+      "task": {
+        "id": "H2-202611102-2-13",
+        "kind": "invoice_extraction",
+        "source": {
+          "text": "Accounts payable receiving copy / prospective evaluation\nInvoice ID \u2192 IX-00-013-202613102\nSupplier \u2192 Vendor 00 Supply\nPurchase order \u2192 PO-00-013\nCurrency \u2192 USD\nSubtotal \u2192 USD 524.37\nTax \u2192 USD 6.38\nTotal due \u2192 USD 530.75\nITEM-01 | quantity=9 | unit=USD 51.61 | amount=USD 464.49\nITEM-02 | quantity=3 | unit=USD 19.96 | amount=USD 59.88\nReceiving copy only. Do not initiate a payment.",
+          "purchase_order": {
+            "purchase_order_id": "PO-00-013",
+            "supplier_name": "Vendor 00 Supply",
+            "currency": "USD",
+            "authorized_cents": 212300
+          },
+          "payments": [
+            {
+              "payment_id": "PAY-IX-00-013-202613102",
+              "invoice_id": "IX-00-013-202613102",
+              "purchase_order_id": "PO-00-013",
+              "supplier_name": "Vendor 00 Supply",
+              "currency": "USD",
+              "amount_cents": 53075,
+              "status": "in_progress"
+            },
+            {
+              "payment_id": "PAY-IX-00-013-202613102",
+              "invoice_id": "IX-00-013-202613102",
+              "purchase_order_id": "PO-00-013",
+              "supplier_name": "Vendor 00 Supply",
+              "currency": "USD",
+              "amount_cents": 53075,
+              "status": "settled"
+            }
+          ]
+        },
+        "min_quality": 1.0
+      }
+    }
+  ],
+  "task_digest": "efe554ee8b793dc3ca875a9d0f14bbcdcfb3d8b0e1cec5dfc519e7b671134de4",
+  "policies": [
+    "tools-only",
+    "always-cheapest",
+    "always-premium",
+    "touchstone-ladder"
+  ],
+  "policy_tiers": {
+    "tools-only": [],
+    "always-cheapest": [
+      "economy"
+    ],
+    "always-premium": [
+      "balanced"
+    ],
+    "touchstone-ladder": [
+      "economy",
+      "balanced"
+    ]
+  },
+  "urls": {
+    "economy": "http://127.0.0.1:8081",
+    "balanced": "http://127.0.0.1:8082"
+  },
+  "models": {
+    "economy": {
+      "model": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+      "model_revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+      "model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+      "model_file": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      "quantization": "Q4_K_M",
+      "runtime_release": "b12000",
+      "backend": "Vulkan",
+      "runtime_archive_sha256": "7377042036a1db75639316459accc336e8fd4b772b27ae35f7ce19a66226a95d",
+      "hash_verified_on_disk": true
+    },
+    "balanced": {
+      "model": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+      "model_revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
+      "model_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+      "model_file": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+      "quantization": "Q4_K_M",
+      "runtime_release": "b12000",
+      "backend": "Vulkan",
+      "runtime_archive_sha256": "7377042036a1db75639316459accc336e8fd4b772b27ae35f7ce19a66226a95d",
+      "hash_verified_on_disk": true
+    }
+  },
+  "assumed_price_micro_usd": {
+    "economy": 10000,
+    "balanced": 20000
+  },
+  "verification_fee_micro_usd": 1000,
+  "per_policy_budget_micro_usd": 672000,
+  "per_call_cap_micro_usd": 20000,
+  "budget_rule": "One declared budget, identical for every policy (paired fairness)",
+  "max_attempts_per_step": 3,
+  "retries_per_tier_call": 1,
+  "timeout_s": 180,
+  "decoding": {
+    "temperature": 0,
+    "seed": 20261112,
+    "max_tokens": 2400
+  },
+  "verifier_version": "invoice-extraction-v2-role-bound",
+  "ladder": "tools, then economy, then balanced on verifier rejection or provider failure. Qualification gate NOT applied in this mock-rail study; it remains enforced on the live path.",
+  "plan_sha256": "8b6ab4636073e427026c828071b529295220c5bf2804f06dd088a430b69a33d5"
+}

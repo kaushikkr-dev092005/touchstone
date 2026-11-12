@@ -1,15 +1,16 @@
 # Touchstone website
 
 The landing page, Dashboard and Ledger share one origin and browser history.
-The original `Vault.tsx` illustration is unchanged. Workspace entry opens that
-same vault in a modal transition; Escape cancels entry. Reduced-motion users
-enter directly. The vault on the landing page can also be opened and closed.
+The landing opens on black. An isometric vault unlocks, reveals a key, closes and collapses
+into a point of light. That point ignites into a ray-marched black hole whose photon ring arcs
+behind the floating pill navigation, and then the hero is revealed. The intro plays once per
+session (`?intro=force` replays it) and can be skipped with the button or Escape.
+**Open Dashboard** and the Ledger link replay a compressed vault and commit the route while the
+screen is covered. Returning home replays only the ignition and hero. Reduced-motion users get
+crossfades and one static frame. Details, timing and tuning are in [landing.md](landing.md).
 
-The visual design follows the supplied dark technical references: mint accents,
-architecture cards, alternating control/verification/record sections and halftone
-panels. The Touchstone identity sequence moves from four dots to a wordmark and
-construction outlines. The glass navigation dock supports pointer, keyboard and
-touch; its links, the header and mobile menu reach the same routes.
+The workspace keeps its behaviour and is restyled to match: black, amber accent, Geist. The glass
+dock appears on the Dashboard and Ledger. The pill navigation collapses into a menu on phones.
 
 ## Public and operator views
 
@@ -39,7 +40,8 @@ python -m unittest tests.test_merchant_service -v
 ```
 
 The browser check starts an isolated simulator, blocks external requests, verifies
-320/390/768/1024/1440px layouts, the opening/cancel transition, history, ledger
+320/390/768/1024/1440px layouts, the full intro with skip and vault unmount, the Dashboard
+vault transition and its skip, history, ledger
 filters and receipts, touch navigation, reduced motion, the real embedded operator
 console and session protection. It sends no financial transactions or model calls.
 `tools/validate_release.py --browser --frontend` includes this check in fresh-source

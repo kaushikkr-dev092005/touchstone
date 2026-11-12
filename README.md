@@ -99,9 +99,9 @@ Qualification approval is not approval for a comparison, card issuance or mercha
 payment. [Invoice qualification](docs/M3_RUNBOOK.md) · [Policy comparison](docs/M4_RUNBOOK.md).
 
 The [public website](https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site)
-shares its landing page, dashboard and ledger on one origin. The original isometric
-vault opens before workspace entry; the animated Touchstone identity and glass dock
-follow the supplied visual references. Public views show saved evidence only.
+shares its landing page, dashboard and ledger on one origin. A cinematic vault intro
+ignites into a ray-marched black hole behind the hero, and the same vault plays before
+workspace entry ([landing notes](docs/landing.md)). Public views show saved evidence only.
 
 For the same interface locally, run `bun install --frozen-lockfile` and `bun run build`
 in `apps/web`, start the Python server, and open `/site/`. `/dashboard` and `/ledger`

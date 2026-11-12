@@ -1,27 +1,73 @@
-import { useState, type CSSProperties } from "react";
-import Vault from "./Vault";
-import { Icon, LogoStudy } from "./Identity";
+import { Icon } from "./Identity";
 import type { Go } from "@/siteTypes";
 
-const layers = [
-  { key: "control-layer", title: "Permission before\npurchase.", text: "The budget is a boundary, not a suggestion. Reserve the cost before a provider is dispatched and pause when authority runs out.", icon: "shield", name: "CONTROL LAYER", annotation: "APPROVAL → RESERVATION → DISPATCH", rows: [["Mandate", "Immutable terms"], ["Per-call limit", "Enforced before purchase"], ["Aggregate budget", "Integer micro-units"], ["Provider access", "Explicit allowlist"], ["Unknown payment", "Pause and reconcile"], ["Automatic top-ups", "Disabled"]], bullets: [["Approve the scope", "Bind the account, provider, price ceiling and permitted operations."], ["Preserve the boundary", "A restart does not grant a new budget or erase a pending payment."], ["Keep the rails separate", "Sandbox fiat and testnet USDZ are accounted independently."]] },
-  { key: "verification", title: "A good-looking answer\nisn’t enough.", text: "A real citation can still point at the wrong field. Verify meaning as well as arithmetic, and keep candidates separate from review and rejection.", icon: "check", name: "VERIFICATION LAYER", annotation: "SOURCE → ROLE → ARITHMETIC", rows: [["Evidence", "Bound to source spans"], ["Field selection", "Role-aware checks"], ["Invoice / purchase order", "Relationship validation"], ["Holdout result", "59 / 60 strictly correct"], ["False accepts", "0 in this synthetic holdout"], ["Invoice payment", "Never automatic"]], bullets: [["Qualify before escalating", "Use objective criteria and an untouched holdout. Do not lower the bar to pass."], ["Keep ambiguous work in review", "Structurally valid extraction does not imply semantic correctness."], ["Retain the failures", "An interrupted trial counts as incorrect. A rejected result can still cost money."]] },
-  { key: "records", title: "The receipt survives\nthe attempt.", text: "A paid answer, a failed check, an uncertain delivery. Each outcome belongs in the same auditable history, with its actual cost intact.", icon: "ledger", name: "RECORD LAYER", annotation: "RECEIPT → VERDICT → RECONCILIATION", rows: [["Accounting", "Integer micro-USD / USDZ"], ["History", "Hash-chained audit"], ["Repeated requests", "Idempotency conflicts"], ["Interrupted dispatch", "Durable recovery"], ["Seller acknowledgement", "Separate from refund"], ["Final clearing", "Not independently proven"]], bullets: [["Account for every attempt", "Failed calls remain expenses when the provider actually charged them."], ["Recover without duplicating", "Find the original receipt instead of assuming a timed-out request was unpaid."], ["Make the boundary visible", "Simulation, saved measurements and external requirements keep their labels."]] },
+export const GITHUB_URL = "https://github.com/kaushikkr-dev092005/touchstone";
+
+const steps = [
+  { n: "01", title: "Source", text: "The agent reserves the cost against an approved budget, then buys one call over x402 from an allowlisted provider. Per-call and aggregate caps apply before dispatch." },
+  { n: "02", title: "Verify", text: "Each answer is checked against its source: cited spans, field roles and arithmetic. Candidate, review and rejected stay separate outcomes." },
+  { n: "03", title: "Settle", text: "The receipt, actual cost and verdict go to the ledger. A rejected answer can still cost money, so it stays on the record too." },
 ];
 
-function Hero({ go, hideVault }: { go: Go; hideVault: boolean }) {
-  const [open, setOpen] = useState(true);
-  return <section className="hero section-width" id="top"><div className="hero-copy"><p className="eyebrow"><i className="status-dot" /> THE FINANCIAL TRUST LAYER</p><h1 id="hero-title">Agent spending.<br />Human control<span>.</span></h1><p className="hero-description">A single control layer for budgets, paid inference, verification and receipts. Give agents room to work. Keep every purchase inside the lines.</p><div className="hero-actions"><button className="button button-light" onClick={() => go("dashboard")}>Open dashboard <Icon name="arrow" size={16} /></button><button className="button button-outline" onClick={() => go("ledger")}>Explore the ledger <Icon name="ledger" size={16} /></button></div><p className="hero-disclosure"><i className="status-dot" /> REAL EVIDENCE. EXPLICIT BOUNDARIES.</p><dl className="hero-specs"><div><dt>Control</dt><dd>Mandate · budget · policy</dd></div><div><dt>Verification</dt><dd>Source-bound, role-aware</dd></div><div><dt>Records</dt><dd>Every attempt, retained</dd></div></dl></div><figure className="hero-locker"><div className="locker-register mono"><span><i className="status-dot" /> THE BUDGET VAULT</span><span>TS / 001</span></div><div className="locker-art">{!hideVault && <Vault open={open} onOpenChange={setOpen} />}<span className="art-coordinate mono">SOURCE / RESERVE / VERIFY / RECORD</span></div><figcaption className="locker-caption"><span className="mono">ILLUSTRATIVE / INTERACTIVE</span><button className="locker-toggle" onClick={() => setOpen(!open)} aria-pressed={open}>{open ? "Close vault" : "Open vault"}<span aria-hidden="true">{open ? "−" : "+"}</span></button></figcaption></figure><div className="hero-footnote mono"><span>01 — A MANDATE BEFORE A PURCHASE</span><span>SCROLL TO EXPLORE ↓</span></div></section>;
-}
+const sampleRows = [
+  ["job-07 / req-01", "local-gpu", "Charged", "0.0100", "Candidate"],
+  ["job-07 / req-01 (retry)", "—", "Replayed", "0.0000", "Original receipt returned"],
+  ["job-08 / req-01", "hosted", "Charged", "0.0100", "Rejected"],
+  ["job-08 / req-02", "hosted", "Unknown", "reserved", "Held until reconciled"],
+];
 
-function Architecture() {
-  return <section className="architecture section-width" id="architecture"><div className="center-heading"><p className="eyebrow"><i className="status-dot" /> SYSTEM ARCHITECTURE</p><h2>One mandate.<br />Every attempt accounted for.</h2><p>Banking, inference and verification have different jobs.<br className="desktop-break" /> Touchstone keeps their records in one trace.</p></div><div className="architecture-grid">{[{ n: "01", title: "One approved budget", text: "Provider allowlists, per-call ceilings and aggregate limits. The agent acts within the authority it was given.", foot: "RESERVATION BEFORE DISPATCH", icon: "shield" }, { n: "02", title: "One source of truth", text: "Check the field’s role, cited evidence and arithmetic. A plausible answer is still a candidate for review.", foot: "SOURCE-BOUND VERIFICATION", icon: "check" }, { n: "03", title: "One durable record", text: "Keep failed calls and their costs. Reconcile uncertain outcomes before another purchase can happen.", foot: "HASH-CHAINED AUDIT HISTORY", icon: "ledger" }].map(item => <article key={item.n}><div className="architecture-number mono">{item.n}<i className="status-dot" /></div><div className="architecture-box"><Icon name={item.icon} size={23} /><h3>{item.title}</h3><p>{item.text}</p><span className="mono">{item.foot}</span></div></article>)}</div><div className="architecture-connector" aria-hidden="true"><i /><i /><i /></div><div className="sequence"><div className="panel-top mono"><span>INTEGRATED PROOF / SAVED SANDBOX RUN</span><span className="mini-tag">CUSTOMER CLOSED</span></div><div className="table-scroll"><table><thead><tr><th>STEP</th><th>SYSTEM</th><th>ACTION</th><th>OBSERVED RESULT</th></tr></thead><tbody>{[["01", "AIRWALLEX", "Authorize customer budget", "USD 1.00 hold"], ["02", "METAL / X402", "Purchase one qualified draft", "0.01 USDZ provider charge"], ["03", "VERIFIER", "Check source and field roles", "Human review required"], ["04", "AIRWALLEX", "Capture agreed cost and close", "USD 0.01 captured"]].map(row => <tr key={row[0]}>{row.map((text, i) => <td key={i} className={i === 1 ? "mint mono" : ""}>{text}</td>)}</tr>)}</tbody></table></div><p className="table-note mono">FIAT AND USDZ ARE SEPARATE. NO FIAT-TO-TOKEN BRIDGE. NO AUTOMATIC INVOICE PAYMENT.</p></div></section>;
-}
+const providers = [
+  { tag: "LOCAL GPU", title: "RTX 3050 Laptop GPU", text: "A small instruct model served by llama.cpp (Vulkan) on a 4 GB laptop GPU, with conservative temperature supervision. It runs on the project machine behind the same provider interface as hosted models.", foot: "llama.cpp · Qwen2.5 Q4_K_M profiles" },
+  { tag: "HOSTED", title: "Qualified hosted model", text: "Escalation goes to a hosted model only after it passes unchanged qualification criteria on calibration and untouched holdout sets. Its drafts still go to review.", foot: "Explicit escalation · review drafts" },
+  { tag: "TOOLS", title: "Deterministic local tools", text: "Arithmetic and source checks that cost nothing per call. The tools-only, cheapest, premium and ladder policies are compared on matched tasks.", foot: "Matched policy comparison" },
+];
 
-function Layers() {
-  return <div className="layers section-width">{layers.map((layer, index) => <section className={"layer-section" + (index % 2 ? " is-reversed" : "")} id={layer.key} key={layer.key}><div className="layer-copy"><Icon name={layer.icon} size={34} /><h2>{layer.title.split("\n").map((line, i) => <span key={line}>{i > 0 && <br />}{line}</span>)}</h2><p>{layer.text}</p><ul>{layer.bullets.map(([title, text]) => <li key={title}><i className="status-dot" /><div><h3>{title}</h3><p>{text}</p></div></li>)}</ul></div><div className={"layer-stage stage-" + index}><div className="halftone-field" aria-hidden="true" /><div className="technical-panel"><div className="panel-top mono"><span>{layer.name}</span><span className="mint"><i className="status-dot" /> SAVED EVIDENCE</span></div><div className="panel-signal"><div className="signal-label mono">{layer.annotation}</div><div className={"signal-graphic signal-" + index} aria-hidden="true">{Array.from({ length: 27 }, (_, i) => <i key={i} style={{ "--signal": (0.25 + ((i * 13 + 7) % 19) / 25).toFixed(2) } as CSSProperties} />)}</div></div><dl>{layer.rows.map(([label, value], i) => <div key={label}><dt>{label}</dt><dd className={i === 3 ? "mint" : ""}>{value}</dd></div>)}</dl></div></div></section>)}</div>;
-}
+export default function Landing({ go }: { go: Go }) {
+  return <>
+    <section className="lp-hero" id="top" aria-labelledby="hero-title">
+      <div className="lp-badge" data-reveal="badge"><span>Airwallex Agentic Banking Hackathon 2026 · Kit 12</span></div>
+      <h1 id="hero-title" className="lp-title">
+        <span className="lp-line"><span data-reveal="line">Buy inference.</span></span>
+        <span className="lp-line"><span data-reveal="line">Prove it passes.</span></span>
+      </h1>
+      <p className="lp-sub" data-reveal="sub">Touchstone buys LLM inference per call over x402 within an approved budget, checks every answer against its source, and records each attempt in a durable ledger, whether it was paid, failed or rejected.</p>
+      <div className="lp-ctas">
+        <button className="lp-btn lp-btn-primary" data-reveal="cta" onClick={() => go("dashboard")}>Open Dashboard</button>
+        <a className="lp-btn lp-btn-secondary" data-reveal="cta" href={GITHUB_URL} target="_blank" rel="noreferrer">View on GitHub</a>
+      </div>
+      <div className="lp-built" data-reveal="built"><span>Built with</span><ul><li>Airwallex</li><li>x402</li><li>Metal testnet</li></ul></div>
+    </section>
 
-export default function Landing({ go, hideVault }: { go: Go; hideVault: boolean }) {
-  return <><Hero go={go} hideVault={hideVault} /><div className="integration-strip section-width"><span className="mono">SEPARATE RAILS.<br />ONE ACCOUNTABLE TRACE.</span>{[["Airwallex", "SANDBOX BANKING"], ["Metal / x402", "TESTNET PAYMENTS"], ["Claude", "QUALIFIED REVIEW DRAFTS"], ["SQLite", "DURABLE RECORDS"]].map(([title, label]) => <div key={title}><strong>{title}</strong><span className="mono">{label}</span></div>)}</div><Architecture /><Layers /><section className="evidence-section section-width" id="evidence"><div><p className="eyebrow"><i className="status-dot" /> OPEN THE RECORD</p><h2>Proof, with<br />a paper trail.</h2><p>Explore the measured sandbox and testnet observations. Read the costs, the failed attempts and the limits of what was proven.</p><button className="button button-light" onClick={() => go("ledger")}>Inspect the ledger <Icon name="arrow" /></button></div><div className="evidence-lines">{[["01", "QUALIFICATION", "120/120 calibration. 59/60 holdout.", "Synthetic sources. One interrupted trial counted incorrect."], ["02", "INTEGRATION", "A customer budget, controlled closure.", "USD 1 hold, USD 0.01 capture. Separate 0.01 USDZ model charge."], ["03", "MERCHANT", "100 products. Verified guest OAuth.", "Sandbox configuration and a read-only MCP catalog lookup."]].map(([n, label, title, text]) => <button key={n} onClick={() => go("dashboard")}><span className="mono">{n}</span><div><span className="eyebrow">{label}</span><h3>{title}</h3><p>{text}</p></div><Icon name="arrow" /></button>)}</div></section><section className="closing section-width"><LogoStudy /><p className="eyebrow">AUTONOMY HAS TERMS.</p><h2>Open the vault.<br />See the controls.</h2><button className="button button-light" onClick={() => go("dashboard")}>Enter the workspace <Icon name="arrow" /></button><p>Sandbox banking. Testnet payments. Clearly labelled evidence.</p></section></>;
+    <div className="lp-below" data-reveal="below">
+      <section className="lp-section" id="how" aria-labelledby="how-title">
+        <p className="lp-kicker mono">HOW IT WORKS</p>
+        <h2 id="how-title">Source. Verify. Settle.</h2>
+        <ol className="lp-steps">{steps.map((s, i) => <li key={s.n}><span className="mono">{s.n}</span><h3>{s.title}</h3><p>{s.text}</p>{i < steps.length - 1 && <i className="lp-step-arrow" aria-hidden="true" />}</li>)}</ol>
+      </section>
+
+      <section className="lp-section lp-ledger" id="ledger-guarantee" aria-labelledby="ledger-title">
+        <div>
+          <p className="lp-kicker mono">THE LEDGER</p>
+          <h2 id="ledger-title">One request.<br />One record.</h2>
+          <p>Each purchase reserves its cost under an idempotency key before dispatch. A retried key finds the original receipt instead of buying again. An unknown outcome stays reserved until it is reconciled. Amounts are integer micro-units, and the audit history is hash-chained.</p>
+          <p className="lp-boundary">These are local ledger guarantees. External rails keep their own replay semantics; Touchstone does not claim exactly-once effects on them.</p>
+          <button className="lp-link" onClick={() => go("ledger")}>Inspect the recorded ledger <Icon name="arrow" size={15} /></button>
+        </div>
+        <figure className="lp-sample">
+          <figcaption><span className="mono">IDEMPOTENT ATTEMPTS</span><span className="lp-sample-tag mono">SAMPLE DATA</span></figcaption>
+          <div className="lp-table-scroll"><table>
+            <thead><tr><th>Key</th><th>Provider</th><th>State</th><th>USDZ</th><th>Outcome</th></tr></thead>
+            <tbody>{sampleRows.map(r => <tr key={r[0]}>{r.map((c, i) => <td key={i} className={i === 3 ? "mono" : i === 2 ? "lp-state lp-state-" + c.toLowerCase() : ""}>{c}</td>)}</tr>)}</tbody>
+          </table></div>
+          <p className="mono lp-sample-note">ILLUSTRATIVE ROWS. RECORDED EVIDENCE LIVES IN THE LEDGER VIEW.</p>
+        </figure>
+      </section>
+
+      <section className="lp-section" id="providers" aria-labelledby="providers-title">
+        <p className="lp-kicker mono">PROVIDERS</p>
+        <h2 id="providers-title">Real providers, bought one call at a time.</h2>
+        <div className="lp-providers">{providers.map((p, i) => <article key={p.tag} className={i === 0 ? "is-local" : ""}><span className="mono lp-provider-tag">{p.tag}</span><h3>{p.title}</h3><p>{p.text}</p><span className="mono lp-provider-foot">{p.foot}</span></article>)}</div>
+      </section>
+    </div>
+  </>;
 }

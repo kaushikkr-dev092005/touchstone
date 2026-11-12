@@ -1,0 +1,2 @@
+// Decides the landing intro mode before first paint (external file: CSP forbids inline scripts).
+(function(){try{var d=document.documentElement,p=location.pathname,q=new URLSearchParams(location.search);if(!/^\/(site\/?(index\.html)?)?$/.test(p))return;var m=matchMedia('(prefers-reduced-motion: reduce)').matches?'reduced':(q.get('intro')==='force'||!sessionStorage.getItem('ts-intro'))?'full':'returning';d.dataset.intro=m;if(m==='full')d.classList.add('intro-lock')}catch(e){}})();
