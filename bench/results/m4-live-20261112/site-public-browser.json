@@ -1,0 +1,32 @@
+{
+  "label": "MEASURED_PUBLIC_SITE_READ_ONLY_QA",
+  "url": "https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site",
+  "source_commit": "bdff6c9c894ceb8b29832d917d0a9808e2e482e2",
+  "viewports": [
+    320,
+    390,
+    768,
+    1440
+  ],
+  "same_origin_routes": [
+    "/site/",
+    "/dashboard",
+    "/ledger"
+  ],
+  "vault_transition": "passed",
+  "ledger_filters_and_receipt": "passed",
+  "live_comparison_outcomes": 64,
+  "actual_paid_comparison_receipts": 32,
+  "ledger_records": 43,
+  "credit_ceiling_usd": 4.5,
+  "merchant_catalog_products": 100,
+  "merchant_product_routes": "passed",
+  "oauth_discovery_and_public_jwks": "passed",
+  "operator_console_exposed": false,
+  "page_errors": [],
+  "failed_requests": [],
+  "external_asset_requests": [],
+  "financial_transactions": 0,
+  "model_calls": 0,
+  "mutation_requests": 0
+}
