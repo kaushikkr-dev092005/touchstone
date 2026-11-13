@@ -11,6 +11,11 @@ from .metal import MetalRail, PaymentPending, task_resource_url
 class MockRail:
     mode = "SIMULATED"
 
+    def authorize_purchase(self, authorization):
+        # Controlled no-spend approval demonstrations use the same Ledger gate.
+        # This rail has no credential or network dispatcher.
+        pass
+
     def __init__(self, path="data/rail.sqlite"):
         self.path = str(path)
         Path(path).parent.mkdir(parents=True, exist_ok=True)
@@ -60,6 +65,9 @@ class MockRail:
 class MetalEngineRail:
     """Metal adapter implementing the engine's quote/pay/lookup/recover contract."""
     mode = "TESTNET"
+
+    def authorize_purchase(self, authorization):
+        self.client.authorize_purchase(authorization)
 
     def __init__(self, job, provider_url=None, price_cap=50000, budget=500000, client=None, expected_provider_ids=None):
         if isinstance(provider_url, str):
@@ -186,6 +194,9 @@ class CompositeRail:
 
     def pay(self, key, quote, output_factory=None):
         return self._rail(quote).pay(key, quote, output_factory)
+
+    def authorize_purchase(self, authorization):
+        self.metal.authorize_purchase(authorization)
 
     def lookup(self, key, quote=None):
         return self._rail(quote).lookup(key, quote)

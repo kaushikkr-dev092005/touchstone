@@ -104,6 +104,8 @@ class LiveSession:
         self.faults = FaultPipeline(self.ledger, record_source or metal_record_source(self.live_rail),
                                    wallet_scope=mandate.scope, **kwargs)
         self.engine = Engine(self.ledger, self.rail, fault_pipeline=self.faults)
+        # TESTNET runs always enforce per-purchase human signatures in Ledger;
+        # the written session phrase does not substitute for that approval.
 
     def confirm(self, value):
         if not isinstance(value, str) or value != f'{self.mandate.budget/1e6:.6f}':

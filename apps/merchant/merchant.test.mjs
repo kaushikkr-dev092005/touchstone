@@ -28,7 +28,10 @@ test('public website context cannot dispatch the private operator API',async t=>
   const {call}=await fixture(t);
   const context=await (await call('/api/site-context')).json();
   assert.equal(context.operator_console,false);assert.equal(context.financial_dispatch,false);
-  for(const path of ['/api/demo','/api/resume','/console'])assert.equal((await call(path,{method:'POST',body:'{}'})).status,404);
+  for(const path of ['/api/demo','/api/resume','/console',
+    '/api/procurement/prepare-approval','/api/procurement/submit-signature',
+    '/api/procurement/revoke-approval','/api/procurement/dispatch-mock'])assert.equal((await call(path,{method:'POST',body:'{}'})).status,404);
+  assert.equal((await call('/api/procurement/approvals')).status,404);
   assert.equal((await call('/merchant')).status,200);
 });
 test('dynamic registration refuses arbitrary remote redirect and implicit clients',async t=>{

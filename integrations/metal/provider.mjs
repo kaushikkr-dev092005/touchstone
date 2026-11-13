@@ -72,7 +72,7 @@ async function modelReady() {
   catch { return false; }
 }
 
-function worker(task) {
+function worker(task, authorization) {
   return new Promise((resolveResult, reject) => {
     const workerEnv = { ...process.env };
     delete workerEnv.METAL_RPC_URL;
@@ -89,7 +89,7 @@ function worker(task) {
     processWorker.on('close', code => { clearTimeout(timer); if (code) reject(Error('Worker failed')); else {
       try { resolveResult(JSON.parse(output)); } catch { reject(Error('Invalid worker output')); }
     } });
-    processWorker.stdin.end(JSON.stringify({ mode, task }));
+    processWorker.stdin.end(JSON.stringify({ mode, task, authorization }));
   });
 }
 
@@ -162,7 +162,13 @@ const server = createServer({ maxHeaderSize: 65536 }, async (request, response) 
     const receiptDigest = createHash('sha256').update(paid.receipt.body + ':' + paid.receipt.operatorSignature + ':' + paid.invoice.id).digest('hex');
     const result = await runQueued(() => store.deliver(id, resource, receiptDigest, async () => {
       if (!await modelReady()) throw Error('Inference provider unavailable after payment; retain and recover the original receipt');
-      const output = await worker(task);
+      let authorization;
+      if(mode==='anthropic') {
+        const header=request.headers['x-touchstone-procurement-approval'];
+        if(typeof header!=='string'||header.length>1024)throw Error('APPROVAL_REQUIRED');
+        authorization=JSON.parse(Buffer.from(header,'base64url').toString('utf8'));
+      }
+      const output = await worker(task,authorization);
       const decodeTps = output.provider_metadata?.decode_tokens_per_second;
       if (typeof decodeTps === 'number' && decodeTps > 0 && decodeTps < 1e6) {
         throughputSamples.push(decodeTps); if (throughputSamples.length > 20) throughputSamples.shift();

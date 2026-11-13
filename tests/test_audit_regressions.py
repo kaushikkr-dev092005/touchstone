@@ -164,6 +164,9 @@ class InputHardeningTests(unittest.TestCase):
 
 
 class HostedUsageTests(unittest.TestCase):
+    def setUp(self):
+        # No-network response parser unit tests; authorization has its own suite.
+        p=patch('touchstone.procurement_approval.authorize_hosted_call');p.start();self.addCleanup(p.stop)
     def call(self, usage):
         response = {"model": "claude-sonnet-5", "stop_reason": "end_turn",
                     "content": [{"type": "text", "text": '{"total_cents": 2000}'}], "usage": usage}

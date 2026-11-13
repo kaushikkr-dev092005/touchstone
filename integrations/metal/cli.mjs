@@ -25,6 +25,7 @@ try {
   } else if (command === 'withdraw') {
     result = await withdraw(config);
   } else if (command === 'pay' || command === 'recover') {
+    if (command === 'pay') throw Error('APPROVAL_REQUIRED: prepare and sign an exact backend purchase; use the protected bridge');
     if (!requestId) throw Error('Supply a stable reservation ID as the third argument');
     const client = await connectJob(config);
     try { result = await (command === 'pay' ? client.buy(requestId) : client.recover(requestId)); }

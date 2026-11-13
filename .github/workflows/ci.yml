@@ -24,12 +24,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Python tests (no runtime dependencies)
-        run: python -m unittest discover -s tests -v
       - name: Install pinned Node dependencies
         if: ${{ !cancelled() }}
         working-directory: integrations/metal
         run: npm ci --ignore-scripts --no-fund
+      - name: Python tests (stdlib backend and real viem signatures)
+        run: python -m unittest discover -s tests -v
       - name: Node tests
         if: ${{ !cancelled() }}
         run: python tools/metal.py test

@@ -230,6 +230,29 @@ class BankedWorkflow:
                     if local['state'] == 'NOT_DISPATCHED':
                         if time.time() >= state['mandate_expires_at'] or time.time() >= quote.expires_at:
                             return self.store.update(scope, state, phase='EXPIRED_BEFORE_PAYMENT')
+                        authorization = None
+                        if getattr(rail, 'mode', 'MOCK') == 'TESTNET':
+                            from .procurement_approval import banked_terms, bind_dispatch, ApprovalError
+                            # Persist the payer scope as part of this new quote;
+                            # completed historical receipts never enter this path.
+                            if not state['quote'].get('payer_scope'):
+                                state = self.store.update(scope, state, quote={**state['quote'], 'payer_scope': scope})
+                                quote = MetalQuote(**state['quote'])
+                            try:
+                                with self.store.ledger.connect() as db:
+                                    terms = banked_terms(self.store.ledger, scope, db)
+                                self.store.ledger.approvals.prepare(terms)
+                                with self.store.ledger.tx() as db:
+                                    if db.execute('SELECT halted FROM control').fetchone()[0]:
+                                        raise PolicyError('Banked payment dispatches are halted')
+                                    authorization = self.store.ledger.approvals.consume(db, state['reservation'], banked_terms(self.store.ledger, scope, db))
+                                    state = {**state, 'phase': 'PAYMENT_DISPATCHING'}
+                                    db.execute('UPDATE banked_jobs SET state=? WHERE scope=?', (canonical(state), scope))
+                                    self.store.ledger._event(db, 'BANKED_PAYMENT_DISPATCHING', {'scope':scope,'purchase_key':state['reservation'],'approval_id':authorization['approval_id']})
+                                bind_dispatch(rail, authorization)
+                            except ApprovalError as error:
+                                self.store.ledger.event('PROCUREMENT_APPROVAL_BLOCKED', {'purchase_key': state['reservation'], 'code': error.code})
+                                return self.store.update(scope, state, phase='PAUSED_APPROVAL', approval_error=error.code)
                         self.treasury.refresh(scope, hold, state['authorization']['id'])
                         self.store.assert_dispatch()
                         state = self.store.update(scope, state, phase='PAYMENT_DISPATCHING')

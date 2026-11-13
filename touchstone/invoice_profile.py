@@ -238,7 +238,9 @@ def paid(scope,origin,budget,cap,max_calls,output,execute=False,reference_scope=
                 offer=offers[0]
                 if before_purchase:before_purchase(task,offer)
                 key=ledger.reserve(job['id'],task,0,offer,VERIFY_COST,expected_version=job['mandate_version'])
-                ledger.assert_can_pay(key,owner)
+                from .procurement_approval import bind_dispatch
+                if ledger.approval_required(key): ledger.prepare_approval(key)
+                bind_dispatch(rail,ledger.assert_can_pay(key,owner))
                 receipt=rail.pay(key,offer)
                 ledger.record_paid(key,receipt);ledger.finish_attempt(key,receipt['output'],verify(task,receipt['output']))
                 if after_purchase:after_purchase(task,offer,receipt)

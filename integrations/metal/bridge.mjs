@@ -7,6 +7,7 @@ import { clearingSpendable } from '@metalntwx/metal-pay';
 import { createPublicClient, http, erc20Abi } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { USDZ } from '@metalntwx/metal-pay';
+import { fail } from './procurement-approval.mjs';
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 let input = '';
@@ -15,6 +16,7 @@ let request;
 try {
   request = JSON.parse(input);
   if (['deposit', 'withdraw', 'pay', 'recover'].includes(request.command) && request.execute !== true) throw Error('Explicit execute required');
+  if (request.command === 'pay' && !request.authorization) fail('APPROVAL_REQUIRED');
   if (!/^[A-Za-z0-9_-]{1,48}$/.test(request.job || '')) throw Error('Invalid job');
   const config = { directory: resolve(root, 'data/metal', request.job), rpcUrl: process.env.METAL_RPC_URL,
     providerUrl: request.provider_url, privateKey: process.env.AGENT_PRIVATE_KEY,
@@ -68,7 +70,7 @@ try {
     const client = await connectJob(config);
     try {
       if (request.command === 'quote') result = await client.quote();
-      else if (request.command === 'pay') result = await client.buy(request.id, request.quote);
+      else if (request.command === 'pay') result = await client.buy(request.id, request.quote, request.authorization);
       else if (request.command === 'recover') result = await client.recover(request.id);
       else if (request.command === 'replay-delivery') result = await client.replayDelivery(request.id);
       else if (request.command === 'balance') {
@@ -82,8 +84,8 @@ try {
     } finally { client.close(); }
   }
   console.log(JSON.stringify({ ok: true, result }, (_, v) => typeof v === 'bigint' ? v.toString() : v));
-} catch {
+} catch (error) {
   // An upstream error can contain full URLs, signatures or key material.
-  console.log(JSON.stringify({ ok: false, error: 'METAL_OPERATION_UNRESOLVED', command: request?.command || null }));
+  console.log(JSON.stringify({ ok: false, error: error.code && /^[A-Z_]+$/.test(error.code) ? error.code : 'METAL_OPERATION_UNRESOLVED', command: request?.command || null }));
   process.exitCode = 1;
 }

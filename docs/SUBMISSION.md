@@ -51,6 +51,13 @@ strategies have no demonstrated live financial advantage here.
 
 ## Controls and validation
 
+Signed mandates now bind a separate allowlisted human EOA's EIP-712 signature to
+the exact inference task, quote, provider, spending limits and verifier policy.
+The ledger consumes approval atomically with dispatch authorization; the Node
+payer independently checks it. Unsigned and tampered proposals are blocked. This
+feature is **controlled/local validated**, with real cryptography and MOCK rails;
+historical financial proofs are not relabelled signed. [Design, tests and demo](SIGNED_MANDATES.md).
+
 Role-aware value binding prevents authentic citations of the wrong field from
 passing. Candidate, review and rejection are separate. Integer micro-unit
 accounting, atomic reservations, idempotency conflicts and a hash-chained audit

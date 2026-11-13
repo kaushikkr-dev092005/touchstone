@@ -31,7 +31,7 @@ The dashboard does not silently turn a failed live service into a simulation.
 | [Metal recovery](bench/results/m2/live-single-call-final.json) | A 0.01 USDZ purchase survived process death and recovered without another charge | Testnet; purchased answer failed verification |
 | [Current fault acknowledgement](bench/results/completion-20261110/current-seller-fault-acknowledgement.json) | Real signed delivery, reproduced wrong answer, signed seller response | Seller rejected credit; no refund moved |
 | [Role-aware verifier review](docs/REVIEW_20261110.md) | Labels selected as field values now fail semantic checks independently of arithmetic | Bounded source grammar; unfamiliar/ambiguous roles require review |
-| [Current qualification](bench/results/m3-v2/sonnet-qualification-result.json) | Sonnet 5.5: 120/120 calibration, 59/60 untouched holdout trials strictly correct | Holdout: 0 candidates, 60 review cases; useful synthetic review drafts, no automatic invoice payments |
+| [Recorded qualification](bench/results/m3-v2/sonnet-qualification-result.json) | Sonnet 5.5: 120/120 calibration, 59/60 untouched holdout trials strictly correct | Holdout: 0 candidates, 60 review cases; useful synthetic review drafts, no automatic invoice payments |
 | [Integrated financial proof](bench/results/m3-v2/integrated-receipt.json) | One qualified paid draft, sandbox USD 1 hold / USD 0.01 capture, 0.01 USDZ provider charge, customer closed | Correct draft requires human review; unused tokens retained; no fiat/token bridge |
 | [Matched live comparison](bench/results/m4-live-20261112/actual-financial-results.json) | 64/64 outcomes; 32 actual paid receipts and 10 confirmed-unpaid failures; 0.263390 USDZ | Real model calls and testnet payments; premium scored 7/16 strict correct, ladder 3/16; no general savings claim |
 | [Paid qualification status](bench/results/m3-v2/paid-qualification-status.json) | 1.32 USDZ deposited; 0.01 USDZ bought one correct hosted result; next request confirmed unpaid | Stopped without retry; API usage estimate separate from USDZ |
@@ -67,6 +67,11 @@ settlement. [Evidence index](docs/EVIDENCE_INDEX.md) · [Serious review and rema
 
 ## Features
 
+- **Signed mandates:** independent human-wallet EIP-712 approval of exact task,
+  quote, provider, caps and verifier policy; atomic ledger enforcement and an
+  independent Node payer check. New real purchases fail closed without approval.
+  [Security design and no-spend demo](docs/SIGNED_MANDATES.md) ·
+  [MOCK/local proof](bench/results/signed-mandates/local-proof.json).
 - Integer micro-unit ledger, atomic reservations, per-call and aggregate caps,
   idempotency conflicts, durable recovery and a hash-chained audit.
 - Source-based arithmetic and invoice-role checks, PO/payment exception review,
@@ -103,6 +108,9 @@ hot startup and stops its own inference process at the configured temperature li
 [Runtime/setup guide](docs/RUNNING.md) · [Account setup](docs/ACCOUNT_SETUP.md).
 
 Zero-cost checks:
+
+Signature tests use the existing Node/viem dependencies; install them with
+`npm ci --ignore-scripts --no-fund` inside `integrations/metal` first.
 
 ```text
 python -m unittest discover -s tests

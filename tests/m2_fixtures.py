@@ -22,6 +22,9 @@ class FixtureFactory:
 
 
 class FixtureClient:
+    def authorize_purchase(self, authorization):
+        # Production ledger already checked a real ephemeral human signature.
+        self.authorization = authorization
     mode = 'MOCK'
 
     def __init__(self, factory, wallet, origin):

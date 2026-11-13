@@ -88,7 +88,9 @@ def run(wallet,scope,*,execute=False,approval=None,directory=None,reader=None,cl
         try:
             with ledger.worker(job['id']) as owner:
                 key=ledger.reserve(job['id'],TASK,0,quote,0)
-                ledger.assert_can_pay(key,owner)
+                from touchstone.procurement_approval import bind_dispatch
+                if ledger.approval_required(key):ledger.prepare_approval(key)
+                bind_dispatch(rail,ledger.assert_can_pay(key,owner))
                 receipt=rail.pay(key,quote)
                 ledger.record_paid(key,receipt)
                 verdict=check(TASK,receipt['output'])

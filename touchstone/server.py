@@ -158,6 +158,15 @@ def serve(port=8088, data_dir="data", live=None):
         def do_GET(self):
             if not self.allowed():
                 return self.respond(403, {"error": "Loopback host required"})
+            if urlparse(self.path).path == '/procurement.js':
+                return self.send_bytes(200,(ROOT/'apps/dashboard/procurement.js').read_bytes(),'application/javascript; charset=utf-8')
+            if urlparse(self.path).path == '/api/procurement/approvals':
+                if self.headers.get('X-Touchstone-Token') != token:
+                    return self.respond(403, {'error':'Local session token required'})
+                try:
+                    return self.respond(200, {'approvals':ledger.approvals.list(), 'mode':live_state()['mode']})
+                except PolicyError as error:
+                    return self.respond(400, {'error':str(error), 'code':getattr(error,'code','APPROVAL_REQUIRED')})
             path = urlparse(self.path).path
             if path == "/site" or path.startswith("/site/") or path in {"/dashboard", "/ledger"}:
                 return self.serve_site(path if path.startswith('/site') else '/site/')
@@ -281,9 +290,78 @@ def serve(port=8088, data_dir="data", live=None):
                 length = int(self.headers.get("Content-Length", "0"))
                 if length < 0 or length > 4096:
                     return self.respond(413, {"error": "Request too large"})
-                payload = json.loads(self.rfile.read(length) or b"{}")
+                from .procurement_approval import strict_json
+                payload = strict_json(self.rfile.read(length) or b"{}")
                 if not isinstance(payload, dict):
                     raise ValueError("JSON object required")
+                if self.path.startswith('/api/procurement/'):
+                    from .procurement_approval import ApprovalError, banked_terms
+                    fields = {'/api/procurement/prepare-approval': {'purchase_key'},
+                              '/api/procurement/submit-signature': {'id','signature'},
+                              '/api/procurement/revoke-approval': {'id'},
+                              '/api/procurement/local-proposal': set(),
+                              '/api/procurement/dispatch-mock': {'id'},
+                              '/api/procurement/verify-terms': {'id','terms'}}
+                    if self.path not in fields: return self.respond(404, {'error':'Not found'})
+                    if set(payload)!=fields[self.path] or not all(isinstance(x,str) for k,x in payload.items() if k!='terms'):
+                        raise ApprovalError('MALFORMED_APPROVAL')
+                    if self.path.endswith('local-proposal'):
+                        if live is not None: raise ApprovalError('LOCAL_DEMO_ONLY')
+                        from .procurement_approval import read_config
+                        from .workload import Task
+                        from .providers import Quote
+                        cfg=read_config()
+                        if not cfg['environment'].startswith('LOCAL_TEST'): raise ApprovalError('LOCAL_DEMO_ONLY')
+                        task=Task('human-gate','arithmetic',{'amounts_cents':[1250,750],'discount_cents':0})
+                        run=ledger.create_run([{'seed':42,'policy':'always-premium','hold':100000,'allocation':100000,
+                            'price_cap':50000,'tasks':[task.public()]}],100000,require_approvals=True)
+                        job=ledger.jobs(run)[0]
+                        quote=Quote(secrets.token_hex(16),'premium',10000,0,time.time()+300)
+                        key=ledger.reserve(job['id'],task,0,quote,1000)
+                        result=ledger.prepare_approval(key)
+                        ledger.status(job['id'],'PAUSED_APPROVAL','MOCK / LOCAL TEST: no external dispatch')
+                    elif self.path.endswith('verify-terms'):
+                        from .procurement_approval import validate_terms, node_verify
+                        validate_terms(payload['terms'])
+                        with ledger.connect() as db:
+                            row=db.execute('SELECT * FROM procurement_approvals WHERE id=?',(payload['id'],)).fetchone()
+                        if not row: raise ApprovalError('APPROVAL_REQUIRED')
+                        if payload['terms']!=json.loads(row['terms']): raise ApprovalError('TERMS_MISMATCH')
+                        result=node_verify(payload['terms'],row['signature'],row['expected_signer'])
+                    elif self.path.endswith('dispatch-mock'):
+                        if live is not None: raise ApprovalError('LOCAL_DEMO_ONLY')
+                        with ledger.connect() as db:
+                            row=db.execute('SELECT * FROM procurement_approvals WHERE id=?',(payload['id'],)).fetchone()
+                            if not row: raise ApprovalError('APPROVAL_REQUIRED')
+                            terms=json.loads(row['terms'])
+                            job=db.execute('SELECT j.*,r.float_mode,r.require_approvals FROM jobs j JOIN runs r ON r.id=j.run_id WHERE j.id=?',(terms['job_id'],)).fetchone()
+                        if not job or job['float_mode']!='SIMULATED' or not job['require_approvals'] or terms['currency']!='MOCK_USD':
+                            raise ApprovalError('LOCAL_DEMO_ONLY')
+                        ledger.approvals.check_state(row)
+                        if row['state']!='SIGNED':raise ApprovalError('APPROVAL_REQUIRED')
+                        with worker_lock:
+                            if worker and worker.is_alive(): return self.respond(409,{'error':'A run is active'})
+                            ledger.status(job['id'],'RUNNING','Resume MOCK signed purchase')
+                            engine.run(job['run_id'],job_id=job['id'])
+                        result={'mode':'MOCK / LOCAL TEST','job_status':ledger.get_job(job['id'])['status'],
+                                'receipts':engine.rail.receipts(),'external_financial_calls':0}
+                    elif self.path.endswith('prepare-approval'):
+                        key=payload['purchase_key']
+                        if any(a['key']==key for a in ledger.attempts()):
+                            result=ledger.prepare_approval(key)
+                        else:
+                            with ledger.connect() as db:
+                                if not db.execute("SELECT 1 FROM sqlite_master WHERE name='banked_jobs'").fetchone():
+                                    raise ApprovalError('APPROVAL_REQUIRED')
+                                match=next((r for r in db.execute('SELECT scope,state FROM banked_jobs') if json.loads(r['state']).get('reservation')==key),None)
+                                if not match: raise ApprovalError('APPROVAL_REQUIRED')
+                                terms=banked_terms(ledger,match['scope'],db)
+                            result=ledger.approvals.prepare(terms)
+                    elif self.path.endswith('submit-signature'):
+                        result=ledger.approvals.submit(payload['id'],payload['signature'])
+                    else:
+                        result=ledger.approvals.revoke(payload['id'])
+                    return self.respond(200,result)
                 if self.path == '/api/issuing-readiness':
                     from .feature_evidence import refresh_issuing
                     from .treasury import AirwallexSandbox
@@ -362,7 +440,9 @@ def serve(port=8088, data_dir="data", live=None):
                         return self.respond(200, {"closed": True, "mode": "SIMULATED"})
                     return self.respond(404, {"error": "Not found"})
             except (ValueError, PolicyError, json.JSONDecodeError) as error:
-                return self.respond(400, {"error": str(error)})
+                code=getattr(error,'code',None)
+                if code: ledger.event('PROCUREMENT_API_BLOCKED', {'code':code})
+                return self.respond(400, {"error": str(error), **({'code':code} if code else {})})
 
     server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     if live is None:

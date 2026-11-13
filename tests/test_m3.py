@@ -188,6 +188,8 @@ class PaidProfileTests(unittest.TestCase):
     def test_partitions_merge_without_rebuying_a_source_or_relabelling_mock(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);factory=PremiumFactory(root/'remote')
+            from signed_fixture import signed_fixtures
+            signed_fixtures(self,root)
             health={'inference_ready':True,'chain':63825,'provider_id':'hosted-premium',
                     'upstream_funding':'PARTNER_CREDITS_OPERATOR_DECLARED','provider_model':'fixture-model'}
             kwargs=dict(execute=True,client_factory=factory,health=health,directory=root/'state')
@@ -217,6 +219,8 @@ class PaidProfileTests(unittest.TestCase):
     def test_reference_calls_are_charged_and_share_call_and_budget_caps(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);factory=PremiumFactory(root/'remote')
+            from signed_fixture import signed_fixtures
+            signed_fixtures(self,root)
             health={'inference_ready':True,'chain':63825,'provider_id':'hosted-premium',
                     'upstream_funding':'PARTNER_CREDITS_OPERATOR_DECLARED'}
             result=paid('primary','http://127.0.0.1:8093',100000,10000,2,root/'out.json',execute=True,
@@ -239,6 +243,8 @@ class PaidProfileTests(unittest.TestCase):
                 return client
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);factory=LosingFactory(root/'remote')
+            from signed_fixture import signed_fixtures
+            signed_fixtures(self,root)
             health={'inference_ready':True,'chain':63825,'provider_id':'hosted-premium',
                     'upstream_funding':'PARTNER_CREDITS_OPERATOR_DECLARED'}
             kwargs=dict(execute=True,client_factory=factory,health=health,directory=root/'state')

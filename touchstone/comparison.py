@@ -371,7 +371,9 @@ class Comparison:
                                         'policy': policy, 'task_id': task.id, 'seed': row['seed'], 'index': row['index'],
                                         'price_micro_usdz': offer.price, 'latency_ms': None}
                 save(journal, state)
-                ledger.assert_can_pay(key, owner)
+                from .procurement_approval import bind_dispatch
+                if ledger.approval_required(key): ledger.prepare_approval(key)
+                bind_dispatch(rail, ledger.assert_can_pay(key, owner))
                 try:
                     receipt = rail.pay(key, offer)
                     ledger.record_paid(key, receipt)

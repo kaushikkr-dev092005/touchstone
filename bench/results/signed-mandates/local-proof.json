@@ -1,0 +1,374 @@
+{
+  "label": "MOCK / LOCAL TEST",
+  "real_external_financial_operations": 0,
+  "hosted_inference_calls": 0,
+  "signature_scheme": "REAL EIP-712 EOA SIGNATURE WITH EPHEMERAL TEST HUMAN",
+  "unsigned": {
+    "decision": "APPROVAL_REQUIRED",
+    "adapter_calls": 0
+  },
+  "signed": {
+    "decision": "AUTHORIZED",
+    "adapter_calls": 1,
+    "signer": "0x38b342740afaeb5746d61a73955130f46007e4ac",
+    "approval_digest": "0x5322fabeb1920f34f08df3cd4192c8132c64224fe476815c071b61788bd156b2",
+    "purchase_key": "1bf2134f54008655c0e775c460897f3f8a05faeacd44b346c73ee95126a2f4aa",
+    "receipt_id": "mock_d4189147d00e495ae4578c3e",
+    "verification": {
+      "signer": "0x38b342740afaeb5746d61a73955130f46007e4ac",
+      "typed_data_hash": "0x6400dd8a0b2a6f45d465a2ceb40429602669ee07b643a2cd29f3e0f8f53fff02",
+      "terms_digest": "0x5322fabeb1920f34f08df3cd4192c8132c64224fe476815c071b61788bd156b2",
+      "verified_at": 1794554754,
+      "scheme": "EIP712_EOA"
+    }
+  },
+  "tampered": {
+    "decision": "TERMS_MISMATCH",
+    "additional_adapter_calls": 0,
+    "original_signature_valid_for_tampered_terms": false
+  },
+  "original_terms_unchanged": true,
+  "authorization": {
+    "id": "bd588ff88354daba364941562296e3f8",
+    "nonce": "0x65e3c48df952cc72f64bf99d7172e51dba4893df16a84254917264b181e65f38",
+    "purchase_key": "1bf2134f54008655c0e775c460897f3f8a05faeacd44b346c73ee95126a2f4aa",
+    "terms": {
+      "allocation": 100000,
+      "allocation_currency": "MOCK_USD",
+      "api_credit_currency": "PREPAID_USD",
+      "api_credit_max": 0,
+      "attempt": 0,
+      "budget_currency": "LEDGER_MICRO_USD",
+      "currency": "MOCK_USD",
+      "environment": "LOCAL_TEST_DEMONSTRATION",
+      "expires_at": 1794554993,
+      "fee_currency": "LEDGER_MICRO_USD",
+      "fee_max": 1000,
+      "issued_at": 1794554753,
+      "job_ceiling": 100000,
+      "job_id": "8f209bbf4d82-1",
+      "mandate_version": 1,
+      "max_amount": 50000,
+      "network": "eip155:31337",
+      "nonce": "0x65e3c48df952cc72f64bf99d7172e51dba4893df16a84254917264b181e65f38",
+      "payer_scope": "8f209bbf4d82-1",
+      "protocol_version": "1",
+      "provider_id": "premium",
+      "provider_origin": "https://mock.invalid",
+      "purchase_key": "1bf2134f54008655c0e775c460897f3f8a05faeacd44b346c73ee95126a2f4aa",
+      "purpose": "PREMIUM_INFERENCE_PURCHASE",
+      "quote_digest": "0x35efa41cb7655e6cd507be7862780d85cef9db51a01b91cb2f0d8701d2fe99f1",
+      "quote_expires_ms": 1794554993682,
+      "quote_id": "mock-premium-quote",
+      "quoted_amount": 10000,
+      "rail_spent": 0,
+      "spent": 0,
+      "step_id": "signed-demo",
+      "task_hash": "0xa1bf4c63737b96dd9243765280e1f5639d6420f94ef7b91463b1d2eb5a4a2049",
+      "verifier_policy_digest": "0x95e53be80f05645d3e655baa0a5e67b1b01f1a8f3f412bf8d57678b228d755eb",
+      "verifier_version": "source-rules-v4-source-gating"
+    },
+    "digest": "0x5322fabeb1920f34f08df3cd4192c8132c64224fe476815c071b61788bd156b2",
+    "expected_signer": "0x38b342740afaeb5746d61a73955130f46007e4ac",
+    "state": "CONSUMED_AT_DISPATCH",
+    "signature": "0x964ce3fa1764810bc08b3adecb0445c41e3f0fcb048cb3f9028fe9c5c994ddbc4478a7cbc31e03690a0787c539a5f7b933df4220253360fd06655624f879ea3a1c",
+    "verification": "{\"signer\": \"0x38b342740afaeb5746d61a73955130f46007e4ac\", \"typed_data_hash\": \"0x6400dd8a0b2a6f45d465a2ceb40429602669ee07b643a2cd29f3e0f8f53fff02\", \"terms_digest\": \"0x5322fabeb1920f34f08df3cd4192c8132c64224fe476815c071b61788bd156b2\", \"verified_at\": 1794554754, \"scheme\": \"EIP712_EOA\"}",
+    "created_at": 1794554753,
+    "expires_at": 1794554993,
+    "consuming_key": "1bf2134f54008655c0e775c460897f3f8a05faeacd44b346c73ee95126a2f4aa",
+    "created_event": 3,
+    "signed_event": 5,
+    "consumed_event": 7,
+    "task": {
+      "id": "signed-demo",
+      "kind": "arithmetic",
+      "min_quality": 1.0,
+      "source": {
+        "amounts_cents": [
+          1250,
+          750
+        ],
+        "discount_cents": 0
+      }
+    },
+    "quote": {
+      "expires_at": 1794554993.682379,
+      "id": "mock-premium-quote",
+      "latency_ms": 0,
+      "mode": "SIMULATED",
+      "price": 10000,
+      "provider": "premium"
+    },
+    "typed_data": {
+      "domain": {
+        "name": "Touchstone",
+        "version": "1",
+        "chainId": 31337,
+        "salt": "0xf9fbef8e45bfb0f51dcae1c7ad780cbb30c950ebd02e6d987af699e091e66795"
+      },
+      "primaryType": "ProcurementApproval",
+      "types": {
+        "ProcurementApproval": [
+          {
+            "name": "protocol_version",
+            "type": "string"
+          },
+          {
+            "name": "environment",
+            "type": "string"
+          },
+          {
+            "name": "network",
+            "type": "string"
+          },
+          {
+            "name": "job_id",
+            "type": "string"
+          },
+          {
+            "name": "step_id",
+            "type": "string"
+          },
+          {
+            "name": "task_hash",
+            "type": "bytes32"
+          },
+          {
+            "name": "purchase_key",
+            "type": "string"
+          },
+          {
+            "name": "attempt",
+            "type": "uint256"
+          },
+          {
+            "name": "mandate_version",
+            "type": "uint256"
+          },
+          {
+            "name": "payer_scope",
+            "type": "string"
+          },
+          {
+            "name": "provider_id",
+            "type": "string"
+          },
+          {
+            "name": "provider_origin",
+            "type": "string"
+          },
+          {
+            "name": "quote_id",
+            "type": "string"
+          },
+          {
+            "name": "quote_digest",
+            "type": "bytes32"
+          },
+          {
+            "name": "quote_expires_ms",
+            "type": "uint256"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "quoted_amount",
+            "type": "uint256"
+          },
+          {
+            "name": "max_amount",
+            "type": "uint256"
+          },
+          {
+            "name": "budget_currency",
+            "type": "string"
+          },
+          {
+            "name": "job_ceiling",
+            "type": "uint256"
+          },
+          {
+            "name": "allocation_currency",
+            "type": "string"
+          },
+          {
+            "name": "allocation",
+            "type": "uint256"
+          },
+          {
+            "name": "spent",
+            "type": "uint256"
+          },
+          {
+            "name": "rail_spent",
+            "type": "uint256"
+          },
+          {
+            "name": "api_credit_currency",
+            "type": "string"
+          },
+          {
+            "name": "api_credit_max",
+            "type": "uint256"
+          },
+          {
+            "name": "fee_currency",
+            "type": "string"
+          },
+          {
+            "name": "fee_max",
+            "type": "uint256"
+          },
+          {
+            "name": "verifier_version",
+            "type": "string"
+          },
+          {
+            "name": "verifier_policy_digest",
+            "type": "bytes32"
+          },
+          {
+            "name": "nonce",
+            "type": "bytes32"
+          },
+          {
+            "name": "issued_at",
+            "type": "uint256"
+          },
+          {
+            "name": "expires_at",
+            "type": "uint256"
+          },
+          {
+            "name": "purpose",
+            "type": "string"
+          }
+        ]
+      },
+      "message": {
+        "allocation": 100000,
+        "allocation_currency": "MOCK_USD",
+        "api_credit_currency": "PREPAID_USD",
+        "api_credit_max": 0,
+        "attempt": 0,
+        "budget_currency": "LEDGER_MICRO_USD",
+        "currency": "MOCK_USD",
+        "environment": "LOCAL_TEST_DEMONSTRATION",
+        "expires_at": 1794554993,
+        "fee_currency": "LEDGER_MICRO_USD",
+        "fee_max": 1000,
+        "issued_at": 1794554753,
+        "job_ceiling": 100000,
+        "job_id": "8f209bbf4d82-1",
+        "mandate_version": 1,
+        "max_amount": 50000,
+        "network": "eip155:31337",
+        "nonce": "0x65e3c48df952cc72f64bf99d7172e51dba4893df16a84254917264b181e65f38",
+        "payer_scope": "8f209bbf4d82-1",
+        "protocol_version": "1",
+        "provider_id": "premium",
+        "provider_origin": "https://mock.invalid",
+        "purchase_key": "1bf2134f54008655c0e775c460897f3f8a05faeacd44b346c73ee95126a2f4aa",
+        "purpose": "PREMIUM_INFERENCE_PURCHASE",
+        "quote_digest": "0x35efa41cb7655e6cd507be7862780d85cef9db51a01b91cb2f0d8701d2fe99f1",
+        "quote_expires_ms": 1794554993682,
+        "quote_id": "mock-premium-quote",
+        "quoted_amount": 10000,
+        "rail_spent": 0,
+        "spent": 0,
+        "step_id": "signed-demo",
+        "task_hash": "0xa1bf4c63737b96dd9243765280e1f5639d6420f94ef7b91463b1d2eb5a4a2049",
+        "verifier_policy_digest": "0x95e53be80f05645d3e655baa0a5e67b1b01f1a8f3f412bf8d57678b228d755eb",
+        "verifier_version": "source-rules-v4-source-gating"
+      }
+    }
+  },
+  "audit": {
+    "valid": true,
+    "events": 11,
+    "head": "d76b20905fd3933bf151b3c9d1897d5169b0bb66d34ff43ef851cd153f7b4dd1"
+  },
+  "audit_export": "SUMMARY_AND_APPROVAL_EVENTS_ONLY",
+  "events": [
+    {
+      "id": 3,
+      "ts": 1794554753.6930304,
+      "kind": "PROCUREMENT_APPROVAL_PREPARED",
+      "payload": {
+        "digest": "0x5322fabeb1920f34f08df3cd4192c8132c64224fe476815c071b61788bd156b2",
+        "expected_signer": "0x38b342740afaeb5746d61a73955130f46007e4ac",
+        "id": "bd588ff88354daba364941562296e3f8",
+        "purchase_key": "1bf2134f54008655c0e775c460897f3f8a05faeacd44b346c73ee95126a2f4aa"
+      },
+      "previous_hash": "6950c6339ec48c3c6b641670a82c0c114f99d7c2636af41ce48fe2afc221ec99",
+      "hash": "66138c80cd41e81d21ece623caab939ea53695e3e5b8d56047e8c1643be10221"
+    },
+    {
+      "id": 4,
+      "ts": 1794554753.7109153,
+      "kind": "PROCUREMENT_APPROVAL_BLOCKED",
+      "payload": {
+        "code": "APPROVAL_REQUIRED",
+        "purchase_key": "1bf2134f54008655c0e775c460897f3f8a05faeacd44b346c73ee95126a2f4aa"
+      },
+      "previous_hash": "66138c80cd41e81d21ece623caab939ea53695e3e5b8d56047e8c1643be10221",
+      "hash": "93e9fce3b7d2331b1e70890816ef985f7b3a0c56bbfc75cca424746e37f9cad3"
+    },
+    {
+      "id": 5,
+      "ts": 1794554754.1859648,
+      "kind": "PROCUREMENT_APPROVAL_SIGNED",
+      "payload": {
+        "digest": "0x5322fabeb1920f34f08df3cd4192c8132c64224fe476815c071b61788bd156b2",
+        "expected_signer": "0x38b342740afaeb5746d61a73955130f46007e4ac",
+        "id": "bd588ff88354daba364941562296e3f8",
+        "purchase_key": "1bf2134f54008655c0e775c460897f3f8a05faeacd44b346c73ee95126a2f4aa"
+      },
+      "previous_hash": "93e9fce3b7d2331b1e70890816ef985f7b3a0c56bbfc75cca424746e37f9cad3",
+      "hash": "8ea55bee1f1f64fc2397a073282213e605e5a63a2a2d5e7606f03f0bdb1d9617"
+    },
+    {
+      "id": 7,
+      "ts": 1794554754.6557777,
+      "kind": "PROCUREMENT_APPROVAL_CONSUMED",
+      "payload": {
+        "digest": "0x5322fabeb1920f34f08df3cd4192c8132c64224fe476815c071b61788bd156b2",
+        "expected_signer": "0x38b342740afaeb5746d61a73955130f46007e4ac",
+        "id": "bd588ff88354daba364941562296e3f8",
+        "purchase_key": "1bf2134f54008655c0e775c460897f3f8a05faeacd44b346c73ee95126a2f4aa"
+      },
+      "previous_hash": "305a86ade18b02d261d3372461d7f724fba03c40024bc304b5d32d371756362a",
+      "hash": "1a1ca633fbcdfd00a62f37523b6c9ebba4f11b2817c003721e4b16dd064cc11d"
+    },
+    {
+      "id": 9,
+      "ts": 1794554754.6684349,
+      "kind": "PAID",
+      "payload": {
+        "amount": 10000,
+        "job_id": "8f209bbf4d82-1",
+        "key": "1bf2134f54008655c0e775c460897f3f8a05faeacd44b346c73ee95126a2f4aa",
+        "mode": "SIMULATED",
+        "provider": "premium",
+        "receipt": "mock_d4189147d00e495ae4578c3e"
+      },
+      "previous_hash": "27ecc9aea87ef2b974d3f8bc6d3c26598495bab3543410ccd38f1069f91c0690",
+      "hash": "9b00c0373f40b97e94fe1b2c263fc641608fc809bd38e9d456c04a004c5292ba"
+    },
+    {
+      "id": 11,
+      "ts": 1794554755.103771,
+      "kind": "PROCUREMENT_TAMPER_BLOCKED",
+      "payload": {
+        "additional_payments": 0,
+        "code": "TERMS_MISMATCH",
+        "purchase_key": "1bf2134f54008655c0e775c460897f3f8a05faeacd44b346c73ee95126a2f4aa"
+      },
+      "previous_hash": "9f52507a6a49277438a562ef67143e74e258f80565cf87d2d79abbcb68bf4e93",
+      "hash": "d76b20905fd3933bf151b3c9d1897d5169b0bb66d34ff43ef851cd153f7b4dd1"
+    }
+  ],
+  "historical_transactions_relabelled": false
+}

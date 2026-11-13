@@ -90,6 +90,8 @@ class M4Tests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
+        from signed_fixture import signed_fixtures
+        signed_fixtures(self, self.root)
         self.plan = prepare('m4-fixture', ORIGINS, 2040000, 50000, 40, 12)
         self.factory = ComparisonFactory(self.root/'remote', self.plan)
         self.runner = Comparison(self.plan, self.root/'study', self.factory, self.factory.health,

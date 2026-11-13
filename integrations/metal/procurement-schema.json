@@ -1,0 +1,14 @@
+{
+  "protocol_version": "string", "environment": "string", "network": "string",
+  "job_id": "string", "step_id": "string", "task_hash": "bytes32",
+  "purchase_key": "string", "attempt": "uint256", "mandate_version": "uint256",
+  "payer_scope": "string", "provider_id": "string", "provider_origin": "string",
+  "quote_id": "string", "quote_digest": "bytes32", "quote_expires_ms": "uint256",
+  "currency": "string", "quoted_amount": "uint256", "max_amount": "uint256",
+  "budget_currency": "string", "job_ceiling": "uint256", "allocation_currency": "string",
+  "allocation": "uint256", "spent": "uint256", "rail_spent": "uint256",
+  "api_credit_currency": "string", "api_credit_max": "uint256",
+  "fee_currency": "string", "fee_max": "uint256",
+  "verifier_version": "string", "verifier_policy_digest": "bytes32",
+  "nonce": "bytes32", "issued_at": "uint256", "expires_at": "uint256", "purpose": "string"
+}

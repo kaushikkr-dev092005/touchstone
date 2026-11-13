@@ -44,6 +44,7 @@ class MetalQuote:
     mode: str = "TESTNET"
     queue_depth: int = 0
     latency_samples: int = 0
+    payer_scope: str = ''
 
     def public(self):
         return asdict(self)
@@ -65,6 +66,10 @@ class MetalRail:
             raise ValueError("Price cap must fit the payment budget")
         self.transport = transport or self._process
         self.execute = execute
+        self._approvals = {}
+
+    def authorize_purchase(self, authorization):
+        self._approvals[authorization['purchase_key']] = dict(authorization)
 
     def _process(self, request):
         try:
@@ -77,6 +82,9 @@ class MetalRail:
                                      cwd=ROOT, env=child_env)
             result = json.loads(process.stdout)
             if process.returncode or not result.get("ok"):
+                if str(result.get('error','')).startswith(('APPROVAL_', 'SIGNER_', 'INVALID_SIGNATURE', 'TERMS_', 'AGENT_SIGNER_', 'QUOTE_EXPIRED', 'APPROVER_')):
+                    from .procurement_approval import ApprovalError
+                    raise ApprovalError(result['error'])
                 raise ValueError("Sidecar refused operation")
             return result["result"]
         except (OSError, ValueError, subprocess.SubprocessError):
@@ -87,6 +95,11 @@ class MetalRail:
     def invoke(self, command, **fields):
         if command in {'pay', 'deposit', 'withdraw', 'recover'} and not self.execute:
             raise ValueError('Metal money-moving operations require explicit execute authorization')
+        if command == 'pay':
+            from .procurement_approval import ApprovalError
+            approval = self._approvals.pop(fields.get('id'), None)
+            if not approval: raise ApprovalError('APPROVAL_REQUIRED')
+            fields['authorization'] = approval
         return self.transport({"command": command, "job": self.job, "provider_url": self.provider_url,
                                "max_price": dollars(self.price_cap), "budget": dollars(self.budget),
                                **fields, 'execute': self.execute})
@@ -110,11 +123,18 @@ class MetalRail:
         if provider_id not in {"metal-provider", "local-gpu", "hosted-premium"}:
             raise ValueError("Metal provider identifier is not approved")
         return MetalQuote(identity, provider_id, price, raw["expires_at"]/1000, raw,
-                          latency_ms=latency_ms, queue_depth=queue_depth, latency_samples=latency_samples)
+                          latency_ms=latency_ms, queue_depth=queue_depth, latency_samples=latency_samples, payer_scope=self.job)
 
     def pay(self, key, quote):
         if quote.price > self.price_cap or not quote.terms.get("url"):
             raise ValueError("Reserved quote differs from the mandate")
+        if key not in self._approvals:
+            # Cached historical delivery is a read, never a new authorization.
+            prior = self.lookup(key)
+            if prior.get('state') in {'DELIVERED','PAID_OUTPUT_MISSING'}:
+                return prior['result']
+            from .procurement_approval import ApprovalError
+            raise ApprovalError('APPROVAL_REQUIRED')
         return self.invoke("pay", id=key, quote=quote.terms, provider_url=quote.terms["url"])
 
     def lookup(self, key):

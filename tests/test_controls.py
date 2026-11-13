@@ -27,6 +27,8 @@ class Controls(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
+        from signed_fixture import signed_fixtures
+        signed_fixtures(self, self.root)
         self.ledger = Ledger(self.root / "ledger.sqlite")
         self.rail = MockRail(self.root / "rail.sqlite")
         self.engine = Engine(self.ledger, self.rail)
@@ -253,6 +255,7 @@ e.run(sys.argv[3],kill_at='after_rail')
                         "mode": self.mode, "terms": {"url": "http://127.0.0.1/inference/task"}}
         class MetalTier:
             mode = "TESTNET"
+            def authorize_purchase(self, authorization): pass
             def __init__(self):
                 self.receipt = None
             def quote_for_task(self, task):
@@ -334,6 +337,7 @@ e.run(sys.argv[3],kill_at='after_rail')
 
         class LiveProviders:
             mode = "TESTNET"
+            def authorize_purchase(self, authorization): pass
             def __init__(self):
                 self.paid = []
 

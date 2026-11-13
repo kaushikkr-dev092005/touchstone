@@ -1,0 +1,149 @@
+{
+  "label": "MOCK / LOCAL TEST",
+  "feature": "TOUCHSTONE_SIGNED_MANDATES_V1",
+  "observed_at": "2026-11-13T07:27:51.862274+00:00",
+  "source_binding": "SHA256_OF_LF_NORMALIZED_WORKTREE_SOURCE_FILES",
+  "source_sha256": {
+    ".github/workflows/ci.yml": "869c19b2f397d601b7cb7a989746f508ad01552ec1145d7d4c3d98e398f5113f",
+    "apps/dashboard/index.html": "cb591dc394627175ae5daaef2a1ab57a9c4ed3da8f959115d82d8dcb6650f692",
+    "apps/dashboard/procurement.js": "2a2f21077d77430fdf3bd1d1269b6c575e1c0f08d5e0fc77ac464248c207e0e7",
+    "apps/merchant/merchant.test.mjs": "8c195c358ff9904c10eb5bd07e39f384c8bc485a20fae73b21357a108d937fab",
+    "integrations/metal/adapter.mjs": "3e3570e8d1eb6ef52eb1501e2c854eee16e57880a5005d6816f1de64ceec7fb6",
+    "integrations/metal/bridge.mjs": "88aac561aed256438def6d846b304fbcb69a12a91fea65f3b49c9e48366d73e8",
+    "integrations/metal/cli.mjs": "5efc188d4b9bc3716c754c4485f30f4d937953aed421269f9ce384776d980935",
+    "integrations/metal/procurement-approval.mjs": "42fa690e58000294e29b730bb89d680083fc858afc6f815647cce3012fee3266",
+    "integrations/metal/procurement-verify.mjs": "dfcf94a00714fcfaaa01b8d7c1fe4a45120ec7f4be206b8a128b16ef2a66870b",
+    "integrations/metal/provider.mjs": "0e68856bbd4b6bc7a632d0108cf7c62f8c996f840e82c992925ca74858738c25",
+    "tests/m2_fixtures.py": "6d9ccf3daeb8cc783194f79f27d029b4c93a48651101be44cc1048380fc43f49",
+    "tests/procurement_signer.mjs": "c5c19cff2d4164c86dc5e4002c6b9b99070eeaab44f19c89618cf0d86c29fd3e",
+    "tests/signed_fixture.py": "8a41f4b9fb83f15278edf01529b95291977bdf835f8fb2d2fbc1e7da9a395d88",
+    "tests/test_audit_regressions.py": "41daeb0022ba0affdf078f04af35c853a1ff7a3a7e08e1d230487196c749b888",
+    "tests/test_controls.py": "73ac964278338a0bbee6e540098bd0e4e9621bab44fa0798a3fe752394aae107",
+    "tests/test_m2.py": "a34c296a402e00ea921120982f02cab2de2ce92c59675b090a0ab207eff851f3",
+    "tests/test_m3.py": "0c7ffcd4683c249ec5e8893aa8c8ab7799609a03c9964dd2d2dd8c9568c7e8d1",
+    "tests/test_m4.py": "1b00ef6661821699f029c5414e262be0e55d10ff94f3b2b165ae7a31f4c52f35",
+    "tests/test_procurement_approval.py": "e7be70887ef6ea32e8216a26ea97381a7ab4404e188ef8f988a24d74f0ef7342",
+    "tests/test_providers.py": "f012b24880f3e6682f3a5d717a792f7e13ee8cb42f0c67ce46cae3a52166c970",
+    "tests/test_validation_status.py": "7e18ef94cd2bd737d78b6400fa4f50b28cb36d0b7d203af170745a6a0c7d12ae",
+    "tools/capped_probe.py": "80fabcd00882674eed94ba668f910df3e97e5513a98b8f5ac9a02d98bddeb19f",
+    "tools/check_dashboard.py": "ccf94f31cc7864189862ce8ae2a2706a32077c91523d820d0f9091e377768407",
+    "tools/check_signed_mandates.py": "32ee37ff21da6612fb3d0309f05f560b6d5208bc27125001d661c709318d052a",
+    "tools/demo_signed_mandates.py": "7712d21c036102e9f3fd9aaccd73b13a9bb0c4849ef0881d8089e117f788afa7",
+    "tools/procurement_approval.py": "88842ef2ce690e988f289a27f5657dbcefa5e5cdda0e7b3d65b975f3155a9930",
+    "touchstone/banked.py": "43f2d0745bcab6202b4de454d38339418ff5a6fb3ea2f5796b8e454aae20cb01",
+    "touchstone/comparison.py": "4d4661481ff1a75744eb83bc3970adad3b5deef97bb550284507941a8c672886",
+    "touchstone/engine.py": "a600394afcc1e777cf9d2690b7ec40061ec0fe4542ea4ef94c459cff676116c8",
+    "touchstone/invoice_profile.py": "5caf77631f0923eb57a1c31cf4009f3134854850e5e20655dcd56b589db8647d",
+    "touchstone/ledger.py": "a7b7d40e2e065b8aa015b7138631368da1674acd12722749e33b319479fdaab6",
+    "touchstone/live.py": "56031bdff99d2e3e21f41a603e591dab6503db0219a7857299d6a80a85e973e8",
+    "touchstone/metal.py": "3b4b7563774547738246f92739735880a79bbf71d81c3ea3bec549175b1bc472",
+    "touchstone/payments.py": "676c2adda3a0a14b0fa8e0e8e83e7f5999d9667f8647b74e17eb11e9174618ff",
+    "touchstone/procurement_approval.py": "42a8b47439dbc03ebe3c9c61ca0cdfeac6390538fd6abb805fa1cd50b23e0db0",
+    "touchstone/provider_worker.py": "1be4afa424c481c1830f566cf872355e93baadc83d01fa91a0003d8c903679b3",
+    "touchstone/providers.py": "2be8d60bc364a51e4d6227e4d056b3430a516b8fa1e2cc8b652516c047dee070",
+    "touchstone/server.py": "84c40be2fa9b40b41a7fe3d3d821f03150f433e28544c5191d42dc17b09506fe",
+    "integrations/metal/procurement-schema.json": "c3ae5ca0a76a1b522b3c10b8bb984c9bf3db4c6ebedb799c829394fa0a0ce484"
+  },
+  "python": {
+    "command": "python -m unittest discover -s tests",
+    "tests": 438,
+    "passed": 438,
+    "failed": 0,
+    "feature_tests": 33,
+    "runtime": "3.12.10",
+    "final_focused_command": "python -m unittest discover -s tests -p test_procurement_approval.py",
+    "final_focused_passed": 33,
+    "followup": "Final focused run covers expanded per-field cryptographic mutations and protected-payer tampering checks."
+  },
+  "metal_node": {
+    "command": "node --test integrations/metal/*.test.mjs",
+    "tests": 56,
+    "passed": 56,
+    "failed": 0,
+    "runtime": "22.23.4",
+    "viem": "2.57.13"
+  },
+  "dashboard": {
+    "command": "python tools/check_dashboard.py",
+    "passed": true,
+    "planning_evidence_status": "STALE_OR_INVALID",
+    "stale_profiles_remained_blocked": true
+  },
+  "frontend": {
+    "command": "bun run build",
+    "directory": "apps/web",
+    "passed": true,
+    "private_data_loaded": false,
+    "network_calls_by_evidence_builder": 0
+  },
+  "browser": {
+    "label": "MOCK / LOCAL TEST",
+    "wallet": "EPHEMERAL EIP1193 TEST ADAPTER WITH REAL VIEM SIGNATURE",
+    "unsigned": "BLOCKED",
+    "signed": "AUTHORIZED",
+    "tampered": "TERMS_MISMATCH",
+    "mock_dispatch": "COMPLETED",
+    "responsive_widths": [
+      320,
+      390,
+      768,
+      1440
+    ],
+    "external_requests": 0,
+    "page_errors": [],
+    "gpu_rendering": "DISABLED",
+    "real_external_financial_operations": 0,
+    "hosted_inference_calls": 0,
+    "screenshots": [
+      "unsigned.png",
+      "signed.png",
+      "tampered.png",
+      "mobile-dark.png"
+    ]
+  },
+  "three_state": {
+    "unsigned": {
+      "decision": "APPROVAL_REQUIRED",
+      "adapter_calls": 0
+    },
+    "signed": {
+      "decision": "AUTHORIZED",
+      "adapter_calls": 1,
+      "signer": "0x38b342740afaeb5746d61a73955130f46007e4ac",
+      "approval_digest": "0x5322fabeb1920f34f08df3cd4192c8132c64224fe476815c071b61788bd156b2",
+      "purchase_key": "1bf2134f54008655c0e775c460897f3f8a05faeacd44b346c73ee95126a2f4aa",
+      "receipt_id": "mock_d4189147d00e495ae4578c3e",
+      "verification": {
+        "signer": "0x38b342740afaeb5746d61a73955130f46007e4ac",
+        "typed_data_hash": "0x6400dd8a0b2a6f45d465a2ceb40429602669ee07b643a2cd29f3e0f8f53fff02",
+        "terms_digest": "0x5322fabeb1920f34f08df3cd4192c8132c64224fe476815c071b61788bd156b2",
+        "verified_at": 1794554754,
+        "scheme": "EIP712_EOA"
+      }
+    },
+    "tampered": {
+      "decision": "TERMS_MISMATCH",
+      "additional_adapter_calls": 0,
+      "original_signature_valid_for_tampered_terms": false
+    },
+    "original_terms_unchanged": true
+  },
+  "signature_proof": "local-proof.json",
+  "configured_secret_scan": {
+    "configured_secret_scan": "PASS",
+    "checked_files_and_blobs": 1763,
+    "findings": []
+  },
+  "heuristic_secret_scan": {
+    "command": "python tools/scan_secrets.py --json",
+    "passed": true,
+    "limitation": "Heuristic scope, not a guarantee; excludes binary/oversize blobs"
+  },
+  "historical_evidence_modified": false,
+  "real_external_financial_operations": 0,
+  "new_hosted_api_calls": 0,
+  "new_hosted_cash": 0,
+  "human_live_wallet_proof": false,
+  "credential_isolation_production_ready": false,
+  "readiness": "IMPLEMENTED_CONTROLLED_VALIDATED_NOT_LIVE_FINANCIAL_EVIDENCE"
+}

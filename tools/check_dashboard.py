@@ -50,15 +50,22 @@ def main():
                 page.goto(BASE, wait_until="domcontentloaded")
                 page.wait_for_function("() => document.getElementById('connection').textContent.includes('CONNECTED')")
                 assert page.locator(".disclosure").inner_text().startswith("SIMULATION")
-                page.wait_for_function("() => !document.getElementById('planning-case').disabled")
-                assert "1000/1000" in page.locator("#planning-summary").inner_text()
-                assert page.locator("#eligibility-rows tr").count() == 6
-                assert page.locator("#planning-decision").inner_text() == "Use a local tool"
-                page.select_option("#planning-case", label="foreign currency")
-                assert page.locator("#planning-decision").inner_text() == "Pause for review"
-                assert page.locator("#planning-output").inner_text() == "No answer accepted."
-                page.select_option("#planning-case", label="sum discount")
-                assert "2000" in page.locator("#planning-output").inner_text()
+                planning=page.request.get(BASE+'/api/procurement-evidence').json()
+                if planning['status']=='CURRENT':
+                    page.wait_for_function("() => !document.getElementById('planning-case').disabled")
+                    assert "1000/1000" in page.locator("#planning-summary").inner_text()
+                    assert page.locator("#eligibility-rows tr").count() == 6
+                    assert page.locator("#planning-decision").inner_text() == "Use a local tool"
+                    page.select_option("#planning-case", label="foreign currency")
+                    assert page.locator("#planning-decision").inner_text() == "Pause for review"
+                    assert page.locator("#planning-output").inner_text() == "No answer accepted."
+                    page.select_option("#planning-case", label="sum discount")
+                    assert "2000" in page.locator("#planning-output").inner_text()
+                else:
+                    assert planning['status'] in {'STALE_OR_INVALID','NOT_RUN'}
+                    assert planning['live_purchase_authorized'] is False
+                    page.wait_for_function("() => document.getElementById('planning-summary').textContent.startsWith('BLOCKED')")
+                    assert page.locator('#planning-case').is_disabled()
                 page.wait_for_function("() => !document.getElementById('testnet-proof-summary').textContent.includes('Checking')")
                 proof = page.request.get(BASE + '/api/readiness').json()['metal']['paid_proof']
                 if proof:
@@ -73,12 +80,12 @@ def main():
                 assert 'SIGNED_BY_INVOICE_RECIPIENT' in page.locator('#fault-limits').text_content()
                 assert 'Seller signed REJECTED' in page.locator('#fault-summary').text_content()
                 assert 'No refund' in page.locator('#fault-summary').text_content()
-                page.wait_for_function("() => document.getElementById('completion-credit').textContent.includes('2.919117')")
+                page.wait_for_function("() => document.getElementById('completion-credit').textContent.includes('4.229541')")
                 assert '120/120' in page.locator('#completion-quality').text_content()
                 assert '59/60' in page.locator('#completion-quality').text_content()
                 assert 'CLOSED_FLOAT_RETAINED' in page.locator('#completion-status').text_content()
-                assert page.locator('#completion-comparison').text_content() == 'Stopped · incomplete'
-                assert 'No savings claim' in page.locator('#completion-limits').text_content()
+                assert page.locator('#completion-comparison').text_content() == '64 / 64 · Complete'
+                assert '32 real paid receipts' in page.locator('#completion-limits').text_content()
                 assert 'SAVED MEASURED sandbox card creation' in page.locator('#card-status').inner_text()
                 assert 'Current account is not verified by this saved proof' in page.locator('#card-status').inner_text()
                 assert page.locator('a[href="https://www.sandbox.airwallex.com/app/"]').count()==1
@@ -144,7 +151,8 @@ def main():
                 result = {"desktop": "passed", "mobile_width": 390, "horizontal_overflow": False,
                           "browser_errors": errors, "start_halt_resume_close": "passed",
                           "host_origin_session_controls": "passed", "reconciliation": state["reconciliation"],
-                          "planning_tool_and_review_cases": "passed", "provider_evidence_rows": 6,
+                          "planning_tool_and_review_cases": "passed" if planning['status']=='CURRENT' else "BLOCKED_STALE_EVIDENCE",
+                          "provider_evidence_status":planning['status'],
                           "testnet_proof_disclosure": "passed",
                           "fault_fx_telemetry_rail_panels": "passed",
                           "current_signed_fault_and_capped_completion_proofs": "passed",

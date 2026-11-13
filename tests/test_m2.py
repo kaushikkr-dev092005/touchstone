@@ -113,6 +113,8 @@ class BatchTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
+        from signed_fixture import signed_fixtures
+        signed_fixtures(self, self.root)
         self.factory = FixtureFactory(self.root/'remote')
         self.batch = MetalBatch(self.root/'batch', self.factory, self.root/'funding-owner.sqlite')
 
@@ -168,6 +170,9 @@ sys.path.insert(0, str(Path.cwd()/'tests'))
 from m2_fixtures import FixtureFactory
 from touchstone.metal_batch import MetalBatch
 root=Path(sys.argv[1])
+import unittest
+from signed_fixture import signed_fixtures
+signed_fixtures(unittest.TestCase(),root)
 MetalBatch(root/'batch', FixtureFactory(root/'remote'), root/'funding-owner.sqlite').run('probe',execute=True,kill_at='after_rail')
 '''
         result = subprocess.run([sys.executable, '-c', script, str(self.root)], capture_output=True, text=True, timeout=30)

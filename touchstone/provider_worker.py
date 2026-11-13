@@ -22,7 +22,7 @@ def main():
             metadata = {"provider_type": "LOCAL_MODEL", "provider_model": os.environ.get("LOCAL_MODEL", "local-model"),
                         "latency_ms": latency, **usage}
         elif raw["mode"] == "anthropic":
-            output, latency, metadata = anthropic_inference(task)
+            output, latency, metadata = anthropic_inference(task, authorization=raw.get('authorization'))
         else:
             raise ValueError("Invalid worker mode")
         if raw["mode"] == "tool":

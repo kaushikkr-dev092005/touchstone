@@ -9,6 +9,10 @@ from touchstone.workload import Task
 
 
 class HostedProviderTests(unittest.TestCase):
+    def setUp(self):
+        # These tests isolate JSON/usage parsing with a no-network opener. Real
+        # signed credit-dispatch enforcement is covered in procurement tests.
+        p=patch('touchstone.procurement_approval.authorize_hosted_call');p.start();self.addCleanup(p.stop)
     def test_structured_schema_uses_anthropic_supported_constraints(self):
         task = Task("invoice", "invoice", {"text": "Invoice X. ITEM QTY 1 PRICE 10"})
         _, schema = task_contract(task)

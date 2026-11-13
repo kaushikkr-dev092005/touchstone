@@ -55,6 +55,15 @@ class Engine:
             if a["job_id"] not in jobs or a["state"] not in {"RESERVED", "DISPATCHING", "PAID"}:
                 continue
             quote = json.loads(a["quote"])
+            with self.ledger.connect() as db:
+                approval=db.execute('SELECT state FROM procurement_approvals WHERE purchase_key=? ORDER BY rowid DESC LIMIT 1',(a['key'],)).fetchone()
+            if a['state']=='RESERVED' and approval and approval['state'] in {'PENDING_APPROVAL','SIGNED'}:
+                # Awaiting a human is not a failed dispatch. Keep the exact quote.
+                if time.time() >= quote['expires_at']:
+                    self.ledger.approvals.expire()
+                    self.ledger.void(a['key'], 'QUOTE_EXPIRED while awaiting approval')
+                    self.ledger.status(a['job_id'], 'PAUSED_APPROVAL', 'QUOTE_EXPIRED; prepare a fresh purchase')
+                continue
             try:
                 outcome = self.rail.lookup(a["key"], quote)
             except PaymentPending:
@@ -122,7 +131,7 @@ class Engine:
                     # nothing: it must not count toward the attempt limit or tier escalation.
                     live = [a for a in past if a["state"] != "VOID"]
                     exhausted = any(a["provider"] == "premium" and a["state"] == "VERIFIED_FAIL" for a in live)
-                    if not exhausted and not any(a["passed"] == 1 for a in live) and len(live) < max_attempts:
+                    if any(a['state']=='RESERVED' for a in live) or not exhausted and not any(a["passed"] == 1 for a in live) and len(live) < max_attempts:
                         task = candidate
                         break
                 if task is None:
@@ -135,13 +144,15 @@ class Engine:
                     self.ledger.status(job["id"], "PAUSED_REVIEW", why)
                     continue
                 attempt = 1 + max(a["attempt"] for a in past) if past else 0  # keys stay unique across voids
+                pending = next((a for a in live if a['state']=='RESERVED'), None)
+                if pending: attempt = pending['attempt']
                 # Demo job 2 grows 4x halfway through; identical index events in benchmark policies.
                 inflated = job["policy"] == "touchstone" and job["id"].endswith("-2") and index >= len(tasks) // 2 and len(tasks) < 100
                 scenario_index = int(index * 100 / len(tasks)) if len(tasks) < 100 else index
                 previous_index = int((index - 1) * 100 / len(tasks)) if len(tasks) < 100 else index - 1
                 real_policy = job["policy"] in {"real-cheapest", "real-premium", "real-touchstone"}
                 offers = [] if real_policy else quotes(job["seed"], scenario_index, inflated)
-                if hasattr(self.rail, "quote_for_task"):
+                if not pending and hasattr(self.rail, "quote_for_task"):
                     live_offer = self.rail.quote_for_task(task)
                     if isinstance(live_offer, list):
                         offers.extend(live_offer)
@@ -153,7 +164,13 @@ class Engine:
                             self.ledger.event("CHAOS", {"job_id": job["id"], "index": index, "event": label})
                     if inflated and index == len(tasks) // 2:
                         self.ledger.event("CHAOS", {"job_id": job["id"], "index": index, "event": "4x prompt expansion"})
-                offer, reason = router.select(offers, task, job, [a["provider"] for a in live])
+                if pending:
+                    from .metal import MetalQuote
+                    from .providers import Quote
+                    raw = json.loads(pending['quote'])
+                    offer, reason = (MetalQuote(**raw) if 'terms' in raw else Quote(**raw)), 'Resume exact human approval quote'
+                else:
+                    offer, reason = router.select(offers, task, job, [a["provider"] for a in live])
                 if offer is None:
                     self.ledger.status(job["id"], "PAUSED_POLICY", reason)
                     continue
@@ -165,7 +182,11 @@ class Engine:
                     if kill_at == "after_reserve":
                         os._exit(86)
                     self.ledger.event("ROUTED", {"job_id": job["id"], "step_id": task.id, "provider": offer.provider, "reason": reason, "quote": offer.public()})
-                    self.ledger.assert_can_pay(key, owners[job['id']])
+                    if self.ledger.approval_required(key):
+                        self.ledger.prepare_approval(key)
+                    authorization = self.ledger.assert_can_pay(key, owners[job['id']])
+                    from .procurement_approval import bind_dispatch
+                    bind_dispatch(self.rail, authorization)
                     receipt = self.rail.pay(key, offer, lambda: simulate(task, offer.provider, job["seed"], scenario_index, attempt))
                     if crash_at == "after_rail":
                         raise InjectedCrash("Crash after durable rail receipt, before local payment commit")
@@ -185,7 +206,8 @@ class Engine:
                         self.ledger.status(job["id"], "PAUSED_REVIEW", verdict["reason"])
                     progressed = True
                 except PolicyError as error:
-                    self.ledger.status(job["id"], "PAUSED_POLICY", str(error))
+                    from .procurement_approval import ApprovalError
+                    self.ledger.status(job["id"], "PAUSED_APPROVAL" if isinstance(error, ApprovalError) else "PAUSED_POLICY", str(error))
                 except PaymentPending:
                     self.ledger.status(job['id'], 'PAUSED_RECOVERY', 'Payment outcome unknown; reservation retained')
                 if delay:

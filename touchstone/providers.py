@@ -137,7 +137,7 @@ def local_inference(task, usage=None):
     return output, round((time.perf_counter() - started) * 1000)
 
 
-def anthropic_inference(task, opener=None):
+def anthropic_inference(task, opener=None, *, authorization=None):
     api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
     if not api_key:
         raise RuntimeError("ANTHROPIC_API_KEY is not configured")
@@ -159,6 +159,8 @@ def anthropic_inference(task, opener=None):
         if not re.fullmatch(r'wrkspc_[A-Za-z0-9_-]{1,100}', workspace):
             raise ValueError('Hosted workspace ID is invalid')
         headers['anthropic-workspace-id'] = workspace
+    from .procurement_approval import authorize_hosted_call
+    authorize_hosted_call(task, authorization, payload)
     request = urllib.request.Request("https://api.anthropic.com/v1/messages", json.dumps(payload).encode(), headers)
     started = time.perf_counter()
     with (opener or urllib.request.urlopen)(request, timeout=90) as response:

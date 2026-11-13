@@ -4,6 +4,7 @@ import { privateKeyToAccount, generatePrivateKey } from 'viem/accounts';
 import { openWallet, openFundingOwner } from './wallet.mjs';
 import { encodePaymentSignatureHeader, readLimitedText } from '@x402/core/http';
 import { gasCappedAccount } from './native-budget.mjs';
+import { dispatchApproval, fail, digest } from './procurement-approval.mjs';
 
 export const NETWORK = 'eip155:63825';
 const UNIT = 10n ** 12n;
@@ -121,7 +122,7 @@ export async function recoverPurchase(wallet, id, clearing, retrieve = null) {
       // It clears pending only after a verified receipt or authoritative refusal.
       // Thus this is local protocol evidence, not an empty remote lookup.
       const result = { mode: 'TESTNET', state: 'UNPAID_CONFIRMED', receipt: null, output: null,
-        next_action: 'Retry this same reservation and identical offer; the SDK retains no possible charge' };
+        next_action: 'Original invoice confirmed unpaid. Do not retry automatically; a new purchase/key, quote and human approval are required' };
       wallet.db.prepare("UPDATE purchases SET state='UNPAID_CONFIRMED',result=? WHERE id=?").run(json(result), id);
       return result;
     }
@@ -191,25 +192,29 @@ export async function connectJob(config) {
     const budget = amount(config.budget || '0.50');
     if (!maximum || !budget || maximum > budget) throw Error('Price cap and budget must be positive and consistent');
     const clearing = sdk.createClearingClient({ ...deployment, rpcUrl: config.rpcUrl, signer: wallet.signer, store: wallet.store, maxAmount: maximum });
-    return { wallet, deployment, clearing,
+    return { wallet, deployment,
       async quote() { return quote(approvedUrl, deployment, maximum); },
-      async buy(id, reservedQuote = null) {
+      async buy(id, reservedQuote = null, authorization = null) {
         const existing = purchase(wallet, id);
         if (existing && existing.terms.url !== approvedUrl) throw Error('Idempotency conflict: provider resource changed');
         // A completed retry returns its exact original result without fetching a fresh quote.
         if (existing?.state === 'DELIVERED' || existing?.state === 'PAID_OUTPUT_MISSING') return existing.result;
+        if (!authorization) fail('APPROVAL_REQUIRED');
         if (existing && existing.state !== 'UNPAID_CONFIRMED') throw Error('Existing reservation must be recovered before requesting any new quote');
         const q = reservedQuote || await quote(approvedUrl, deployment, maximum);
         if (q.url !== approvedUrl || Date.now() >= q.expires_at) throw Error('Reserved quote changed URL or expired');
         const checked = approvedOffer(Buffer.from(json({ x402Version: 2, accepts: [q.offer] })).toString('base64'), deployment, maximum);
         if (termsKey({url: approvedUrl, offer: checked}) !== termsKey(q)) throw Error('Reserved quote terms differ');
+        await dispatchApproval(wallet, id, q, authorization, {directory:config.directory, maximum, budget});
         const guardedFetch = async (input, init = {}) => {
           const url = resourceUrl(typeof input === 'string' ? input : input.url || input.href);
           if (url !== approvedUrl) throw Error('Payment resource changed');
-          const response = await fetch(input, { ...init, redirect: 'error', signal: AbortSignal.timeout(30000) });
+          const headers=new Headers(init.headers);
+          headers.set('X-Touchstone-Procurement-Approval',Buffer.from(JSON.stringify({approval_id:authorization.approval_id,purchase_key:id})).toString('base64url'));
+          const response = await fetch(input, { ...init, headers, redirect: 'error', signal: AbortSignal.timeout(30000) });
           if (response.status === 402) {
             const offer = approvedOffer(response.headers.get('PAYMENT-REQUIRED'), deployment, maximum);
-            if (termsKey({url,offer}) !== termsKey(q)) throw Error('Offer changed; a fresh quote and reservation are required');
+            if (digest(offer)!==digest(q.offer)) throw Error('Offer changed; a fresh quote and signed approval are required');
           }
           return response;
         };

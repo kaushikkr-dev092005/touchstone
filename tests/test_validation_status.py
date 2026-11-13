@@ -16,6 +16,7 @@ class ValidationStatusTests(unittest.TestCase):
         calls=[]
         class Client:
             mode='MOCK'
+            def authorize_purchase(self, authorization): pass
             def __init__(self,*args,**kwargs):self.provider_url=args[1]
             def invoke(self,command):
                 self_check=command=='receipts'
@@ -28,6 +29,8 @@ class ValidationStatusTests(unittest.TestCase):
                     'output':{'body':{'output':{'total_cents':2000}}}}
         with tempfile.TemporaryDirectory() as directory:
             target=Path(directory)
+            from signed_fixture import signed_fixtures
+            signed_fixtures(self,target)
             kwargs=dict(directory=target,reader=lambda *_:{},client_factory=Client,
                         preflight=lambda *a,**k:{'ready_for_final_approval':True})
             refused=run('existing','one',**kwargs)
