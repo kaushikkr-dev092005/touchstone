@@ -126,7 +126,7 @@ def main():
                 frame.locator('[data-nav="overview"]').click()
                 frame.locator('#start').wait_for(state='visible')
                 frame.locator('#start').click()
-                frame.locator('[data-nav="spend"]').click()
+                frame.locator('[data-nav="transactions"]').click()
                 frame.locator('#payment-rows tr').first.wait_for()
                 frame.locator('[data-nav="overview"]').click()
                 frame.locator('#halt').click()
