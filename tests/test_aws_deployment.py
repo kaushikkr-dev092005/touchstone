@@ -1,4 +1,7 @@
 import json
+import contextlib
+import hashlib
+import io
 from pathlib import Path
 import subprocess
 import tempfile
@@ -6,13 +9,87 @@ import unittest
 from unittest.mock import patch
 from decimal import Decimal
 
-from tools.aws_preflight import inspect, read_aws, default_configured
+from tools.aws_preflight import inspect, read_aws, default_configured, find_aws_cli, main, READ_CHECKS_COMPLETE
 
 ROOT=Path(__file__).resolve().parent.parent
 ACCOUNT='123456789012'
 
 
 class AwsPreflightTests(unittest.TestCase):
+    def completed_reads(self, *, plan=None, offered=True, instance_type='t4g.micro'):
+        responses=[{'Account':ACCOUNT},
+            {'Regions':[{'RegionName':'ap-south-1','OptInStatus':'opt-in-not-required'}]},
+            {'InstanceTypeOfferings':[{'InstanceType':instance_type,'Location':'ap-south-1'}] if offered else []},
+            plan if plan is not None else {'accountId':ACCOUNT,'accountPlanType':'FREE','accountPlanStatus':'ACTIVE'}]
+        with patch('tools.aws_preflight.read_aws',side_effect=responses) as reader:
+            return inspect(ACCOUNT,configured=True,reader=reader,instance_type=instance_type), reader.call_count
+
+    def cli_exit(self, result):
+        (ROOT/'tmp').mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=ROOT/'tmp') as directory:
+            output=Path(directory)/'preflight.json'
+            with patch('tools.aws_preflight.inspect',return_value=result), contextlib.redirect_stdout(io.StringIO()):
+                code=main(['--expected-account',ACCOUNT,'--output',str(output)])
+            self.assertEqual(json.loads(output.read_text()),result)
+            return code
+
+    def test_missing_cli_is_reported_without_aws_calls(self):
+        with patch('tools.aws_preflight.find_aws_cli',return_value=None):
+            result=inspect(ACCOUNT,configured=True)
+        self.assertEqual(result['status'],'AWS_CLI_NOT_INSTALLED')
+        self.assertFalse(result['read_only_checks_passed'])
+        self.assertEqual(self.cli_exit(result),2)
+
+    def test_cli_discovery_supports_existing_windows_per_user_install(self):
+        with tempfile.TemporaryDirectory() as directory:
+            binary=Path(directory)/'Programs/Amazon/AWSCLIV2/aws.exe'
+            binary.parent.mkdir(parents=True);binary.touch()
+            with patch('tools.aws_preflight.sys.platform','win32'), \
+                    patch('tools.aws_preflight.shutil.which',return_value=None), \
+                    patch.dict('os.environ',{'LOCALAPPDATA':directory},clear=True):
+                self.assertEqual(find_aws_cli(),str(binary))
+
+    def test_completed_reads_do_not_authorize_resources(self):
+        result,calls=self.completed_reads()
+        self.assertEqual(calls,4)
+        self.assertTrue(result['read_only_checks_passed'])
+        self.assertEqual(result['status'],READ_CHECKS_COMPLETE)
+        self.assertEqual(self.cli_exit(result),0)
+        self.assertFalse(result['provisioning_authorized'])
+        self.assertEqual(result['aws_resources_created'],0)
+
+    def test_late_account_mismatch_cannot_return_success(self):
+        result,_=self.completed_reads(plan={'accountId':'999999999999'})
+        self.assertTrue(result['identity_verified'] and result['region_available'] and result['instance_offered'])
+        self.assertEqual(result['status'],'AWS_ACCOUNT_MISMATCH')
+        self.assertFalse(result['read_only_checks_passed'])
+        self.assertEqual(self.cli_exit(result),2)
+
+    def test_unknown_or_inactive_account_plan_fails_closed(self):
+        for plan_type,status,reason in [('UNKNOWN','ACTIVE','AWS_ACCOUNT_PLAN_UNVERIFIED'),
+                ('FREE','NOT_STARTED','AWS_ACCOUNT_PLAN_NOT_ACTIVE'),('PAID','EXPIRED','AWS_ACCOUNT_PLAN_NOT_ACTIVE')]:
+            with self.subTest(plan_type=plan_type,status=status):
+                result,_=self.completed_reads(plan={'accountId':ACCOUNT,'accountPlanType':plan_type,'accountPlanStatus':status})
+                self.assertEqual(result['status'],reason)
+                self.assertFalse(result['read_only_checks_passed'])
+                self.assertEqual(self.cli_exit(result),2)
+
+    def test_unoffered_instance_stops_before_billing_check(self):
+        result,calls=self.completed_reads(offered=False)
+        self.assertEqual(calls,3)
+        self.assertEqual(result['status'],'INSTANCE_TYPE_NOT_OFFERED')
+        self.assertFalse(result['read_only_checks_passed'])
+        self.assertEqual(self.cli_exit(result),2)
+
+    def test_billing_permission_failure_cannot_return_success(self):
+        answers=[{'Account':ACCOUNT},
+            {'Regions':[{'RegionName':'ap-south-1','OptInStatus':'opt-in-not-required'}]},
+            {'InstanceTypeOfferings':[{'InstanceType':'t4g.micro','Location':'ap-south-1'}]},RuntimeError('ACCESSDENIED')]
+        with patch('tools.aws_preflight.read_aws',side_effect=answers) as reader:
+            result=inspect(ACCOUNT,configured=True,reader=reader)
+        self.assertEqual(result['status'],'ACCESSDENIED')
+        self.assertEqual(self.cli_exit(result),2)
+
     def test_missing_default_never_uses_another_account(self):
         def unexpected(*args):self.fail('No AWS call permitted without the configured default profile')
         result=inspect(ACCOUNT,configured=False,reader=unexpected)
@@ -60,11 +137,13 @@ class AwsPreflightTests(unittest.TestCase):
         result=inspect(ACCOUNT,configured=True,reader=reader,instance_type='t4g.nano')
         self.assertEqual(result['status'],'FREE_PLAN_INSTANCE_NOT_ELIGIBLE')
         self.assertFalse(result['provisioning_authorized'])
+        self.assertFalse(result['read_only_checks_passed'])
+        self.assertEqual(self.cli_exit(result),2)
 
     def test_billing_endpoint_does_not_change_deployment_region(self):
         seen=[]
         def runner(command,**kwargs):seen.extend(command);return subprocess.CompletedProcess(command,0,'{}','')
-        with patch('tools.aws_preflight.shutil.which',return_value='aws'):
+        with patch('tools.aws_preflight.find_aws_cli',return_value='aws'):
             read_aws('freetier','get-account-plan-state',runner=runner)
         self.assertEqual(seen[seen.index('--region')+1],'us-east-1')
 
@@ -73,7 +152,7 @@ class AwsPreflightTests(unittest.TestCase):
         def runner(command,**kwargs):
             observed.update(command=command,env=kwargs['env'])
             return subprocess.CompletedProcess(command,0,'{"Account":"123456789012"}','')
-        with patch('tools.aws_preflight.shutil.which',return_value='aws'), patch.dict('os.environ',{
+        with patch('tools.aws_preflight.find_aws_cli',return_value='aws'), patch.dict('os.environ',{
             'AWS_ACCESS_KEY_ID':'fixture-only','AWS_SECRET_ACCESS_KEY':'fixture-only',
             'AWS_ENDPOINT_URL':'https://example.invalid','AGENT_PRIVATE_KEY':'fixture-only',
             'AIRWALLEX_API_KEY':'fixture-only','ANTHROPIC_API_KEY':'fixture-only'}):
@@ -81,10 +160,11 @@ class AwsPreflightTests(unittest.TestCase):
         for name in ('AWS_ACCESS_KEY_ID','AWS_SECRET_ACCESS_KEY','AWS_ENDPOINT_URL','AGENT_PRIVATE_KEY','AIRWALLEX_API_KEY','ANTHROPIC_API_KEY'):
             self.assertNotIn(name,observed['env'])
         self.assertIn('default',observed['command']);self.assertIn('ap-south-1',observed['command'])
+        self.assertEqual(observed['env']['AWS_CLI_AUTO_PROMPT'],'off')
 
     def test_permission_errors_are_redacted(self):
         def runner(command,**kwargs):return subprocess.CompletedProcess(command,1,'','AccessDenied fixture-only-credential-detail')
-        with patch('tools.aws_preflight.shutil.which',return_value='aws'):
+        with patch('tools.aws_preflight.find_aws_cli',return_value='aws'):
             with self.assertRaisesRegex(RuntimeError,'^ACCESSDENIED$'):read_aws('sts','get-caller-identity',runner=runner)
 
 
@@ -93,6 +173,17 @@ class AwsInfrastructureTests(unittest.TestCase):
     def setUpClass(cls):
         cls.template=json.loads((ROOT/'deploy/aws/cloudformation.json').read_text())
         cls.resources=cls.template['Resources']
+
+    def test_guard_findings_are_bound_to_the_reviewed_template(self):
+        report=json.loads((ROOT/'deploy/aws/guard-review.json').read_text())
+        self.assertEqual(report['template_hash_normalization'],'CRLF_TO_LF_ONLY')
+        normalized=(ROOT/report['template']).read_bytes().replace(b'\r\n',b'\n')
+        self.assertEqual(report['template_sha256'],hashlib.sha256(normalized).hexdigest())
+        self.assertEqual(sum(report['outcomes'].values()),report['rule_files'])
+        self.assertEqual(len(report['failed_rules']),report['outcomes']['FAIL'])
+        self.assertEqual(report['status'],'FAIL')
+        self.assertNotEqual(report['guard_exit_code'],0)
+        self.assertEqual(report['aws_resources_created'],0)
 
     def test_no_expensive_managed_service_or_financial_resource(self):
         forbidden={'AWS::EC2::NatGateway','AWS::ECS::Cluster','AWS::EKS::Cluster',

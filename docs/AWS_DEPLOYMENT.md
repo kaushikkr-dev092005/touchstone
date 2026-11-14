@@ -2,9 +2,13 @@
 
 No AWS resource, account upgrade, budget subscription, inference purchase or bank
 operation has been created. The existing Sites deployment remains unchanged.
-The current preflight result is **AWS_PROFILE_NOT_CONFIGURED**. The supplied AWS
-Cost Explorer URL is a private console link, not a usable authenticated CLI session.
-Its account number is only the intended identity until STS confirms it.
+The latest local preflight (14 November 2026) returns **AWS_ACCOUNT_MISMATCH**.
+AWS CLI 2.40.3 is installed outside `PATH`; the helper now discovers its standard
+Windows installation location. A real read-only STS request succeeded, but
+`default` did not match the account in the operator's earlier console link.
+The helper stopped before region, instance-offering or credit queries. Do not
+silently switch accounts or change `default`; confirm the intended identity first.
+The supplied Cost Explorer URL alone is not an authenticated CLI session.
 
 ## Approved preparation scope
 
@@ -86,6 +90,9 @@ recipient email and confirm delivery. **Budget alerts do not enforce a hard cap*
 and billing notifications may lag usage. See
 [AWS Budgets limitations](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html).
 Existing unrelated account usage can consume this budget. No budget is created now.
+`[MY AWS BILLING EMAIL]` is a placeholder, not a configured recipient; replace it
+privately with a real email in the approved deployment parameters. The template
+requires a valid email and does not commit the recipient to source control.
 
 ## Authenticate and perform read-only checks
 
@@ -97,8 +104,11 @@ For an account already using IAM Identity Center, `aws configure sso --profile d
 and `aws sso login --profile default` are options. Do not create an IAM account or
 upgrade a plan merely to enable this flow. Never paste access keys or tokens in chat.
 
-```text
-python tools/aws_preflight.py --expected-account YOUR_12_DIGIT_ACCOUNT_ID
+From the repository root in PowerShell, after the official CLI is available:
+
+```powershell
+$touchstoneAccountId = Read-Host 'Intended 12-digit AWS account ID'
+python tools/aws_preflight.py --expected-account $touchstoneAccountId
 ```
 
 This tool accepts only `default`, verifies STS identity, checks Mumbai opt-in and
@@ -107,6 +117,28 @@ instance offerings, then calls the read-only Free Tier account-plan API in
 overrides. It never calls Cost Explorer's billed API or any provisioning/write API.
 Missing authentication/permissions remain explicit blockers. The resulting report
 is ignored at `tmp/aws-preflight.json` and contains no credential values.
+Exit `0` means only that all supported read checks completed for the intended
+account and an active plan. `provisioning_authorized` remains `false`, and credit
+eligibility and final approval remain blocked. Exit `2` means a check is missing,
+failed or ineligible, including an account mismatch discovered by the billing API.
+Missing `default` authentication returns `AWS_PROFILE_NOT_CONFIGURED`; an installed
+profile with no CLI returns `AWS_CLI_NOT_INSTALLED`. Neither is a successful check.
+The helper checks `PATH` and standard Windows CLI v2 installation directories;
+it does not install software, alter your profile or persistently change `PATH`.
+
+The equivalent individual read-only CLI checks are below. Use the helper above
+for account/environment isolation: unlike these raw commands, it strips inherited
+AWS credential and endpoint overrides and stops if identity does not match. If
+running them manually, first remove such overrides in your local shell and verify
+the STS account before continuing. Do not share credentials or full debug output.
+If `aws` is not on `PATH`, replace it with the full path to your installed `aws.exe`.
+
+```powershell
+aws sts get-caller-identity --profile default --region ap-south-1 --no-cli-pager --output json
+aws ec2 describe-regions --profile default --region ap-south-1 --region-names ap-south-1 --no-cli-pager --output json
+aws ec2 describe-instance-type-offerings --profile default --region ap-south-1 --location-type region --filters Name=instance-type,Values=t4g.micro --no-cli-pager --output json
+aws freetier get-account-plan-state --profile default --region us-east-1 --no-cli-pager --output json
+```
 
 The [Free Tier account-plan API](https://docs.aws.amazon.com/cli/latest/reference/freetier/get-account-plan-state.html)
 can return plan status, remaining credits and expiration. A balance does not prove
@@ -215,15 +247,61 @@ before releasing its IP. No teardown command has been executed.
 
 ## Local validation and remaining blockers
 
-Executed: CloudFormation schema lint for Mumbai, Docker Compose configuration
-resolution, Bash syntax check, and 14 focused preparation/security tests. The
-existing 22 operational tests passed on repeat; the first run had one Windows
-socket-abort error (`WinError 10053`) without an application change or relaxed test.
-No live AWS API ran because `default` is not configured. The local Docker engine
-is unavailable, so image build/container/TLS and EC2 smoke checks remain unrun.
-No image workflow was executed and no resource was created.
+Latest local validation on 14 November 2026:
 
-Remaining: secure default-profile login, account/region/credit verification,
+| Check | Result |
+|---|---|
+| `python -m unittest discover -s tests -p test_aws_deployment.py -v` | 22 passed; controlled AWS responses only |
+| `cfn-lint -t deploy/aws/cloudformation.json -r ap-south-1` | Passed with installed cfn-lint 1.60.1 |
+| `docker compose -f deploy/aws/compose.yaml config --quiet` | Passed with dummy public artifact identifiers; no containers started |
+| `bash -n deploy/aws/install-runtime.sh` | Passed; installer not executed |
+| Read-only account preflight | Real STS request returned `AWS_ACCOUNT_MISMATCH`; region/credit checks stopped |
+| cfn-guard 3.2.1, pinned AWS EC2/IAM registry rules | FAIL: 8 failed, 20 passed, 15 not applicable; details below |
+| Image/container/TLS/EC2 smoke checks | Unrun: Docker engine unavailable and intended AWS account not verified |
+
+The preceding preparation revision `50324146a162aef0060b4b4d6f1d0cb7b88aa9a3`
+passed GitHub CI on Ubuntu/Windows with Python 3.11/3.12. Its existing 22 operational
+tests passed locally on repeat; the first local run had one Windows socket-abort
+error (`WinError 10053`) without an application change or relaxed test. These are
+local/CI results, not proof of an AWS deployment. No image workflow was executed
+and no resource was created.
+
+### Guard review: unresolved findings
+
+With explicit installation approval, Guard 3.2.1 was installed under ignored
+`.tools/aws-guard/3.2.1/`. The official Windows archive was checked against its
+published SHA-256 before execution. Rules came from the
+[AWS registry at pinned commit 7f7340c](https://github.com/aws-cloudformation/aws-guard-rules-registry/tree/7f7340c26ae5d5e8874651dbffeb12e0e9f505b6).
+All 43 EC2/IAM rule files were evaluated without suppressions. The template was
+not modified to hide findings. The hash-bound summary (SHA-256 after CRLF-to-LF
+normalization, supporting Windows and Linux checkouts) is
+[`deploy/aws/guard-review.json`](../deploy/aws/guard-review.json).
+
+| Failed rule | Resource and disposition before deployment |
+|---|---|
+| `EBS_OPTIMIZED_INSTANCE` | `Instance`: `EbsOptimized` is not explicit. Verify the selected type's default/support and price before making the setting explicit. |
+| `EBS_VOLUME_ENCRYPTION_KEY_RULE` | `DataVolume`: encrypted, but no explicit `KmsKeyId`. Review default EBS encryption and key access; do not create a paid customer key automatically. |
+| `EC2_INSTANCE_DETAILED_MONITORING_ENABLED` | `Instance`: detailed monitoring is disabled for the cost plan. Review basic monitoring coverage and price any additional monitoring before approval. |
+| `EC2_SECURITY_GROUP_EGRESS_OPEN_TO_WORLD_RULE` | `SecurityGroup`: outbound TCP 80/443 is internet-wide for bootstrapping and read-only provider queries. Destination restrictions remain a deployment security review. |
+| `EC2_SECURITY_GROUP_INGRESS_OPEN_TO_WORLD_RULE` | `SecurityGroup`: public TCP 80/443 serves the website/TLS challenge. No SSH or Python port is open; public exposure still requires explicit review. |
+| `NO_UNRESTRICTED_ROUTE_TO_IGW` | `PublicRoute`: the default internet route is required by the proposed public single-host topology. Review that topology before deployment. |
+| `SECURITY_GROUP_DESCRIPTION_RULE` | `SecurityGroup`: individual ingress/egress rules lack descriptions, despite a group description. Add precise rule descriptions in a reviewed template revision. |
+| `SECURITY_GROUP_INGRESS_CIDR_NON_32_RULE` | `SecurityGroup`: public website ingress is wider than a single IPv4 address. A private operator-only alternative would change accessibility; do not change silently. |
+
+On this Windows workspace, reproduce the static review after the approved local
+installation and pinned registry download (these commands do not contact AWS):
+
+```powershell
+& .tools/aws-guard/3.2.1/cfn-guard-v3-x86_64-windows-latest/cfn-guard.exe validate --data deploy/aws/cloudformation.json --rules .tools/aws-guard/rules-7f7340c/amazon_ec2 --rules .tools/aws-guard/rules-7f7340c/iam --output-format json --show-summary none
+```
+
+The full local output is ignored at `tmp/aws-guard-review.json`; the command exits
+nonzero while findings remain. These checks do not establish runtime security,
+credit eligibility, account permissions, HTTPS issuance or readiness to provision.
+
+Remaining: confirmation/correction of the default profile's intended account,
+region/credit verification,
 current month usage/tax/gp3 pricing, compliant cost review, image builds/digests,
-budget recipient email, exact final provisioning approval and explicit operator
+resolution/review of the static security findings, budget recipient email,
+exact final provisioning approval and explicit operator
 initialization. **This is prepared infrastructure, not a successful AWS deployment.**
