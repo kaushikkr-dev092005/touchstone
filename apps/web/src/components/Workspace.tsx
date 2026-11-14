@@ -52,9 +52,9 @@ function RingProgress({ pct, color }: { pct: number; color: string }) {
 
 function providerBadge(provider: string) {
   const p = provider.toLowerCase();
-  if (p.includes("local")) return { icon: "cpu", color: "#3b82f6", label: "Local GPU" };
-  if (p.includes("premium") || p.includes("sonnet")) return { icon: "spark", color: "#8b5cf6", label: "Hosted Premium" };
-  return { icon: "bolt", color: "#f97316", label: "Hosted Route" };
+  if (p.includes("local")) return { icon: "cpu", color: "#e4e4e7", label: "Local GPU" };
+  if (p.includes("premium") || p.includes("sonnet")) return { icon: "spark", color: "#d4d4d8", label: "Hosted Premium" };
+  return { icon: "bolt", color: "#a1a1aa", label: "Hosted Route" };
 }
 
 export default function Workspace({
@@ -114,12 +114,12 @@ export default function Workspace({
   const activeBar = capsuleBars[Math.min(activeBarIdx, Math.max(0, capsuleBars.length - 1))];
 
   const providerRows = [
-    { name: "RTX 3050 Local GPU", sub: "llama.cpp · Vulkan", price: "$0.0050", color: "#3b82f6", icon: "cpu" },
-    { name: "Hosted Premium Model", sub: "Strict holdout escalated", price: "$0.0100", color: "#8b5cf6", icon: "spark" },
-    { name: "Deterministic Tools", sub: "Arithmetic & role checks", price: "$0.0000", color: "#34d399", icon: "check" },
-    { name: "Airwallex Sandbox", sub: "Authorized customer hold", price: evidence ? `$${evidence.holdUsd.toFixed(2)}` : "$1.00", color: "#f97316", icon: "wallet" },
-    { name: "Airwallex Capture", sub: "Customer closed · retained", price: evidence ? `$${evidence.captureUsd.toFixed(2)}` : "$0.01", color: "#f43f5e", icon: "shield" },
-    { name: "Merchant MCP Catalog", sub: "Verified guest OAuth", price: `${evidence?.products ?? 100} SKUs`, color: "#38bdf8", icon: "grid" },
+    { name: "RTX 3050 Local GPU", sub: "llama.cpp · Vulkan", price: "$0.0050", color: "#e4e4e7", icon: "cpu" },
+    { name: "Hosted Premium Model", sub: "Strict holdout escalated", price: "$0.0100", color: "#d4d4d8", icon: "spark" },
+    { name: "Deterministic Tools", sub: "Arithmetic & role checks", price: "$0.0000", color: "#a1a1aa", icon: "check" },
+    { name: "Airwallex Sandbox", sub: "Authorized customer hold", price: evidence ? `$${evidence.holdUsd.toFixed(2)}` : "$1.00", color: "#e5a95d", icon: "wallet" },
+    { name: "Airwallex Capture", sub: "Customer closed · retained", price: evidence ? `$${evidence.captureUsd.toFixed(2)}` : "$0.01", color: "#d4d4d8", icon: "shield" },
+    { name: "Merchant MCP Catalog", sub: "Verified guest OAuth", price: `${evidence?.products ?? 100} SKUs`, color: "#a1a1aa", icon: "grid" },
   ];
 
   const ledgerToolbarAndTable = (
@@ -168,7 +168,7 @@ export default function Workspace({
                   <tr key={row.id}>
                     <td>
                       <div className="tx-cell-main">
-                        <span className="tx-icon-sq" style={{ color: badge.color, backgroundColor: `${badge.color}1c`, borderColor: `${badge.color}40` }}>
+                        <span className="tx-icon-sq">
                           <Icon name={badge.icon} size={13} />
                         </span>
                         <button className="record-link" onClick={() => setSelected(row)}>{row.task}</button>
@@ -302,286 +302,303 @@ export default function Workspace({
           <div className="bento-card"><div className="bento-well workspace-empty" role="status">Saved evidence is loading or unavailable. No transaction is being sent.</div></div>
         ) : (
           <>
-            <div className="bento-kpi-grid">
-              <div className="bento-card kpi-card">
-                <div className="bento-card-head">
-                  <span className="bento-card-title"><Icon name="wallet" size={14} /> Customer Hold (USD)</span>
-                  <Icon name="dots" size={14} />
-                </div>
-                <div className="bento-well kpi-well">
-                  <div className="kpi-main">
-                    <SplitMetric value={evidence.holdUsd} prefix="$" decimals={2} />
-                    <MiniSpark color="#3b82f6" bars={[14, 21, 27]} curve="M6 12 Q24 6 42 16 T66 10" />
-                  </div>
-                  <div className="kpi-foot">
-                    <span className="muted">Captured ${evidence.captureUsd.toFixed(2)}</span>
-                    <span className="kpi-delta is-up">Float Safe</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bento-card kpi-card">
-                <div className="bento-card-head">
-                  <span className="bento-card-title"><Icon name="ledger" size={14} /> Model Spend (USDZ)</span>
-                  <Icon name="dots" size={14} />
-                </div>
-                <div className="bento-well kpi-well">
-                  <div className="kpi-main">
-                    <SplitMetric
-                      value={evidence.comparison ? evidence.comparison.providerUsdz : evidence.modelUsdz}
-                      prefix="$"
-                      decimals={3}
-                    />
-                    <MiniSpark color="#8b5cf6" bars={[18, 26, 20]} curve="M6 20 Q24 8 42 14 T66 8" />
-                  </div>
-                  <div className="kpi-foot">
-                    <span className="muted">{evidence.comparison?.paidReceipts ?? chargedCount} paid receipts</span>
-                    <span className="kpi-delta is-up">x402 Rail</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bento-card kpi-card">
-                <div className="bento-card-head">
-                  <span className="bento-card-title"><Icon name="check" size={14} /> Strict Qualification</span>
-                  <Icon name="dots" size={14} />
-                </div>
-                <div className="bento-well kpi-well">
-                  <div className="kpi-main">
-                    <span className="split-num">
-                      {evidence.calibrationCorrect}
-                      <span className="split-dec">/{evidence.calibrationTotal}</span>
-                    </span>
-                    <MiniSpark color="#f97316" bars={[20, 24, 29]} curve="M6 22 Q24 14 42 12 T66 6" />
-                  </div>
-                  <div className="kpi-foot">
-                    <span className="muted">Holdout {evidence.holdoutCorrect}/{evidence.holdoutTotal}</span>
-                    <span className="kpi-delta is-up">98.3% Holdout</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bento-card kpi-card">
-                <div className="bento-card-head">
-                  <span className="bento-card-title"><Icon name="shield" size={14} /> API Exposure</span>
-                  <Icon name="dots" size={14} />
-                </div>
-                <div className="bento-well kpi-well">
-                  <div className="kpi-main">
-                    <SplitMetric value={evidence.creditUsd} prefix="$" decimals={3} />
-                    <MiniSpark color="#f43f5e" bars={[26, 22, 16]} curve="M6 10 Q24 18 42 14 T66 22" />
-                  </div>
-                  <div className="kpi-foot">
-                    <span className="muted">Ceiling ${evidence.creditCeilingUsd.toFixed(2)}</span>
-                    <span className="kpi-delta is-warn">Capped</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             {view === "dashboard" ? (
               <>
-                <div className="bento-row-mid">
-                  <div className="bento-card">
-                    <div className="bento-card-head">
-                      <span className="bento-card-title"><Icon name="dashboard" size={14} /> Attempt &amp; Settlement Flow</span>
-                      <span className="bento-pill-tag">{records.length} Calls</span>
-                    </div>
-                    <div className="bento-well capsule-well">
-                      <div className="capsule-stage">
-                        {activeBar && (
-                          <div
-                            className="capsule-tooltip"
-                            style={{ left: `${Math.min(72, Math.max(8, (activeBar.index / 27) * 84))}%` }}
-                          >
-                            <div className="cap-tip-head">
-                              <span>{activeBar.label}</span>
-                              <i className={activeBar.state === "Charged" ? "is-charged" : ""} />
-                            </div>
-                            <strong>{activeBar.amountUsd} USDZ</strong>
-                          </div>
-                        )}
-                        <div className="capsule-grid" aria-label="Interactive attempt telemetry chart">
-                          {capsuleBars.map(bar => (
-                            <button
-                              type="button"
-                              key={bar.index}
-                              className={"capsule-col" + (activeBarIdx === bar.index ? " is-active" : "")}
-                              onMouseEnter={() => setActiveBarIdx(bar.index)}
-                              onFocus={() => setActiveBarIdx(bar.index)}
-                              onClick={() => bar.record && setSelected(bar.record)}
-                              aria-label={`${bar.label}: ${bar.amountUsd}`}
-                            >
-                              <span className="cap-upper" style={{ height: `${bar.upperPct}%` }} />
-                              <span className="cap-lower" style={{ height: `${bar.primaryPct}%` }} />
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="capsule-axis mono">
-                        <span>BANKED-01</span>
-                        <span>M4-BATCH-07</span>
-                        <span>M4-BATCH-14</span>
-                        <span>M4-BATCH-21</span>
-                        <span>M4-LATEST</span>
-                      </div>
-                    </div>
+                {/* Zone 1: Executive Overview */}
+                <section aria-label="Executive Overview" className="bento-zone">
+                  <div className="bento-zone-header">
+                    <span className="bento-zone-title mono"><Icon name="dashboard" size={13} /> ZONE 01 · EXECUTIVE OVERVIEW</span>
                   </div>
 
-                  <div className="bento-card">
-                    <div className="bento-card-head">
-                      <span className="bento-card-title"><Icon name="wallet" size={14} /> Qualified Rails</span>
-                      <button type="button" className="bento-viewall-btn" onClick={() => go("ledger")}>View All</button>
+                  <div className="bento-kpi-grid">
+                    <div className="bento-card kpi-card">
+                      <div className="bento-card-head">
+                        <span className="bento-card-title"><Icon name="wallet" size={14} /> Customer Hold (USD)</span>
+                      </div>
+                      <div className="bento-well kpi-well">
+                        <div className="kpi-main">
+                          <SplitMetric value={evidence.holdUsd} prefix="$" decimals={2} />
+                          <MiniSpark color="rgba(255,255,255,0.7)" bars={[14, 21, 27]} curve="M6 12 Q24 6 42 16 T66 10" />
+                        </div>
+                        <div className="kpi-foot">
+                          <span className="muted">Captured ${evidence.captureUsd.toFixed(2)}</span>
+                          <span className="kpi-delta is-up">Float Safe</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="bento-well pill-list-well">
-                      {providerRows.map(item => (
-                        <div className="pill-list-row" key={item.name}>
-                          <span className="pill-row-sq" style={{ color: item.color, backgroundColor: `${item.color}1e` }}>
-                            <Icon name={item.icon} size={14} />
+
+                    <div className="bento-card kpi-card">
+                      <div className="bento-card-head">
+                        <span className="bento-card-title"><Icon name="ledger" size={14} /> Model Spend (USDZ)</span>
+                      </div>
+                      <div className="bento-well kpi-well">
+                        <div className="kpi-main">
+                          <SplitMetric
+                            value={evidence.comparison ? evidence.comparison.providerUsdz : evidence.modelUsdz}
+                            prefix="$"
+                            decimals={3}
+                          />
+                          <MiniSpark color="rgba(255,255,255,0.7)" bars={[18, 26, 20]} curve="M6 20 Q24 8 42 14 T66 8" />
+                        </div>
+                        <div className="kpi-foot">
+                          <span className="muted">{evidence.comparison?.paidReceipts ?? chargedCount} paid receipts</span>
+                          <span className="kpi-delta is-up">x402 Rail</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bento-card kpi-card">
+                      <div className="bento-card-head">
+                        <span className="bento-card-title"><Icon name="check" size={14} /> Strict Qualification</span>
+                      </div>
+                      <div className="bento-well kpi-well">
+                        <div className="kpi-main">
+                          <span className="split-num">
+                            {evidence.calibrationCorrect}
+                            <span className="split-dec">/{evidence.calibrationTotal}</span>
                           </span>
-                          <div className="pill-row-copy">
-                            <strong>{item.name}</strong>
-                            <small>{item.sub}</small>
-                          </div>
-                          <span className="pill-row-val mono">{item.price}</span>
+                          <MiniSpark color="rgba(255,255,255,0.7)" bars={[20, 24, 29]} curve="M6 22 Q24 14 42 12 T66 6" />
                         </div>
-                      ))}
+                        <div className="kpi-foot">
+                          <span className="muted">Holdout {evidence.holdoutCorrect}/{evidence.holdoutTotal}</span>
+                          <span className="kpi-delta is-up">98.3% Holdout</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bento-card kpi-card">
+                      <div className="bento-card-head">
+                        <span className="bento-card-title"><Icon name="shield" size={14} /> API Exposure</span>
+                      </div>
+                      <div className="bento-well kpi-well">
+                        <div className="kpi-main">
+                          <SplitMetric value={evidence.creditUsd} prefix="$" decimals={3} />
+                          <MiniSpark color="rgba(255,255,255,0.7)" bars={[26, 22, 16]} curve="M6 10 Q24 18 42 14 T66 22" />
+                        </div>
+                        <div className="kpi-foot">
+                          <span className="muted">Ceiling ${evidence.creditCeilingUsd.toFixed(2)}</span>
+                          <span className="kpi-delta is-warn">Capped</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="bento-card">
-                    <div className="bento-card-head">
-                      <span className="bento-card-title"><Icon name="spark" size={14} /> Audit Insights</span>
-                      <button
-                        type="button"
-                        className="bento-viewall-btn"
-                        onClick={() => document.getElementById("policy-planner")?.scrollIntoView({ behavior: "smooth" })}
-                      >
-                        Planner
-                      </button>
-                    </div>
-                    <div className="bento-well insight-list-well">
-                      <ul className="insight-bullets">
-                        <li><Icon name="check" size={13} /><span>Calibration strict accuracy hit <b>{evidence.calibrationCorrect}/{evidence.calibrationTotal}</b> under frozen specs.</span></li>
-                        <li><Icon name="shield" size={13} /><span>Untouched holdout scored <b>{evidence.holdoutCorrect}/{evidence.holdoutTotal}</b> with <b>0 false accepts</b>.</span></li>
-                        <li><Icon name="bolt" size={13} /><span>Interrupted calls count as failed; costs remain <b>intact</b> in ledger.</span></li>
-                        <li><Icon name="wallet" size={13} /><span>Sandbox fiat hold <b>${evidence.holdUsd.toFixed(2)}</b> stayed isolated from USDZ.</span></li>
-                        <li><Icon name="grid" size={13} /><span>Merchant catalog verified <b>{evidence.products} SKUs</b> + signed guest OAuth.</span></li>
-                      </ul>
-                      <button
-                        type="button"
-                        className="ask-ai-btn"
-                        onClick={() => document.getElementById("policy-planner")?.scrollIntoView({ behavior: "smooth" })}
-                      >
-                        <Icon name="spark" size={14} /> Inspect 64/64 Policy Study
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bento-row-bot">
-                  <div className="bento-card">
-                    <div className="bento-card-head">
-                      <span className="bento-card-title"><Icon name="ledger" size={14} /> Recent Attempts</span>
-                      <button type="button" className="bento-viewall-btn" onClick={() => go("ledger")}>View All</button>
-                    </div>
-                    <div className="bento-well recent-well">
-                      <div className="recent-tx-grid">
-                        {records.slice(0, 6).map(rec => {
-                          const badge = providerBadge(rec.provider);
-                          return (
-                            <button type="button" className="recent-tx-chip" key={rec.id} onClick={() => setSelected(rec)}>
-                              <span className="tx-icon-sq" style={{ color: badge.color, backgroundColor: `${badge.color}1c` }}>
-                                <Icon name={badge.icon} size={13} />
-                              </span>
-                              <div className="recent-tx-copy">
-                                <strong>{rec.task}</strong>
-                                <small>{rec.provider}</small>
+                  <div className="bento-row-mid">
+                    <div className="bento-card">
+                      <div className="bento-card-head">
+                        <span className="bento-card-title"><Icon name="dashboard" size={14} /> Attempt &amp; Settlement Flow</span>
+                        <span className="bento-pill-tag mono">{records.length} Calls</span>
+                      </div>
+                      <div className="bento-well capsule-well">
+                        <div className="capsule-stage">
+                          {activeBar && (
+                            <div
+                              className="capsule-tooltip"
+                              style={{ left: `${Math.min(72, Math.max(8, (activeBar.index / 27) * 84))}%` }}
+                            >
+                              <div className="cap-tip-head">
+                                <span>{activeBar.label}</span>
+                                <i className={activeBar.state === "Charged" ? "is-charged" : ""} />
                               </div>
-                              <span className="recent-tx-amt mono">
-                                {rec.costMicro ? `$${(rec.costMicro / 1e6).toFixed(4)}` : "$0.00"}
-                              </span>
-                            </button>
-                          );
-                        })}
+                              <strong>{activeBar.amountUsd} USDZ</strong>
+                            </div>
+                          )}
+                          <div className="capsule-grid" aria-label="Interactive attempt telemetry chart">
+                            {capsuleBars.map(bar => (
+                              <button
+                                type="button"
+                                key={bar.index}
+                                className={"capsule-col" + (activeBarIdx === bar.index ? " is-active" : "")}
+                                onMouseEnter={() => setActiveBarIdx(bar.index)}
+                                onFocus={() => setActiveBarIdx(bar.index)}
+                                onClick={() => bar.record && setSelected(bar.record)}
+                                aria-label={`${bar.label}: ${bar.amountUsd}`}
+                              >
+                                <span className="cap-upper" style={{ height: `${bar.upperPct}%` }} />
+                                <span className="cap-lower" style={{ height: `${bar.primaryPct}%` }} />
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="capsule-axis mono">
+                          <span>BANKED-01</span>
+                          <span>M4-BATCH-07</span>
+                          <span>M4-BATCH-14</span>
+                          <span>M4-BATCH-21</span>
+                          <span>M4-LATEST</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="bento-card">
-                    <div className="bento-card-head">
-                      <span className="bento-card-title"><Icon name="check" size={14} /> Qualification Benchmarks</span>
-                      <span className="mini-tag">UNCHANGED</span>
-                    </div>
-                    <div className="bento-well rings-well">
-                      <div className="goal-ring-row">
-                        <div>
-                          <strong>Calibration Trials</strong>
-                          <small className="mono">{evidence.calibrationCorrect} / {evidence.calibrationTotal} strict</small>
-                        </div>
-                        <RingProgress pct={100} color="#3b82f6" />
+                    <div className="bento-card">
+                      <div className="bento-card-head">
+                        <span className="bento-card-title"><Icon name="wallet" size={14} /> Qualified Rails</span>
+                        <button type="button" className="bento-viewall-btn" onClick={() => go("ledger")}>View All</button>
                       </div>
-                      <div className="goal-ring-row">
-                        <div>
-                          <strong>Untouched Holdout</strong>
-                          <small className="mono">{evidence.holdoutCorrect} / {evidence.holdoutTotal} strict (1 timeout)</small>
-                        </div>
-                        <RingProgress pct={Math.round((evidence.holdoutCorrect / evidence.holdoutTotal) * 100)} color="#8b5cf6" />
-                      </div>
-                      <div className="trial-grid bento-trial-grid" aria-hidden="true">
-                        {Array.from({ length: 60 }, (_, i) => (
-                          <i className={i === 59 ? "interrupted" : ""} key={i} />
+                      <div className="bento-well pill-list-well">
+                        {providerRows.map(item => (
+                          <div className="pill-list-row" key={item.name}>
+                            <span className="pill-row-sq">
+                              <Icon name={item.icon} size={14} />
+                            </span>
+                            <div className="pill-row-copy">
+                              <strong>{item.name}</strong>
+                              <small>{item.sub}</small>
+                            </div>
+                            <span className="pill-row-val mono">{item.price}</span>
+                          </div>
                         ))}
                       </div>
                     </div>
+
+                    <div className="bento-card">
+                      <div className="bento-card-head">
+                        <span className="bento-card-title"><Icon name="spark" size={14} /> Audit Insights</span>
+                        <button
+                          type="button"
+                          className="bento-viewall-btn"
+                          onClick={() => document.getElementById("policy-planner")?.scrollIntoView({ behavior: "smooth" })}
+                        >
+                          Planner
+                        </button>
+                      </div>
+                      <div className="bento-well insight-list-well">
+                        <ul className="insight-bullets">
+                          <li><Icon name="check" size={13} /><span>Calibration strict accuracy hit <b>{evidence.calibrationCorrect}/{evidence.calibrationTotal}</b> under frozen specs.</span></li>
+                          <li><Icon name="shield" size={13} /><span>Untouched holdout scored <b>{evidence.holdoutCorrect}/{evidence.holdoutTotal}</b> with <b>0 false accepts</b>.</span></li>
+                          <li><Icon name="bolt" size={13} /><span>Interrupted calls count as failed; costs remain <b>intact</b> in ledger.</span></li>
+                          <li><Icon name="wallet" size={13} /><span>Sandbox fiat hold <b>${evidence.holdUsd.toFixed(2)}</b> stayed isolated from USDZ.</span></li>
+                          <li><Icon name="grid" size={13} /><span>Merchant catalog verified <b>{evidence.products} SKUs</b> + signed guest OAuth.</span></li>
+                        </ul>
+                        <button
+                          type="button"
+                          className="ask-ai-btn"
+                          onClick={() => document.getElementById("policy-planner")?.scrollIntoView({ behavior: "smooth" })}
+                        >
+                          <Icon name="spark" size={14} /> Inspect 64/64 Policy Study
+                        </button>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="bento-card">
-                    <div className="bento-card-head">
-                      <span className="bento-card-title"><Icon name="shield" size={14} /> Protocol Guarantees</span>
+                  <div className="bento-row-bot">
+                    <div className="bento-card">
+                      <div className="bento-card-head">
+                        <span className="bento-card-title"><Icon name="ledger" size={14} /> Recent Attempts</span>
+                        <button type="button" className="bento-viewall-btn" onClick={() => go("ledger")}>View All</button>
+                      </div>
+                      <div className="bento-well recent-well">
+                        <div className="recent-tx-grid">
+                          {records.slice(0, 6).map(rec => {
+                            const badge = providerBadge(rec.provider);
+                            return (
+                              <button type="button" className="recent-tx-chip" key={rec.id} onClick={() => setSelected(rec)}>
+                                <span className="tx-icon-sq">
+                                  <Icon name={badge.icon} size={13} />
+                                </span>
+                                <div className="recent-tx-copy">
+                                  <strong>{rec.task}</strong>
+                                  <small>{rec.provider}</small>
+                                </div>
+                                <span className="recent-tx-amt mono">
+                                  {rec.costMicro ? `$${(rec.costMicro / 1e6).toFixed(4)}` : "$0.00"}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </div>
-                    <div className="bento-well guardrail-well">
-                      <div className="guard-row">
-                        <Icon name="check" size={14} />
-                        <div>
-                          <strong>Idempotent Key Hold</strong>
-                          <small>Retried keys replay original receipts without double billing</small>
+
+                    <div className="bento-card">
+                      <div className="bento-card-head">
+                        <span className="bento-card-title"><Icon name="check" size={14} /> Qualification Benchmarks</span>
+                        <span className="mini-tag">UNCHANGED</span>
+                      </div>
+                      <div className="bento-well rings-well">
+                        <div className="goal-ring-row">
+                          <div>
+                            <strong>Calibration Trials</strong>
+                            <small className="mono">{evidence.calibrationCorrect} / {evidence.calibrationTotal} strict</small>
+                          </div>
+                          <RingProgress pct={100} color="#e4e4e7" />
+                        </div>
+                        <div className="goal-ring-row">
+                          <div>
+                            <strong>Untouched Holdout</strong>
+                            <small className="mono">{evidence.holdoutCorrect} / {evidence.holdoutTotal} strict (1 timeout)</small>
+                          </div>
+                          <RingProgress pct={Math.round((evidence.holdoutCorrect / evidence.holdoutTotal) * 100)} color="#e5a95d" />
+                        </div>
+                        <div className="trial-grid bento-trial-grid" aria-hidden="true">
+                          {Array.from({ length: 60 }, (_, i) => (
+                            <i className={i === 59 ? "interrupted" : ""} key={i} />
+                          ))}
                         </div>
                       </div>
-                      <div className="guard-row">
-                        <Icon name="check" size={14} />
-                        <div>
-                          <strong>Source-Bound Field Roles</strong>
-                          <small>Synthetic tricks move to human review with zero false accepts</small>
-                        </div>
+                    </div>
+
+                    <div className="bento-card">
+                      <div className="bento-card-head">
+                        <span className="bento-card-title"><Icon name="shield" size={14} /> Protocol Guarantees</span>
                       </div>
-                      <div className="guard-row">
-                        <Icon name="shield" size={14} />
-                        <div>
-                          <strong>Independent EIP-712 Gate</strong>
-                          <small>Human signature invalidates any provider or cap tampering</small>
+                      <div className="bento-well guardrail-well">
+                        <div className="guard-row">
+                          <Icon name="check" size={14} />
+                          <div>
+                            <strong>Idempotent Key Hold</strong>
+                            <small>Retried keys replay original receipts without double billing</small>
+                          </div>
+                        </div>
+                        <div className="guard-row">
+                          <Icon name="check" size={14} />
+                          <div>
+                            <strong>Source-Bound Field Roles</strong>
+                            <small>Synthetic tricks move to human review with zero false accepts</small>
+                          </div>
+                        </div>
+                        <div className="guard-row">
+                          <Icon name="shield" size={14} />
+                          <div>
+                            <strong>Independent EIP-712 Gate</strong>
+                            <small>Human signature invalidates any provider or cap tampering</small>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
+                </section>
+
+                {/* Zone 2: Policy Studio */}
+                <div className="bento-zone">
+                  <div className="bento-zone-header">
+                    <span className="bento-zone-title mono"><Icon name="spark" size={13} /> ZONE 02 · POLICY STUDIO &amp; MODEL BENCHMARK</span>
+                  </div>
+                  <PolicyComparison
+                    data={evidence.comparison}
+                    calibration={`${evidence.calibrationCorrect} / ${evidence.calibrationTotal}`}
+                    holdout={`${evidence.holdoutCorrect} / ${evidence.holdoutTotal}`}
+                    products={evidence.products}
+                  />
                 </div>
 
-                <PolicyComparison
-                  data={evidence.comparison}
-                  calibration={`${evidence.calibrationCorrect} / ${evidence.calibrationTotal}`}
-                  holdout={`${evidence.holdoutCorrect} / ${evidence.holdoutTotal}`}
-                  products={evidence.products}
-                />
-
-                {ledgerToolbarAndTable}
+                {/* Zone 3: Settlement Ledger */}
+                <div className="bento-zone">
+                  <div className="bento-zone-header">
+                    <span className="bento-zone-title mono"><Icon name="ledger" size={13} /> ZONE 03 · SETTLEMENT LEDGER &amp; VERIFIED RECEIPTS</span>
+                  </div>
+                  {ledgerToolbarAndTable}
+                </div>
               </>
             ) : (
-              <div className="bento-ledger-split">
-                <div className="bento-ledger-left">
+              <div className="bento-ledger-hero-view">
+                {ledgerToolbarAndTable}
+
+                <div className="bento-ledger-supporting-grid">
                   <div className="bento-card">
                     <div className="bento-card-head">
                       <span className="bento-card-title"><Icon name="spark" size={14} /> Settlement Audit</span>
-                      <span className="bento-pill-tag">{records.length} Total</span>
+                      <span className="bento-pill-tag mono">{records.length} TOTAL</span>
                     </div>
                     <div className="bento-well insight-spotlight">
                       <div className="spotlight-rings" aria-hidden="true" />
@@ -598,6 +615,7 @@ export default function Workspace({
                   <div className="bento-card">
                     <div className="bento-card-head">
                       <span className="bento-card-title"><Icon name="wallet" size={14} /> Rail Separation Proof</span>
+                      <span className="mini-tag">METAL + FIAT</span>
                     </div>
                     <div className="bento-well saving-well">
                       <p>Integrated sandbox payment authorized ${evidence.holdUsd.toFixed(2)} USD and captured ${evidence.captureUsd.toFixed(2)} USD, completely separate from x402 testnet spend.</p>
@@ -611,8 +629,6 @@ export default function Workspace({
                     </div>
                   </div>
                 </div>
-
-                {ledgerToolbarAndTable}
               </div>
             )}
 

@@ -2,14 +2,14 @@ import type { PolicyComparisonData, PolicyRow } from "@/siteTypes";
 import { Icon } from "./Identity";
 
 const POLICY_META: Record<string, { label: string; color: string; icon: string }> = {
-  "tools-only": { label: "Local tools only", color: "#34d399", icon: "check" },
-  "always-cheapest": { label: "Cheapest paid model", color: "#3b82f6", icon: "bolt" },
-  "always-premium": { label: "Premium paid model", color: "#8b5cf6", icon: "spark" },
-  "touchstone-ladder": { label: "Touchstone ladder", color: "#f97316", icon: "shield" },
+  "tools-only": { label: "Local tools only", color: "#a1a1aa", icon: "check" },
+  "always-cheapest": { label: "Cheapest paid model", color: "#71717a", icon: "bolt" },
+  "always-premium": { label: "Premium paid model", color: "#d4d4d8", icon: "spark" },
+  "touchstone-ladder": { label: "Touchstone ladder", color: "#e5a95d", icon: "shield" },
 };
 
 const policyLabel = (policy: string) => POLICY_META[policy]?.label ?? policy;
-const policyColor = (policy: string) => POLICY_META[policy]?.color ?? "#3b82f6";
+const policyColor = (policy: string) => POLICY_META[policy]?.color ?? "#d4d4d8";
 const policyIcon = (policy: string) => POLICY_META[policy]?.icon ?? "cpu";
 
 export default function PolicyComparison({
@@ -131,7 +131,7 @@ export default function PolicyComparison({
                 return (
                   <div className="led-row" key={row.policy}>
                     <div className="led-name">
-                      <span className="led-squircle" style={{ color, backgroundColor: `${color}1f`, borderColor: `${color}44` }}>
+                      <span className="led-squircle" style={{ color, borderColor: row.policy === "touchstone-ladder" ? "rgba(229,169,93,.3)" : "rgba(255,255,255,.08)" }}>
                         <Icon name={policyIcon(row.policy)} size={14} />
                       </span>
                       <div>
@@ -148,7 +148,7 @@ export default function PolicyComparison({
                         {Array.from({ length: 12 }, (_, idx) => (
                           <i
                             key={idx}
-                            style={idx < litSegments ? { backgroundColor: color, boxShadow: `0 0 8px ${color}80` } : undefined}
+                            style={idx < litSegments ? { backgroundColor: color, boxShadow: `0 0 5px ${color}55` } : undefined}
                           />
                         ))}
                       </div>
@@ -223,7 +223,7 @@ export default function PolicyComparison({
                     <path
                       key={idx}
                       d={`M ${x1.toFixed(1)} ${y1.toFixed(1)} A ${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}`}
-                      stroke={lit ? (idx > 8 ? "#f97316" : "#b85d38") : "#232329"}
+                      stroke={lit ? (idx > 8 ? "#e5a95d" : "rgba(255,255,255,.75)") : "#1e1e24"}
                       strokeWidth="16"
                       strokeLinecap="butt"
                       fill="none"
