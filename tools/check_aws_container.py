@@ -81,7 +81,11 @@ def main():
         connection=http.client.HTTPConnection('127.0.0.1',port,timeout=10)
         connection.request('GET','/operator-api/events',headers={'Host':f'127.0.0.1:{port}','Cookie':cookie,'Last-Event-ID':'1'})
         response=connection.getresponse();assert response.status==200
-        lines=[response.readline().decode() for _ in range(4)];connection.close()
+        lines=[]
+        for _ in range(32):
+            line=response.readline().decode();lines.append(line)
+            if 'JOB_COMPLETED' in line:break
+        connection.close()
         assert any('JOB_CREATED' in line for line in lines)
         docker('restart','--time','35',name);ready()
         status,raw,_=request('/operator-api/jobs');assert status==200

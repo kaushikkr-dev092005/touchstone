@@ -60,6 +60,9 @@ install -m 755 /opt/touchstone/docker-compose.pending /usr/local/lib/docker/cli-
 for name in compose.yaml Caddyfile; do
     curl --fail --silent --show-error --location "https://raw.githubusercontent.com/kaushikkr-dev092005/touchstone/$source_revision/deploy/aws/$name" -o "/opt/touchstone/$name"
 done
+# Public routing configuration must be readable by the separate unprivileged proxy.
+# runtime.env, policy, operator credentials and TLS state remain private.
+chmod 644 /opt/touchstone/Caddyfile
 printf 'APPLICATION_IMAGE=%s\nCADDY_IMAGE=%s\nSOURCE_REVISION=%s\nOPERATOR_DOMAIN=%s\n' "$application_image" "$caddy_image" "$source_revision" "$operator_domain" > /opt/touchstone/runtime.env
 
 install -d /etc/systemd/system/docker.service.d

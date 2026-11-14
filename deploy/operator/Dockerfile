@@ -1,4 +1,4 @@
-FROM oven/bun:1.4.0 AS frontend
+FROM --platform=$BUILDPLATFORM oven/bun:1.4.0@sha256:5ff609364c049b54eb0ff560ec96319729a972078ef2c755d758f0c6ef89c2d6 AS frontend
 WORKDIR /source
 COPY apps/web/package.json apps/web/bun.lock apps/web/
 RUN cd apps/web && bun install --frozen-lockfile --ignore-scripts
@@ -11,15 +11,15 @@ COPY bench bench
 RUN apt-get update && apt-get install -y --no-install-recommends python3 && rm -rf /var/lib/apt/lists/*
 RUN cd apps/web && bun run build
 
-FROM node:22-bookworm-slim AS quote_runtime
+FROM node:22-bookworm-slim@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee AS quote_runtime
 WORKDIR /node
 COPY integrations/metal/package.json integrations/metal/package-lock.json ./
 RUN npm ci --ignore-scripts --no-audit --no-fund
 
-FROM python:3.12-slim-bookworm AS operator
+FROM python:3.12-slim-bookworm@sha256:935c3c5b12357a7e10caa9c1e6ca5692344d97cf229832ef584be2cec9fc03df AS operator
 WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends libstdc++6 && rm -rf /var/lib/apt/lists/*
-RUN useradd --uid 10001 --create-home operator && mkdir -p /var/lib/touchstone && chown operator /var/lib/touchstone
+RUN groupadd --gid 10001 touchstone && useradd --uid 10001 --gid 10001 --no-user-group --create-home operator && mkdir -p /var/lib/touchstone && chown 10001:10001 /var/lib/touchstone
 COPY touchstone touchstone
 COPY tools/run_operator.py tools/run_operator.py
 COPY tools/operator_backup.py tools/operator_backup.py

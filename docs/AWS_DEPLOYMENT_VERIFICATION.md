@@ -51,6 +51,14 @@ from gross costs. Actual account-wide usage, KMS/tax costs, promotional eligibil
 credit balance/expiry and $0 cash coverage remain **BLOCKED**. No architecture is
 selected. Budget alerts at $5/$8/$10 are notifications, not a hard cap.
 
+## Proposed resources (not provisioned)
+
+The unchanged resource inventory is: Vpc, InternetGateway, GatewayAttachment,
+Subnet, RouteTable, PublicRoute, RouteAssociation, SecurityGroup, HostRole,
+HostProfile, Instance, PublicIp, IpAttachment, DataVolume, DataAttachment,
+and UsageBudget. Root storage is attached to Instance; no KMS key, scheduler,
+managed database, load balancer or paid networking resource is added.
+
 ## Release gates
 
 Full final-source validation and image runtime results will be recorded here after
