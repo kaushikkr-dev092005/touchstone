@@ -68,7 +68,8 @@ def make_server(config_path, data_dir, *, bind='127.0.0.1',port=8089):
             self.send_response(status)
             for name,value in {'Content-Type':mime,'Content-Length':str(len(body)),
                 'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
-                'Content-Security-Policy':CSP,'Referrer-Policy':'no-referrer',
+                'Content-Security-Policy':(CSP.replace("frame-ancestors 'none'", "frame-ancestors 'self'")
+                    if urlsplit(self.path).path == '/site/dashboard/index.html' else CSP),'Referrer-Policy':'no-referrer',
                 'Permissions-Policy':'camera=(), microphone=(), geolocation=()',
                 'Connection':'close'}.items():self.send_header(name,value)
             if cookie:self.send_header('Set-Cookie',cookie)

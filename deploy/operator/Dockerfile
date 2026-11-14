@@ -4,6 +4,8 @@ COPY apps/web/package.json apps/web/bun.lock apps/web/
 RUN cd apps/web && bun install --frozen-lockfile --ignore-scripts
 COPY apps/web apps/web
 COPY tools/build_site_evidence.py tools/build_site_evidence.py
+COPY tools/build_public_dashboard.py tools/build_public_dashboard.py
+COPY apps/dashboard apps/dashboard
 COPY touchstone touchstone
 COPY bench bench
 RUN apt-get update && apt-get install -y --no-install-recommends python3 && rm -rf /var/lib/apt/lists/*

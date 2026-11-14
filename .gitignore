@@ -12,3 +12,4 @@ __pycache__/
 *.pending
 node_modules/
 apps/web/public/data/evidence.json
+apps/web/public/dashboard/

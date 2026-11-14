@@ -6,6 +6,12 @@ every attempt. A rejected answer can still cost money.
 
 ## Current website
 
+The public [dashboard](https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site/dashboard)
+and [ledger](https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site/ledger)
+use the current design from `apps/dashboard/index.html`. The public build includes
+saved transaction details and benchmarks; operator actions remain disabled.
+The local console retains its existing interactive controls.
+
 **Authenticated operational workspace:** real source submission, bounded local
 tools, source verification, persistent jobs and backend events now have a separate
 secured service. [Setup and deployment](docs/LIVE_DEPLOYMENT.md) ·
@@ -16,8 +22,17 @@ zero-charge vertical slice, not a fully deployed financial application.
 Start the current website and operator dashboard from the repository root:
 
 ```text
+cd apps/web
+bun install --frozen-lockfile
+bun run build
+cd ../..
 python -m touchstone serve
 ```
+
+The frontend build regenerates the read-only dashboard from the canonical console.
+It never loads private wallet databases or operator credentials. Rebuild after
+pulling UI changes; an existing hosted deployment does not update from GitHub
+until its matching artifact is published. See [dashboard delivery](docs/DASHBOARD_DELIVERY.md).
 
 - [Website and animated landing page](http://127.0.0.1:8088/site/)
 - [Dashboard](http://127.0.0.1:8088/dashboard)

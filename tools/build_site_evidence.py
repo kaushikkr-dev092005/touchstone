@@ -38,7 +38,9 @@ def build():
                 'state':'Charged' if charged else 'Confirmed unpaid' if unpaid else 'Unresolved',
                 'costMicro':call['price_micro_usdz'] if charged else 0 if unpaid else None,
                 'receipt':call.get('receipt_id'),
-                'verification':'CONFIRMED_UNPAID_NO_RETRY' if unpaid else next((r['decision'] for r in raw['rows'] if r['task']['id']==call['task_id']),'UNRESOLVED'),
+                'verification':'CONFIRMED_UNPAID_NO_RETRY' if unpaid else next((r['decision'] for r in raw['rows'] if call['reservation_key'] in r.get('calls',[])),'UNRESOLVED'),
+                'policy':call['policy'],'purchaseKey':call['reservation_key'],
+                'scope':'m4-live-20261112','evidencePath':'bench/results/m4-live-20261112/live-report.json',
                 'apiCreditMicro':cost['estimated_credit_micro_usd'] if cost else 0 if call['provider']=='local-gpu' else None})
         comparison={'completed':measured['completed_outcomes'],'expected':measured['expected_outcomes'],
             'complete':measured['complete'],'liveGatePassed':measured['live_gate_passed'],
@@ -57,6 +59,8 @@ def build():
     path=ROOT/'apps/web/public/data/evidence.json'
     path.parent.mkdir(parents=True,exist_ok=True)
     path.write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
+    from tools.build_public_dashboard import build as build_dashboard
+    build_dashboard()
     return {'records':len(records),'private_data_loaded':False,'network_calls':0}
 
 

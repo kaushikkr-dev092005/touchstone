@@ -82,7 +82,7 @@ export async function handle(request,env,{now=Date.now()}={}){
       if(asset)return new Response(unbase64(asset.body),{headers:{'content-type':asset.type,
         'cache-control':path.startsWith('/site/assets/')?'public,max-age=31536000,immutable':'no-cache',
         'x-content-type-options':'nosniff',
-        'content-security-policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'none'; base-uri 'none'"}});
+        'content-security-policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors "+(path==='/site/dashboard/index.html'?"'self'":"'none'")+"; base-uri 'none'"}});
     }
     if(['/health','/api/merchant-health'].includes(path)&&request.method==='GET')return json({mode:'SANDBOX_ONLY',payment_dispatch:false,hosted_inference:false,catalog_products:catalog.length,oauth_ready:!!env.OAUTH_PRIVATE_JWK,checkout_secret_configured:!!env.CHECKOUT_HMAC_SECRET});
     if(path==='/.well-known/openid-configuration'&&request.method==='GET')return json({issuer:origin,authorization_endpoint:origin+'/oauth/authorize',token_endpoint:origin+'/oauth/token',registration_endpoint:origin+'/oauth/register',jwks_uri:origin+'/.well-known/jwks.json',response_types_supported:['code'],grant_types_supported:['authorization_code'],code_challenge_methods_supported:['S256'],token_endpoint_auth_methods_supported:['none'],scopes_supported:['openid','email'],subject_types_supported:['public'],id_token_signing_alg_values_supported:['RS256']});

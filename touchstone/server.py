@@ -150,6 +150,8 @@ def serve(port=8088, data_dir="data", live=None):
                 mime += "; charset=utf-8"
             csp = ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
                    "font-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'")
+            if path == '/site/dashboard/index.html':
+                csp = csp.replace("frame-ancestors 'none'", "frame-ancestors 'self'")
             return self.send_bytes(200, target.read_bytes(), mime, csp)
 
         def respond(self, status, payload):
