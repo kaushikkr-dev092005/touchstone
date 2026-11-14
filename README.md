@@ -4,6 +4,47 @@ Budgeted inference procurement with source checks, durable receipts and payment 
 An agent reserves an approved budget, buys a result, verifies it, and accounts for
 every attempt. A rejected answer can still cost money.
 
+## Current website
+
+**Authenticated operational workspace:** real source submission, bounded local
+tools, source verification, persistent jobs and backend events now have a separate
+secured service. [Setup and deployment](docs/LIVE_DEPLOYMENT.md) ·
+[Feature status](docs/LIVE_FEATURE_MATRIX.md) · [Judge workflow](docs/LIVE_JUDGE_DEMO.md).
+Public operator hosting and remote paid dispatch remain blocked; this is a working
+zero-charge vertical slice, not a fully deployed financial application.
+
+Start the current website and operator dashboard from the repository root:
+
+```text
+python -m touchstone serve
+```
+
+- [Website and animated landing page](http://127.0.0.1:8088/site/)
+- [Dashboard](http://127.0.0.1:8088/dashboard)
+- [Ledger](http://127.0.0.1:8088/ledger)
+- [Standalone operator console](http://127.0.0.1:8088/console)
+
+To provision the separate authenticated workspace locally, run
+`python tools/run_operator.py init`, then `python tools/run_operator.py serve`.
+It opens at [the operator control room](http://127.0.0.1:8089/control-room).
+Initialization asks for your own password in a masked local prompt.
+
+These are local URLs, available while the Python server is running. The landing
+page, dashboard and ledger share one website. The dashboard uses a responsive dark
+interface with Overview, Transactions, Spend controls, Approvals, Evidence and
+Integrations views. The Approvals view contains the **Human Authorization Gate**
+for separate-wallet signatures over exact procurement terms.
+
+Starting the server does not start a GPU model or initiate paid operations. The
+default interactive workflow is **SIMULATED**; saved sandbox/testnet evidence is
+labelled separately. Signed-mandate setup and the no-spend demonstration are in
+[Signed Mandates](docs/SIGNED_MANDATES.md).
+
+The landing page requires the frontend build. If it is missing, run
+`bun install --frozen-lockfile` and `bun run build` in `apps/web`, then restart the
+Python server. The standalone console works without that build.
+[Website behavior and checks](docs/WEBSITE.md).
+
 ## For judges
 
 Watch the [captioned demonstration](docs/recordings/touchstone-demo.webm)
@@ -87,7 +128,7 @@ settlement. [Evidence index](docs/EVIDENCE_INDEX.md) · [Serious review and rema
 Issuing creation is verified: one READY synthetic delegate and one capped sandbox
 card, without a merchant charge. Agentic Commerce merchant configuration is active,
 100 synthetic products are uploaded, and guest OAuth/MCP discovery passes.
-[Open the sandbox merchant](https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site/merchant).
+[Sandbox merchant setup and evidence](docs/EXTERNAL_ACCESS.md).
 Visa approval remains pending. [Proofs and boundaries](docs/EXTERNAL_ACCESS.md).
 The matched comparison and submission status are recorded in the
 [current review](docs/REVIEW_20261110.md). [Detailed feature boundaries](docs/FEATURES.md).
@@ -126,17 +167,6 @@ evidence. [Validation runbook](docs/VALIDATION_RUNBOOK.md).
 Financial execution requires a concrete, explicitly approved scope and caps.
 Qualification approval is not approval for a comparison, card issuance or merchant
 payment. [Invoice qualification](docs/M3_RUNBOOK.md) · [Policy comparison](docs/M4_RUNBOOK.md).
-
-The [public website](https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site)
-shares its landing page, dashboard and ledger on one origin. A cinematic vault intro
-ignites into a ray-marched black hole behind the hero, and the same vault plays before
-workspace entry ([landing notes](docs/landing.md)). Public views show saved evidence only.
-
-For the same interface locally, run `bun install --frozen-lockfile` and `bun run build`
-in `apps/web`, start the Python server, and open `/site/`. `/dashboard` and `/ledger`
-embed the existing local operator console with its session protections. `/console`
-and the legacy root dashboard still work without a frontend build.
-[Website behavior and checks](docs/WEBSITE.md).
 
 Built for Airwallex Agentic Banking Hackathon Kit 12. [Submission draft](docs/SUBMISSION.md)
 · [Demo script](docs/DEMO_SCRIPT.md) · [MIT license](LICENSE).

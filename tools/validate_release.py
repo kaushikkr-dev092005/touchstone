@@ -117,6 +117,7 @@ def main():
         if args.browser:
             stage('procurement-evidence', [sys.executable, '-m', 'touchstone', 'procurement-evidence'])
             stage('dashboard-browser', [sys.executable, 'tools/check_dashboard.py'])
+            stage('signed-mandates-browser', [sys.executable, 'tools/check_signed_mandates.py'])
             stage('motion-browser', [sys.executable, 'tools/check_dashboard_motion.py'])
             command = [sys.executable, 'tools/check_release_browser.py']
             if args.frontend:
@@ -124,6 +125,7 @@ def main():
             stage('release-browser', command)
             if args.frontend:
                 stage('shared-site-browser', [sys.executable, 'tools/check_site_design.py'])
+                stage('operator-workspace-browser', [sys.executable, 'tools/check_operator_workspace.py'])
         python_log = (logs / 'python-tests.log').read_text(encoding='utf-8')
         node_log = (logs / 'node-tests.log').read_text(encoding='utf-8')
         report['python_tests'] = int(re.search(r'Ran (\d+) tests', python_log).group(1))

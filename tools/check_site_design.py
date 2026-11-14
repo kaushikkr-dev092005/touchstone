@@ -123,8 +123,12 @@ def main():
                 operator=local.new_page();operator.on('pageerror',lambda e:errors.append(str(e)))
                 operator.goto(base+'/dashboard',wait_until='domcontentloaded')
                 frame=operator.frame_locator('iframe[title="Touchstone operator dashboard"]')
+                frame.locator('[data-nav="overview"]').click()
                 frame.locator('#start').wait_for(state='visible')
-                frame.locator('#start').click();frame.locator('#payment-rows tr').first.wait_for()
+                frame.locator('#start').click()
+                frame.locator('[data-nav="spend"]').click()
+                frame.locator('#payment-rows tr').first.wait_for()
+                frame.locator('[data-nav="overview"]').click()
                 frame.locator('#halt').click()
                 operator.wait_for_function("async()=>!(await(await fetch('/api/state')).json()).worker_running")
                 assert operator.request.post(base+'/api/demo',data={}).status==403

@@ -1,5 +1,9 @@
 # Documentation index
 
+Current operational work: [deployment](LIVE_DEPLOYMENT.md),
+[feature matrix](LIVE_FEATURE_MATRIX.md), [verification](LIVE_VERIFICATION_REPORT.md)
+and [judge interactions](LIVE_JUDGE_DEMO.md).
+
 Current entry points, security controls and measured evidence are listed first.
 Historical reports describe their recorded revision; use the current review and
 raw financial evidence when assessing today's status. No past approval grants

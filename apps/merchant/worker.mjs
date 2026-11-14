@@ -78,7 +78,7 @@ export async function handle(request,env,{now=Date.now()}={}){
     if(path==='/api/site-context'&&request.method==='GET')return json({operator_console:false,mode:'SAVED_PUBLIC_EVIDENCE',financial_dispatch:false});
     if(request.method==='GET'&&siteAssets['/site/index.html']){
       if(path==='/'||path==='/site')return new Response(null,{status:302,headers:{location:'/site/','cache-control':'no-store'}});
-      const asset=siteAssets[['/site/','/dashboard','/ledger'].includes(path)?'/site/index.html':path];
+      const asset=siteAssets[['/site/','/dashboard','/ledger','/control-room'].includes(path)?'/site/index.html':path];
       if(asset)return new Response(unbase64(asset.body),{headers:{'content-type':asset.type,
         'cache-control':path.startsWith('/site/assets/')?'public,max-age=31536000,immutable':'no-cache',
         'x-content-type-options':'nosniff',

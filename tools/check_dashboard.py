@@ -17,6 +17,23 @@ ARTIFACTS = ROOT / "tmp/browser"
 BASE = "http://127.0.0.1:8091"
 
 
+def activate(page, selector):
+    """Open the actual tab containing a control; hidden controls must not be forced."""
+    view = page.locator(selector).first.evaluate("e=>e.closest('.view')?.dataset.view")
+    if view:
+        page.locator('[data-nav="'+view+'"]').click()
+
+
+def click(page, selector):
+    activate(page, selector)
+    page.click(selector)
+
+
+def select(page, selector, value):
+    activate(page, selector)
+    page.select_option(selector, value)
+
+
 def main():
     ARTIFACTS.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="qa-", dir=ARTIFACTS) as data:
@@ -49,17 +66,17 @@ def main():
                 page.on("pageerror", lambda error: errors.append(str(error)))
                 page.goto(BASE, wait_until="domcontentloaded")
                 page.wait_for_function("() => document.getElementById('connection').textContent.includes('CONNECTED')")
-                assert page.locator(".disclosure").inner_text().startswith("SIMULATION")
+                assert page.locator('[data-mode-tag]').first.inner_text().upper() == 'SIMULATED'
                 planning=page.request.get(BASE+'/api/procurement-evidence').json()
                 if planning['status']=='CURRENT':
                     page.wait_for_function("() => !document.getElementById('planning-case').disabled")
                     assert "1000/1000" in page.locator("#planning-summary").inner_text()
                     assert page.locator("#eligibility-rows tr").count() == 6
                     assert page.locator("#planning-decision").inner_text() == "Use a local tool"
-                    page.select_option("#planning-case", label="foreign currency")
+                    select(page, "#planning-case", label="foreign currency")
                     assert page.locator("#planning-decision").inner_text() == "Pause for review"
                     assert page.locator("#planning-output").inner_text() == "No answer accepted."
-                    page.select_option("#planning-case", label="sum discount")
+                    select(page, "#planning-case", label="sum discount")
                     assert "2000" in page.locator("#planning-output").inner_text()
                 else:
                     assert planning['status'] in {'STALE_OR_INVALID','NOT_RUN'}
@@ -93,13 +110,13 @@ def main():
                 assert page.request.post(BASE+'/api/issuing-readiness',headers={
                     'X-Touchstone-Token':token,'Origin':'https://untrusted.example'},data={}).status==403
                 with page.expect_response(BASE+'/api/issuing-readiness') as issuing_response:
-                    page.click('#refresh-issuing')
+                    click(page, '#refresh-issuing')
                 assert issuing_response.value.status==503
                 page.wait_for_function("() => document.getElementById('card-status').textContent.startsWith('BLOCKED') && document.getElementById('card-status').textContent.includes('No card created')")
                 assert 'MOCK identity' in page.locator('#tap-status').inner_text()
                 assert page.request.post(BASE+'/api/fx-quote',data={}).status==403
                 with page.expect_response(BASE+'/api/fx-quote') as quote_response:
-                    page.click('#refresh-fx')
+                    click(page, '#refresh-fx')
                 assert quote_response.value.status==503
                 page.wait_for_function("() => document.getElementById('fx-status').textContent.startsWith('BLOCKED')")
                 refused = page.request.post(BASE + "/api/demo", headers={"X-Touchstone-Token": token, "Origin": "https://untrusted.example"}, data={})
@@ -110,28 +127,28 @@ def main():
                     raise AssertionError("Invalid Host accepted")
                 except urllib.error.HTTPError as e:
                     assert e.code == 403
-                page.click("#start")
+                click(page, "#start")
                 page.wait_for_function("() => document.querySelectorAll('#payment-rows tr').length >= 3")
-                page.click("#halt")
+                click(page, "#halt")
                 page.wait_for_function("() => document.getElementById('notice').textContent.includes('Kill switch active')")
                 page.wait_for_function("() => document.body.dataset.eventLight==='kill' && starFrame===0")
                 wait_state(lambda s: not s["worker_running"])
-                page.click("#resume")
+                click(page, "#resume")
                 wait_state(lambda s: not s["halted"] and not s["worker_running"] and len(s["jobs"]) == 3 and all(j["status"] != "RUNNING" for j in s["jobs"]))
                 page.wait_for_function("() => !document.getElementById('close').disabled")
                 page.screenshot(path=str(ARTIFACTS / "desktop-paused.png"), full_page=True)
                 with page.expect_response(BASE + "/api/close") as close_response:
-                    page.click("#close")
+                    click(page, "#close")
                 assert close_response.value.status == 200, close_response.value.text()
                 state = wait_state(lambda s: len(s["jobs"]) == 3 and all(j["status"] == "COMPLETED" for j in s["jobs"]))
                 assert all(j["captured"] == j["spent"] and j["captured"] + j["released"] == j["hold"] for j in state["jobs"]), json.dumps(state["jobs"], indent=2)
                 assert state["reconciliation"]["matched"]
                 assert state["audit"]["valid"]
-                page.select_option('#failed-call-policy','MERCHANT_ABSORBS')
-                page.click('#start')
+                select(page, '#failed-call-policy','MERCHANT_ABSORBS')
+                click(page, '#start')
                 state=wait_state(lambda s: not s['worker_running'] and len(s['runs'])==2)
                 page.wait_for_function("() => !document.getElementById('close').disabled")
-                page.click('#close')
+                click(page, '#close')
                 state=wait_state(lambda s: all(j['status']=='COMPLETED' for j in s['jobs']))
                 latest=state['runs'][0]['id']
                 financial=next(row for row in state['financials']['by_run'] if row['run_id']==latest)
