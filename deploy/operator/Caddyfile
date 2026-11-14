@@ -1,0 +1,12 @@
+{$OPERATOR_DOMAIN} {
+    header Strict-Transport-Security "max-age=31536000"
+    request_body {
+        max_size 32KB
+    }
+    reverse_proxy operator:8089 {
+        flush_interval -1
+        stream_timeout 30s
+    }
+    # Application audit is durable in SQLite. Do not enable access logging with
+    # cookies, Authorization, source bodies or query strings in a shared log sink.
+}

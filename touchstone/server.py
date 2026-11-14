@@ -150,6 +150,8 @@ def serve(port=8088, data_dir="data", live=None):
                 mime += "; charset=utf-8"
             csp = ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
                    "font-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'")
+            if path == '/site/dashboard/index.html':
+                csp = csp.replace("frame-ancestors 'none'", "frame-ancestors 'self'")
             return self.send_bytes(200, target.read_bytes(), mime, csp)
 
         def respond(self, status, payload):
@@ -168,7 +170,7 @@ def serve(port=8088, data_dir="data", live=None):
                 except PolicyError as error:
                     return self.respond(400, {'error':str(error), 'code':getattr(error,'code','APPROVAL_REQUIRED')})
             path = urlparse(self.path).path
-            if path == "/site" or path.startswith("/site/") or path in {"/dashboard", "/ledger"}:
+            if path == "/site" or path.startswith("/site/") or path in {"/dashboard", "/ledger", "/control-room"}:
                 return self.serve_site(path if path.startswith('/site') else '/site/')
             if path == "/api/site-context":
                 return self.respond(200, {"operator_console": True, "mode": live_state()['mode']})
@@ -185,7 +187,8 @@ def serve(port=8088, data_dir="data", live=None):
                 if path == '/console':
                     if urlparse(self.path).query == 'embedded=1':
                         page = page.replace('<body', '<body data-embedded="true"', 1)
-                        page = page.replace('</head>', '<style>body[data-embedded] .ledger-nav,body[data-embedded] .cinematic-hero{display:none}body[data-embedded] main,body[data-embedded] dialog{--text:#f2efe6;--surface:#090a08;--muted:#adb0a4;--line:#303329;--gold:#d8b65a;--green:#8ac595;--amber:#d8b65a;--red:#f07868;color-scheme:dark}</style></head>')
+                        # The console is dark-only and carries its own navigation; only the intro is hidden.
+                        page = page.replace('</head>', '<style>body[data-embedded] .cinematic-hero{display:none}</style></head>')
                     csp = f"default-src 'self'; script-src 'nonce-{token}'; style-src 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'self'"
                     return self.send_bytes(200, page.encode(), 'text/html; charset=utf-8', csp)
                 return self.send_bytes(200, page.encode(), "text/html; charset=utf-8")

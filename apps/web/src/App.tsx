@@ -6,6 +6,7 @@ import Workspace from "@/components/Workspace";
 import { Brand, Icon } from "@/components/Identity";
 import { prefersReduced } from "@/hooks/useInView";
 import type { Evidence, Go, View } from "@/siteTypes";
+import ControlRoom from "@/components/ControlRoom";
 
 const currentView = (): View => /\/(dashboard|ledger)\/?$/.test(location.pathname) ? location.pathname.includes("ledger") ? "ledger" : "dashboard" : "home";
 
@@ -42,7 +43,7 @@ function Dock({ view, go }: { view: View; go: Go }) {
   return <nav className={"glass-dock" + (open ? " is-expanded" : "")} ref={root} aria-label="Quick navigation" onPointerEnter={e => { if (e.pointerType === "mouse") setOpen(true); }} onPointerLeave={() => { if (!root.current?.contains(document.activeElement)) setOpen(false); }} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setOpen(false); }} onKeyDown={e => { if (e.key === "Escape") { setOpen(false); trigger.current?.focus(); } }}><button ref={trigger} className="dock-trigger" aria-label="Expand quick navigation" aria-expanded={open} onClick={() => setOpen(true)}><Icon name={view === "home" ? "ledger" : view} size={28} /></button><div className="dock-items" inert={!open}>{links.map(item => <a key={item.key} href={item.key === "dashboard" || item.key === "ledger" ? "/" + item.key : "/site/#" + (item.key === "home" ? "top" : item.key)} className={view === item.key ? "is-active" : ""} aria-label={item.label} aria-current={view === item.key ? "page" : undefined} onClick={e => { e.preventDefault(); setOpen(false); if (item.key === "dashboard" || item.key === "ledger") go(item.key); else go("home", item.key === "home" ? "top" : item.key); }}><Icon name={item.icon} size={24} /><span>{item.label}</span></a>)}</div></nav>;
 }
 
-export default function App() {
+function EvidenceApp() {
   const [view, setView] = useState<View>(currentView), [evidence, setEvidence] = useState<Evidence | null>(null), [operator, setOperator] = useState(false);
   const anchor = useRef<string | undefined>(undefined), director = useRef<DirectorApi>(null), evidenceRequest = useRef<Promise<void> | null>(null);
   useEffect(() => { const pop = () => setView(currentView()); window.addEventListener("popstate", pop); return () => window.removeEventListener("popstate", pop); }, []);
@@ -74,8 +75,12 @@ export default function App() {
     <BlackHole />
     <PillNav view={view} go={go} />
     <main id="main-content" tabIndex={-1}>{view === "home" ? <Landing go={go} /> : <Workspace view={view} evidence={evidence} go={go} operator={operator} />}</main>
-    <footer className="footer section-width" data-reveal={view === "home" ? "below" : undefined}><a href="/site/" onClick={e => { e.preventDefault(); go("home", "top"); }} className="brand" aria-label="Touchstone home"><Brand /></a><p className="mono">SANDBOX BANKING · TESTNET PAYMENTS · LABELLED EVIDENCE.</p><a className="mono footer-github" href={GITHUB_URL} target="_blank" rel="noreferrer">GITHUB <Icon name="arrow" size={12} /></a><a className="mono" href="/merchant">SANDBOX MERCHANT</a><span className="mono">© TOUCHSTONE / 2026</span></footer>
+    <footer className="footer section-width" data-reveal={view === "home" ? "below" : undefined}><a href="/site/" onClick={e => { e.preventDefault(); go("home", "top"); }} className="brand" aria-label="Touchstone home"><Brand /></a><p className="mono">SANDBOX BANKING · TESTNET PAYMENTS · LABELLED EVIDENCE.</p><a className="mono footer-github" href={GITHUB_URL} target="_blank" rel="noreferrer">GITHUB <Icon name="arrow" size={12} /></a><a className="mono" href="/control-room">OPERATOR WORKSPACE</a><a className="mono" href="/merchant">SANDBOX MERCHANT</a><span className="mono">© TOUCHSTONE / 2026</span></footer>
     {view !== "home" && <Dock view={view} go={go} />}
     <Director ref={director} view={view} prefetch={loadEvidence} />
   </>;
+}
+
+export default function App() {
+  return location.pathname.replace(/\/$/, '') === '/control-room' ? <ControlRoom /> : <EvidenceApp />;
 }

@@ -14,6 +14,8 @@ def check_page(page, base, artifacts):
     """Check the real API, filters, drawer, pagination and exported charge totals."""
     artifacts = Path(artifacts)
     artifacts.mkdir(parents=True, exist_ok=True)
+    if page.locator('[data-nav="transactions"]').count():
+        page.locator('[data-nav="transactions"]').click()
     transactions = page.request.get(base + '/api/transactions').json()['transactions']
     assert transactions, 'Run the simulated demo before checking transactions'
     page.wait_for_function('(n) => Number(document.getElementById("tx-count").textContent)===n', arg=len(transactions))
@@ -55,7 +57,7 @@ def check_page(page, base, artifacts):
         exported = list(csv.DictReader(stream))
     assert len(exported) == len(transactions)
     assert round(sum(float(row['total_charged_usd']) for row in exported)*1e6) == expected_spend
-    page.locator('#transactions').screenshot(path=str(artifacts/'transactions.png'))
+    page.locator('#v-transactions' if page.locator('#v-transactions').count() else '#transactions').screenshot(path=str(artifacts/'transactions.png'))
     return {'rows': len(transactions), 'runs': len(run_ids), 'confirmed_spend_micro_usd': expected_spend,
         'search_filters_sort_pagination': 'passed', 'keyboard_drawer': 'passed', 'csv_totals': 'passed'}
 

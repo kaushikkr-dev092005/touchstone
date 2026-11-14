@@ -49,9 +49,10 @@ with tempfile.TemporaryDirectory(prefix='dashboard-style-',dir=folder) as data:
             page.locator('#console').scroll_into_view_if_needed();page.wait_for_timeout(400)
             assert page.evaluate('starFrame')==0
             page.screenshot(path=str(folder/'desktop-ledger.png'))
-            page.click('#theme-toggle');page.screenshot(path=str(folder/'desktop-ledger-dark.png'))
-            assert page.locator('body').get_attribute('data-theme')=='dark'
-            page.click('#theme-toggle')
+            # The current console is dark-only; verify the actual scheme rather
+            # than clicking the removed legacy theme switch.
+            assert 'dark' in page.locator('html').evaluate('e=>getComputedStyle(e).colorScheme')
+            page.screenshot(path=str(folder/'desktop-ledger-dark.png'))
             page.evaluate('window.scrollTo(0,0)');page.wait_for_timeout(300)
             page.click('#motion-toggle');page.wait_for_timeout(150)
             assert page.evaluate('starFrame')!=0
@@ -71,7 +72,7 @@ with tempfile.TemporaryDirectory(prefix='dashboard-style-',dir=folder) as data:
             assert not errors and not external
             report={'label':'MEASURED','scope':'ISOLATED_SIMULATED_DASHBOARD','desktop':[1440,900],'mobile':[390,844],
                 'particle_preview':stats,'fps_environment':'HEADLESS_CHROMIUM_WINDOWS_NOT_A_HARDWARE_GUARANTEE',
-                'pause_replay_offscreen_reduced_motion':'passed','dark_light_toggle':'passed',
+                'pause_replay_offscreen_reduced_motion':'passed','current_dark_scheme':'passed',
                 'horizontal_overflow':False,'page_errors':errors,'external_requests':external,'financial_transactions':0}
             if args.record:
                 movie_context=browser.new_context(viewport={'width':1440,'height':900},

@@ -54,7 +54,9 @@ def main():
                         raise ValueError('Unexpected wallet method')
                     page.expose_function('ephemeralLocalTestWallet',wallet)
                     page.add_init_script('window.ethereum={request:r=>window.ephemeralLocalTestWallet(r)}')
-                    page.goto(base+'/console');panel=page.locator('#human-authorization');panel.scroll_into_view_if_needed()
+                    page.goto(base+'/console')
+                    page.locator('[data-nav="approvals"]').click()
+                    panel=page.locator('#human-authorization');panel.scroll_into_view_if_needed()
                     page.get_by_role('button',name='Create local test proposal',exact=True).click()
                     page.wait_for_function("() => document.getElementById('approval-state').textContent==='PENDING_APPROVAL'")
                     panel.screenshot(path=str(artifacts/'unsigned.png'))
@@ -70,7 +72,8 @@ def main():
                         page.set_viewport_size({'width':width,'height':1000});panel.scroll_into_view_if_needed()
                         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),f'Overflow at {width}'
                         if width==390:
-                            page.locator('#theme-toggle').click();panel.screenshot(path=str(artifacts/'mobile-dark.png'))
+                            assert page.locator('html').evaluate("e=>getComputedStyle(e).colorScheme").find('dark') >= 0
+                            panel.screenshot(path=str(artifacts/'mobile-dark.png'))
                     page.get_by_role('button',name='Dispatch MOCK purchase',exact=True).click()
                     page.wait_for_function("() => document.getElementById('approval-state').textContent==='CONSUMED_AT_DISPATCH'")
                     assert '0 external financial calls' in page.locator('#approval-message').inner_text()
