@@ -18,9 +18,10 @@ function PillNav({ view, go }: { view: View; go: Go }) {
     return () => document.removeEventListener("keydown", escape);
   }, []);
   const links: { label: string; href: string; onClick?: () => void; current?: boolean; external?: boolean }[] = [
+    { label: "Dashboard", href: "/dashboard", onClick: () => go("dashboard"), current: view === "dashboard" },
+    { label: "Ledger", href: "/ledger", onClick: () => go("ledger"), current: view === "ledger" },
     { label: "How it works", href: "/site/#how", onClick: () => go("home", "how") },
     { label: "Providers", href: "/site/#providers", onClick: () => go("home", "providers") },
-    { label: "Ledger", href: "/ledger", onClick: () => go("ledger"), current: view === "ledger" },
     { label: "GitHub", href: GITHUB_URL, external: true },
   ];
   return <header className="pill-nav-wrap" data-reveal="nav"><nav className="pill-nav" aria-label="Main navigation">
@@ -38,8 +39,14 @@ function Dock({ view, go }: { view: View; go: Go }) {
     document.addEventListener("pointerdown", dismiss);
     return () => document.removeEventListener("pointerdown", dismiss);
   }, []);
-  const links = [{ key: "home", label: "Home", icon: "home" }, { key: "dashboard", label: "Dashboard", icon: "dashboard" }, { key: "ledger", label: "Ledger", icon: "ledger" }, { key: "architecture", label: "Architecture", icon: "grid" }, { key: "evidence", label: "Evidence", icon: "check" }];
-  return <nav className={"glass-dock" + (open ? " is-expanded" : "")} ref={root} aria-label="Quick navigation" onPointerEnter={e => { if (e.pointerType === "mouse") setOpen(true); }} onPointerLeave={() => { if (!root.current?.contains(document.activeElement)) setOpen(false); }} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setOpen(false); }} onKeyDown={e => { if (e.key === "Escape") { setOpen(false); trigger.current?.focus(); } }}><button ref={trigger} className="dock-trigger" aria-label="Expand quick navigation" aria-expanded={open} onClick={() => setOpen(true)}><Icon name={view === "home" ? "ledger" : view} size={28} /></button><div className="dock-items" inert={!open}>{links.map(item => <a key={item.key} href={item.key === "dashboard" || item.key === "ledger" ? "/" + item.key : "/site/#" + (item.key === "home" ? "top" : item.key)} className={view === item.key ? "is-active" : ""} aria-label={item.label} aria-current={view === item.key ? "page" : undefined} onClick={e => { e.preventDefault(); setOpen(false); if (item.key === "dashboard" || item.key === "ledger") go(item.key); else go("home", item.key === "home" ? "top" : item.key); }}><Icon name={item.icon} size={24} /><span>{item.label}</span></a>)}</div></nav>;
+  const links: { key: string; label: string; icon: string; target?: string }[] = [
+    { key: "home", label: "Home", icon: "home", target: "top" },
+    { key: "dashboard", label: "Dashboard", icon: "dashboard" },
+    { key: "ledger", label: "Ledger", icon: "ledger" },
+    { key: "how", label: "Protocol", icon: "shield", target: "how" },
+    { key: "providers", label: "Providers", icon: "cpu", target: "providers" },
+  ];
+  return <nav className={"glass-dock" + (open ? " is-expanded" : "")} ref={root} aria-label="Quick navigation" onPointerEnter={e => { if (e.pointerType === "mouse") setOpen(true); }} onPointerLeave={() => { if (!root.current?.contains(document.activeElement)) setOpen(false); }} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setOpen(false); }} onKeyDown={e => { if (e.key === "Escape") { setOpen(false); trigger.current?.focus(); } }}><button ref={trigger} className="dock-trigger" aria-label="Expand quick navigation" aria-expanded={open} onClick={() => setOpen(true)}><Icon name={view === "home" ? "ledger" : view} size={28} /></button><div className="dock-items" inert={!open}>{links.map(item => <a key={item.key} href={item.key === "dashboard" || item.key === "ledger" ? "/" + item.key : "/site/#" + (item.target || "top")} className={view === item.key ? "is-active" : ""} aria-label={item.label} aria-current={view === item.key ? "page" : undefined} onClick={e => { e.preventDefault(); setOpen(false); if (item.key === "dashboard" || item.key === "ledger") go(item.key as View); else go("home", item.target || "top"); }}><Icon name={item.icon} size={24} /><span>{item.label}</span></a>)}</div></nav>;
 }
 
 export default function App() {
@@ -74,7 +81,19 @@ export default function App() {
     <BlackHole />
     <PillNav view={view} go={go} />
     <main id="main-content" tabIndex={-1}>{view === "home" ? <Landing go={go} /> : <Workspace view={view} evidence={evidence} go={go} operator={operator} />}</main>
-    <footer className="footer section-width" data-reveal={view === "home" ? "below" : undefined}><a href="/site/" onClick={e => { e.preventDefault(); go("home", "top"); }} className="brand" aria-label="Touchstone home"><Brand /></a><p className="mono">SANDBOX BANKING · TESTNET PAYMENTS · LABELLED EVIDENCE.</p><a className="mono footer-github" href={GITHUB_URL} target="_blank" rel="noreferrer">GITHUB <Icon name="arrow" size={12} /></a><a className="mono" href="/merchant">SANDBOX MERCHANT</a><span className="mono">© TOUCHSTONE / 2026</span></footer>
+    <footer className="footer section-width" data-reveal={view === "home" ? "below" : undefined}>
+      <div className="footer-brand-col">
+        <a href="/site/" onClick={e => { e.preventDefault(); go("home", "top"); }} className="brand" aria-label="Touchstone home"><Brand /></a>
+        <p className="mono footer-tag">SANDBOX BANKING · TESTNET PAYMENTS · VERIFIED INFERENCE LEDGER</p>
+      </div>
+      <nav className="footer-links mono" aria-label="Footer navigation">
+        <a href="/dashboard" onClick={e => { e.preventDefault(); go("dashboard"); }}>OVERVIEW</a>
+        <a href="/ledger" onClick={e => { e.preventDefault(); go("ledger"); }}>LEDGER</a>
+        <a href="/merchant">SANDBOX CATALOG</a>
+        <a className="footer-github" href={GITHUB_URL} target="_blank" rel="noreferrer">GITHUB <Icon name="arrow" size={12} /></a>
+      </nav>
+      <span className="mono footer-copy">© TOUCHSTONE / 2026</span>
+    </footer>
     {view !== "home" && <Dock view={view} go={go} />}
     <Director ref={director} view={view} prefetch={loadEvidence} />
   </>;

@@ -9,7 +9,7 @@ session (`?intro=force` replays it) and can be skipped with the button or Escape
 screen is covered. Returning home replays only the ignition and hero. Reduced-motion users get
 crossfades and one static frame. Details, timing and tuning are in [landing.md](landing.md).
 
-The workspace keeps its behaviour and is restyled to match: black, amber accent, Geist. The glass
+The workspace keeps its behaviour and uses a Titanium/Obsidian design system (`#050506` obsidian canvas, `#0A0B0E` card shells, `#10B981` emerald verified, `#F59E0B` amber pending/capped, Geist) arranged into a 3-Zone Bento Control Room. The glass
 dock appears on the Dashboard and Ledger. The pill navigation collapses into a menu on phones.
 
 ## Public and operator views

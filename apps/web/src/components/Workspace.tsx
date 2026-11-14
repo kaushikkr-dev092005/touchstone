@@ -14,14 +14,12 @@ function SplitMetric({ value, prefix = "", decimals = 2 }: { value: number; pref
   );
 }
 
-function MiniSpark({ color, bars, curve }: { color: string; bars: [number, number, number]; curve: string }) {
+function KpiMeter({ pct, tone = "neutral" }: { pct: number; tone?: "neutral" | "emerald" | "amber" }) {
+  const clamped = Math.max(4, Math.min(100, Math.round(pct)));
   return (
-    <svg className="spark-svg" viewBox="0 0 72 34" aria-hidden="true">
-      <rect x="6" y={32 - bars[0]} width="18" height={bars[0]} rx="3" fill={color} opacity="0.28" />
-      <rect x="27" y={32 - bars[1]} width="18" height={bars[1]} rx="3" fill={color} opacity="0.52" />
-      <rect x="48" y={32 - bars[2]} width="18" height={bars[2]} rx="3" fill={color} opacity="0.88" />
-      <path d={curve} fill="none" stroke="#f5f5f7" strokeWidth="1.6" strokeLinecap="round" opacity="0.9" />
-    </svg>
+    <div className="kpi-meter" aria-hidden="true">
+      <i className={"is-" + tone} style={{ width: `${clamped}%` }} />
+    </div>
   );
 }
 
@@ -52,9 +50,9 @@ function RingProgress({ pct, color }: { pct: number; color: string }) {
 
 function providerBadge(provider: string) {
   const p = provider.toLowerCase();
-  if (p.includes("local")) return { icon: "cpu", color: "#e4e4e7", label: "Local GPU" };
-  if (p.includes("premium") || p.includes("sonnet")) return { icon: "spark", color: "#d4d4d8", label: "Hosted Premium" };
-  return { icon: "bolt", color: "#a1a1aa", label: "Hosted Route" };
+  if (p.includes("local")) return { icon: "cpu", label: "Local GPU" };
+  if (p.includes("premium") || p.includes("sonnet")) return { icon: "spark", label: "Hosted Premium" };
+  return { icon: "bolt", label: "Hosted Route" };
 }
 
 export default function Workspace({
@@ -71,7 +69,7 @@ export default function Workspace({
   const [filter, setFilter] = useState("all");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<RecordRow | null>(null);
-  const [activeBarIdx, setActiveBarIdx] = useState<number>(4);
+  const [activeBarIdx, setActiveBarIdx] = useState<number | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -95,8 +93,11 @@ export default function Workspace({
       const rec = source[i % Math.max(1, source.length)];
       const costMicro = rec?.costMicro ?? 0;
       const apiMicro = rec?.apiCreditMicro ?? 0;
+      const isCharged = rec?.state === "Charged";
       const primaryPct = costMicro > 0 ? Math.min(72, 26 + Math.round((costMicro / 10000) * 34)) : 14;
-      const upperPct = Math.min(88 - primaryPct, Math.max(12, Math.round(((apiMicro || 4000) / 14000) * 36)));
+      const upperPct = apiMicro > 0
+        ? Math.min(88 - primaryPct, Math.max(12, Math.round((apiMicro / 14000) * 36)))
+        : 10;
       return {
         index: i,
         record: rec ?? null,
@@ -105,28 +106,41 @@ export default function Workspace({
         amountUsd: costMicro > 0 ? `$${(costMicro / 1e6).toFixed(4)}` : "$0.0000",
         label: rec ? rec.task : `Slot ${i + 1}`,
         state: rec ? rec.state : "Unpaid",
+        isCharged,
       };
     });
   }, [records]);
 
+  const defaultPaidIdx = useMemo(() => {
+    const firstPaid = capsuleBars.findIndex(b => b.isCharged);
+    return firstPaid >= 0 ? firstPaid : 0;
+  }, [capsuleBars]);
+
+  const effectiveActiveIdx = activeBarIdx ?? defaultPaidIdx;
   const chargedCount = records.filter(r => (r.costMicro || 0) > 0).length;
   const unpaidCount = records.filter(r => r.state === "Confirmed unpaid").length;
-  const activeBar = capsuleBars[Math.min(activeBarIdx, Math.max(0, capsuleBars.length - 1))];
+  const activeBar = capsuleBars[Math.min(effectiveActiveIdx, Math.max(0, capsuleBars.length - 1))];
 
   const providerRows = [
-    { name: "RTX 3050 Local GPU", sub: "llama.cpp · Vulkan", price: "$0.0050", color: "#e4e4e7", icon: "cpu" },
-    { name: "Hosted Premium Model", sub: "Strict holdout escalated", price: "$0.0100", color: "#d4d4d8", icon: "spark" },
-    { name: "Deterministic Tools", sub: "Arithmetic & role checks", price: "$0.0000", color: "#a1a1aa", icon: "check" },
-    { name: "Airwallex Sandbox", sub: "Authorized customer hold", price: evidence ? `$${evidence.holdUsd.toFixed(2)}` : "$1.00", color: "#e5a95d", icon: "wallet" },
-    { name: "Airwallex Capture", sub: "Customer closed · retained", price: evidence ? `$${evidence.captureUsd.toFixed(2)}` : "$0.01", color: "#d4d4d8", icon: "shield" },
-    { name: "Merchant MCP Catalog", sub: "Verified guest OAuth", price: `${evidence?.products ?? 100} SKUs`, color: "#a1a1aa", icon: "grid" },
+    { name: "RTX 3050 Local GPU", sub: "llama.cpp · Vulkan", price: "$0.0050", icon: "cpu" },
+    { name: "Hosted Premium Model", sub: "Strict holdout escalated", price: "$0.0100", icon: "spark" },
+    { name: "Deterministic Tools", sub: "Arithmetic & role checks", price: "$0.0000", icon: "check" },
+    { name: "Airwallex Sandbox Hold", sub: "Authorized customer hold", price: evidence ? `$${evidence.holdUsd.toFixed(2)}` : "$1.00", icon: "wallet" },
+    { name: "Airwallex Capture", sub: "Customer closed · retained", price: evidence ? `$${evidence.captureUsd.toFixed(2)}` : "$0.01", icon: "shield" },
+    { name: "Merchant MCP Catalog", sub: "Verified guest OAuth", price: `${evidence?.products ?? 100} SKUs`, icon: "grid" },
   ];
 
   const ledgerToolbarAndTable = (
     <div className="bento-card bento-ledger-card" id="attempt-ledger">
       <div className="bento-card-head">
         <span className="bento-card-title"><Icon name="ledger" size={14} /> Attempt History &amp; Settlement Receipts</span>
-        <span className="bento-muted-tag mono">{records.length} RECORDED ATTEMPTS</span>
+        {view === "dashboard" ? (
+          <button type="button" className="bento-viewall-btn" onClick={() => go("ledger")}>
+            Open Full Ledger ({records.length}) <Icon name="arrow" size={12} />
+          </button>
+        ) : (
+          <span className="bento-muted-tag mono">{rows.length} / {records.length} SHOWN</span>
+        )}
       </div>
       <div className="bento-well ledger-well">
         <div className="ledger-toolbar bento-ledger-toolbar">
@@ -139,6 +153,7 @@ export default function Workspace({
           </div>
           <label className="bento-search-label">
             <span className="sr-only">Search ledger</span>
+            <Icon name="search" size={13} />
             <input
               aria-label="Search ledger"
               placeholder="Search task, provider or receipt…"
@@ -148,7 +163,7 @@ export default function Workspace({
           </label>
         </div>
 
-        <div className="table-scroll">
+        <div className={"table-scroll" + (view === "dashboard" ? " ledger-scroll-frame" : "")}>
           <table className="record-table bento-record-table">
             <thead>
               <tr>
@@ -164,6 +179,7 @@ export default function Workspace({
               {rows.map(row => {
                 const badge = providerBadge(row.provider);
                 const isCharged = row.state === "Charged";
+                const formattedCost = row.costMicro === null ? "Unresolved" : (row.costMicro / 1e6).toFixed(4);
                 return (
                   <tr key={row.id}>
                     <td>
@@ -171,7 +187,12 @@ export default function Workspace({
                         <span className="tx-icon-sq">
                           <Icon name={badge.icon} size={13} />
                         </span>
-                        <button className="record-link" onClick={() => setSelected(row)}>{row.task}</button>
+                        <div className="tx-task-wrap">
+                          <button className="record-link" onClick={() => setSelected(row)}>{row.task}</button>
+                          <span className="tx-mobile-meta mono">
+                            {row.provider} · {isCharged ? "Charged" : "Unpaid"} · {formattedCost === "Unresolved" ? "Unresolved" : `$${formattedCost}`}
+                          </span>
+                        </div>
                       </div>
                     </td>
                     <td><span className="tx-cat-pill">{row.provider}</span></td>
@@ -181,9 +202,7 @@ export default function Workspace({
                         {row.state}
                       </span>
                     </td>
-                    <td className={"mono " + (isCharged ? "tx-neg" : "tx-zero")}>
-                      {row.costMicro === null ? "Unresolved" : (row.costMicro / 1e6).toFixed(4)}
-                    </td>
+                    <td className={"mono " + (isCharged ? "tx-neg" : "tx-zero")}>{formattedCost}</td>
                     <td className="mono">
                       {row.apiCreditMicro == null ? "Unreported" : (row.apiCreditMicro / 1e6).toFixed(6)}
                     </td>
@@ -206,10 +225,12 @@ export default function Workspace({
     </div>
   );
 
+  const modelSpendUsdz = evidence ? (evidence.comparison ? evidence.comparison.providerUsdz : evidence.modelUsdz) : 0;
+  const exposurePct = evidence && evidence.creditCeilingUsd > 0 ? Math.min(100, (evidence.creditUsd / evidence.creditCeilingUsd) * 100) : 0;
+  const holdoutPct = evidence ? Math.round((evidence.holdoutCorrect / Math.max(1, evidence.holdoutTotal)) * 100) : 98;
+
   return (
     <div className="bento-shell section-width">
-      <div className="bento-spotlight" aria-hidden="true" />
-
       <aside className="bento-rail" aria-label="Workspace quick rail">
         <button type="button" className="rail-brand" onClick={() => go("home", "top")} aria-label="Back to landing">
           <span className="rail-logo-mark"><i /></span>
@@ -253,31 +274,15 @@ export default function Workspace({
 
       <div className="bento-main">
         <div className="bento-topbar">
-          <div className="bento-crumb mono">
-            <button type="button" className="crumb-circle" onClick={() => go("home", "top")} aria-label="Previous view">
-              <Icon name="chevron-left" size={14} />
-            </button>
-            <button type="button" className="crumb-circle" onClick={() => go(view === "ledger" ? "dashboard" : "ledger")} aria-label="Next view">
-              <Icon name="chevron-right" size={14} />
-            </button>
-            <span>Home</span>
-            <Icon name="chevron-right" size={12} />
-            <strong className="crumb-current">{view === "ledger" ? "Transactions" : "Dashboard"}</strong>
-          </div>
+          <nav className="bento-crumb mono" aria-label="Breadcrumb">
+            <button type="button" className="crumb-link" onClick={() => go("home", "top")}>Touchstone</button>
+            <span aria-hidden="true">/</span>
+            <strong className="crumb-current">{view === "ledger" ? "Transaction Ledger" : "Control Room"}</strong>
+          </nav>
 
-          <div className="bento-top-actions">
-            <div className="bento-search-pill">
-              <Icon name="search" size={14} />
-              <input
-                aria-label="Filter dashboard records"
-                placeholder="Filter receipts or tasks…"
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-              />
-            </div>
-            <span className="bento-notif-pill" title="Recorded evidence mode">
-              <Icon name="bell" size={14} />
-            </span>
+          <div className="bento-top-status mono">
+            <span className="bento-status-item"><i className="status-dot" /> Metal Testnet · x402</span>
+            <span className="bento-status-item">Airwallex Sandbox · Isolated</span>
           </div>
         </div>
 
@@ -314,15 +319,14 @@ export default function Workspace({
                     <div className="bento-card kpi-card">
                       <div className="bento-card-head">
                         <span className="bento-card-title"><Icon name="wallet" size={14} /> Customer Hold (USD)</span>
+                        <span className="kpi-delta is-up">Float Safe</span>
                       </div>
                       <div className="bento-well kpi-well">
-                        <div className="kpi-main">
-                          <SplitMetric value={evidence.holdUsd} prefix="$" decimals={2} />
-                          <MiniSpark color="rgba(255,255,255,0.7)" bars={[14, 21, 27]} curve="M6 12 Q24 6 42 16 T66 10" />
-                        </div>
+                        <SplitMetric value={evidence.holdUsd} prefix="$" decimals={2} />
+                        <KpiMeter pct={evidence.holdUsd > 0 ? Math.max(8, (evidence.captureUsd / evidence.holdUsd) * 100) : 100} tone="emerald" />
                         <div className="kpi-foot">
-                          <span className="muted">Captured ${evidence.captureUsd.toFixed(2)}</span>
-                          <span className="kpi-delta is-up">Float Safe</span>
+                          <span className="muted">Captured ${evidence.captureUsd.toFixed(2)} USD</span>
+                          <span className="mono muted">Sandbox</span>
                         </div>
                       </div>
                     </div>
@@ -330,19 +334,14 @@ export default function Workspace({
                     <div className="bento-card kpi-card">
                       <div className="bento-card-head">
                         <span className="bento-card-title"><Icon name="ledger" size={14} /> Model Spend (USDZ)</span>
+                        <span className="kpi-delta is-up">x402 Rail</span>
                       </div>
                       <div className="bento-well kpi-well">
-                        <div className="kpi-main">
-                          <SplitMetric
-                            value={evidence.comparison ? evidence.comparison.providerUsdz : evidence.modelUsdz}
-                            prefix="$"
-                            decimals={3}
-                          />
-                          <MiniSpark color="rgba(255,255,255,0.7)" bars={[18, 26, 20]} curve="M6 20 Q24 8 42 14 T66 8" />
-                        </div>
+                        <SplitMetric value={modelSpendUsdz} prefix="$" decimals={3} />
+                        <KpiMeter pct={54} tone="neutral" />
                         <div className="kpi-foot">
                           <span className="muted">{evidence.comparison?.paidReceipts ?? chargedCount} paid receipts</span>
-                          <span className="kpi-delta is-up">x402 Rail</span>
+                          <span className="mono muted">−54% vs premium</span>
                         </div>
                       </div>
                     </div>
@@ -350,18 +349,17 @@ export default function Workspace({
                     <div className="bento-card kpi-card">
                       <div className="bento-card-head">
                         <span className="bento-card-title"><Icon name="check" size={14} /> Strict Qualification</span>
+                        <span className="kpi-delta is-up">{holdoutPct}% Holdout</span>
                       </div>
                       <div className="bento-well kpi-well">
-                        <div className="kpi-main">
-                          <span className="split-num">
-                            {evidence.calibrationCorrect}
-                            <span className="split-dec">/{evidence.calibrationTotal}</span>
-                          </span>
-                          <MiniSpark color="rgba(255,255,255,0.7)" bars={[20, 24, 29]} curve="M6 22 Q24 14 42 12 T66 6" />
-                        </div>
+                        <span className="split-num">
+                          {evidence.calibrationCorrect}
+                          <span className="split-dec">/{evidence.calibrationTotal}</span>
+                        </span>
+                        <KpiMeter pct={(evidence.calibrationCorrect / Math.max(1, evidence.calibrationTotal)) * 100} tone="emerald" />
                         <div className="kpi-foot">
                           <span className="muted">Holdout {evidence.holdoutCorrect}/{evidence.holdoutTotal}</span>
-                          <span className="kpi-delta is-up">98.3% Holdout</span>
+                          <span className="mono muted">0 false accepts</span>
                         </div>
                       </div>
                     </div>
@@ -369,38 +367,41 @@ export default function Workspace({
                     <div className="bento-card kpi-card">
                       <div className="bento-card-head">
                         <span className="bento-card-title"><Icon name="shield" size={14} /> API Exposure</span>
+                        <span className="kpi-delta is-warn">Capped</span>
                       </div>
                       <div className="bento-well kpi-well">
-                        <div className="kpi-main">
-                          <SplitMetric value={evidence.creditUsd} prefix="$" decimals={3} />
-                          <MiniSpark color="rgba(255,255,255,0.7)" bars={[26, 22, 16]} curve="M6 10 Q24 18 42 14 T66 22" />
-                        </div>
+                        <SplitMetric value={evidence.creditUsd} prefix="$" decimals={3} />
+                        <KpiMeter pct={exposurePct} tone="amber" />
                         <div className="kpi-foot">
-                          <span className="muted">Ceiling ${evidence.creditCeilingUsd.toFixed(2)}</span>
-                          <span className="kpi-delta is-warn">Capped</span>
+                          <span className="muted">Ceiling ${evidence.creditCeilingUsd.toFixed(2)} USD</span>
+                          <span className="mono muted">{Math.round(exposurePct)}% used</span>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bento-row-mid">
+                  <div className="bento-row-mid bento-row-2">
                     <div className="bento-card">
                       <div className="bento-card-head">
                         <span className="bento-card-title"><Icon name="dashboard" size={14} /> Attempt &amp; Settlement Flow</span>
-                        <span className="bento-pill-tag mono">{records.length} Calls</span>
+                        <div className="capsule-legend mono">
+                          <span><i className="leg-dot is-paid" /> Paid USDZ</span>
+                          <span><i className="leg-dot is-est" /> API Est.</span>
+                          <span><i className="leg-dot is-held" /> Unpaid</span>
+                        </div>
                       </div>
                       <div className="bento-well capsule-well">
                         <div className="capsule-stage">
                           {activeBar && (
                             <div
                               className="capsule-tooltip"
-                              style={{ left: `${Math.min(72, Math.max(8, (activeBar.index / 27) * 84))}%` }}
+                              style={{ left: `clamp(0px, ${(activeBar.index / 27) * 82}%, calc(100% - 172px))` }}
                             >
                               <div className="cap-tip-head">
                                 <span>{activeBar.label}</span>
-                                <i className={activeBar.state === "Charged" ? "is-charged" : ""} />
+                                <i className={activeBar.isCharged ? "is-charged" : ""} />
                               </div>
-                              <strong>{activeBar.amountUsd} USDZ</strong>
+                              <strong>{activeBar.amountUsd} USDZ · {activeBar.isCharged ? "Charged" : "Unpaid"}</strong>
                             </div>
                           )}
                           <div className="capsule-grid" aria-label="Interactive attempt telemetry chart">
@@ -408,7 +409,7 @@ export default function Workspace({
                               <button
                                 type="button"
                                 key={bar.index}
-                                className={"capsule-col" + (activeBarIdx === bar.index ? " is-active" : "")}
+                                className={"capsule-col" + (effectiveActiveIdx === bar.index ? " is-active" : "") + (bar.isCharged ? " is-paid" : " is-unpaid")}
                                 onMouseEnter={() => setActiveBarIdx(bar.index)}
                                 onFocus={() => setActiveBarIdx(bar.index)}
                                 onClick={() => bar.record && setSelected(bar.record)}
@@ -432,8 +433,8 @@ export default function Workspace({
 
                     <div className="bento-card">
                       <div className="bento-card-head">
-                        <span className="bento-card-title"><Icon name="wallet" size={14} /> Qualified Rails</span>
-                        <button type="button" className="bento-viewall-btn" onClick={() => go("ledger")}>View All</button>
+                        <span className="bento-card-title"><Icon name="wallet" size={14} /> Qualified Rails &amp; Guardrails</span>
+                        <span className="bento-pill-tag mono">{records.length} Calls</span>
                       </div>
                       <div className="bento-well pill-list-well">
                         {providerRows.map(item => (
@@ -450,85 +451,30 @@ export default function Workspace({
                         ))}
                       </div>
                     </div>
-
-                    <div className="bento-card">
-                      <div className="bento-card-head">
-                        <span className="bento-card-title"><Icon name="spark" size={14} /> Audit Insights</span>
-                        <button
-                          type="button"
-                          className="bento-viewall-btn"
-                          onClick={() => document.getElementById("policy-planner")?.scrollIntoView({ behavior: "smooth" })}
-                        >
-                          Planner
-                        </button>
-                      </div>
-                      <div className="bento-well insight-list-well">
-                        <ul className="insight-bullets">
-                          <li><Icon name="check" size={13} /><span>Calibration strict accuracy hit <b>{evidence.calibrationCorrect}/{evidence.calibrationTotal}</b> under frozen specs.</span></li>
-                          <li><Icon name="shield" size={13} /><span>Untouched holdout scored <b>{evidence.holdoutCorrect}/{evidence.holdoutTotal}</b> with <b>0 false accepts</b>.</span></li>
-                          <li><Icon name="bolt" size={13} /><span>Interrupted calls count as failed; costs remain <b>intact</b> in ledger.</span></li>
-                          <li><Icon name="wallet" size={13} /><span>Sandbox fiat hold <b>${evidence.holdUsd.toFixed(2)}</b> stayed isolated from USDZ.</span></li>
-                          <li><Icon name="grid" size={13} /><span>Merchant catalog verified <b>{evidence.products} SKUs</b> + signed guest OAuth.</span></li>
-                        </ul>
-                        <button
-                          type="button"
-                          className="ask-ai-btn"
-                          onClick={() => document.getElementById("policy-planner")?.scrollIntoView({ behavior: "smooth" })}
-                        >
-                          <Icon name="spark" size={14} /> Inspect 64/64 Policy Study
-                        </button>
-                      </div>
-                    </div>
                   </div>
 
-                  <div className="bento-row-bot">
-                    <div className="bento-card">
-                      <div className="bento-card-head">
-                        <span className="bento-card-title"><Icon name="ledger" size={14} /> Recent Attempts</span>
-                        <button type="button" className="bento-viewall-btn" onClick={() => go("ledger")}>View All</button>
-                      </div>
-                      <div className="bento-well recent-well">
-                        <div className="recent-tx-grid">
-                          {records.slice(0, 6).map(rec => {
-                            const badge = providerBadge(rec.provider);
-                            return (
-                              <button type="button" className="recent-tx-chip" key={rec.id} onClick={() => setSelected(rec)}>
-                                <span className="tx-icon-sq">
-                                  <Icon name={badge.icon} size={13} />
-                                </span>
-                                <div className="recent-tx-copy">
-                                  <strong>{rec.task}</strong>
-                                  <small>{rec.provider}</small>
-                                </div>
-                                <span className="recent-tx-amt mono">
-                                  {rec.costMicro ? `$${(rec.costMicro / 1e6).toFixed(4)}` : "$0.00"}
-                                </span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
-
+                  <div className="bento-row-bot bento-row-2-even">
                     <div className="bento-card">
                       <div className="bento-card-head">
                         <span className="bento-card-title"><Icon name="check" size={14} /> Qualification Benchmarks</span>
-                        <span className="mini-tag">UNCHANGED</span>
+                        <span className="mini-tag">UNCHANGED SPECS</span>
                       </div>
                       <div className="bento-well rings-well">
-                        <div className="goal-ring-row">
-                          <div>
-                            <strong>Calibration Trials</strong>
-                            <small className="mono">{evidence.calibrationCorrect} / {evidence.calibrationTotal} strict</small>
+                        <div className="goal-ring-pair">
+                          <div className="goal-ring-row">
+                            <div>
+                              <strong>Calibration Trials</strong>
+                              <small className="mono">{evidence.calibrationCorrect} / {evidence.calibrationTotal} strict</small>
+                            </div>
+                            <RingProgress pct={100} color="#34d399" />
                           </div>
-                          <RingProgress pct={100} color="#e4e4e7" />
-                        </div>
-                        <div className="goal-ring-row">
-                          <div>
-                            <strong>Untouched Holdout</strong>
-                            <small className="mono">{evidence.holdoutCorrect} / {evidence.holdoutTotal} strict (1 timeout)</small>
+                          <div className="goal-ring-row">
+                            <div>
+                              <strong>Untouched Holdout</strong>
+                              <small className="mono">{evidence.holdoutCorrect} / {evidence.holdoutTotal} strict (1 timeout)</small>
+                            </div>
+                            <RingProgress pct={holdoutPct} color="#e5a95d" />
                           </div>
-                          <RingProgress pct={Math.round((evidence.holdoutCorrect / evidence.holdoutTotal) * 100)} color="#e5a95d" />
                         </div>
                         <div className="trial-grid bento-trial-grid" aria-hidden="true">
                           {Array.from({ length: 60 }, (_, i) => (
@@ -540,29 +486,29 @@ export default function Workspace({
 
                     <div className="bento-card">
                       <div className="bento-card-head">
-                        <span className="bento-card-title"><Icon name="shield" size={14} /> Protocol Guarantees</span>
+                        <span className="bento-card-title"><Icon name="ledger" size={14} /> Recent Attempts</span>
+                        <button type="button" className="bento-viewall-btn" onClick={() => go("ledger")}>View All {records.length} <Icon name="arrow" size={12} /></button>
                       </div>
-                      <div className="bento-well guardrail-well">
-                        <div className="guard-row">
-                          <Icon name="check" size={14} />
-                          <div>
-                            <strong>Idempotent Key Hold</strong>
-                            <small>Retried keys replay original receipts without double billing</small>
-                          </div>
-                        </div>
-                        <div className="guard-row">
-                          <Icon name="check" size={14} />
-                          <div>
-                            <strong>Source-Bound Field Roles</strong>
-                            <small>Synthetic tricks move to human review with zero false accepts</small>
-                          </div>
-                        </div>
-                        <div className="guard-row">
-                          <Icon name="shield" size={14} />
-                          <div>
-                            <strong>Independent EIP-712 Gate</strong>
-                            <small>Human signature invalidates any provider or cap tampering</small>
-                          </div>
+                      <div className="bento-well recent-well">
+                        <div className="recent-tx-grid">
+                          {records.slice(0, 6).map(rec => {
+                            const badge = providerBadge(rec.provider);
+                            const isCharged = rec.state === "Charged";
+                            return (
+                              <button type="button" className="recent-tx-chip" key={rec.id} onClick={() => setSelected(rec)}>
+                                <span className="tx-icon-sq">
+                                  <Icon name={badge.icon} size={13} />
+                                </span>
+                                <div className="recent-tx-copy">
+                                  <strong>{rec.task}</strong>
+                                  <small>{rec.provider} · {isCharged ? "Charged" : "Unpaid"}</small>
+                                </div>
+                                <span className={"recent-tx-amt mono" + (isCharged ? "" : " tx-zero")}>
+                                  {rec.costMicro ? `$${(rec.costMicro / 1e6).toFixed(4)}` : "$0.00"}
+                                </span>
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
@@ -578,7 +524,6 @@ export default function Workspace({
                     data={evidence.comparison}
                     calibration={`${evidence.calibrationCorrect} / ${evidence.calibrationTotal}`}
                     holdout={`${evidence.holdoutCorrect} / ${evidence.holdoutTotal}`}
-                    products={evidence.products}
                   />
                 </div>
 
@@ -666,15 +611,22 @@ export default function Workspace({
           </div>
           {selected && (
             <>
-              <h2>{selected.task}</h2>
-              <dl className="status-list">
-                <div><dt>Provider</dt><dd>{selected.provider}</dd></div>
-                <div><dt>State</dt><dd>{selected.state}</dd></div>
-                <div><dt>Cost / USDZ</dt><dd>{selected.costMicro === null ? "Unresolved" : (selected.costMicro / 1e6).toFixed(6)}</dd></div>
-                <div><dt>API estimate / USD</dt><dd>{selected.apiCreditMicro == null ? "Unreported; allowance retained" : (selected.apiCreditMicro / 1e6).toFixed(6)}</dd></div>
+              <div className="receipt-title-row">
+                <h2>{selected.task}</h2>
+                <span className={"state-tag " + (selected.state === "Charged" ? "charged" : "")}>
+                  <i className={"state-dot " + (selected.state === "Charged" ? "is-live" : "")} />
+                  {selected.state}
+                </span>
+              </div>
+              <dl className="receipt-kv-grid">
+                <div><dt>Provider</dt><dd className="mono">{selected.provider}</dd></div>
+                <div><dt>State</dt><dd className="mono">{selected.state}</dd></div>
+                <div><dt>Cost / USDZ</dt><dd className="mono">{selected.costMicro === null ? "Unresolved" : (selected.costMicro / 1e6).toFixed(6)}</dd></div>
+                <div><dt>API estimate / USD</dt><dd className="mono">{selected.apiCreditMicro == null ? "Unreported; allowance retained" : (selected.apiCreditMicro / 1e6).toFixed(6)}</dd></div>
               </dl>
+              <div className="receipt-hash-label mono">CRYPTOGRAPHIC SETTLEMENT RECEIPT</div>
               <p className="receipt-id mono">{selected.receipt || "No paid receipt recorded"}</p>
-              <p className="muted">{selected.verification}. No refund or invoice payment is inferred.</p>
+              <p className="receipt-note">{selected.verification}. No refund or invoice payment is inferred.</p>
             </>
           )}
         </dialog>

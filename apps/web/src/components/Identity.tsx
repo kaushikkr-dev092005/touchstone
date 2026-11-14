@@ -33,7 +33,3 @@ export function Icon({ name, size = 20 }: { name: string; size?: number }) {
 export function Brand() {
   return <span className="brand-lockup" aria-label="Touchstone"><span className="brand-flower" aria-hidden="true">{[0, 1, 2, 3].map(i => <i key={i} />)}</span><span className="wordmark" aria-hidden="true">touchstone</span></span>;
 }
-
-export function LogoStudy() {
-  return <div className="logo-study" aria-label="Animated Touchstone identity"><div className="logo-study-dots" aria-hidden="true">{[0, 1, 2, 3].map(i => <i key={i} />)}</div><svg className="logo-study-word" viewBox="0 0 760 180" aria-hidden="true"><g className="logo-construction" fill="none" stroke="currentColor" strokeWidth=".6">{[37, 81, 138].map(y => <path key={y} d={"M15 " + y + "H745"} />)}{Array.from({ length: 11 }, (_, i) => <g key={i}><path d={"M" + (35 + i * 68) + " 20v140"} /><circle cx={35 + i * 68} cy="81" r="42" /></g>)}</g><text x="380" y="132" textAnchor="middle" textLength="700" lengthAdjust="spacingAndGlyphs">touchstone</text></svg><span className="logo-study-label mono">ONE IDENTITY. THROUGH EVERY STATE.</span></div>;
-}

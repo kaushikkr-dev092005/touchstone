@@ -37,11 +37,11 @@ const float BC = 2.598076; // critical impact parameter 3*sqrt(3)/2 rs
 ${NOISE}
 
 vec3 ramp(float t){
-  const vec3 BROWN = vec3(.038,.0066,.0006), AMBER = vec3(1.,.465,.101), WHITE = vec3(1.,.88,.68);
+  const vec3 SHADOW = vec3(.018,.022,.03), SILVER = vec3(.56,.62,.72), WHITE = vec3(.95,.97,1.);
   t = clamp(t, 0., 1.6);
-  vec3 c = mix(BROWN, AMBER, smoothstep(0., .55, t));
+  vec3 c = mix(SHADOW, SILVER, smoothstep(0., .55, t));
   c = mix(c, WHITE, smoothstep(.5, 1.05, t));
-  return mix(c, vec3(1.,.97,.94), smoothstep(1.05, 1.6, t));
+  return mix(c, vec3(.98,.99,1.), smoothstep(1.05, 1.6, t));
 }
 
 vec4 disk(vec3 pc, vec3 vd, float rc, float rOut){
@@ -76,7 +76,7 @@ vec3 stars(vec3 d){
       vec3 off = vec3(hash13(c+1.7), hash13(c+5.3), hash13(c+9.1))*.6+.2;
       float b = pow(hash13(c+3.1), 3.)*(l==0 ? 1.2 : .5);
       float tw = .75 + .25*sin(uTime*(1.+3.*h) + h*40.);
-      vec3 tint = mix(vec3(1.,.82,.62), vec3(.8,.88,1.), hash13(c+7.7));
+      vec3 tint = mix(vec3(.78,.84,.96), vec3(.96,.97,1.), hash13(c+7.7));
       col += tint*b*tw*smoothstep(.16, 0., length(f-off));
     }
   }
@@ -149,8 +149,8 @@ void main(){
   float asym = 1. + .55*side;                    // approaching side brighter
   float core = exp(-pow((dB - 1.2*px)/(1.6*px), 2.));
   float halo = dB > 0. ? exp(-dB/(16.*px))*.32 + exp(-dB/(90.*px))*.07 : exp(dB/(2.*px))*.25;
-  vec3 ringCol = mix(vec3(1.,.66,.32), vec3(1.,.95,.86), core);
-  col += (1.-a*.8)*ringCol*(core*3.2 + halo*1.4)*asym*ringT;
+  vec3 ringCol = mix(vec3(.72,.79,.90), vec3(.98,.99,1.), core);
+  col += (1.-a*.8)*ringCol*(core*3.0 + halo*1.35)*asym*ringT;
 
   // Glimmering dust haze in the disk plane, faintly lit by the disk.
   vec2 hq = s/max(uRadius, 1e-3);
@@ -159,7 +159,7 @@ void main(){
     float hang = atan(hq.y, hq.x) + uTime*.035/pow(rho, 1.5);
     float hn = fbm(vec3(cos(hang)*2.2, sin(hang)*2.2, log(rho)*9. - uTime*.02));
     float hz = hn*hn*exp(-(rho-1.)*mix(5., 2.2, smoothstep(.6, 2.2, 1./uRadius)))*smoothstep(.9, 1.02, rho);
-    col += vec3(.95,.5,.2)*hz*.2*(1. + .5*side)*dustT*(1. - smoothstep(uRadius + fadeW*.6, uRadius + fadeW*1.8, sl));
+    col += vec3(.68,.75,.86)*hz*.18*(1. + .5*side)*dustT*(1. - smoothstep(uRadius + fadeW*.6, uRadius + fadeW*1.8, sl));
   }
 
   // Tiny distant body for scale, lit from the hole.
@@ -169,12 +169,12 @@ void main(){
     col *= 1. - m*dustT;
     vec2 lightDir = normalize(uHole - uBody);
     float rim = smoothstep(uBodyR*.55, uBodyR, bl)*m*pow(max(dot(normalize(bd), lightDir), 0.), 3.);
-    col += vec3(1.,.78,.5)*rim*1.6*dustT;
+    col += vec3(.84,.89,.98)*rim*1.5*dustT;
   }
 
   // The point of light handed over from the vault seam.
   float pd = length(uv - uPointPos);
-  col += vec3(1.,.86,.64)*uPoint*(exp(-pd*140.)*6. + exp(-pd*22.)*.45);
+  col += vec3(.92,.95,1.)*uPoint*(exp(-pd*140.)*6. + exp(-pd*22.)*.45);
 
   o = vec4(col*uHdr, 1.);
 }`;
@@ -215,7 +215,7 @@ void main(){
   float tw = .45 + .55*pow(.5 + .5*sin(uTime*(1.3 + seed*3.7) + seed*61.), 6.);
   gl_PointSize = clamp(aMeta.z*(uCamDist/z)*uPx, 1., 6.);
   vB = vis*uDust*tw*aOrbit.w*(1.6/(1. + .12*r));
-  vC = mix(vec3(1.,.6,.28), vec3(1.,.93,.84), seed);
+  vC = mix(vec3(.66,.74,.88), vec3(.96,.97,1.), seed);
 }`;
 
 export const PARTICLE_FS = /* glsl */ `#version 300 es

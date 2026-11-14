@@ -132,6 +132,24 @@ shares its landing page, dashboard and ledger on one origin. A cinematic vault i
 ignites into a ray-marched black hole behind the hero, and the same vault plays before
 workspace entry ([landing notes](docs/landing.md)). Public views show saved evidence only.
 
+### UI/UX Redesign: Titanium/Obsidian & 3-Zone Bento Control Room
+
+The web application (`apps/web/`) has been redesigned into a restrained **Titanium/Obsidian** palette (`#050506` canvas, `#0A0B0E` double-bezel Bento shells, `#10B981` emerald verified state, `#F59E0B` amber pending/capped state) across every route:
+
+- **Landing Page (`/site/`):** Platinum-silver WebGL2 black-hole shader (`shaders.ts`), 4-card **Proof Strip** (`120/120` calibration, `59/60` holdout, `-54%` ladder spend vs premium, `$1.00` sandbox hold), double-bezel Bento architecture cards (`#how`), aligned provider tier cards (`#providers`), monochromatic protocol state table (`#ledger-guarantee`), and structured footer + quick-nav dock.
+- **Control Room & Ledger (`/dashboard`, `/ledger`):** 3-Zone Bento hierarchy:
+  - **Zone 01 — Executive Overview:** Proportional KPI meters, interactive **Attempt & Settlement Flow** bar chart (defaulting to the first charged attempt with a 3-state legend), and **Qualified Rails & Guardrails**.
+  - **Zone 02 — Measured Policy Benchmark:** Unified 2-card summary (`Policy Spend Overview` + `Policy Verdict`) above a single benchmark table with 12-tick strict-accuracy meters.
+  - **Zone 03 — Transaction Ledger & Receipt Modal:** Bounded scroll frame on `/dashboard`, search/state filters, responsive mobile metadata subline (`<720px`), and centered cryptographic Receipt Modal with a `2x2` specification grid and hash block.
+- **Legacy Cleanup:** Removed 7 unused legacy component/helper files (`CardsScene.tsx`, `Vault.tsx`, `Lamp.tsx`, `Glass.tsx`, `components/icons/index.tsx`, `lib/theme.ts`, `lib/utils.ts`), uninstalled `@samasante/liquid-glass`, removed dead `useInView`/`LogoStudy` exports, and stripped dead green/halftone editorial rules from `apps/web/src/index.css`.
+
+| View | Preview |
+|---|---|
+| **Landing (`/site/`)** | ![Landing page 1440px](docs/screenshots/landing-1440.png) |
+| **Control Room (`/dashboard`)** | ![Dashboard 1440px](docs/screenshots/dashboard-1440.png) |
+| **Ledger & Receipt Modal (`/ledger`)** | ![Ledger and Receipt Modal 1440px](docs/screenshots/ledger-1440.png) |
+| **Mobile Responsive (`390px`)** | ![Mobile 390px view](docs/screenshots/mobile-390.png) |
+
 For the same interface locally, run `bun install --frozen-lockfile` and `bun run build`
 in `apps/web`, start the Python server, and open `/site/`. `/dashboard` and `/ledger`
 embed the existing local operator console with its session protections. `/console`

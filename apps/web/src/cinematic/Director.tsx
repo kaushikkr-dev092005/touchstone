@@ -171,7 +171,7 @@ export default function Director({ view, prefetch, ref }: { view: View; prefetch
   }, [debug, startMaster, endMaster]);
 
   const revealLedger = () => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>(".workspace-heading, .workspace-tabs, .workspace-metrics, .workspace-panels > *, .policy-comparison, .ledger-panel .panel-top, .ledger-toolbar, .record-table tbody tr")).slice(0, 48);
+    const els = Array.from(document.querySelectorAll<HTMLElement>(".bento-header, .bento-kpi-grid > *, .bento-row-mid > *, .bento-row-bot > *, .bento-policy-section, .bento-record-table tbody tr")).slice(0, 48);
     if (els.length) gsap.fromTo(els, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: TIMELINE.dashboard.ledgerIn * 0.6, stagger: TIMELINE.dashboard.ledgerIn * 0.4 / els.length, ease: "power3.out", clearProps: "opacity,transform" });
   };
 
@@ -192,7 +192,7 @@ export default function Director({ view, prefetch, ref }: { view: View; prefetch
       }
       pending.current = (vaultTl, api) => {
         const D = TIMELINE.dashboard, t = heroTargets();
-        const fadeOut = [...t.badge, ...t.lines, ...t.sub, ...t.cta, ...t.built, ...t.below, ...nav, ...document.querySelectorAll<HTMLElement>(".workspace, .footer")];
+        const fadeOut = [...t.badge, ...t.lines, ...t.sub, ...t.cta, ...t.built, ...t.below, ...nav, ...document.querySelectorAll<HTMLElement>(".bento-shell, .workspace, .footer")];
         const m = gsap.timeline({ onComplete: () => { setVault(null); setLive("The " + next + " is open."); setState("done"); endMaster(m); } });
         startMaster(m, undefined, 1, "Skip");
         setState("dashboard");
@@ -216,7 +216,7 @@ export default function Director({ view, prefetch, ref }: { view: View; prefetch
         m.call(revealLedger, [], end + 0.12);
         m.fromTo(nav, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out", immediateRender: false }, end + 0.25);
         m.to(line, { opacity: 0, duration: 0.7, ease: "power1.in" }, end + 0.35);
-        m.set([...nav, ...document.querySelectorAll<HTMLElement>(".workspace, .footer")], { clearProps: "opacity,transform" }, end + D.ledgerIn);
+        m.set([...nav, ...document.querySelectorAll<HTMLElement>(".bento-shell, .workspace, .footer")], { clearProps: "opacity,transform" }, end + D.ledgerIn);
       };
       setVault({ variant: "dashboard", phases: TIMELINE.dashboard.vault, caption: "AUTHORIZING LEDGER ACCESS", key: Date.now() });
     },
