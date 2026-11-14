@@ -19,7 +19,7 @@ from touchstone.operator_auth import make_config
 def main():
     from playwright.sync_api import sync_playwright
     artifacts=ROOT/'tmp/operator-browser';artifacts.mkdir(parents=True,exist_ok=True)
-    env={k:v for k,v in os.environ.items() if not k.startswith(('AIRWALLEX_','METAL_','ANTHROPIC_','TOUCHSTONE_')) and k!='AGENT_PRIVATE_KEY'}
+    env={k:v for k,v in os.environ.items() if not k.startswith(('AWS_','AIRWALLEX_','METAL_','ANTHROPIC_','CLAUDE_','TOUCHSTONE_')) and k!='AGENT_PRIVATE_KEY'}
     env['TOUCHSTONE_IGNORE_LOCAL_CONFIG']='1'
     with socket.socket() as sock:sock.bind(('127.0.0.1',0));port=sock.getsockname()[1]
     base=f'http://127.0.0.1:{port}'

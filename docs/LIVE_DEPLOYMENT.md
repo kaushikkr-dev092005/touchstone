@@ -40,9 +40,10 @@ best effort on Windows). Use a dedicated OS user in deployment.
 
 The public Worker cannot execute the Python/SQLite service. Deploy this service on
 an approved persistent Linux/Docker host with its own operator HTTPS domain. No
-such approved host/domain has been supplied during this implementation. Docker's
-daemon is also unavailable in the current Windows environment; container execution
-and public operator availability must not be claimed as verified.
+such approved AWS host/domain has been provisioned. Current local Docker, ARM64
+build and runtime results are recorded separately in
+[AWS verification](AWS_DEPLOYMENT_VERIFICATION.md); local checks do not establish
+public operator availability.
 
 `deploy/operator/compose.yaml` provides a non-root, read-only application container,
 private proxy network, outbound quote network, named persistent database volume,

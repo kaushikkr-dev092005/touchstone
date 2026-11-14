@@ -18,6 +18,7 @@ RUN npm ci --ignore-scripts --no-audit --no-fund
 
 FROM python:3.12-slim-bookworm AS operator
 WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends libstdc++6 && rm -rf /var/lib/apt/lists/*
 RUN useradd --uid 10001 --create-home operator && mkdir -p /var/lib/touchstone && chown operator /var/lib/touchstone
 COPY touchstone touchstone
 COPY tools/run_operator.py tools/run_operator.py
@@ -27,6 +28,7 @@ COPY --from=quote_runtime /node/node_modules integrations/metal/node_modules
 COPY --from=quote_runtime /usr/local/bin/node /usr/local/bin/node
 COPY --from=frontend /source/apps/web/dist apps/web/dist
 ARG SOURCE_REVISION=unknown
+LABEL org.opencontainers.image.revision=$SOURCE_REVISION
 ENV TOUCHSTONE_SOURCE_REVISION=$SOURCE_REVISION TOUCHSTONE_IGNORE_LOCAL_CONFIG=1 PYTHONUNBUFFERED=1
 USER operator
 EXPOSE 8089

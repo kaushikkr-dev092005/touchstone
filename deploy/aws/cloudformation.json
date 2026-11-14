@@ -11,7 +11,13 @@
         "Provisioning requires separate explicit approval and a verified gross monthly estimate at most USD 10.",
         "Financial dispatch remains disabled; no payer, bank, model or AWS credentials are mounted in application containers."
       ],
-      "ref": [{"at": "docs/AWS_DEPLOYMENT.md", "has": "Design, cost gates, Guard exceptions and acceptance procedure", "scope": "stack"}]
+      "ref": [
+        {
+          "at": "docs/AWS_DEPLOYMENT.md",
+          "has": "Design, cost gates, Guard exceptions and acceptance procedure",
+          "scope": "stack"
+        }
+      ]
     }
   },
   "Parameters": {
@@ -58,6 +64,12 @@
         "t4g.nano"
       ],
       "Description": "micro is the Free Plan candidate; nano requires an already paid plan and separate credit/cost verification."
+    },
+    "RuntimePolicyBase64": {
+      "Type": "String",
+      "AllowedPattern": "[A-Za-z0-9+/]+={0,2}",
+      "MaxLength": 4096,
+      "Description": "Base64 of the privately reviewed monthly operating policy. No credentials. Explicit owner approval required; no automatic renewal."
     }
   },
   "Rules": {
@@ -211,7 +223,10 @@
       "Metadata": {
         "com.aws.cloudformation.Context": {
           "why": "Only the dedicated public host uses this group; web/TLS ingress and limited-protocol egress support the single-host topology.",
-          "must": ["Only Instance references this group; no SSH, database or Python ingress.", "Network exposure changes require review of all attachments."],
+          "must": [
+            "Only Instance references this group; no SSH, database or Python ingress.",
+            "Network exposure changes require review of all attachments."
+          ],
           "mutable": "change-with-constraints"
         }
       },
@@ -291,7 +306,11 @@
       "Metadata": {
         "com.aws.cloudformation.Context": {
           "why": "T4g keeps the existing ARM64 runtime small; optimization is already included for the allowed instance types.",
-          "must": ["Standard CPU credits; no financial credentials; IMDSv2 required with hop limit 1 to keep host credentials out of containers.", "Root encryption key must be existing, approved and compatible with account policy."],
+          "must": [
+            "Standard CPU credits; no financial credentials; IMDSv2 required with hop limit 1 to keep host credentials out of containers.",
+            "Root encryption key must be existing, approved and compatible with account policy.",
+            "Embedded root-owned runtime guard precedes networking; absolute monthly window includes stopped gaps and prior usage; no automatic renewal or start API."
+          ],
           "mutable": "change-with-constraints"
         }
       },
@@ -332,7 +351,9 @@
             "DeviceName": "/dev/xvda",
             "Ebs": {
               "Encrypted": true,
-              "KmsKeyId": {"Ref": "EbsKmsKeyArn"},
+              "KmsKeyId": {
+                "Ref": "EbsKmsKeyArn"
+              },
               "VolumeType": "gp3",
               "VolumeSize": 8,
               "DeleteOnTermination": true
@@ -359,9 +380,10 @@
         ],
         "UserData": {
           "Fn::Base64": {
-            "Fn::Sub": "#!/bin/bash\nset -euo pipefail\numask 077\n# Wait for the explicitly allocated Elastic IP; never allocate a second public IP.\nfor n in $(seq 1 120); do if curl --silent --show-error --head --connect-timeout 3 https://cdn.amazonlinux.com/ >/dev/null; then break; fi; sleep 5; done\ndnf install -y docker\nsystemctl enable --now docker amazon-ssm-agent\ninstall -d -m 700 /opt/touchstone\nprintf '%s\\n' '${ApplicationImage}' > /opt/touchstone/application-image\nprintf '%s\\n' '${SourceRevision}' > /opt/touchstone/source-revision\n# No operator identity, payment key, financial operation or app launch is created here.\n"
+            "Fn::Sub": "#!/bin/bash\n# Rendered into cloudformation.json; never execute on a developer workstation.\nset -euo pipefail\numask 077\ntrap '/usr/bin/systemctl --no-block poweroff' ERR\ninstall -d -m 700 /opt/touchstone /etc/touchstone /var/lib/touchstone-runtime-guard\nprintf '%s' '${RuntimePolicyBase64}' | base64 --decode > /etc/touchstone/runtime-policy.json\nchmod 600 /etc/touchstone/runtime-policy.json\npython3 - <<'PY'\nimport base64,zlib\nfrom pathlib import Path\nPath('/opt/touchstone/aws_runtime_guard.py').write_bytes(zlib.decompress(base64.b64decode('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')))\nPY\nchmod 700 /opt/touchstone/aws_runtime_guard.py\ncat > /etc/systemd/system/touchstone-runtime-guard.service <<'EOF'\n[Unit]\nDescription=Fail-closed approved Touchstone operating window\nFailureAction=poweroff\n[Service]\nType=oneshot\nUMask=0077\nTimeoutStartSec=15\nExecStart=/usr/bin/python3 /opt/touchstone/aws_runtime_guard.py --policy /etc/touchstone/runtime-policy.json --state /var/lib/touchstone-runtime-guard/state.sqlite --enforce\nEOF\ncat > /etc/systemd/system/touchstone-runtime-guard.timer <<'EOF'\n[Unit]\nDescription=Recheck runtime allocation including restarts and manual starts\n[Timer]\nOnBootSec=15s\nOnUnitActiveSec=30s\nAccuracySec=1s\n[Install]\nWantedBy=timers.target\nEOF\nsystemctl daemon-reload\n# Validate identity/window and arm the stop control before any network install.\nsystemctl start touchstone-runtime-guard.service\nsystemctl enable --now touchstone-runtime-guard.timer\n# Wait for the explicitly allocated Elastic IP; never allocate a second public IP.\nfor n in $(seq 1 120); do if curl --silent --show-error --head --connect-timeout 3 https://cdn.amazonlinux.com/ >/dev/null; then break; fi; sleep 5; done\ndnf install -y docker\nsystemctl enable --now docker amazon-ssm-agent\nprintf '%s\\n' '${ApplicationImage}' > /opt/touchstone/application-image\nprintf '%s\\n' '${SourceRevision}' > /opt/touchstone/source-revision\n# No operator identity, payment key, financial operation or app launch is created here.\n"
           }
-        }
+        },
+        "InstanceInitiatedShutdownBehavior": "stop"
       }
     },
     "PublicIp": {
@@ -398,7 +420,10 @@
       "Metadata": {
         "com.aws.cloudformation.Context": {
           "why": "A separate encrypted disk preserves SQLite, operator configuration and TLS state across host lifecycle changes.",
-          "must": ["Retain on deletion and replacement; verified backup before any explicit deletion.", "Use the reviewed existing encryption key; do not create a paid customer key or override account policy silently."],
+          "must": [
+            "Retain on deletion and replacement; verified backup before any explicit deletion.",
+            "Use the reviewed existing encryption key; do not create a paid customer key or override account policy silently."
+          ],
           "mutable": "change-with-constraints"
         }
       },
@@ -414,7 +439,9 @@
         "Size": 8,
         "VolumeType": "gp3",
         "Encrypted": true,
-        "KmsKeyId": {"Ref": "EbsKmsKeyArn"},
+        "KmsKeyId": {
+          "Ref": "EbsKmsKeyArn"
+        },
         "Tags": [
           {
             "Key": "Name",

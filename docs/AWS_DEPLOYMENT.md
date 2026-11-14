@@ -2,13 +2,14 @@
 
 No AWS resource, account upgrade, budget subscription, inference purchase or bank
 operation has been created. The existing Sites deployment remains unchanged.
-The latest local preflight (14 November 2026) returns **AWS_ACCOUNT_MISMATCH**.
-AWS CLI 2.40.3 is installed outside `PATH`; the helper now discovers its standard
-Windows installation location. A real read-only STS request succeeded, but
-`default` did not match the account in the operator's earlier console link.
-The helper stopped before region, instance-offering or credit queries. Do not
-silently switch accounts or change `default`; confirm the intended identity first.
-The supplied Cost Explorer URL alone is not an authenticated CLI session.
+The latest local preflight returns **AWS_ROOT_CREDENTIALS_FORBIDDEN** before
+any AWS API call: the default profile points to a root login session. An explicitly
+authorized browser login completed but returned root again. The owner confirmed
+that no non-root identity exists yet. The owner must create/authorize a non-root
+IAM user or role in the intended account before cloud checks can resume. No IAM
+resource or account plan was changed. AWS CLI 2.40.3 is installed and discovered.
+Earlier STS evidence returned AWS_ACCOUNT_MISMATCH; it does not establish the
+intended account, Mumbai availability, current account plan or credit coverage.
 
 ## Approved preparation scope
 
@@ -35,7 +36,9 @@ the operator explicitly approves that exact final plan.
   SQLite, operator configuration and TLS state persist. Data is never formatted
   unless the exact approved EBS volume is blank; unknown filesystems are refused.
 - The application runs as UID 10001, with read-only root, dropped capabilities,
-  memory/process limits and a protected data mount. Images must be ARM64 and
+  memory/process limits and a protected data mount. Caddy uses separate UID 10002,
+  no capabilities and unprivileged internal ports 8080/8443, mapped to public 80/443.
+  Images must be ARM64 and
   pinned by digest; the application revision label must match the approved source.
 - No AWS, Airwallex, Claude or payment-wallet secrets are mounted in the app.
   The existing Node libraries support protected read-only quote validation.
@@ -50,8 +53,8 @@ signature-security boundary. This single-host prototype is not highly available.
 ## Cost review: verified public rates, account eligibility pending
 
 The gross monthly ceiling remains **$10** and the cash target **$0**. No alternative
-has been selected or authorized. The owner will correct `default` and rerun the
-read-only preflight; no new authenticated AWS call was made during this review.
+has been selected or authorized. The owner must establish a non-root identity and rerun the
+read-only preflight; no cloud checks continued after root was detected.
 Actual credit/tax/service eligibility and other account usage remain unverified.
 
 Official Mumbai rates retrieved on 14 November 2026:
@@ -98,9 +101,11 @@ They change capacity, availability or connectivity; they are not silently applie
 2. **Micro with a 360-hour monthly running limit:** keeps the Free Plan candidate
    type and all storage/auth controls, but the backend is offline outside agreed
    windows. Allocated IPv4 and both disks still bill for the full month, including
-   stopped periods. The limit includes launch, setup and validation hours. No
-   scheduler or stop/start automation has been deployed or implemented; selection
-   requires an approved accounting/stop procedure and explicit availability consent.
+   stopped periods. The limit includes launch, setup and validation hours. A root-owned operating-window guard is implemented and locally tested, but
+   not deployed or host-verified. Its absolute UTC deadline counts stopped gaps,
+   prior use and a shutdown margin. See [runtime accounting and limitations](AWS_RUNTIME_GUARD.md).
+   No automatic starts, monthly renewals or off-host watchdog are implemented.
+   Selection requires explicit availability consent and on-host stop acceptance.
 3. **IPv6-only micro:** a costed research option, not a supported replacement yet.
    IPv4-only clients cannot connect directly. Package/image registries, SSM,
    providers, temporary DNS and CA validation must all support the chosen IPv6
@@ -130,14 +135,29 @@ For an account already using IAM Identity Center, `aws configure sso --profile d
 and `aws sso login --profile default` are options. Do not create an IAM account or
 upgrade a plan merely to enable this flow. Never paste access keys or tokens in chat.
 
-From the repository root in PowerShell, after the official CLI is available:
+The current owner action is to create/authorize a non-root IAM user or assumed
+role in the intended account, then sign into that identity in the console. Do not
+use root or create long-lived keys for this deployment. An administrator must allow
+`SignInLocalDevelopmentAccess` and the read-only permissions listed below. Creating
+IAM resources is a separate owner action, not a permitted deployment side effect.
+After that identity exists, use the approved local sign-in flow:
+
+```powershell
+$touchstoneAwsCli = Join-Path $env:LOCALAPPDATA 'Programs\Amazon\AWSCLIV2\aws.exe'
+& $touchstoneAwsCli login --profile default --region ap-south-1
+```
+
+This changes the local login profile only. Verify the browser identity before
+accepting the change. Do not paste authentication codes, passwords or keys in chat.
+From the repository root, run:
 
 ```powershell
 $touchstoneAccountId = Read-Host 'Intended 12-digit AWS account ID'
 python tools/aws_preflight.py --expected-account $touchstoneAccountId
 ```
 
-This tool accepts only `default`, verifies STS identity, checks Mumbai opt-in and
+This tool accepts only `default`, rejects a known root login before any API call,
+rejects STS root identities, verifies the intended non-root identity, checks Mumbai opt-in and
 instance offerings, then calls the read-only Free Tier account-plan API in
 `us-east-1` (billing endpoint). It ignores environment credentials and endpoint
 overrides. It never calls Cost Explorer's billed API or any provisioning/write API.
@@ -180,6 +200,12 @@ CloudFormation/IAM/EC2/Budgets provisioning permissions have not been verified.
 
 ## Build and freeze the artifact before final approval
 
+A no-publication local ARM64 build is reproducible from committed files only:
+`python tools/build_aws_image.py --ref FULL_REVIEWED_COMMIT`. Its git archive excludes
+ignored local wallets, environment files, databases and Git credentials. The image
+ID printed by a local build is **not** a published registry manifest digest.
+
+
 The manual `.github/workflows/aws-image.yml` accepts a full reviewed commit already
 merged into master. It builds ARM64 with the existing Dockerfile and publishes an
 image to GHCR using GitHub's scoped workflow token, not AWS credentials.
@@ -201,7 +227,7 @@ source commit equal to the approved plan. The template itself is not a cost limi
 
 ```text
 aws cloudformation validate-template --profile default --region ap-south-1 --template-body file://deploy/aws/cloudformation.json
-aws cloudformation deploy --profile default --region ap-south-1 --stack-name touchstone --template-file deploy/aws/cloudformation.json --capabilities CAPABILITY_IAM --parameter-overrides ExpectedAccountId=APPROVED_ACCOUNT VerifiedAccountPlan=VERIFIED_EXISTING_PLAN ApplicationImage=APPROVED_PUBLIC_ARM64_IMAGE_DIGEST SourceRevision=APPROVED_FULL_COMMIT BudgetEmail=APPROVED_ALERT_EMAIL EbsKmsKeyArn=APPROVED_EXISTING_KEY_ARN
+aws cloudformation deploy --profile default --region ap-south-1 --stack-name touchstone --template-file deploy/aws/cloudformation.json --capabilities CAPABILITY_IAM --parameter-overrides ExpectedAccountId=APPROVED_ACCOUNT VerifiedAccountPlan=VERIFIED_EXISTING_PLAN ApplicationImage=APPROVED_PUBLIC_ARM64_IMAGE_DIGEST SourceRevision=APPROVED_FULL_COMMIT BudgetEmail=APPROVED_ALERT_EMAIL EbsKmsKeyArn=APPROVED_EXISTING_KEY_ARN RuntimePolicyBase64=PRIVATELY_APPROVED_MONTHLY_POLICY
 aws cloudformation describe-stacks --profile default --region ap-south-1 --stack-name touchstone
 ```
 
@@ -273,24 +299,12 @@ before releasing its IP. No teardown command has been executed.
 
 ## Local validation and remaining blockers
 
-Latest local validation on 14 November 2026:
-
-| Check | Result |
-|---|---|
-| `python -m unittest discover -s tests -p test_aws_deployment.py -v` | 28 passed; controlled AWS responses only |
-| `cfn-lint -t deploy/aws/cloudformation.json -r ap-south-1` | Passed with installed cfn-lint 1.60.1 |
-| `docker compose -f deploy/aws/compose.yaml config --quiet` | Passed with dummy public artifact identifiers; no containers started |
-| `bash -n deploy/aws/install-runtime.sh` | Passed; installer not executed |
-| Read-only account preflight | Real STS request returned `AWS_ACCOUNT_MISMATCH`; region/credit checks stopped |
-| cfn-guard 3.2.1, pinned AWS EC2/IAM registry rules | FAIL: 5 proposed exceptions, 23 passed, 15 not applicable; three fixes below |
-| Image/container/TLS/EC2 smoke checks | Unrun: Docker engine unavailable and intended AWS account not verified |
-
-The preceding preparation revision `50324146a162aef0060b4b4d6f1d0cb7b88aa9a3`
-passed GitHub CI on Ubuntu/Windows with Python 3.11/3.12. Its existing 22 operational
-tests passed locally on repeat; the first local run had one Windows socket-abort
-error (`WinError 10053`) without an application change or relaxed test. These are
-local/CI results, not proof of an AWS deployment. No image workflow was executed
-and no resource was created.
+Current results and the exact tested revision are recorded in
+[AWS deployment verification](AWS_DEPLOYMENT_VERIFICATION.md). These are local/CI
+results, not proof of an AWS deployment. No publication workflow or provisioning
+operation has been executed. The latest complete GitHub matrix must be green on
+the final source before release; a previous passing push does not erase a failing
+PR run on the same source.
 
 ### Guard review: three fixes, five proposed exceptions
 
@@ -310,7 +324,7 @@ eight-finding baseline from `eaaba69` for comparison.
 | `EBS_OPTIMIZED_INSTANCE` | **Fixed:** explicit `EbsOptimized:true`. T4g nano/micro are [optimized by default](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html); this makes the included feature explicit. |
 | `EBS_VOLUME_ENCRYPTION_KEY_RULE` | **Fixed:** root and data disks require `EbsKmsKeyArn`, an existing same-account Mumbai key with no default override. Before approval, verify the actual account default/policy, enabled state, grants and cost. No key resource was added; do not weaken policy or create a paid key to pass Guard. AWS-managed keys have [no monthly key fee](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html), while request charges/coverage and customer-key fees need account review. |
 | `SECURITY_GROUP_DESCRIPTION_RULE` | **Fixed:** every ingress/egress rule now explains its purpose. The group is referenced only by `Instance`; no port/CIDR was widened. |
-| `EC2_INSTANCE_DETAILED_MONITORING_ENABLED` | **Proposed exception:** basic EC2 monitoring avoids adding unbudgeted detailed metrics. Risk: coarser host failure/performance detection. Mitigations: container health checks, restart policy, bounded logs, basic host metrics and manual observation during the approved window. Verify alarm/log requirements and price additions before approval. |
+| `EC2_INSTANCE_DETAILED_MONITORING_ENABLED` | **Proposed exception:** basic EC2 monitoring avoids adding unbudgeted detailed metrics. Mumbai first-tier metrics are $0.30/metric-month ([official regional catalog](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonCloudWatch/current/ap-south-1/index.json)); actual metric count, hourly proration and account allowances require verification. This is an additional unbudgeted line, not assumed free. Risk: coarser host failure/performance detection. Mitigations: container health checks, restart policy, bounded logs, basic host metrics and manual observation during the approved window. Verify alarm/log requirements and price additions before approval. |
 | `EC2_SECURITY_GROUP_EGRESS_OPEN_TO_WORLD_RULE` | **Proposed exception:** TCP 80/443 internet egress supports packages, images, SSM, TLS and read-only provider checks without a paid NAT/proxy. Risks: outbound exfiltration/cost if the host is compromised. Mitigations: no financial secrets, minimal host role, unprivileged app, read-only containers, protocol limits. Destination allowlisting/private endpoints remain production hardening; do not claim least-privilege destinations. |
 | `EC2_SECURITY_GROUP_INGRESS_OPEN_TO_WORLD_RULE` | **Proposed exception:** public 80/443 is intentional for HTTPS website access and ACME redirects/challenges. Risks: attacks, denial of service and traffic costs. Mitigations: authenticated private API, TLS, Host/Origin/CSRF checks, application rate/body limits, no public SSH/Python/database port. These limits do not provide a hard AWS bandwidth cap. |
 | `NO_UNRESTRICTED_ROUTE_TO_IGW` | **Proposed exception:** this dedicated public subnet needs its default IGW route; a private-host gateway/load-balancer architecture exceeds this cost target. Risk: direct internet routing. Mitigations: only the dedicated host/group, IMDSv2, no application AWS credentials, limited network ports. Confirm there are no additional group attachments before deployment. |

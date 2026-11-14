@@ -10,6 +10,9 @@ volume_id=$1; application_image=$2; caddy_image=$3; source_revision=$4; operator
 [[ $caddy_image =~ ^caddy@sha256:[a-f0-9]{64}$ ]] || exit 1
 [[ $operator_domain =~ ^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$ && $operator_domain == *.sslip.io ]] || exit 1
 [[ $(cat /opt/touchstone/application-image) == "$application_image" && $(cat /opt/touchstone/source-revision) == "$source_revision" ]] || { echo 'APPROVED_IMAGE_OR_SOURCE_MISMATCH'; exit 1; }
+systemctl is-enabled --quiet touchstone-runtime-guard.timer
+systemctl is-active --quiet touchstone-runtime-guard.timer
+systemctl start touchstone-runtime-guard.service
 
 data_device=''
 for serial_file in /sys/block/nvme*n1/device/serial; do
@@ -40,7 +43,7 @@ if ! grep -Fq "UUID=$volume_uuid " /etc/fstab; then
     printf 'UUID=%s /var/lib/touchstone-aws ext4 defaults,nofail,x-systemd.device-timeout=30 0 2\n' "$volume_uuid" >> /etc/fstab
 fi
 install -d -m 700 -o 10001 -g 10001 /var/lib/touchstone-aws/operator
-install -d -m 700 /var/lib/touchstone-aws/caddy-data /var/lib/touchstone-aws/caddy-config
+install -d -m 700 -o 10002 -g 10002 /var/lib/touchstone-aws/caddy-data /var/lib/touchstone-aws/caddy-config
 # Small-host swap is on the encrypted retained volume. Never run model inference here.
 if [[ ! -e /var/lib/touchstone-aws/swapfile ]]; then
     dd if=/dev/zero of=/var/lib/touchstone-aws/swapfile bs=1M count=512 status=none
@@ -63,20 +66,26 @@ install -d /etc/systemd/system/docker.service.d
 cat > /etc/systemd/system/docker.service.d/touchstone-data.conf <<'EOF'
 [Unit]
 RequiresMountsFor=/var/lib/touchstone-aws
+Requires=touchstone-runtime-guard.service
+After=touchstone-runtime-guard.service
 [Service]
 ExecStartPre=/usr/bin/mountpoint -q /var/lib/touchstone-aws
+ExecStartPre=/usr/bin/systemctl is-active --quiet touchstone-runtime-guard.timer
+ExecStartPre=/usr/bin/python3 /opt/touchstone/aws_runtime_guard.py --policy /etc/touchstone/runtime-policy.json --state /var/lib/touchstone-runtime-guard/state.sqlite --enforce
 EOF
 cat > /etc/systemd/system/touchstone.service <<'EOF'
 [Unit]
 Description=Touchstone authenticated zero-charge workspace
-Requires=docker.service
-After=docker.service network-online.target
+Requires=docker.service touchstone-runtime-guard.service
+After=docker.service network-online.target touchstone-runtime-guard.service
 RequiresMountsFor=/var/lib/touchstone-aws
 ConditionPathExists=/var/lib/touchstone-aws/operator/operator-config.json
 [Service]
 Type=oneshot
 RemainAfterExit=yes
 WorkingDirectory=/opt/touchstone
+ExecStartPre=/usr/bin/systemctl is-active --quiet touchstone-runtime-guard.timer
+ExecStartPre=/usr/bin/python3 /opt/touchstone/aws_runtime_guard.py --policy /etc/touchstone/runtime-policy.json --state /var/lib/touchstone-runtime-guard/state.sqlite --enforce
 ExecStart=/usr/bin/docker compose --env-file runtime.env -f compose.yaml up -d --no-build
 ExecStop=/usr/bin/docker compose --env-file runtime.env -f compose.yaml stop
 [Install]
@@ -88,5 +97,6 @@ cd /opt/touchstone
 docker compose --env-file runtime.env -f compose.yaml config --quiet
 docker compose --env-file runtime.env -f compose.yaml pull
 [[ $(docker image inspect --format '{{.Architecture}}' "$application_image") == arm64 ]] || { echo 'ARM64_IMAGE_REQUIRED'; exit 1; }
+[[ $(docker image inspect --format '{{.Architecture}}' "$caddy_image") == arm64 ]] || { echo 'ARM64_PROXY_REQUIRED'; exit 1; }
 [[ $(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' "$application_image") == "$source_revision" ]] || { echo 'IMAGE_SOURCE_REVISION_MISMATCH'; exit 1; }
 echo 'Prepared. Operator identity NOT created and application NOT started. Initialize interactively, then start touchstone.service.'

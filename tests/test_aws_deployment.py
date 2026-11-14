@@ -15,11 +15,12 @@ from tools.aws_cost_review import estimate
 
 ROOT=Path(__file__).resolve().parent.parent
 ACCOUNT='123456789012'
+IDENTITY={'Account':ACCOUNT,'Arn':'arn:aws:sts::'+ACCOUNT+':assumed-role/operator/controlled-test'}
 
 
 class AwsPreflightTests(unittest.TestCase):
     def completed_reads(self, *, plan=None, offered=True, instance_type='t4g.micro'):
-        responses=[{'Account':ACCOUNT},
+        responses=[IDENTITY,
             {'Regions':[{'RegionName':'ap-south-1','OptInStatus':'opt-in-not-required'}]},
             {'InstanceTypeOfferings':[{'InstanceType':instance_type,'Location':'ap-south-1'}] if offered else []},
             plan if plan is not None else {'accountId':ACCOUNT,'accountPlanType':'FREE','accountPlanStatus':'ACTIVE'}]
@@ -84,7 +85,7 @@ class AwsPreflightTests(unittest.TestCase):
         self.assertEqual(self.cli_exit(result),2)
 
     def test_billing_permission_failure_cannot_return_success(self):
-        answers=[{'Account':ACCOUNT},
+        answers=[IDENTITY,
             {'Regions':[{'RegionName':'ap-south-1','OptInStatus':'opt-in-not-required'}]},
             {'InstanceTypeOfferings':[{'InstanceType':'t4g.micro','Location':'ap-south-1'}]},RuntimeError('ACCESSDENIED')]
         with patch('tools.aws_preflight.read_aws',side_effect=answers) as reader:
@@ -115,7 +116,7 @@ class AwsPreflightTests(unittest.TestCase):
 
     def test_actual_credit_balance_does_not_authorize_provisioning(self):
         def reader(service,operation,*args):
-            if service=='sts':return {'Account':ACCOUNT}
+            if service=='sts':return IDENTITY
             if operation=='describe-regions':return {'Regions':[{'RegionName':'ap-south-1','OptInStatus':'opt-in-not-required'}]}
             if operation=='describe-instance-type-offerings':return {'InstanceTypeOfferings':[{'InstanceType':'t4g.micro','Location':'ap-south-1'}]}
             return {'accountId':ACCOUNT,'accountPlanType':'FREE','accountPlanStatus':'ACTIVE',
@@ -132,7 +133,7 @@ class AwsPreflightTests(unittest.TestCase):
 
     def test_free_plan_cannot_silently_select_nano(self):
         def reader(service,operation,*args):
-            if service=='sts':return {'Account':ACCOUNT}
+            if service=='sts':return IDENTITY
             if operation=='describe-regions':return {'Regions':[{'RegionName':'ap-south-1','OptInStatus':'opt-in-not-required'}]}
             if operation=='describe-instance-type-offerings':return {'InstanceTypeOfferings':[{'InstanceType':'t4g.nano','Location':'ap-south-1'}]}
             return {'accountId':ACCOUNT,'accountPlanType':'FREE','accountPlanStatus':'ACTIVE'}
@@ -148,6 +149,28 @@ class AwsPreflightTests(unittest.TestCase):
         with patch('tools.aws_preflight.find_aws_cli',return_value='aws'):
             read_aws('freetier','get-account-plan-state',runner=runner)
         self.assertEqual(seen[seen.index('--region')+1],'us-east-1')
+
+    def test_known_root_login_profile_is_blocked_before_any_aws_call(self):
+        with patch('tools.aws_preflight.profile_metadata',return_value={
+                'configured':True,'credential_source':'LOGIN_SESSION','known_root_identity':True}):
+            result=inspect(ACCOUNT,reader=lambda *args:self.fail('Root credentials must not be used'))
+        self.assertEqual(result['status'],'AWS_ROOT_CREDENTIALS_FORBIDDEN')
+
+    def test_root_sts_identity_cannot_proceed_to_cloud_checks(self):
+        calls=[]
+        def reader(*args):calls.append(args);return {'Account':ACCOUNT,'Arn':'arn:aws:iam::'+ACCOUNT+':root'}
+        result=inspect(ACCOUNT,configured=True,reader=reader)
+        self.assertEqual(result['status'],'AWS_ROOT_CREDENTIALS_FORBIDDEN')
+        self.assertEqual(calls,[('sts','get-caller-identity')])
+        self.assertFalse(result['read_only_checks_passed'])
+
+    def test_missing_identity_arn_fails_closed_and_identifiers_are_not_returned(self):
+        result=inspect(ACCOUNT,configured=True,reader=lambda *args:{'Account':ACCOUNT})
+        self.assertEqual(result['status'],'AWS_IDENTITY_UNVERIFIED')
+        result,_=self.completed_reads()
+        self.assertNotIn(ACCOUNT,json.dumps(result))
+        self.assertEqual(result['identity_type'],'ASSUMED-ROLE')
+        self.assertTrue(result['session_valid'])
 
     def test_credentials_and_endpoint_overrides_are_not_forwarded(self):
         observed={}
@@ -232,6 +255,17 @@ class AwsInfrastructureTests(unittest.TestCase):
         self.assertTrue(volume['Properties']['Encrypted'])
         self.assertEqual(volume['DeletionPolicy'],'Retain');self.assertEqual(volume['UpdateReplacePolicy'],'Retain')
         self.assertTrue(self.resources['Instance']['Properties']['BlockDeviceMappings'][0]['Ebs']['Encrypted'])
+
+    def test_guard_is_embedded_before_networking_and_cannot_terminate_data(self):
+        from tools.render_aws_userdata import render
+        script=self.resources['Instance']['Properties']['UserData']['Fn::Base64']['Fn::Sub']
+        self.assertEqual(script,render())
+        self.assertLessEqual(len(script.encode())+4096,16384)
+        self.assertLess(script.index('systemctl start touchstone-runtime-guard.service'),script.index('dnf install'))
+        self.assertIn('FailureAction=poweroff',script)
+        self.assertIn('OnUnitActiveSec=30s',script)
+        self.assertEqual(self.resources['Instance']['Properties']['InstanceInitiatedShutdownBehavior'],'stop')
+        self.assertNotIn('Default',self.template['Parameters']['RuntimePolicyBase64'])
 
     def test_usage_alerts_do_not_hide_spend_with_credits(self):
         budget=self.resources['UsageBudget']['Properties']

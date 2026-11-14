@@ -29,7 +29,7 @@ def find_aws_cli():
     return None
 
 
-def default_configured(directory=None):
+def profile_metadata(directory=None):
     directory = Path(directory) if directory else Path.home()/'.aws'
     paths = [Path(os.environ.get('AWS_CONFIG_FILE', directory/'config')),
              Path(os.environ.get('AWS_SHARED_CREDENTIALS_FILE', directory/'credentials'))]
@@ -39,10 +39,17 @@ def default_configured(directory=None):
             parser.read(path, encoding='utf-8')
         except (OSError, configparser.Error):
             continue
-        if parser.has_section('default') and any(parser.get('default',name,fallback='') for name in
-                ('aws_access_key_id','sso_session','sso_start_url','login_session','credential_process','role_arn')):
-            return True
-    return False
+        if not parser.has_section('default'):continue
+        for name in ('login_session','sso_session','sso_start_url','role_arn','credential_process','aws_access_key_id'):
+            value=parser.get('default',name,fallback='')
+            if value:
+                return {'configured':True,'credential_source':name.upper(),
+                        'known_root_identity':name=='login_session' and value.endswith(':root')}
+    return {'configured':False,'credential_source':'NOT_CONFIGURED','known_root_identity':False}
+
+
+def default_configured(directory=None):
+    return profile_metadata(directory)['configured']
 
 
 def read_aws(service, operation, extra=(), runner=subprocess.run):
@@ -71,17 +78,28 @@ def read_aws(service, operation, extra=(), runner=subprocess.run):
 def inspect(expected_account, *, configured=None, reader=read_aws, instance_type='t4g.micro'):
     if not re.fullmatch(r'[0-9]{12}',expected_account):raise ValueError('EXPECTED_ACCOUNT_REQUIRED')
     if instance_type not in {'t4g.micro','t4g.nano'}:raise ValueError('UNREVIEWED_INSTANCE_TYPE')
+    metadata=profile_metadata() if configured is None else {'configured':configured,'credential_source':'CONTROLLED_TEST','known_root_identity':False}
     result={'status':'AWS_PROFILE_NOT_CONFIGURED','profile':'default','region':REGION,
+            'credential_source':metadata['credential_source'],'session_valid':False,
             'aws_cli_available':bool(find_aws_cli()),
             'read_only_checks_passed':False,
             'identity_verified':False,'region_available':False,'instance_offered':False,'instance_type':instance_type,
             'promotional_credit_service_eligibility':'NOT_VERIFIED',
             'provisioning_authorized':False,'aws_resources_created':0,'financial_operations':0}
-    if not (default_configured() if configured is None else configured):return result
+    if not metadata['configured']:return result
+    if metadata['known_root_identity']:
+        result['status']='AWS_ROOT_CREDENTIALS_FORBIDDEN';return result
     try:
         identity=reader('sts','get-caller-identity')
+        arn=identity.get('Arn','')
+        if isinstance(arn,str) and arn.endswith(':root'):
+            result['status']='AWS_ROOT_CREDENTIALS_FORBIDDEN';return result
+        result['session_valid']=True
         if identity.get('Account')!=expected_account:
             result['status']='AWS_ACCOUNT_MISMATCH';return result
+        if (not isinstance(arn,str) or not re.fullmatch(r'arn:aws:(iam|sts)::'+expected_account+r':(user|assumed-role|federated-user)/[^\s]+',arn)):
+            result['status']='AWS_IDENTITY_UNVERIFIED';return result
+        result['identity_type']=arn.split(':',5)[5].split('/',1)[0].upper()
         result['identity_verified']=True
         regions=reader('ec2','describe-regions',('--region-names',REGION))
         result['region_available']=any(r.get('RegionName')==REGION and r.get('OptInStatus') in

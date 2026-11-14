@@ -3,7 +3,7 @@
   "date": "2026-11-14",
   "status": "FAIL",
   "template": "deploy/aws/cloudformation.json",
-  "template_sha256": "c5da4fb0ea8c977aa6d5534b366842cd12a8fbecfbf01c5cad18db190f62da33",
+  "template_sha256": "d8c094fb3b7504e1ea60ec9c3f52ce099970d609afbda475559982e5fadd351d",
   "template_hash_normalization": "CRLF_TO_LF_ONLY",
   "guard_version": "3.2.1",
   "guard_release": "https://github.com/aws-cloudformation/cloudformation-guard/releases/tag/3.2.1",
@@ -26,31 +26,46 @@
       "rule": "EC2_INSTANCE_DETAILED_MONITORING_ENABLED",
       "resource_paths": [
         "/Resources/Instance/Properties/Monitoring"
-      ]
+      ],
+      "disposition": "PROPOSED_EXCEPTION",
+      "owner_approval": "REQUIRED_NOT_GRANTED",
+      "review_reference": "docs/AWS_DEPLOYMENT.md#guard-review-three-fixes-five-proposed-exceptions"
     },
     {
       "rule": "EC2_SECURITY_GROUP_EGRESS_OPEN_TO_WORLD_RULE",
       "resource_paths": [
         "/Resources/SecurityGroup"
-      ]
+      ],
+      "disposition": "PROPOSED_EXCEPTION",
+      "owner_approval": "REQUIRED_NOT_GRANTED",
+      "review_reference": "docs/AWS_DEPLOYMENT.md#guard-review-three-fixes-five-proposed-exceptions"
     },
     {
       "rule": "EC2_SECURITY_GROUP_INGRESS_OPEN_TO_WORLD_RULE",
       "resource_paths": [
         "/Resources/SecurityGroup"
-      ]
+      ],
+      "disposition": "PROPOSED_EXCEPTION",
+      "owner_approval": "REQUIRED_NOT_GRANTED",
+      "review_reference": "docs/AWS_DEPLOYMENT.md#guard-review-three-fixes-five-proposed-exceptions"
     },
     {
       "rule": "NO_UNRESTRICTED_ROUTE_TO_IGW",
       "resource_paths": [
         "/Resources/PublicRoute/Properties/DestinationCidrBlock"
-      ]
+      ],
+      "disposition": "PROPOSED_EXCEPTION",
+      "owner_approval": "REQUIRED_NOT_GRANTED",
+      "review_reference": "docs/AWS_DEPLOYMENT.md#guard-review-three-fixes-five-proposed-exceptions"
     },
     {
       "rule": "SECURITY_GROUP_INGRESS_CIDR_NON_32_RULE",
       "resource_paths": [
         "/Resources/SecurityGroup"
-      ]
+      ],
+      "disposition": "PROPOSED_EXCEPTION",
+      "owner_approval": "REQUIRED_NOT_GRANTED",
+      "review_reference": "docs/AWS_DEPLOYMENT.md#guard-review-three-fixes-five-proposed-exceptions"
     }
   ],
   "aws_resources_created": 0,

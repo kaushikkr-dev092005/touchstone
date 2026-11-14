@@ -1,7 +1,9 @@
 # AWS deployment acceptance checklist
 
 Status: **preparation only; nothing is provisioned or approved to provision**.
-The account owner is correcting `default` and will rerun the read-only preflight.
+The account owner must first establish a non-root identity, then correct `default`
+and rerun the read-only preflight. The latest check blocks a root login before
+any API call; the owner confirmed no non-root identity is available yet.
 Keep PR #3 draft/unmerged. Image publication and infrastructure deployment each
 require explicit approval; a green test or merged source is not that approval.
 
@@ -36,8 +38,10 @@ require explicit approval; a green test or merged source is not that approval.
 - [ ] Select an explicit architecture/availability window. The current always-on
   micro estimate exceeds $10 and **must not be provisioned**. Nano requires an
   already-paid plan and capacity evidence; no plan upgrade is authorized.
-  The 360-hour micro proposal has no implemented scheduler: an approved stopping
-  procedure, running-hour accounting and contingency are required before selection.
+  The 360-hour micro proposal has a tested host-side guard but no deployed
+  off-host watchdog or automatic starts. Approve a fixed UTC window, prior consumption
+  and shutdown margin; stopped gaps count toward the allocation. Complete the
+  [on-host stop tests](AWS_RUNTIME_GUARD.md) and contingency review before selection.
   IPv6-only is research, not a validated replacement.
 - [ ] Forecast gross account-wide usage <= $10 including all storage, allocated
   IPs while stopped, variable usage, taxes, key costs and unrelated resources.
@@ -69,6 +73,9 @@ require explicit approval; a green test or merged source is not that approval.
 - [ ] Resolve the actual AL2023 ARM64 AMI, offered instance type, key permissions,
   SSM availability and capacity in the correct account. Keep changeset/resource
   creation outside zero-spend checks.
+- [ ] Validate the private monthly policy, its approval reference, prior consumed
+  seconds and absolute deadline. No cross-month renewal; no more than 360 micro
+  hours including setup and stopping margin. Verify guard-before-network bootstrap.
 - [ ] Freeze account, region, existing plan, resource list, image digests, source
   revision, encryption key, cost calculation, credit coverage, email and exception
   decisions into the exact plan. Obtain **explicit final provisioning approval**.
@@ -79,6 +86,8 @@ python tools/check_dashboard.py
 python tools/metal.py test
 cfn-lint -t deploy/aws/cloudformation.json -r ap-south-1
 bash -n deploy/aws/install-runtime.sh
+bash -n deploy/aws/bootstrap.sh
+python tools/render_aws_userdata.py --check
 python tools/aws_cost_review.py
 python tools/scan_secrets.py
 ```

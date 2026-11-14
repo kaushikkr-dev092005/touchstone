@@ -44,5 +44,15 @@
     "reserve_is_hard_limit": false,
     "credit_discount_assumed_usd": "0.00",
     "scope": "Low-traffic planning estimate; actual account usage, key costs, taxes, credits and egress require verification."
+  },
+  "detailed_monitoring_metric": {
+    "source": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonCloudWatch/current/ap-south-1/index.json",
+    "publication_date": "2026-11-04T21:35:32Z",
+    "location": "Asia Pacific (Mumbai)",
+    "usage_type": "APS3-CW:MetricMonitorUsage",
+    "description": "$0.30 per metric-month for the first 10,000 metrics - Asia Pacific (Mumbai)",
+    "usd_per_metric_month": "0.3000000000",
+    "unit": "Metrics",
+    "rate_code": "WJAN9NR7AQ8KWB2U.JRTCKXETXF.A6VD9GXV7W"
   }
 }

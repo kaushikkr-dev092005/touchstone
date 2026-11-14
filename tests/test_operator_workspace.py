@@ -21,6 +21,69 @@ def proposal(**changes):
         'policy':'tools-only','budget_micro_usdz':0,'max_call_micro_usdz':0,**changes}
 
 
+class ControlledClock:
+    def __init__(self,wall=59.9):self.wall,self.elapsed=wall,0.0
+    def time(self):return self.wall
+    def monotonic(self):return self.elapsed
+    def advance(self,seconds):self.wall+=seconds;self.elapsed+=seconds
+
+
+class OperatorRateTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.ops=Operations(Path(self.tmp.name)/'ledger.sqlite')
+        self.config=make_config('http://127.0.0.1:8089','operator',secrets.token_urlsafe(24))
+        self.clock=ControlledClock()
+        self.sessions=self.reopen()
+
+    def reopen(self):
+        return Sessions(self.ops.ledger,self.config,wall_clock=self.clock.time,monotonic_clock=self.clock.monotonic)
+
+    def fill(self):
+        for _ in range(5):self.sessions.rate('login:127.0.0.1',5)
+
+    def test_calendar_minute_boundary_does_not_reset_attempts(self):
+        self.fill();self.clock.advance(.2)
+        with self.assertRaisesRegex(PolicyError,'RATE_LIMITED'):self.sessions.rate('login:127.0.0.1',5)
+
+    def test_monotonic_window_ignores_forward_and_backward_wall_adjustments(self):
+        self.fill()
+        for wall in [36000,-36000]:
+            self.clock.wall=wall
+            with self.assertRaises(PolicyError):self.sessions.rate('login:127.0.0.1',5)
+        self.clock.advance(60)
+        self.sessions.rate('login:127.0.0.1',5)
+
+    def test_sliding_window_expires_attempts_individually(self):
+        for _ in range(2):self.sessions.rate('login:127.0.0.1',5)
+        self.clock.advance(30)
+        for _ in range(3):self.sessions.rate('login:127.0.0.1',5)
+        self.clock.advance(31)
+        for _ in range(2):self.sessions.rate('login:127.0.0.1',5)
+        with self.assertRaises(PolicyError):self.sessions.rate('login:127.0.0.1',5)
+
+    def test_restart_and_backwards_clock_keep_durable_attempts(self):
+        self.fill();self.clock.wall-=3600
+        self.sessions=self.reopen()
+        with self.assertRaises(PolicyError):self.sessions.rate('login:127.0.0.1',5)
+        self.clock.advance(60)
+        self.sessions.rate('login:127.0.0.1',5)
+
+    def test_concurrent_workers_share_one_atomic_limit(self):
+        def attempt(_):
+            try:self.sessions.rate('login:127.0.0.1',5);return True
+            except PolicyError:return False
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+            self.assertEqual(sum(pool.map(attempt,range(20))),5)
+
+    def test_recent_legacy_buckets_are_not_forgotten_on_upgrade(self):
+        import hashlib
+        with self.ops.ledger.tx() as db:
+            db.execute('INSERT INTO operator_rates VALUES(?,?,?)',(hashlib.sha256(b'login:127.0.0.1').hexdigest(),0,5))
+        self.sessions=self.reopen()
+        with self.assertRaises(PolicyError):self.sessions.rate('login:127.0.0.1',5)
+
+
 class OperationalJobsTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory()
@@ -142,7 +205,10 @@ class OperatorHTTPTests(unittest.TestCase):
         self.config=make_config(self.origin,'operator',self.password)
         path=Path(self.tmp.name)/'config.json'
         path.write_text(json.dumps(self.config))
-        self.server=make_server(path,self.tmp.name,port=port)
+        self.rate_clock=ControlledClock()
+        with patch('touchstone.operator_server.Sessions',side_effect=lambda ledger,config:Sessions(
+                ledger,config,wall_clock=self.rate_clock.time,monotonic_clock=self.rate_clock.monotonic)):
+            self.server=make_server(path,self.tmp.name,port=port)
         self.thread=threading.Thread(target=self.server.serve_forever,daemon=True)
         self.thread.start()
         self.addCleanup(self.close)
@@ -201,7 +267,10 @@ class OperatorHTTPTests(unittest.TestCase):
 
     def test_wrong_password_rate_limit_and_safe_errors(self):
         for _ in range(5):self.assertEqual(self.request('/operator-api/login',{'username':'operator','password':'wrong'})[0],401)
+        self.rate_clock.advance(.2)  # cross a calendar minute without a 60s reset
         self.assertEqual(self.request('/operator-api/login',{'username':'operator','password':self.password})[0],429)
+        self.rate_clock.advance(60)
+        self.assertEqual(self.request('/operator-api/login',{'username':'operator','password':self.password})[0],200)
 
     def test_expired_revoked_and_rotated_sessions(self):
         self.login()

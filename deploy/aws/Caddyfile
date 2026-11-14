@@ -1,3 +1,10 @@
+{
+    admin off
+    # Internal unprivileged listeners; public HTTPS/HTTP remain 443/80.
+    http_port 8080
+    https_port 8443
+}
+
 {$OPERATOR_DOMAIN} {
     header Strict-Transport-Security "max-age=31536000"
     request_body {

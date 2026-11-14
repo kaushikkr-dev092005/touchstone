@@ -79,8 +79,8 @@
     "capacity_validated": false
   },
   "expected_account_id_source": "Operator-supplied private console link; must be verified with STS and supplied as a parameter, not committed.",
-  "last_account_preflight_status": "AWS_ACCOUNT_MISMATCH",
-  "account_verification_status": "AWAITING_OPERATOR_CORRECTION_AND_READ_ONLY_PREFLIGHT",
+  "last_account_preflight_status": "AWS_ROOT_CREDENTIALS_FORBIDDEN",
+  "account_verification_status": "BLOCKED_OWNER_MUST_ESTABLISH_NON_ROOT_IDENTITY",
   "approved_budget_satisfied": null,
   "out_of_pocket_target_verified": false,
   "ebs_kms_key_arn": null,
@@ -141,10 +141,12 @@
         "At most 360 running instance-hours per month including launch and validation",
         "Approved availability window and enforced/manual stop accounting",
         "Actual account and credit eligibility",
-        "Explicit new plan approval"
+        "Explicit new plan approval",
+        "Approved private monthly runtime policy, real EC2 stop test and accepted host-failure/traffic risk"
       ],
       "availability": "Backend unavailable outside approved windows; retained disks and IP still charged",
-      "stop_start_automation_implemented": false
+      "stop_start_automation_implemented": false,
+      "stop_guard_implemented": true
     },
     {
       "id": "micro_ipv6_only_research",
@@ -175,5 +177,15 @@
       ],
       "availability": "Not an equivalent currently validated replacement; IPv4 clients cannot connect directly"
     }
-  ]
+  ],
+  "runtime_control": {
+    "implementation": "tools/aws_runtime_guard.py",
+    "documentation": "docs/AWS_RUNTIME_GUARD.md",
+    "mode": "ABSOLUTE_MONTHLY_WINDOW_STOPPED_GAPS_INCLUDED",
+    "automated_start": false,
+    "automatic_renewal": false,
+    "on_host_validated": false,
+    "hard_account_spend_bound": false,
+    "owner_approved": false
+  }
 }
