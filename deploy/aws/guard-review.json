@@ -3,7 +3,7 @@
   "date": "2026-11-14",
   "status": "FAIL",
   "template": "deploy/aws/cloudformation.json",
-  "template_sha256": "2354de45b6c0bb5c124966b64fab4e3057f9d358f2cf513b73a902870b279c21",
+  "template_sha256": "c5da4fb0ea8c977aa6d5534b366842cd12a8fbecfbf01c5cad18db190f62da33",
   "template_hash_normalization": "CRLF_TO_LF_ONLY",
   "guard_version": "3.2.1",
   "guard_release": "https://github.com/aws-cloudformation/cloudformation-guard/releases/tag/3.2.1",
@@ -16,24 +16,12 @@
   ],
   "rule_files": 43,
   "outcomes": {
-    "FAIL": 8,
-    "SKIP": 15,
-    "PASS": 20
+    "PASS": 23,
+    "FAIL": 5,
+    "SKIP": 15
   },
   "guard_exit_code": 19,
   "failed_rules": [
-    {
-      "rule": "EBS_OPTIMIZED_INSTANCE",
-      "resource_paths": [
-        "/Resources/Instance/Properties"
-      ]
-    },
-    {
-      "rule": "EBS_VOLUME_ENCRYPTION_KEY_RULE",
-      "resource_paths": [
-        "/Resources/DataVolume/Properties"
-      ]
-    },
     {
       "rule": "EC2_INSTANCE_DETAILED_MONITORING_ENABLED",
       "resource_paths": [
@@ -59,12 +47,6 @@
       ]
     },
     {
-      "rule": "SECURITY_GROUP_DESCRIPTION_RULE",
-      "resource_paths": [
-        "/Resources/SecurityGroup"
-      ]
-    },
-    {
       "rule": "SECURITY_GROUP_INGRESS_CIDR_NON_32_RULE",
       "resource_paths": [
         "/Resources/SecurityGroup"
@@ -73,5 +55,71 @@
   ],
   "aws_resources_created": 0,
   "financial_operations": 0,
-  "scope_limit": "Static EC2/IAM rule checks only; not account-aware validation or a production certification."
+  "scope_limit": "Static EC2/IAM rule checks only; not account-aware validation or a production certification.",
+  "baseline": {
+    "source_revision": "eaaba69bbf6d9035c52aebb187f50eecbaf5db06",
+    "template_sha256": "2354de45b6c0bb5c124966b64fab4e3057f9d358f2cf513b73a902870b279c21",
+    "outcomes": {
+      "FAIL": 8,
+      "SKIP": 15,
+      "PASS": 20
+    },
+    "failed_rules": [
+      {
+        "rule": "EBS_OPTIMIZED_INSTANCE",
+        "resource_paths": [
+          "/Resources/Instance/Properties"
+        ]
+      },
+      {
+        "rule": "EBS_VOLUME_ENCRYPTION_KEY_RULE",
+        "resource_paths": [
+          "/Resources/DataVolume/Properties"
+        ]
+      },
+      {
+        "rule": "EC2_INSTANCE_DETAILED_MONITORING_ENABLED",
+        "resource_paths": [
+          "/Resources/Instance/Properties/Monitoring"
+        ]
+      },
+      {
+        "rule": "EC2_SECURITY_GROUP_EGRESS_OPEN_TO_WORLD_RULE",
+        "resource_paths": [
+          "/Resources/SecurityGroup"
+        ]
+      },
+      {
+        "rule": "EC2_SECURITY_GROUP_INGRESS_OPEN_TO_WORLD_RULE",
+        "resource_paths": [
+          "/Resources/SecurityGroup"
+        ]
+      },
+      {
+        "rule": "NO_UNRESTRICTED_ROUTE_TO_IGW",
+        "resource_paths": [
+          "/Resources/PublicRoute/Properties/DestinationCidrBlock"
+        ]
+      },
+      {
+        "rule": "SECURITY_GROUP_DESCRIPTION_RULE",
+        "resource_paths": [
+          "/Resources/SecurityGroup"
+        ]
+      },
+      {
+        "rule": "SECURITY_GROUP_INGRESS_CIDR_NON_32_RULE",
+        "resource_paths": [
+          "/Resources/SecurityGroup"
+        ]
+      }
+    ]
+  },
+  "fixed_rules": [
+    "EBS_OPTIMIZED_INSTANCE",
+    "EBS_VOLUME_ENCRYPTION_KEY_RULE",
+    "SECURITY_GROUP_DESCRIPTION_RULE"
+  ],
+  "exception_status": "PROPOSED_REQUIRES_EXPLICIT_FINAL_PLAN_REVIEW",
+  "suppressed_rules": []
 }

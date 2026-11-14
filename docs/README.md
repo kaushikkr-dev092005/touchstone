@@ -2,6 +2,7 @@
 
 Current operational work: [deployment](LIVE_DEPLOYMENT.md),
 [AWS preparation and budget gates](AWS_DEPLOYMENT.md),
+[AWS acceptance checklist](AWS_ACCEPTANCE_CHECKLIST.md),
 [feature matrix](LIVE_FEATURE_MATRIX.md), [verification](LIVE_VERIFICATION_REPORT.md)
 and [judge interactions](LIVE_JUDGE_DEMO.md).
 

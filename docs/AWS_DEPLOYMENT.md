@@ -47,52 +47,78 @@ the operator explicitly approves that exact final plan.
 The host administrator and a fully compromised host remain outside the app's
 signature-security boundary. This single-host prototype is not highly available.
 
-## Cost review: a gate, not a promise of free hosting
+## Cost review: verified public rates, account eligibility pending
 
-Observed public Mumbai Linux prices on 14 November 2026 are $0.0056/hour for
-`t4g.micro` and $0.0028/hour for `t4g.nano` from the
-[AWS public EC2 pricing feed](https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/Asia%20Pacific%20%28Mumbai%29/Linux/index.json).
-One public IPv4 address costs $0.005/hour per
-[AWS VPC pricing](https://aws.amazon.com/vpc/pricing/).
+The gross monthly ceiling remains **$10** and the cash target **$0**. No alternative
+has been selected or authorized. The owner will correct `default` and rerun the
+read-only preflight; no new authenticated AWS call was made during this review.
+Actual credit/tax/service eligibility and other account usage remain unverified.
 
-| Planning item, 744-hour month | Free Plan candidate: micro | Conditional nano alternative |
-|---|---:|---:|
-| Compute | $4.1664 | $2.0832 |
-| One public IPv4 | $3.7200 | $3.7200 |
-| 16 GiB storage allowance at $0.12/GiB-month | $1.9200 | $1.9200 |
-| Fixed subtotal before reserves | $9.8064 | $7.7232 |
-| 20% tax/planning reserve plus $0.50 other-usage reserve | $2.46128 | $2.04464 |
-| Conservative planning total | **$12.26768 â€” over cap** | **$9.76784 â€” conditional** |
+Official Mumbai rates retrieved on 14 November 2026:
 
-Storage uses a conservative allowance, **not a verified regional gp3 quote**.
-The tax reserve is not a determination of the account's actual tax treatment.
-Actual Free Tier entitlements, current month usage, egress, retained storage,
-credit-covered services and tax coverage require account-level verification.
-No credit deduction is assumed in this table. Neither option guarantees a $0 bill.
+- Linux `t4g.micro`: $0.0056/hour; `t4g.nano`: $0.0028/hour, from the
+  [AWS EC2 public feed](https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/Asia%20Pacific%20%28Mumbai%29/Linux/index.json).
+- gp3 storage: **$0.0912 per GB-month**, confirmed in the
+  [AWS Mumbai public catalog](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/current/ap-south-1/index.csv),
+  SKU `D7RMW443YWTMZ4V5`, rate `D7RMW443YWTMZ4V5.JRTCKXETXF.6YS6EN2CT7`,
+  effective 1 November 2026. This replaces the former unverified $0.12 allowance.
+- One allocated public IPv4: $0.005/hour, including idle hours, per
+  [AWS VPC pricing](https://aws.amazon.com/vpc/pricing/).
 
-AWS currently lists `t4g.micro` among the instance types available under the newer
-Free Tier plan, not `t4g.nano`; see the
-[EC2 launch parameters](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-launch-parameters.html).
-The template defaults to micro. Nano is only a conditional alternative for an
-**already paid** account whose credits and permissions are verified. Never upgrade
-the account to use it. If the account is on the Free Plan, reprice its actual
-entitlements and resolve the conservative over-cap estimate before requesting
-final approval. Never silently resize or shorten uptime to fit the budget.
+The compact source record is [`pricing.json`](../deploy/aws/pricing.json).
+Reproduce every number using `python tools/aws_cost_review.py`; it is offline,
+uses Decimal, cannot provision and never deducts credits from gross usage.
+The 744-hour bound covers a 31-day month; both encrypted disks total 16 GiB.
 
-CPU credit mode is `standard`, preventing surplus CPU-credit billing; exhausted
-credits reduce performance. All compilation occurs off-host. The tiny-host capacity
-and memory limits remain unverified until an approved runtime smoke check.
+| Proposal | Compute | Allocated IPv4 | Storage | Fixed subtotal | Total with reserves |
+|---|---:|---:|---:|---:|---:|
+| Current micro, 744 hours | $4.1664 | $3.7200 | $1.4592 | $9.3456 | **$11.71472: over cap** |
+| Nano, 744 hours | $2.0832 | $3.7200 | $1.4592 | $7.2624 | **$9.21488: conditional** |
+| Micro, at most 360 running hours | $2.0160 | $3.7200 | $1.4592 | $7.1952 | **$9.13424: conditional** |
+| IPv6-only micro research, 744 hours | $4.1664 | $0 | $1.4592 | $5.6256 | **$7.25072: connectivity blocked** |
 
-The CloudFormation budget is account-wide **gross usage**, with credits/refunds
-excluded and taxes included, so promotional credits do not hide consumption.
-Alerts are configured at 50%, 80%, 100% ($5/$8/$10); the operator must provide the
-recipient email and confirm delivery. **Budget alerts do not enforce a hard cap**,
-and billing notifications may lag usage. See
+Totals add a 20% tax/planning reserve to the fixed subtotal and $0.50 variable-usage
+reserve. This is not the account's verified tax rate or a hard network-cost cap.
+Account-wide unrelated usage, chargeable key costs, taxes and traffic beyond the
+reserve must be included before a final decision. Credits cannot repair a gross
+estimate above $10. No option currently proves $0 out of pocket.
+
+### Lower-cost alternatives and tradeoffs
+
+All proposals preserve operator authentication, financial dispatch disabled,
+SQLite on encrypted persistent storage, signed-approval controls and backups.
+They change capacity, availability or connectivity; they are not silently applied.
+
+1. **Always-on nano:** least disruptive to the current template, but only on an
+   **already-paid** plan with verified credits. AWS's
+   [eligible instance list](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-launch-parameters.html)
+   includes micro, not nano, for the newer Free Plan. Never upgrade the account.
+   Its 512 MiB capacity is untested; require memory/restart/load validation before
+   accepting it. If inadequate, stop rather than resize automatically.
+2. **Micro with a 360-hour monthly running limit:** keeps the Free Plan candidate
+   type and all storage/auth controls, but the backend is offline outside agreed
+   windows. Allocated IPv4 and both disks still bill for the full month, including
+   stopped periods. The limit includes launch, setup and validation hours. No
+   scheduler or stop/start automation has been deployed or implemented; selection
+   requires an approved accounting/stop procedure and explicit availability consent.
+3. **IPv6-only micro:** a costed research option, not a supported replacement yet.
+   IPv4-only clients cannot connect directly. Package/image registries, SSM,
+   providers, temporary DNS and CA validation must all support the chosen IPv6
+   design; otherwise egress translation/gateways could erase savings. No NAT,
+   gateway or IPv6 resources have been added, and the current template is IPv4.
+
+For a Free Plan, the bounded-hours micro proposal is the practical next candidate;
+for an already-paid plan, nano is a candidate subject to capacity. Both remain
+blocked until actual account usage, credits and costs are verified. The plan's
+`approved_budget_satisfied` remains null; cost arithmetic alone cannot approve it.
+
+Standard CPU credits avoid surplus-credit charges; exhaustion throttles the host.
+Compilation remains off-host. Budgets are account-wide gross costs excluding
+credits/refunds and including taxes, with alerts at $5/$8/$10. They are delayed
+notifications, **not a hard cap**; see
 [AWS Budgets limitations](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html).
-Existing unrelated account usage can consume this budget. No budget is created now.
-`[MY AWS BILLING EMAIL]` is a placeholder, not a configured recipient; replace it
-privately with a real email in the approved deployment parameters. The template
-requires a valid email and does not commit the recipient to source control.
+`[MY AWS BILLING EMAIL]` is still a placeholder; supply the recipient privately.
+No budget resource has been created.
 
 ## Authenticate and perform read-only checks
 
@@ -175,7 +201,7 @@ source commit equal to the approved plan. The template itself is not a cost limi
 
 ```text
 aws cloudformation validate-template --profile default --region ap-south-1 --template-body file://deploy/aws/cloudformation.json
-aws cloudformation deploy --profile default --region ap-south-1 --stack-name touchstone --template-file deploy/aws/cloudformation.json --capabilities CAPABILITY_IAM --parameter-overrides ExpectedAccountId=APPROVED_ACCOUNT VerifiedAccountPlan=VERIFIED_EXISTING_PLAN ApplicationImage=APPROVED_PUBLIC_ARM64_IMAGE_DIGEST SourceRevision=APPROVED_FULL_COMMIT BudgetEmail=APPROVED_ALERT_EMAIL
+aws cloudformation deploy --profile default --region ap-south-1 --stack-name touchstone --template-file deploy/aws/cloudformation.json --capabilities CAPABILITY_IAM --parameter-overrides ExpectedAccountId=APPROVED_ACCOUNT VerifiedAccountPlan=VERIFIED_EXISTING_PLAN ApplicationImage=APPROVED_PUBLIC_ARM64_IMAGE_DIGEST SourceRevision=APPROVED_FULL_COMMIT BudgetEmail=APPROVED_ALERT_EMAIL EbsKmsKeyArn=APPROVED_EXISTING_KEY_ARN
 aws cloudformation describe-stacks --profile default --region ap-south-1 --stack-name touchstone
 ```
 
@@ -251,12 +277,12 @@ Latest local validation on 14 November 2026:
 
 | Check | Result |
 |---|---|
-| `python -m unittest discover -s tests -p test_aws_deployment.py -v` | 22 passed; controlled AWS responses only |
+| `python -m unittest discover -s tests -p test_aws_deployment.py -v` | 28 passed; controlled AWS responses only |
 | `cfn-lint -t deploy/aws/cloudformation.json -r ap-south-1` | Passed with installed cfn-lint 1.60.1 |
 | `docker compose -f deploy/aws/compose.yaml config --quiet` | Passed with dummy public artifact identifiers; no containers started |
 | `bash -n deploy/aws/install-runtime.sh` | Passed; installer not executed |
 | Read-only account preflight | Real STS request returned `AWS_ACCOUNT_MISMATCH`; region/credit checks stopped |
-| cfn-guard 3.2.1, pinned AWS EC2/IAM registry rules | FAIL: 8 failed, 20 passed, 15 not applicable; details below |
+| cfn-guard 3.2.1, pinned AWS EC2/IAM registry rules | FAIL: 5 proposed exceptions, 23 passed, 15 not applicable; three fixes below |
 | Image/container/TLS/EC2 smoke checks | Unrun: Docker engine unavailable and intended AWS account not verified |
 
 The preceding preparation revision `50324146a162aef0060b4b4d6f1d0cb7b88aa9a3`
@@ -266,42 +292,48 @@ error (`WinError 10053`) without an application change or relaxed test. These ar
 local/CI results, not proof of an AWS deployment. No image workflow was executed
 and no resource was created.
 
-### Guard review: unresolved findings
+### Guard review: three fixes, five proposed exceptions
 
-With explicit installation approval, Guard 3.2.1 was installed under ignored
-`.tools/aws-guard/3.2.1/`. The official Windows archive was checked against its
-published SHA-256 before execution. Rules came from the
-[AWS registry at pinned commit 7f7340c](https://github.com/aws-cloudformation/aws-guard-rules-registry/tree/7f7340c26ae5d5e8874651dbffeb12e0e9f505b6).
-All 43 EC2/IAM rule files were evaluated without suppressions. The template was
-not modified to hide findings. The hash-bound summary (SHA-256 after CRLF-to-LF
-normalization, supporting Windows and Linux checkouts) is
-[`deploy/aws/guard-review.json`](../deploy/aws/guard-review.json).
+Guard 3.2.1 is installed locally under ignored `.tools/aws-guard/3.2.1/`, with
+its official Windows release checksum verified. All 43 EC2/IAM rule files from
+[AWS registry revision 7f7340c](https://github.com/aws-cloudformation/aws-guard-rules-registry/tree/7f7340c26ae5d5e8874651dbffeb12e0e9f505b6)
+ran without suppressions. Results: **23 passed, 15 not applicable, 5 failed**.
+Raw Guard still exits nonzero. These exception proposals require final-plan review;
+none is a production compliance certificate or silently accepted waiver.
 
-| Failed rule | Resource and disposition before deployment |
+[`guard-review.json`](../deploy/aws/guard-review.json) binds the result to the
+current template SHA-256 after CRLF-to-LF normalization and preserves the original
+eight-finding baseline from `eaaba69` for comparison.
+
+| Original finding | Disposition and remaining risk/check |
 |---|---|
-| `EBS_OPTIMIZED_INSTANCE` | `Instance`: `EbsOptimized` is not explicit. Verify the selected type's default/support and price before making the setting explicit. |
-| `EBS_VOLUME_ENCRYPTION_KEY_RULE` | `DataVolume`: encrypted, but no explicit `KmsKeyId`. Review default EBS encryption and key access; do not create a paid customer key automatically. |
-| `EC2_INSTANCE_DETAILED_MONITORING_ENABLED` | `Instance`: detailed monitoring is disabled for the cost plan. Review basic monitoring coverage and price any additional monitoring before approval. |
-| `EC2_SECURITY_GROUP_EGRESS_OPEN_TO_WORLD_RULE` | `SecurityGroup`: outbound TCP 80/443 is internet-wide for bootstrapping and read-only provider queries. Destination restrictions remain a deployment security review. |
-| `EC2_SECURITY_GROUP_INGRESS_OPEN_TO_WORLD_RULE` | `SecurityGroup`: public TCP 80/443 serves the website/TLS challenge. No SSH or Python port is open; public exposure still requires explicit review. |
-| `NO_UNRESTRICTED_ROUTE_TO_IGW` | `PublicRoute`: the default internet route is required by the proposed public single-host topology. Review that topology before deployment. |
-| `SECURITY_GROUP_DESCRIPTION_RULE` | `SecurityGroup`: individual ingress/egress rules lack descriptions, despite a group description. Add precise rule descriptions in a reviewed template revision. |
-| `SECURITY_GROUP_INGRESS_CIDR_NON_32_RULE` | `SecurityGroup`: public website ingress is wider than a single IPv4 address. A private operator-only alternative would change accessibility; do not change silently. |
+| `EBS_OPTIMIZED_INSTANCE` | **Fixed:** explicit `EbsOptimized:true`. T4g nano/micro are [optimized by default](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html); this makes the included feature explicit. |
+| `EBS_VOLUME_ENCRYPTION_KEY_RULE` | **Fixed:** root and data disks require `EbsKmsKeyArn`, an existing same-account Mumbai key with no default override. Before approval, verify the actual account default/policy, enabled state, grants and cost. No key resource was added; do not weaken policy or create a paid key to pass Guard. AWS-managed keys have [no monthly key fee](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html), while request charges/coverage and customer-key fees need account review. |
+| `SECURITY_GROUP_DESCRIPTION_RULE` | **Fixed:** every ingress/egress rule now explains its purpose. The group is referenced only by `Instance`; no port/CIDR was widened. |
+| `EC2_INSTANCE_DETAILED_MONITORING_ENABLED` | **Proposed exception:** basic EC2 monitoring avoids adding unbudgeted detailed metrics. Risk: coarser host failure/performance detection. Mitigations: container health checks, restart policy, bounded logs, basic host metrics and manual observation during the approved window. Verify alarm/log requirements and price additions before approval. |
+| `EC2_SECURITY_GROUP_EGRESS_OPEN_TO_WORLD_RULE` | **Proposed exception:** TCP 80/443 internet egress supports packages, images, SSM, TLS and read-only provider checks without a paid NAT/proxy. Risks: outbound exfiltration/cost if the host is compromised. Mitigations: no financial secrets, minimal host role, unprivileged app, read-only containers, protocol limits. Destination allowlisting/private endpoints remain production hardening; do not claim least-privilege destinations. |
+| `EC2_SECURITY_GROUP_INGRESS_OPEN_TO_WORLD_RULE` | **Proposed exception:** public 80/443 is intentional for HTTPS website access and ACME redirects/challenges. Risks: attacks, denial of service and traffic costs. Mitigations: authenticated private API, TLS, Host/Origin/CSRF checks, application rate/body limits, no public SSH/Python/database port. These limits do not provide a hard AWS bandwidth cap. |
+| `NO_UNRESTRICTED_ROUTE_TO_IGW` | **Proposed exception:** this dedicated public subnet needs its default IGW route; a private-host gateway/load-balancer architecture exceeds this cost target. Risk: direct internet routing. Mitigations: only the dedicated host/group, IMDSv2, no application AWS credentials, limited network ports. Confirm there are no additional group attachments before deployment. |
+| `SECURITY_GROUP_INGRESS_CIDR_NON_32_RULE` | **Proposed exception:** a public website must serve more than a single operator IP. Risk: internet-wide attack surface, overlapping the public-ingress finding. The operator API remains authenticated. Restricting to an owner CIDR is a different, private-access product choice, not silently applied. |
 
-On this Windows workspace, reproduce the static review after the approved local
-installation and pinned registry download (these commands do not contact AWS):
+The encrypted data volume retains both deletion/replacement policies. The template
+is below the inline size limit; metadata records financial/network/storage
+constraints. Account-aware service validation, TLS and runtime checks are still
+pending. No account, key policy or deployed security group was modified.
+
+Reproduce Guard locally (no AWS call):
 
 ```powershell
 & .tools/aws-guard/3.2.1/cfn-guard-v3-x86_64-windows-latest/cfn-guard.exe validate --data deploy/aws/cloudformation.json --rules .tools/aws-guard/rules-7f7340c/amazon_ec2 --rules .tools/aws-guard/rules-7f7340c/iam --output-format json --show-summary none
 ```
 
-The full local output is ignored at `tmp/aws-guard-review.json`; the command exits
-nonzero while findings remain. These checks do not establish runtime security,
-credit eligibility, account permissions, HTTPS issuance or readiness to provision.
+The exact phased release gates and expected results are in
+[the acceptance checklist](AWS_ACCEPTANCE_CHECKLIST.md). The current source remains
+unmerged; no image publication or infrastructure operation was performed.
 
 Remaining: confirmation/correction of the default profile's intended account,
 region/credit verification,
-current month usage/tax/gp3 pricing, compliant cost review, image builds/digests,
+current month usage/tax/key costs, compliant cost review, image builds/digests,
 resolution/review of the static security findings, budget recipient email,
 exact final provisioning approval and explicit operator
 initialization. **This is prepared infrastructure, not a successful AWS deployment.**

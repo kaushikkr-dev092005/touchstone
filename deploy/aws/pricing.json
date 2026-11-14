@@ -1,0 +1,48 @@
+{
+  "verified_date": "2026-11-14",
+  "currency": "USD",
+  "region": "ap-south-1",
+  "account_eligibility_verified": false,
+  "ec2_source": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/Asia%20Pacific%20%28Mumbai%29/Linux/index.json",
+  "ec2_publication_date": "2026-11-14T01:29:26Z",
+  "ec2": {
+    "t4g.micro": {
+      "usd_per_hour": "0.0056000000",
+      "rate_code": "59S79M36KP4XSB6Y.JRTCKXETXF.6YS6EN2CT7",
+      "operating_system": "Linux",
+      "memory": "1 GiB"
+    },
+    "t4g.nano": {
+      "usd_per_hour": "0.0028000000",
+      "rate_code": "G634XPPHS7MF7CYN.JRTCKXETXF.6YS6EN2CT7",
+      "operating_system": "Linux",
+      "memory": "0.5 GiB"
+    }
+  },
+  "gp3": {
+    "usd_per_gb_month": "0.0912000000",
+    "source": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/current/ap-south-1/index.csv",
+    "sku": "D7RMW443YWTMZ4V5",
+    "rate_code": "D7RMW443YWTMZ4V5.JRTCKXETXF.6YS6EN2CT7",
+    "effective_date": "2026-11-01",
+    "usage_type": "APS3-EBS:VolumeUsage.gp3",
+    "location": "Asia Pacific (Mumbai)",
+    "description": "$0.0912 per GB-month of General Purpose (gp3) provisioned storage - Asia Pacific (Mumbai)",
+    "unit": "GB-Mo"
+  },
+  "public_ipv4": {
+    "usd_per_hour": "0.005",
+    "source": "https://aws.amazon.com/vpc/pricing/",
+    "applies_when_idle": true
+  },
+  "planning": {
+    "month_hours": 744,
+    "encrypted_storage_gib": 16,
+    "tax_reserve_fraction": "0.20",
+    "other_usage_reserve_usd": "0.50",
+    "tax_rate_is_account_verified": false,
+    "reserve_is_hard_limit": false,
+    "credit_discount_assumed_usd": "0.00",
+    "scope": "Low-traffic planning estimate; actual account usage, key costs, taxes, credits and egress require verification."
+  }
+}

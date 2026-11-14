@@ -1,6 +1,19 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Touchstone zero-charge application host. REVIEW ONLY until explicit provisioning approval. No financial credentials or dispatch.",
+  "Description": "Touchstone authenticated deterministic workspace on a small persistent host. REVIEW ONLY until explicit provisioning approval. Financial dispatch disabled.",
+  "Metadata": {
+    "AWSToolsMetrics": {
+      "AWSAgentToolkit": "aws-cloudformation@3"
+    },
+    "com.aws.cloudformation.Context": {
+      "arch": "Single ARM64 host; Caddy HTTPS; private authenticated Python service; retained encrypted SQLite volume.",
+      "must": [
+        "Provisioning requires separate explicit approval and a verified gross monthly estimate at most USD 10.",
+        "Financial dispatch remains disabled; no payer, bank, model or AWS credentials are mounted in application containers."
+      ],
+      "ref": [{"at": "docs/AWS_DEPLOYMENT.md", "has": "Design, cost gates, Guard exceptions and acceptance procedure", "scope": "stack"}]
+    }
+  },
   "Parameters": {
     "ExpectedAccountId": {
       "Type": "String",
@@ -19,6 +32,11 @@
       "Type": "String",
       "AllowedPattern": "[^ @]+@[^ @]+\\.[^ @]+",
       "Description": "Operator-approved alert recipient. Alerts are not a hard spending cap."
+    },
+    "EbsKmsKeyArn": {
+      "Type": "String",
+      "AllowedPattern": "arn:aws:kms:ap-south-1:[0-9]{12}:key/([a-f0-9-]{36}|mrk-[a-f0-9]{32})",
+      "Description": "Approved existing same-account Mumbai EBS encryption key ARN. Verify account policy and costs; never silently replace a stronger account default or create a new key."
     },
     "LatestAmi": {
       "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
@@ -190,6 +208,13 @@
     },
     "SecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Only the dedicated public host uses this group; web/TLS ingress and limited-protocol egress support the single-host topology.",
+          "must": ["Only Instance references this group; no SSH, database or Python ingress.", "Network exposure changes require review of all attachments."],
+          "mutable": "change-with-constraints"
+        }
+      },
       "Properties": {
         "GroupDescription": "Only public HTTP certificate challenges and HTTPS. No SSH, database or Python port.",
         "VpcId": {
@@ -197,12 +222,14 @@
         },
         "SecurityGroupIngress": [
           {
+            "Description": "Public HTTP ACME challenge and redirect to HTTPS",
             "IpProtocol": "tcp",
             "FromPort": 80,
             "ToPort": 80,
             "CidrIp": "0.0.0.0/0"
           },
           {
+            "Description": "Public HTTPS website and authenticated operator workspace",
             "IpProtocol": "tcp",
             "FromPort": 443,
             "ToPort": 443,
@@ -211,12 +238,14 @@
         ],
         "SecurityGroupEgress": [
           {
+            "Description": "HTTPS packages, images, SSM, TLS issuance and read-only provider queries",
             "IpProtocol": "tcp",
             "FromPort": 443,
             "ToPort": 443,
             "CidrIp": "0.0.0.0/0"
           },
           {
+            "Description": "HTTP certificate-status and package redirects; no other egress protocols",
             "IpProtocol": "tcp",
             "FromPort": 80,
             "ToPort": 80,
@@ -259,6 +288,13 @@
     },
     "Instance": {
       "Type": "AWS::EC2::Instance",
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "T4g keeps the existing ARM64 runtime small; optimization is already included for the allowed instance types.",
+          "must": ["Standard CPU credits; no financial credentials; IMDSv2 required with hop limit 1 to keep host credentials out of containers.", "Root encryption key must be existing, approved and compatible with account policy."],
+          "mutable": "change-with-constraints"
+        }
+      },
       "DependsOn": [
         "PublicRoute",
         "RouteAssociation"
@@ -290,11 +326,13 @@
           "CPUCredits": "standard"
         },
         "Monitoring": false,
+        "EbsOptimized": true,
         "BlockDeviceMappings": [
           {
             "DeviceName": "/dev/xvda",
             "Ebs": {
               "Encrypted": true,
+              "KmsKeyId": {"Ref": "EbsKmsKeyArn"},
               "VolumeType": "gp3",
               "VolumeSize": 8,
               "DeleteOnTermination": true
@@ -357,6 +395,13 @@
     },
     "DataVolume": {
       "Type": "AWS::EC2::Volume",
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "A separate encrypted disk preserves SQLite, operator configuration and TLS state across host lifecycle changes.",
+          "must": ["Retain on deletion and replacement; verified backup before any explicit deletion.", "Use the reviewed existing encryption key; do not create a paid customer key or override account policy silently."],
+          "mutable": "change-with-constraints"
+        }
+      },
       "DeletionPolicy": "Retain",
       "UpdateReplacePolicy": "Retain",
       "Properties": {
@@ -369,6 +414,7 @@
         "Size": 8,
         "VolumeType": "gp3",
         "Encrypted": true,
+        "KmsKeyId": {"Ref": "EbsKmsKeyArn"},
         "Tags": [
           {
             "Key": "Name",

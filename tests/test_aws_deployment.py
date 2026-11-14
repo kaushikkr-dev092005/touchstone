@@ -2,6 +2,7 @@ import json
 import contextlib
 import hashlib
 import io
+import re
 from pathlib import Path
 import subprocess
 import tempfile
@@ -10,6 +11,7 @@ from unittest.mock import patch
 from decimal import Decimal
 
 from tools.aws_preflight import inspect, read_aws, default_configured, find_aws_cli, main, READ_CHECKS_COMPLETE
+from tools.aws_cost_review import estimate
 
 ROOT=Path(__file__).resolve().parent.parent
 ACCOUNT='123456789012'
@@ -184,6 +186,27 @@ class AwsInfrastructureTests(unittest.TestCase):
         self.assertEqual(report['status'],'FAIL')
         self.assertNotEqual(report['guard_exit_code'],0)
         self.assertEqual(report['aws_resources_created'],0)
+        self.assertEqual(report['suppressed_rules'],[])
+        self.assertEqual({r['rule'] for r in report['failed_rules']},{
+            'EC2_INSTANCE_DETAILED_MONITORING_ENABLED','EC2_SECURITY_GROUP_EGRESS_OPEN_TO_WORLD_RULE',
+            'EC2_SECURITY_GROUP_INGRESS_OPEN_TO_WORLD_RULE','NO_UNRESTRICTED_ROUTE_TO_IGW',
+            'SECURITY_GROUP_INGRESS_CIDR_NON_32_RULE'})
+        self.assertEqual(report['baseline']['source_revision'],'eaaba69bbf6d9035c52aebb187f50eecbaf5db06')
+
+    def test_actionable_guard_fixes_preserve_controls(self):
+        self.assertTrue(self.resources['Instance']['Properties']['EbsOptimized'])
+        group=self.resources['SecurityGroup']['Properties']
+        for rule in group['SecurityGroupIngress']+group['SecurityGroupEgress']:
+            self.assertTrue(rule['Description'])
+        key=self.template['Parameters']['EbsKmsKeyArn']
+        self.assertNotIn('Default',key)
+        self.assertIsNotNone(re.fullmatch(key['AllowedPattern'],'arn:aws:kms:ap-south-1:123456789012:key/1234abcd-1234-abcd-1234-123456789abc'))
+        for arn in ['alias/aws/ebs','arn:aws:kms:us-east-1:123456789012:key/1234abcd-1234-abcd-1234-123456789abc']:
+            self.assertIsNone(re.fullmatch(key['AllowedPattern'],arn))
+        self.assertEqual(self.resources['DataVolume']['Properties']['KmsKeyId'],{'Ref':'EbsKmsKeyArn'})
+        self.assertEqual(self.resources['Instance']['Properties']['BlockDeviceMappings'][0]['Ebs']['KmsKeyId'],{'Ref':'EbsKmsKeyArn'})
+        self.assertFalse(any(resource['Type']=='AWS::KMS::Key' for resource in self.resources.values()))
+        self.assertEqual(self.template['Metadata']['AWSToolsMetrics']['AWSAgentToolkit'],'aws-cloudformation@3')
 
     def test_no_expensive_managed_service_or_financial_resource(self):
         forbidden={'AWS::EC2::NatGateway','AWS::ECS::Cluster','AWS::EKS::Cluster',
@@ -218,13 +241,58 @@ class AwsInfrastructureTests(unittest.TestCase):
 
     def test_cost_plan_is_conservative_and_not_approved(self):
         plan=json.loads((ROOT/'deploy/aws/plan.json').read_text());r=plan['pricing'];D=Decimal
-        fixed=(D(r['ec2_usd_per_hour'])+D(r['ipv4_usd_per_hour']))*r['month_hours']+D(r['storage_planning_allowance_usd_per_gib_month'])*(plan['root_gp3_gib']+plan['retained_data_gp3_gib'])
+        fixed=(D(r['ec2_usd_per_hour'])+D(r['ipv4_usd_per_hour']))*r['month_hours']+D(r['storage_usd_per_gb_month'])*(plan['root_gp3_gib']+plan['retained_data_gp3_gib'])
         total=fixed*(1+D(r['tax_planning_reserve_fraction']))+D(r['other_usage_planning_reserve_usd'])
         self.assertEqual(total,D(r['all_in_estimate_usd']));self.assertGreater(total,D('10'))
         self.assertFalse(r['within_approved_ceiling'])
         self.assertLessEqual(D(plan['conditional_alternative']['planning_total_usd']),D('10'))
         self.assertFalse(plan['final_provisioning_approval']);self.assertFalse(plan['promotional_credit_eligibility_verified'])
         self.assertFalse(plan['budget_is_hard_cap']);self.assertEqual(plan['aws_resources_created'],0)
+        self.assertIsNone(plan['approved_budget_satisfied'])
+        self.assertFalse(plan['out_of_pocket_target_verified'])
+        self.assertIsNone(plan['selected_alternative'])
+        self.assertFalse(plan['image_build_completed'])
+        self.assertFalse(plan['image_publication_authorized'])
+
+
+class AwsCostReviewTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):cls.pricing=json.loads((ROOT/'deploy/aws/pricing.json').read_text())
+
+    def test_verified_rate_is_mumbai_gp3_not_an_unverified_allowance(self):
+        row=self.pricing['gp3']
+        self.assertEqual(row['location'],'Asia Pacific (Mumbai)')
+        self.assertEqual(row['usage_type'],'APS3-EBS:VolumeUsage.gp3')
+        self.assertEqual(row['unit'],'GB-Mo')
+        plan=json.loads((ROOT/'deploy/aws/plan.json').read_text())
+        self.assertEqual(estimate(self.pricing,'t4g.micro')['planning_total_usd'],plan['pricing']['all_in_estimate_usd'])
+        self.assertEqual(self.pricing['planning']['encrypted_storage_gib'],plan['root_gp3_gib']+plan['retained_data_gp3_gib'])
+
+    def test_stopping_does_not_remove_allocated_ip_or_persistent_storage_cost(self):
+        full=estimate(self.pricing,'t4g.micro');stopped=estimate(self.pricing,'t4g.micro',compute_hours=0)
+        self.assertEqual(stopped['ipv4_usd'],full['ipv4_usd'])
+        self.assertEqual(stopped['storage_usd'],full['storage_usd'])
+        self.assertEqual(Decimal(stopped['compute_usd']),0)
+        self.assertGreater(Decimal(stopped['fixed_subtotal_usd']),0)
+
+    def test_unknown_account_costs_and_credits_cannot_authorize_candidate(self):
+        result=estimate(self.pricing,'t4g.nano')
+        self.assertTrue(result['fits_ceiling_before_other_account_usage'])
+        self.assertIsNone(result['account_gross_estimate_fits_ceiling'])
+        self.assertEqual(result['credit_discount_assumed_usd'],'0.00')
+        self.assertFalse(result['out_of_pocket_target_verified'])
+        self.assertFalse(result['provisioning_authorized'])
+
+    def test_existing_account_costs_can_make_cheaper_option_exceed_cap(self):
+        result=estimate(self.pricing,'t4g.nano',other_account_projected_gross_usd='1')
+        self.assertFalse(result['account_gross_estimate_fits_ceiling'])
+        self.assertGreater(Decimal(result['projected_account_gross_usd']),Decimal('10'))
+        self.assertFalse(result['provisioning_authorized'])
+
+    def test_invalid_cost_inputs_are_rejected(self):
+        for value in ['NaN','Infinity','-1',True,'745']:
+            with self.subTest(value=value),self.assertRaises(ValueError):
+                estimate(self.pricing,'t4g.micro',compute_hours=value)
 
 
 if __name__=='__main__':unittest.main()
