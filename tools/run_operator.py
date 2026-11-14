@@ -36,15 +36,20 @@ def main():
     if not 1024<=args.port<=65535:raise ValueError('Use port 1024 to 65535')
     import os
     for name in list(os.environ):
-        if name.startswith(('AIRWALLEX_','ANTHROPIC_','METAL_')) or name=='AGENT_PRIVATE_KEY':os.environ.pop(name)
+        if name.startswith(('AWS_','AIRWALLEX_','ANTHROPIC_','CLAUDE_','METAL_')) or name=='AGENT_PRIVATE_KEY':os.environ.pop(name)
     os.environ['TOUCHSTONE_IGNORE_LOCAL_CONFIG']='1'
     from touchstone.operator_server import make_server
     from touchstone.leases import exclusive
     with exclusive(Path(args.data_dir)/'operator-owner.sqlite'):
         server=make_server(path,args.data_dir,bind=args.bind,port=args.port)
         print('Authenticated workspace started; financial dispatch is disabled.',flush=True)
+        import signal
+        import threading
+        previous=signal.signal(signal.SIGTERM,lambda *_:threading.Thread(target=server.shutdown,daemon=True).start())
         try:server.serve_forever()
-        finally:server.server_close()
+        finally:
+            server.server_close()
+            signal.signal(signal.SIGTERM,previous)
 
 
 if __name__=='__main__':main()

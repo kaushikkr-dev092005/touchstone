@@ -1,6 +1,8 @@
 # Documentation index
 
 Current operational work: [deployment](LIVE_DEPLOYMENT.md),
+[AWS preparation and budget gates](AWS_DEPLOYMENT.md),
+[AWS acceptance checklist](AWS_ACCEPTANCE_CHECKLIST.md),
 [feature matrix](LIVE_FEATURE_MATRIX.md), [verification](LIVE_VERIFICATION_REPORT.md)
 and [judge interactions](LIVE_JUDGE_DEMO.md).
 
@@ -88,3 +90,6 @@ authority for a new purchase.
 
 All 44 pre-existing Markdown documents under `docs/` are categorized above.
 No documents, evidence links, recordings or historical results were relocated.
+
+- [AWS current verification and blockers](AWS_DEPLOYMENT_VERIFICATION.md)
+- [AWS bounded operating window and stop control](AWS_RUNTIME_GUARD.md)

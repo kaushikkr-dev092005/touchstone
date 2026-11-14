@@ -109,12 +109,27 @@ def make_server(config_path, data_dir, *, bind='127.0.0.1',port=8089):
             length=int(self.headers['Content-Length'])
             if not 0<length<=32768:raise ValueError('REQUEST_TOO_LARGE')
             payload=self.rfile.read(length)
+            self._body_received=True
             if len(payload)!=length:raise ValueError('INCOMPLETE_BODY')
             value=strict_json(payload.decode('utf-8'))
             if type(value) is not dict:raise ValueError('JSON_OBJECT_REQUIRED')
             return value
 
         def error(self,error):
+            # Closing a TCP socket with an unread POST body can reset the response
+            # on Windows. Drain only a small, unambiguous body; never parse it or
+            # wait indefinitely before rejecting authentication/origin/rate errors.
+            lengths=self.headers.get_all('Content-Length') or []
+            if (self.command=='POST' and not getattr(self,'_body_received',False)
+                    and not self.headers.get('Transfer-Encoding') and len(lengths)==1
+                    and lengths[0].isascii() and lengths[0].isdigit()
+                    and 0<int(lengths[0])<=32768):
+                timeout=self.connection.gettimeout()
+                try:
+                    self.connection.settimeout(.25)
+                    self.rfile.read(int(lengths[0]))
+                except (OSError,ValueError):pass
+                finally:self.connection.settimeout(timeout)
             known={'AUTHENTICATION_REQUIRED':401,'INVALID_CREDENTIALS':401,'RATE_LIMITED':429,
                    'HOST_REJECTED':403,'ORIGIN_REJECTED':403,'CSRF_REJECTED':403,
                    'JOB_NOT_FOUND':404,'IDEMPOTENCY_CONFLICT':409,'JOB_PAUSED':409}

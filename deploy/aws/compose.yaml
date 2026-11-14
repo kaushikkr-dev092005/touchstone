@@ -1,0 +1,61 @@
+# AWS runtime only: build the reviewed ARM64 image elsewhere, never on the nano.
+services:
+  operator:
+    image: ${APPLICATION_IMAGE:?Set the approved image digest}
+    platform: linux/arm64
+    restart: unless-stopped
+    stop_grace_period: 35s
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    memswap_limit: 384m
+    cpus: 0.5
+    pids_limit: 96
+    tmpfs: [/tmp:size=32m,mode=1777]
+    environment:
+      TOUCHSTONE_IGNORE_LOCAL_CONFIG: "1"
+      TOUCHSTONE_SOURCE_REVISION: ${SOURCE_REVISION:?Set the reviewed source commit}
+    volumes:
+      - /var/lib/touchstone-aws/operator:/var/lib/touchstone
+    networks: [private, quote_egress]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8089/healthz',headers={'Host':'${OPERATOR_DOMAIN:?Set the approved HTTPS hostname}'}),timeout=3).close()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options: {max-size: 5m, max-file: "2"}
+  proxy:
+    image: ${CADDY_IMAGE:?Set the reviewed Caddy image digest}
+    platform: linux/arm64
+    restart: unless-stopped
+    stop_grace_period: 35s
+    read_only: true
+    user: "10002:10002"
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 64m
+    cpus: 0.25
+    pids_limit: 64
+    environment:
+      OPERATOR_DOMAIN: ${OPERATOR_DOMAIN:?Set the approved HTTPS hostname}
+    ports: ["80:8080", "443:8443"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - /var/lib/touchstone-aws/caddy-data:/data
+      - /var/lib/touchstone-aws/caddy-config:/config
+    tmpfs: [/tmp:size=16m,mode=1777]
+    networks: [private, public]
+    depends_on:
+      operator:
+        condition: service_healthy
+    logging:
+      driver: json-file
+      options: {max-size: 5m, max-file: "2"}
+networks:
+  private: {internal: true}
+  public:
+  quote_egress:

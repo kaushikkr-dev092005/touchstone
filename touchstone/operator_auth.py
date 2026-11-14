@@ -2,6 +2,7 @@
 import hashlib
 import hmac
 import json
+import math
 from pathlib import Path
 import re
 import secrets
@@ -63,8 +64,11 @@ def load_config(path):
 
 
 class Sessions:
-    def __init__(self, ledger, config):
+    def __init__(self, ledger, config, *, wall_clock=None, monotonic_clock=None):
         self.ledger,self.config=ledger,validate_config(config)
+        self._rate_monotonic=monotonic_clock or time.monotonic
+        self._rate_epoch=(wall_clock or time.time)()
+        self._rate_started=self._rate_monotonic()
         # Password rotation or environment change invalidates existing sessions.
         self.epoch=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest()
         with ledger.connect() as db:
@@ -75,20 +79,44 @@ class Sessions:
             CREATE TABLE IF NOT EXISTS operator_rates(
               rate_key TEXT NOT NULL, window INTEGER NOT NULL, count INTEGER NOT NULL,
               PRIMARY KEY(rate_key,window));
+            CREATE TABLE IF NOT EXISTS operator_rate_windows(
+              rate_key TEXT PRIMARY KEY, observed_at REAL NOT NULL, attempts TEXT NOT NULL);
             ''')
+        with ledger.tx() as db:
+            prior=db.execute('SELECT MAX(observed_at) FROM operator_rate_windows').fetchone()[0]
+            # A backwards wall-clock adjustment across restart cannot clear limits.
+            self._rate_epoch=max(self._rate_epoch,prior or self._rate_epoch)
+            # Conservative one-time migration of recent fixed-minute buckets.
+            for row in db.execute('SELECT rate_key,SUM(count) AS count FROM operator_rates WHERE window>=? GROUP BY rate_key',
+                                  (int(self._rate_epoch//60)-1,)).fetchall():
+                db.execute('INSERT OR IGNORE INTO operator_rate_windows VALUES(?,?,?)',
+                    (row['rate_key'],self._rate_epoch,json.dumps([self._rate_epoch]*min(60,row['count']))))
+            db.execute('DELETE FROM operator_rates')
 
     @property
     def cookie_name(self):
         return '__Host-touchstone' if self.config['origin'].startswith('https:') else 'touchstone-local'
 
     def rate(self,key,limit):
-        now=int(time.time()//60)
+        if type(limit) is not int or not 1<=limit<=60:raise ValueError('INVALID_RATE_LIMIT')
+        elapsed=self._rate_monotonic()-self._rate_started
+        now=self._rate_epoch+elapsed
+        if elapsed<0 or not math.isfinite(now):raise PolicyError('RATE_LIMITED')
         fingerprint=hashlib.sha256(key.encode()).hexdigest()
         with self.ledger.tx() as db:
-            db.execute('DELETE FROM operator_rates WHERE window<?',(now-2,))
-            db.execute('INSERT INTO operator_rates VALUES(?,?,1) ON CONFLICT(rate_key,window) DO UPDATE SET count=count+1',(fingerprint,now))
-            count=db.execute('SELECT count FROM operator_rates WHERE rate_key=? AND window=?',(fingerprint,now)).fetchone()[0]
-        if count>limit:
+            row=db.execute('SELECT * FROM operator_rate_windows WHERE rate_key=?',(fingerprint,)).fetchone()
+            now=max(now,row['observed_at'] if row else now)
+            attempts=json.loads(row['attempts']) if row else []
+            if (type(attempts) is not list or len(attempts)>60 or
+                any(type(t) not in (int,float) or not math.isfinite(t) for t in attempts)):
+                raise PolicyError('RATE_LIMITED')
+            attempts=[t for t in attempts if t>now-60]
+            blocked=len(attempts)>=limit
+            if not blocked:attempts.append(now)
+            db.execute('DELETE FROM operator_rate_windows WHERE observed_at<?',(now-120,))
+            db.execute('INSERT INTO operator_rate_windows VALUES(?,?,?) ON CONFLICT(rate_key) DO UPDATE SET observed_at=excluded.observed_at,attempts=excluded.attempts',
+                       (fingerprint,now,json.dumps(attempts)))
+        if blocked:
             raise PolicyError('RATE_LIMITED')
 
     def login(self,username,password):
