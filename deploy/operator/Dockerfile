@@ -21,6 +21,7 @@ WORKDIR /app
 RUN useradd --uid 10001 --create-home operator && mkdir -p /var/lib/touchstone && chown operator /var/lib/touchstone
 COPY touchstone touchstone
 COPY tools/run_operator.py tools/run_operator.py
+COPY tools/operator_backup.py tools/operator_backup.py
 COPY integrations/metal integrations/metal
 COPY --from=quote_runtime /node/node_modules integrations/metal/node_modules
 COPY --from=quote_runtime /usr/local/bin/node /usr/local/bin/node

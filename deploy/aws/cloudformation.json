@@ -1,0 +1,499 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Touchstone zero-charge application host. REVIEW ONLY until explicit provisioning approval. No financial credentials or dispatch.",
+  "Parameters": {
+    "ExpectedAccountId": {
+      "Type": "String",
+      "AllowedPattern": "[0-9]{12}"
+    },
+    "ApplicationImage": {
+      "Type": "String",
+      "AllowedPattern": "ghcr\\.io/kaushikkr-dev092005/touchstone@sha256:[a-f0-9]{64}",
+      "Description": "Reviewed public ARM64 image digest; no builds on the small instance."
+    },
+    "SourceRevision": {
+      "Type": "String",
+      "AllowedPattern": "[a-f0-9]{40}"
+    },
+    "BudgetEmail": {
+      "Type": "String",
+      "AllowedPattern": "[^ @]+@[^ @]+\\.[^ @]+",
+      "Description": "Operator-approved alert recipient. Alerts are not a hard spending cap."
+    },
+    "LatestAmi": {
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+      "Default": "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-arm64"
+    },
+    "VerifiedAccountPlan": {
+      "Type": "String",
+      "AllowedValues": [
+        "FREE",
+        "PAID"
+      ],
+      "Description": "Read-only verified existing plan. Never upgrade an account for this template."
+    },
+    "InstanceType": {
+      "Type": "String",
+      "Default": "t4g.micro",
+      "AllowedValues": [
+        "t4g.micro",
+        "t4g.nano"
+      ],
+      "Description": "micro is the Free Plan candidate; nano requires an already paid plan and separate credit/cost verification."
+    }
+  },
+  "Rules": {
+    "ApprovedAccount": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Equals": [
+              {
+                "Ref": "AWS::AccountId"
+              },
+              {
+                "Ref": "ExpectedAccountId"
+              }
+            ]
+          },
+          "AssertDescription": "Deploy only to the independently verified intended account."
+        }
+      ]
+    },
+    "MumbaiOnly": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Equals": [
+              {
+                "Ref": "AWS::Region"
+              },
+              "ap-south-1"
+            ]
+          },
+          "AssertDescription": "This reviewed plan supports Mumbai only."
+        }
+      ]
+    },
+    "NanoRequiresExistingPaidPlan": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Or": [
+              {
+                "Fn::Not": [
+                  {
+                    "Fn::Equals": [
+                      {
+                        "Ref": "InstanceType"
+                      },
+                      "t4g.nano"
+                    ]
+                  }
+                ]
+              },
+              {
+                "Fn::Equals": [
+                  {
+                    "Ref": "VerifiedAccountPlan"
+                  },
+                  "PAID"
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "Never launch nano on a Free Plan or upgrade the account automatically."
+        }
+      ]
+    }
+  },
+  "Resources": {
+    "Vpc": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.87.0.0/24",
+        "EnableDnsSupport": true,
+        "EnableDnsHostnames": true,
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Ref": "AWS::StackName"
+            }
+          }
+        ]
+      }
+    },
+    "InternetGateway": {
+      "Type": "AWS::EC2::InternetGateway"
+    },
+    "GatewayAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "InternetGatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    },
+    "Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "CidrBlock": "10.87.0.0/26",
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false
+      }
+    },
+    "RouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      }
+    },
+    "PublicRoute": {
+      "Type": "AWS::EC2::Route",
+      "DependsOn": "GatewayAttachment",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "RouteTable"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    },
+    "RouteAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "RouteTable"
+        },
+        "SubnetId": {
+          "Ref": "Subnet"
+        }
+      }
+    },
+    "SecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Only public HTTP certificate challenges and HTTPS. No SSH, database or Python port.",
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 80,
+            "ToPort": 80,
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 443,
+            "ToPort": 443,
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 443,
+            "ToPort": 443,
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 80,
+            "ToPort": 80,
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+    "HostRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"
+          }
+        ]
+      }
+    },
+    "HostProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "HostRole"
+          }
+        ]
+      }
+    },
+    "Instance": {
+      "Type": "AWS::EC2::Instance",
+      "DependsOn": [
+        "PublicRoute",
+        "RouteAssociation"
+      ],
+      "Properties": {
+        "ImageId": {
+          "Ref": "LatestAmi"
+        },
+        "InstanceType": {
+          "Ref": "InstanceType"
+        },
+        "SubnetId": {
+          "Ref": "Subnet"
+        },
+        "SecurityGroupIds": [
+          {
+            "Ref": "SecurityGroup"
+          }
+        ],
+        "IamInstanceProfile": {
+          "Ref": "HostProfile"
+        },
+        "MetadataOptions": {
+          "HttpTokens": "required",
+          "HttpPutResponseHopLimit": 1,
+          "HttpEndpoint": "enabled"
+        },
+        "CreditSpecification": {
+          "CPUCredits": "standard"
+        },
+        "Monitoring": false,
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/xvda",
+            "Ebs": {
+              "Encrypted": true,
+              "VolumeType": "gp3",
+              "VolumeSize": 8,
+              "DeleteOnTermination": true
+            }
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Ref": "AWS::StackName"
+            }
+          },
+          {
+            "Key": "SourceRevision",
+            "Value": {
+              "Ref": "SourceRevision"
+            }
+          },
+          {
+            "Key": "FinancialDispatch",
+            "Value": "DISABLED"
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Sub": "#!/bin/bash\nset -euo pipefail\numask 077\n# Wait for the explicitly allocated Elastic IP; never allocate a second public IP.\nfor n in $(seq 1 120); do if curl --silent --show-error --head --connect-timeout 3 https://cdn.amazonlinux.com/ >/dev/null; then break; fi; sleep 5; done\ndnf install -y docker\nsystemctl enable --now docker amazon-ssm-agent\ninstall -d -m 700 /opt/touchstone\nprintf '%s\\n' '${ApplicationImage}' > /opt/touchstone/application-image\nprintf '%s\\n' '${SourceRevision}' > /opt/touchstone/source-revision\n# No operator identity, payment key, financial operation or app launch is created here.\n"
+          }
+        }
+      }
+    },
+    "PublicIp": {
+      "Type": "AWS::EC2::EIP",
+      "DependsOn": "GatewayAttachment",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Ref": "AWS::StackName"
+            }
+          }
+        ]
+      }
+    },
+    "IpAttachment": {
+      "Type": "AWS::EC2::EIPAssociation",
+      "Properties": {
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "PublicIp",
+            "AllocationId"
+          ]
+        },
+        "InstanceId": {
+          "Ref": "Instance"
+        }
+      }
+    },
+    "DataVolume": {
+      "Type": "AWS::EC2::Volume",
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain",
+      "Properties": {
+        "AvailabilityZone": {
+          "Fn::GetAtt": [
+            "Instance",
+            "AvailabilityZone"
+          ]
+        },
+        "Size": 8,
+        "VolumeType": "gp3",
+        "Encrypted": true,
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Sub": "${AWS::StackName}-persistent-data"
+            }
+          }
+        ]
+      }
+    },
+    "DataAttachment": {
+      "Type": "AWS::EC2::VolumeAttachment",
+      "Properties": {
+        "Device": "/dev/sdf",
+        "InstanceId": {
+          "Ref": "Instance"
+        },
+        "VolumeId": {
+          "Ref": "DataVolume"
+        }
+      }
+    },
+    "UsageBudget": {
+      "Type": "AWS::Budgets::Budget",
+      "Properties": {
+        "Budget": {
+          "BudgetName": {
+            "Fn::Sub": "${AWS::StackName}-account-usage-ceiling"
+          },
+          "BudgetType": "COST",
+          "TimeUnit": "MONTHLY",
+          "BudgetLimit": {
+            "Amount": 10,
+            "Unit": "USD"
+          },
+          "CostTypes": {
+            "IncludeCredit": false,
+            "IncludeRefund": false,
+            "IncludeTax": true,
+            "IncludeSubscription": true,
+            "UseBlended": false
+          }
+        },
+        "NotificationsWithSubscribers": [
+          {
+            "Notification": {
+              "NotificationType": "ACTUAL",
+              "ComparisonOperator": "GREATER_THAN",
+              "Threshold": 50,
+              "ThresholdType": "PERCENTAGE"
+            },
+            "Subscribers": [
+              {
+                "SubscriptionType": "EMAIL",
+                "Address": {
+                  "Ref": "BudgetEmail"
+                }
+              }
+            ]
+          },
+          {
+            "Notification": {
+              "NotificationType": "ACTUAL",
+              "ComparisonOperator": "GREATER_THAN",
+              "Threshold": 80,
+              "ThresholdType": "PERCENTAGE"
+            },
+            "Subscribers": [
+              {
+                "SubscriptionType": "EMAIL",
+                "Address": {
+                  "Ref": "BudgetEmail"
+                }
+              }
+            ]
+          },
+          {
+            "Notification": {
+              "NotificationType": "ACTUAL",
+              "ComparisonOperator": "GREATER_THAN",
+              "Threshold": 100,
+              "ThresholdType": "PERCENTAGE"
+            },
+            "Subscribers": [
+              {
+                "SubscriptionType": "EMAIL",
+                "Address": {
+                  "Ref": "BudgetEmail"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "Outputs": {
+    "InstanceId": {
+      "Value": {
+        "Ref": "Instance"
+      }
+    },
+    "PublicIp": {
+      "Value": {
+        "Ref": "PublicIp"
+      }
+    },
+    "TemporaryOrigin": {
+      "Description": "Proposed shared-DNS HTTPS hostname. Not live until operator initialization and TLS verification.",
+      "Value": {
+        "Fn::Sub": "https://${PublicIp}.sslip.io"
+      }
+    },
+    "DataVolumeId": {
+      "Value": {
+        "Ref": "DataVolume"
+      }
+    },
+    "ApplicationImage": {
+      "Value": {
+        "Ref": "ApplicationImage"
+      }
+    },
+    "FinancialDispatch": {
+      "Value": "DISABLED"
+    }
+  }
+}

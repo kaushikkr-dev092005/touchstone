@@ -1,5 +1,8 @@
 # Authenticated operational workspace
 
+For the prepared Mumbai AWS stack, budget and authentication gates, see
+[AWS deployment preparation](AWS_DEPLOYMENT.md). AWS resources have not been provisioned.
+
 This release implements a working **zero-charge operational vertical slice**:
 authenticated source submission, bounded local computation, deterministic verification,
 SQLite persistence, hash-chained audit, real SSE, job controls and transaction inspection.
