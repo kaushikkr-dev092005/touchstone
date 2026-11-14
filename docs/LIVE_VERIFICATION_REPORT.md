@@ -1,4 +1,4 @@
-# Live workspace verification — 14 November 2026
+# Live workspace verification â€” 14 November 2026
 
 **Current acceptance: locally operational zero-charge slice; public operator
 deployment and remote financial execution are not complete.** No new bank operation,
@@ -60,11 +60,44 @@ reads SUCCEEDED with USD 0.01 captured. The hold flow label now correctly names
 claims a currently active hold. Without matching evidence it remains unverified.
 Metal RPC connects on testnet chain 63825. Local paid seller services are stopped.
 
-The existing public Sites v4 viewer and merchant returned HTTP 200 for landing,
-dashboard, ledger, merchant and OAuth discovery; the procurement API returned 404.
-That deployment corresponds to bdff6c9, not this new authenticated backend. No new
-public operator deployment has yet succeeded. A working HTTPS evidence page is
-not proof of public authenticated job processing.
+The current public deployment is **Sites version 6**, successfully published at
+11:56:55 UTC on 14 November 2026:
+https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site/dashboard
+
+Application source: `0f8481acb3d8b69f6a8bbd0b664e16429d659f05`.
+Sites artifact-source commit: `07b1fcc9d83f77911df937f5a99583eaba5de07b`.
+Deployment: `appgdep_6af84c7a571481919baa35bcd1086050`.
+
+This replaces the older public React evidence layout with a read-only projection
+of the current canonical dashboard. External GET checks returned 200 for landing,
+dashboard, ledger, generated dashboard HTML and reports; procurement approvals and
+operator jobs returned 404. Public browser checks confirmed 43 saved attempts,
+receipt inspection, all four policies / 64 outcomes, mobile layout and zero page
+errors. `/control-room` correctly reports **Backend not connected**, with no sign-in
+form. Publishing the new design does not deploy the authenticated Python backend.
+
+Current source validation (financial credentials stripped; local config disabled):
+
+| Command | Actual result |
+|---|---|
+| `python -m unittest discover -s tests` | 464 passed; 349.859 seconds |
+| `python tools/metal.py test` | 67 passed |
+| Node merchant tests | 9 passed |
+| `bun run build` in `apps/web` | TypeScript and Vite build passed |
+| `python tools/check_site_design.py` | Passed: vault, public ledger/CSV, 320/390/768/1024/1440 widths, private console/CSRF |
+| `python tools/check_dashboard.py` | Passed: existing private controls and 128-row transaction explorer |
+| `python tools/scan_secrets.py --json` | 1,728 blobs scanned, no findings; heuristic exclusions reported |
+
+The initial updated browser check found a missing confirmed-unpaid filter. The
+public projection gained that filter and the check passed on rerun. No assertion
+was removed to obtain passing results. All benchmark files and the pre-existing
+canonical dashboard remain unchanged relative to `6f7318b`.
+
+The broader archive release validator's earlier run at `6f7318b` passed Python/Node
+checks but failed the M2 controlled CLI proof's six-purchase assertion: that legacy
+harness does not install independent test-signing fixtures. It was not rerun or
+represented as passing in this dashboard release. Historical financial evidence
+was not regenerated to work around this failure.
 
 ## Outstanding release gates
 
@@ -79,5 +112,5 @@ not proof of public authenticated job processing.
 - Single-operator authentication is not enterprise RBAC. No independent penetration
   test or fully compromised-host guarantee is claimed.
 
-Final source revision, exact full-suite/release results and PR will be appended
-after validation. Unrun checks must not be represented as passing.
+The application revision above identifies the deployed build. Later documentation-only
+commits do not change that artifact. The feature branch requires review before merge.

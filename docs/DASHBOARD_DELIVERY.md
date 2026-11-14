@@ -48,3 +48,9 @@ artifact; refreshing an older deployment cannot load a newer Git revision.
 Repository changes are reviewed on a feature branch. The default branch remains
 unchanged until its pull request is approved and merged. No historical transaction
 is relabelled as a new live or cryptographically human-approved purchase.
+
+Verified public release: Sites version 6, application source `0f8481a`, published
+14 November 2026. Public desktop/mobile inspection confirmed the current design,
+43 attempts, receipt inspection and the complete comparison. The public operator
+backend remains disconnected. Full current Python tests: 464 passed; Node: 67;
+merchant: 9. No financial transaction or model call was initiated.
