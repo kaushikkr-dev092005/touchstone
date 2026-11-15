@@ -4,6 +4,12 @@ Budgeted inference procurement with source checks, durable receipts and payment 
 An agent reserves an approved budget, buys a result, verifies it, and accounts for
 every attempt. A rejected answer can still cost money.
 
+## Video demo
+
+[![Watch the Touchstone video on YouTube](https://img.youtube.com/vi/L0sjs7m_ezY/hqdefault.jpg)](https://youtu.be/L0sjs7m_ezY)
+
+**[Watch Touchstone — The Financial Trust Layer for Autonomous AI](https://youtu.be/L0sjs7m_ezY)**
+
 ## Current website
 
 The public [dashboard](https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site/dashboard)
