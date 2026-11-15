@@ -1,8 +1,10 @@
+import BentoDashboard from "./BentoDashboard";
 import { Icon } from "./Identity";
 import type { Evidence, Go, View } from "@/siteTypes";
 
 // Share the canonical design; the anonymous build never includes operator scripts.
-export default function Workspace({ view, operator }: { view: View; evidence: Evidence | null; go: Go; operator: boolean }) {
+export default function Workspace({ view, operator, evidence, go }: { view: View; evidence: Evidence | null; go: Go; operator: boolean }) {
+  if (!operator) return <BentoDashboard view={view} evidence={evidence} go={go} />;
   const ledger = view === "ledger";
   const source = operator ? "/console?embedded=1" : "/site/dashboard/index.html";
   return <section className="operator-workspace">
