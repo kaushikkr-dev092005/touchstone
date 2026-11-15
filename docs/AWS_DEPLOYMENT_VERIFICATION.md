@@ -109,10 +109,53 @@ It is not owner-approved yet. Syntax validation is not public certificate issuan
 
 ## Release gates
 
-Full source/archive/browser and GitHub matrix results will be recorded after
-execution. No unrun command is a pass. A local image identifier is not a published
-registry digest. Public HTTPS, SSM, EBS retention, host shutdown and outside-machine
-acceptance remain **NOT RUN** until an exact compliant plan is explicitly approved.
+The public PR head remains `79287854c92258fe7eb7f4f2e83735602e974e65`.
+GitHub PR workflow [43628947781](https://github.com/kaushikkr-dev092005/touchstone/actions/runs/43628947781)
+and push workflow [43628943192](https://github.com/kaushikkr-dev092005/touchstone/actions/runs/43628943192)
+both passed Ubuntu/Windows with Python 3.11 and 3.12. These results do not cover
+subsequent local commits. Publishing those commits requires owner approval.
+
+Local committed source `8734c162c8b1d4de955394cb15333131db2dc1bd` passed
+518 Python tests on Windows/Python 3.12, 67 Node tests, frontend TypeScript/Vite
+build, and all five controlled milestone proofs in a disposable source archive.
+The controlled proof scripts now supply real ephemeral test-human signatures
+through the existing test-only fixture. Their network fence remains enabled.
+Canonical historical results under `bench/` were not regenerated or changed.
+
+The first aggregate browser run failed because the existing dashboard QA helper
+did not accept its caller's `label=` selection argument. The helper now forwards
+that argument to Playwright without changing the UI or weakening an assertion.
+The failed dashboard command and all subsequent browser commands were executed
+again and passed: dashboard/128 transaction rows, signed-mandate three-state
+proof, motion, release/reconnection, shared website and operator workspace.
+Operator QA measured result 2000, real events, refresh/restart persistence and
+valid audit history, with zero external requests or financial calls. These are
+local controlled measurements, not public AWS acceptance.
+
+The same committed source also passed a fresh ARM64 build and network-isolated
+container acceptance. Its local image identifier is
+`sha256:bed0752295d8ca205701486d371bc7303a60a861c1b138fe8d9debaf820f2054`.
+It is not a published registry manifest. Caddy's candidate manifest was retrieved
+anonymously, its digest verified and Linux/ARM64 support confirmed; an EC2 pull
+has not been attempted. The image publication workflow is not present on the
+default branch and has not been dispatched.
+
+Public Mumbai micro/nano compute and gp3 rates were rechecked on 2026-11-15;
+the offline forecasts above are unchanged. This verifies public rates only,
+not account credits, taxation, unrelated consumption or cash coverage.
+
+After committing fixes, rerun the complete isolated release gate:
+
+```powershell
+python tools/validate_release.py --ref HEAD --browser --frontend --output tmp/aws-release-current.json
+```
+
+The generated local report records the exact source SHA, archive/log hashes,
+each stage's exit code and overall result. Do not treat a failed earlier report
+as passing because an individual stage was subsequently repaired. No unrun
+command is a pass. Public HTTPS, SSM, EBS retention, host shutdown and
+outside-machine acceptance remain **NOT RUN** until an exact compliant plan is
+explicitly approved.
 
 The reproducible commands and complete resource/backup/teardown requirements are
 in [the deployment guide](AWS_DEPLOYMENT.md) and [acceptance checklist](AWS_ACCEPTANCE_CHECKLIST.md).

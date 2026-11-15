@@ -29,9 +29,12 @@ def click(page, selector):
     page.click(selector)
 
 
-def select(page, selector, value):
+def select(page, selector, value=None, *, label=None):
     activate(page, selector)
-    page.select_option(selector, value)
+    if label is None:
+        page.select_option(selector, value)
+    else:
+        page.select_option(selector, label=label)
 
 
 def main():
