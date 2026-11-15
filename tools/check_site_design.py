@@ -72,6 +72,26 @@ def main():
                 page.wait_for_timeout(500);after=page.locator('#door-assembly').get_attribute('transform')
                 assert before!=after,'Vault door did not animate'
                 page.wait_for_url('**/dashboard',timeout=8000);page.locator('.vault-sequence').wait_for(state='detached',timeout=8000)
+                # The imported Bento view is public/read-only; the complete existing
+                # evidence explorer remains available without dropping any fields.
+                page.get_by_role('heading',name='The control room.',exact=True).wait_for()
+                page.locator('.bento-record-table tbody tr').first.wait_for()
+                assert page.locator('.bento-record-table tbody tr').count()==len(records)
+                page.get_by_role('button',name='Confirmed unpaid',exact=True).click()
+                assert page.locator('.bento-record-table tbody tr').count()==unpaid_count
+                page.get_by_role('button',name='All attempts',exact=True).click()
+                page.get_by_label('Search ledger',exact=True).fill('no-such-receipt')
+                assert page.locator('.bento-record-table tbody tr').count()==0
+                page.get_by_label('Search ledger',exact=True).fill('')
+                page.get_by_label('Sort ledger').select_option('cost')
+                page.locator('.bento-record-table .record-link').first.click()
+                assert page.locator('.receipt-dialog').is_visible()
+                page.keyboard.press('Escape');assert not page.locator('.receipt-dialog').is_visible()
+                with page.expect_download() as bento_export:
+                    page.get_by_role('button',name='Export CSV',exact=True).click()
+                assert len(Path(bento_export.value.path()).read_text().splitlines())==len(records)+1
+                page.screenshot(path=str(folder/'bento-dashboard-1440.png'))
+                page.locator('.saved-evidence-details summary').click()
                 frame=page.frame_locator('iframe[title="Touchstone saved dashboard"]')
                 frame.locator('html[data-evidence-loaded="true"]').wait_for()
                 assert frame.get_by_role('heading',name='Operations overview',exact=True).is_visible()
@@ -97,6 +117,7 @@ def main():
                 for width,height in [(1440,1000),(768,1024),(390,844),(320,740)]:
                     page.set_viewport_size({'width':width,'height':height})
                     assert frame.locator('body').evaluate('document.documentElement.scrollWidth<=innerWidth'),f'Public dashboard overflow at {width}'
+                    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),f'Bento dashboard overflow at {width}'
                 page.set_viewport_size({'width':1440,'height':1000})
                 frame.locator('[data-nav="transactions"]').click()
                 with page.expect_download() as exported:
@@ -133,7 +154,7 @@ def main():
                 phone.get_by_role('navigation',name='Quick navigation').get_by_role('link',name='Ledger',exact=True).tap()
                 phone.wait_for_url('**/ledger')
                 phone.get_by_role('button',name='Expand quick navigation').tap()
-                phone.locator('.operator-strip').tap()
+                phone.locator('.bento-header h1').tap()
                 assert phone.locator('.dock-trigger').get_attribute('aria-expanded')=='false'
                 touch.close()
                 # Local operators retain their actual same-origin console and CSRF controls.
