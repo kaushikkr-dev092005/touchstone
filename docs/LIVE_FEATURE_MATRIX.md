@@ -32,10 +32,13 @@ bank transaction. Historical measured operations remain historical.
 | Metal fault acknowledgement / recovery proof | LIVE VERIFIED â€” historical | Existing signed receipt/evidence; rejected credit remains rejected; no refund claim |
 | Visa registration / agent trust | BLOCKED_EXTERNAL_APPROVAL | Application pending; local RFC 9421 verification remains distinct |
 | Backups, restore, session revocation | IMPLEMENTED / controlled verified | SQLite backup + exclusive owner lease; fresh destination; audit checked |
-| Docker/Caddy deployment configuration | IMPLEMENTED / execution BLOCKED | Docker daemon unavailable on current host; image/proxy execution not verified |
-| Public authenticated Python service | BLOCKED | Approved persistent backend host, domain/TLS and operator provisioning not supplied |
+| Docker/Caddy deployment configuration | IMPLEMENTED / local ARM64 verified | 15 November: actual ARM64 build/container passed auth, arithmetic 2000, SSE and restart/audit checks; Caddy/OCI host execution still unverified |
+| Oracle Always Free host | BLOCKED_FREE_CAPACITY | Mumbai home region; actual A1 capacity reports return OUT_OF_HOST_CAPACITY for both 2 OCPUs / 12 GB and 1 OCPU / 6 GB; one availability domain; no resources created |
+| Public authenticated Python service | BLOCKED | Oracle host capacity, owned domain/TLS and interactive operator initialization remain required; no public backend deployment claimed |
 | Production financial operations | DISABLED | PRODUCTION config rejected; no ambiguous LIVE flag or frontend override |
 
 This is a working authenticated **zero-charge vertical slice**, not completion of
 all financial deployment criteria. See [deployment](LIVE_DEPLOYMENT.md),
 [judge interactions](LIVE_JUDGE_DEMO.md), and [verification](LIVE_VERIFICATION_REPORT.md).
+The dated 14 November report remains historical; current cloud observations and
+final runtime revision are recorded in [Oracle verification](ORACLE_VERIFICATION.md).
