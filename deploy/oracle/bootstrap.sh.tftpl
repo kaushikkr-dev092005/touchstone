@@ -1,0 +1,30 @@
+#!/bin/bash
+# Cloud-init only on the reviewed OCI Ubuntu 24.04 ARM64 host.
+set -euo pipefail
+umask 077
+[[ $(uname -m) == aarch64 ]] || { echo ARM64_REQUIRED; exit 1; }
+. /etc/os-release
+[[ $ID == ubuntu && $VERSION_ID == 24.04 ]] || { echo UBUNTU_24_04_REQUIRED; exit 1; }
+export DEBIAN_FRONTEND=noninteractive
+apt-get update
+apt-get install -y ca-certificates curl gnupg git python3 ufw unattended-upgrades
+install -d -m 755 /etc/apt/keyrings
+curl --fail --silent --show-error --location https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+chmod 644 /etc/apt/keyrings/docker.asc
+printf '%s\n' 'Types: deb' 'URIs: https://download.docker.com/linux/ubuntu' 'Suites: noble' 'Components: stable' 'Architectures: arm64' 'Signed-By: /etc/apt/keyrings/docker.asc' > /etc/apt/sources.list.d/docker.sources
+apt-get update
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+printf '%s\n' 'PasswordAuthentication no' 'KbdInteractiveAuthentication no' 'PermitRootLogin no' > /etc/ssh/sshd_config.d/00-touchstone.conf
+sshd -t
+systemctl reload ssh
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow from ${admin_ipv4_cidr} to any port 22 proto tcp
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw --force enable
+install -d -m 700 /var/lib/touchstone-data
+install -d -m 700 -o 10001 -g 10001 /var/lib/touchstone-data/operator
+install -d -m 700 -o 10002 -g 10002 /var/lib/touchstone-data/caddy-data /var/lib/touchstone-data/caddy-config
+systemctl enable --now docker unattended-upgrades
+# No cloud credentials, wallet, application password, model, image publication or app start.

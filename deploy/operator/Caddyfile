@@ -1,12 +1,20 @@
+{
+    admin off
+    # Internal unprivileged listeners; public HTTPS/HTTP remain 443/80.
+    http_port 8080
+    https_port 8443
+}
+
 {$OPERATOR_DOMAIN} {
     header Strict-Transport-Security "max-age=31536000"
     request_body {
         max_size 32KB
     }
+    # The sandbox merchant remains a separate existing service, without payer secrets.
+    redir /merchant https://touchstone-sandbox-merchant.sublimeoak1.chatgpt.site/merchant 302
     reverse_proxy operator:8089 {
         flush_interval -1
         stream_timeout 30s
     }
-    # Application audit is durable in SQLite. Do not enable access logging with
-    # cookies, Authorization, source bodies or query strings in a shared log sink.
+    # Do not log session cookies, passwords, source bodies or authorization headers.
 }

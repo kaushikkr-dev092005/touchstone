@@ -36,7 +36,7 @@ def main():
     if not 1024<=args.port<=65535:raise ValueError('Use port 1024 to 65535')
     import os
     for name in list(os.environ):
-        if name.startswith(('AWS_','AIRWALLEX_','ANTHROPIC_','CLAUDE_','METAL_')) or name=='AGENT_PRIVATE_KEY':os.environ.pop(name)
+        if name.startswith(('AWS_','OCI_','ORACLE_','AIRWALLEX_','ANTHROPIC_','CLAUDE_','METAL_')) or name=='AGENT_PRIVATE_KEY':os.environ.pop(name)
     os.environ['TOUCHSTONE_IGNORE_LOCAL_CONFIG']='1'
     from touchstone.operator_server import make_server
     from touchstone.leases import exclusive

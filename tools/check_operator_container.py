@@ -1,4 +1,4 @@
-"""Isolated local ARM64 container acceptance. No AWS, public TLS or financial calls."""
+"""Isolated local ARM64 container acceptance. No cloud, public TLS or financial calls."""
 import argparse
 import json
 from pathlib import Path
@@ -21,7 +21,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--revision',required=True)
     args=parser.parse_args()
     if not re.fullmatch('[a-f0-9]{40}',args.revision):raise ValueError('EXACT_LOCAL_IMAGE_REVISION_REQUIRED')
-    image='touchstone-aws-local:'+args.revision
+    image='touchstone-operator-local:'+args.revision
     info=json.loads(docker('image','inspect',image))[0]
     if info['Architecture']!='arm64' or info['Config']['Labels'].get('org.opencontainers.image.revision')!=args.revision:
         raise ValueError('IMAGE_IDENTITY_MISMATCH')
@@ -100,8 +100,8 @@ print(json.dumps([r.status,payload,dict(r.getheaders())]));c.close()
         report={'status':'PASS','scope':'LOCAL_ARM64_CONTAINER_NO_EXTERNAL_NETWORK','source_revision':args.revision,
             'architecture':'arm64','node_runtime':True,'frontend_routes':True,'authentication_and_throttle':True,
             'arithmetic_output':2000,'sse':True,'container_restart_persistence':True,'audit_valid':True,
-            'financial_dispatch_enabled':False,'aws_deployed':False,'public_tls_tested':False}
-        path=ROOT/'tmp/aws-container-verification.json';path.write_text(json.dumps(report,indent=2)+'\n')
+            'financial_dispatch_enabled':False,'cloud_deployed':False,'public_tls_tested':False}
+        path=ROOT/'tmp/operator-container-verification.json';path.write_text(json.dumps(report,indent=2)+'\n')
         print(json.dumps(report,indent=2))
     finally:
         # Only disposable local test objects with an unpredictable unique prefix.

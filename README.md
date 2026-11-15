@@ -18,6 +18,8 @@ secured service. [Setup and deployment](docs/LIVE_DEPLOYMENT.md) ·
 [Feature status](docs/LIVE_FEATURE_MATRIX.md) · [Judge workflow](docs/LIVE_JUDGE_DEMO.md).
 Public operator hosting and remote paid dispatch remain blocked; this is a working
 zero-charge vertical slice, not a fully deployed financial application.
+[Oracle Always Free deployment](docs/ORACLE_DEPLOYMENT.md) preserves this boundary;
+[execution status](docs/ORACLE_VERIFICATION.md) distinguishes local checks from cloud acceptance.
 
 Start the current website and operator dashboard from the repository root:
 

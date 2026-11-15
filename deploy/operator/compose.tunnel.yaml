@@ -1,0 +1,4 @@
+# Requires an SSH tunnel. Python remains bound to host loopback only.
+services:
+  operator:
+    ports: ["127.0.0.1:8089:8089"]

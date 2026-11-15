@@ -1,43 +1,63 @@
+# Reviewed ARM64 runtime, shared by OCI and local controlled validation.
 services:
   operator:
-    build:
-      context: ../..
-      dockerfile: deploy/operator/Dockerfile
-      args:
-        SOURCE_REVISION: ${SOURCE_REVISION:?Set the reviewed source commit}
+    image: ${APPLICATION_IMAGE:?Set the approved image digest}
+    platform: linux/arm64
+    pull_policy: never
     restart: unless-stopped
+    stop_grace_period: 35s
     read_only: true
+    user: "10001:10001"
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
-    tmpfs: [/tmp]
-    volumes: [operator_data:/var/lib/touchstone]
+    mem_limit: 256m
+    memswap_limit: 384m
+    cpus: 0.5
+    pids_limit: 96
+    tmpfs: [/tmp:size=32m,mode=1777]
+    environment:
+      TOUCHSTONE_IGNORE_LOCAL_CONFIG: "1"
+      TOUCHSTONE_SOURCE_REVISION: ${SOURCE_REVISION:?Set the reviewed source commit}
+    volumes:
+      - /var/lib/touchstone-data/operator:/var/lib/touchstone
     networks: [private, quote_egress]
     healthcheck:
-      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8089/healthz', headers={'Host':'${OPERATOR_DOMAIN:?Set your operator domain}'}),timeout=3).close()"]
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8089/healthz',headers={'Host':'${OPERATOR_HOST:?Set the configured Host header}'}),timeout=3).close()"]
       interval: 30s
       timeout: 5s
       retries: 3
-    # No published Python port, payer volume, bank key or hosted-model key.
+    logging:
+      driver: json-file
+      options: {max-size: 5m, max-file: "2"}
   proxy:
-    image: caddy:2
+    profiles: [https]
+    image: ${CADDY_IMAGE:?Set the reviewed Caddy image digest}
+    platform: linux/arm64
     restart: unless-stopped
+    stop_grace_period: 35s
+    read_only: true
+    user: "10002:10002"
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 64m
+    cpus: 0.25
+    pids_limit: 64
     environment:
-      OPERATOR_DOMAIN: ${OPERATOR_DOMAIN:?Set your operator domain}
-    ports: ["80:80", "443:443"]
+      OPERATOR_DOMAIN: ${OPERATOR_DOMAIN:-}
+    ports: ["80:8080", "443:8443"]
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
+      - /var/lib/touchstone-data/caddy-data:/data
+      - /var/lib/touchstone-data/caddy-config:/config
+    tmpfs: [/tmp:size=16m,mode=1777]
     networks: [private, public]
     depends_on:
       operator:
         condition: service_healthy
-volumes:
-  operator_data:
-  caddy_data:
-  caddy_config:
+    logging:
+      driver: json-file
+      options: {max-size: 5m, max-file: "2"}
 networks:
-  private:
-    internal: true
+  private: {internal: true}
   public:
   quote_egress:

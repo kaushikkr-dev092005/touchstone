@@ -13,3 +13,13 @@ __pycache__/
 node_modules/
 apps/web/public/data/evidence.json
 apps/web/public/dashboard/
+.terraform/
+*.tfstate*
+*.tfplan
+*.tfvars
+*.tfvars.json
+!.terraform.lock.hcl
+!*.example.tfvars
+.oci/
+*.pem
+*.key

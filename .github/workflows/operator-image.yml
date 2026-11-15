@@ -1,4 +1,4 @@
-name: build-reviewed-aws-image
+name: build-reviewed-operator-image
 on:
   workflow_dispatch:
     inputs:
@@ -49,4 +49,4 @@ jobs:
       - name: Record image identity without provisioning
         env:
           DIGEST: ${{ steps.image.outputs.digest }}
-        run: echo "Reviewed image digest $DIGEST. No AWS resources were created."
+        run: echo "Reviewed image digest $DIGEST. No cloud resources were created."

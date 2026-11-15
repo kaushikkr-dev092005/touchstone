@@ -1,7 +1,8 @@
 # Authenticated operational workspace
 
-For the prepared Mumbai AWS stack, budget and authentication gates, see
-[AWS deployment preparation](AWS_DEPLOYMENT.md). AWS resources have not been provisioned.
+For Oracle Always Free infrastructure, account gates and the actual deployment
+status, see [Oracle deployment](ORACLE_DEPLOYMENT.md). No cloud deployment is
+claimed until its external acceptance checks pass.
 
 This release implements a working **zero-charge operational vertical slice**:
 authenticated source submission, bounded local computation, deterministic verification,
@@ -38,50 +39,24 @@ best effort on Windows). Use a dedicated OS user in deployment.
 
 ## Deployment boundary
 
-The public Worker cannot execute the Python/SQLite service. Deploy this service on
-an approved persistent Linux/Docker host with its own operator HTTPS domain. No
-such approved AWS host/domain has been provisioned. Current local Docker, ARM64
-build and runtime results are recorded separately in
-[AWS verification](AWS_DEPLOYMENT_VERIFICATION.md); local checks do not establish
-public operator availability.
+The public merchant Worker cannot execute the Python/SQLite workspace. The
+shared `deploy/operator/Dockerfile` builds the current React frontend and canonical
+read-only dashboard. Its public routes use projected committed evidence; the
+private loopback `/console` is never exposed by the operator service.
 
-`deploy/operator/compose.yaml` provides a non-root, read-only application container,
-private proxy network, outbound quote network, named persistent database volume,
-health check, dropped capabilities and Caddy TLS proxy. Python port 8089 is **not
-published**. Only proxy ports 80/443 are public. There are no payer/bank secrets or
-wallet mounts. The image includes the pinned Node dependencies for read-only quote
-validation. Pin deployment images to reviewed digests before production hardening;
-the shared ARM64 Dockerfile is now built and smoke-tested locally, as recorded
-in the AWS report. Public hosting and TLS remain unverified.
+`deploy/operator/compose.yaml` uses a reviewed ARM64 image, separate unprivileged
+application/proxy UIDs, read-only roots, dropped capabilities, bounded logs and
+persistent data. Python has no public port. HTTPS is an explicit profile; without
+an owned domain use `compose.tunnel.yaml`, which publishes Python on host loopback
+only and requires SSH forwarding. No cloud/bank/model credentials or wallets are
+mounted. Initialize the operator interactively in **DEMO** mode.
 
-On the approved host, point the domain's DNS at that host and copy the reviewed
-repository. Copy `deploy/operator/.env.example` to `deploy/operator/.env`, then set
-the domain and exact reviewed Git commit. These values are not financial secrets.
-
-```text
-docker compose --env-file deploy/operator/.env -f deploy/operator/compose.yaml build
-docker compose --env-file deploy/operator/.env -f deploy/operator/compose.yaml run --rm -it operator python tools/run_operator.py init --config /var/lib/touchstone/operator-config.json --origin https://YOUR_OPERATOR_DOMAIN --environment SANDBOX
-docker compose --env-file deploy/operator/.env -f deploy/operator/compose.yaml up -d
-```
-
-Replace the domain placeholder. Do not put the password in a command, environment
-variable, image layer, shared log or Git. Initialization creates only the local
-operator identity the administrator explicitly requests. No bank or model action
-runs during deployment. Limit network ingress to the proxy; restrict allowed quote
-egress at the host firewall. Do not mount the private payer's filesystem.
-
-Validate externally before announcing deployment:
-
-```text
-curl --fail https://YOUR_OPERATOR_DOMAIN/healthz
-curl -i https://YOUR_OPERATOR_DOMAIN/operator-api/jobs
-```
-
-Health must identify `touchstone-operator`, the configured environment, source
-revision and disabled financial dispatch. Anonymous jobs must return **401**.
-Sign in through the browser, execute the arithmetic example, reload, restart the
-container and verify that history and audit remain valid. Test HTTPS cookies and
-SSE through the actual proxy. Do not use curl flags that print cookies or passwords.
+Follow [the exact Oracle setup and maintenance commands](ORACLE_DEPLOYMENT.md).
+Build and verify committed source off-host with `tools/build_operator_image.py`
+and `tools/check_operator_container.py`. The local image can be transferred over
+SSH after its archive checksum and revision are verified; public registry
+publication is not required. Local container checks do not establish public TLS
+or Oracle host readiness.
 
 ## Authentication and security controls
 
