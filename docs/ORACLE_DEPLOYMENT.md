@@ -54,6 +54,9 @@ and dedicated NSG. SSH 22 is restricted to the authorized owner's IPv4 `/32`;
 egress uses 80/443. There is no NAT, load balancer, database, paid key, instance
 principal, IAM policy or reserved IP resource. Public IP is the VNIC's ephemeral
 address. All resource eligibility and egress allowances still require review.
+The Docker pre-start rule rejects container traffic to link-local metadata;
+OCI's IMDSv2 constant header alone is not container isolation. Validate this on
+the actual host before starting the app, without retrieving identity credentials.
 
 ## Authentication and read-only preparation
 

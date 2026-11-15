@@ -54,6 +54,23 @@ class OraclePreflightTests(unittest.TestCase):
                 read_oci(command,[],cli='oci',profile='TOUCHSTONE',region='ap-mumbai-1',config_file='unused')
             run.assert_not_called()
 
+    def test_documented_empty_list_has_no_stdout_but_get_must_have_json(self):
+        for command, succeeds in [(('iam','compartment','list'),True),(('iam','tenancy','get'),False)]:
+            response=subprocess.CompletedProcess([],0,stdout='',stderr='')
+            with patch('subprocess.run',return_value=response) as run:
+                args=dict(cli='oci',profile='TOUCHSTONE',region='ap-mumbai-1',config_file='unused')
+                if succeeds:self.assertEqual(read_oci(command,[],**args),[])
+                else:
+                    with self.assertRaises(RuntimeError):read_oci(command,[],**args)
+                argv=run.call_args.args[0]
+                self.assertIn('--cli-rc-file',argv)
+                self.assertEqual(argv[argv.index('--query')+1],'@')
+
+    def test_a_filtered_empty_result_is_not_an_empty_inventory(self):
+        response=subprocess.CompletedProcess([],0,stdout='',stderr='Query returned empty result, no output to show.')
+        with patch('subprocess.run',return_value=response), self.assertRaises(RuntimeError):
+            read_oci(('iam','compartment','list'),[],cli='oci',profile='TOUCHSTONE',region='ap-mumbai-1',config_file='unused')
+
     def test_missing_profile_and_mismatch_make_no_reads(self):
         with tempfile.TemporaryDirectory() as d:
             with patch('tools.oracle_preflight.find_cli',return_value='oci'):
@@ -114,6 +131,8 @@ class OracleRuntimeTests(unittest.TestCase):
         self.assertIn('https://download.docker.com/linux/ubuntu',script)
         self.assertIn('ufw default deny incoming',script)
         self.assertIn('PermitRootLogin no',script)
+        self.assertIn('ExecStartPre=/usr/local/sbin/touchstone-container-boundary',script)
+        self.assertIn('169.254.0.0/16 -j REJECT',script)
         self.assertNotIn('systemctl start touchstone',script)
         self.assertNotIn('ufw disable',script)
 
@@ -122,6 +141,7 @@ class OracleRuntimeTests(unittest.TestCase):
         self.assertNotIn('mkfs',script)
         self.assertIn('EXISTING_RUNTIME_REQUIRES_REVIEWED_UPDATE',script)
         self.assertIn('IMAGE_REVISION_MISMATCH',script)
+        self.assertIn('CONTAINER_METADATA_BLOCK_REQUIRED',script)
         self.assertIn('--pull never --no-build',script)
         self.assertNotIn('systemctl start touchstone',script)
 

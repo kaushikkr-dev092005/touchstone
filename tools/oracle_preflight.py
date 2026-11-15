@@ -55,10 +55,16 @@ def read_oci(command, args, *, cli, profile, region, config_file):
     env = {k: v for k, v in os.environ.items() if not k.startswith(
         ('OCI_', 'ORACLE_', 'AWS_', 'AIRWALLEX_', 'METAL_', 'CLAUDE_', 'ANTHROPIC_')) and k != 'AGENT_PRIVATE_KEY'}
     result = subprocess.run([cli, '--config-file', str(config_file), '--profile', profile,
+        '--cli-rc-file', os.devnull, '--query', '@',
         '--auth', 'security_token', '--region', region, '--output', 'json', *command, *args],
         env=env, capture_output=True, text=True, timeout=90)
     if result.returncode:
         raise RuntimeError('OCI_READ_DENIED_OR_SESSION_EXPIRED')
+    # OCI CLI 3.95.1 cli_util.render() emits nothing for an empty list.
+    # Force whole-response query/default isolation above; never apply this to GET.
+    # https://github.com/oracle/oci-cli/blob/v3.95.1/src/oci_cli/cli_util.py
+    if command[-1] == 'list' and not result.stdout.strip() and 'Query returned empty' not in result.stderr:
+        return []
     try:
         return json.loads(result.stdout)['data']
     except (ValueError, KeyError):

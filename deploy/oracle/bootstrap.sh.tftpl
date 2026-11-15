@@ -14,6 +14,22 @@ chmod 644 /etc/apt/keyrings/docker.asc
 printf '%s\n' 'Types: deb' 'URIs: https://download.docker.com/linux/ubuntu' 'Suites: noble' 'Components: stable' 'Architectures: arm64' 'Signed-By: /etc/apt/keyrings/docker.asc' > /etc/apt/sources.list.d/docker.sources
 apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+# OCI IMDSv2 uses a public constant header, so it does not isolate containers.
+# Prepare DOCKER-USER before every daemon start, including restored containers.
+install -d -m 755 /usr/local/sbin /etc/systemd/system/docker.service.d
+cat > /usr/local/sbin/touchstone-container-boundary <<'BOUNDARY'
+#!/bin/sh
+set -eu
+iptables -nL DOCKER-USER >/dev/null 2>&1 || iptables -N DOCKER-USER
+iptables -C DOCKER-USER -d 169.254.0.0/16 -j REJECT 2>/dev/null || iptables -I DOCKER-USER 1 -d 169.254.0.0/16 -j REJECT
+BOUNDARY
+chmod 700 /usr/local/sbin/touchstone-container-boundary
+cat > /etc/systemd/system/docker.service.d/touchstone-boundary.conf <<'BOUNDARY_UNIT'
+[Service]
+ExecStartPre=/usr/local/sbin/touchstone-container-boundary
+BOUNDARY_UNIT
+systemctl daemon-reload
+systemctl restart docker
 printf '%s\n' 'PasswordAuthentication no' 'KbdInteractiveAuthentication no' 'PermitRootLogin no' > /etc/ssh/sshd_config.d/00-touchstone.conf
 sshd -t
 systemctl reload ssh

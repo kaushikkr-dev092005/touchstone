@@ -18,6 +18,8 @@ esac
 [[ $(docker image inspect --format '{{.Architecture}}' "$app_image") == arm64 ]] || exit 1
 [[ $(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' "$app_image") == "$revision" ]] || { echo IMAGE_REVISION_MISMATCH; exit 1; }
 docker compose version >/dev/null
+[[ -f /etc/systemd/system/docker.service.d/touchstone-boundary.conf ]] || { echo CONTAINER_BOUNDARY_REQUIRED; exit 1; }
+iptables -C DOCKER-USER -d 169.254.0.0/16 -j REJECT || { echo CONTAINER_METADATA_BLOCK_REQUIRED; exit 1; }
 install -d -m 700 /opt/touchstone /var/lib/touchstone-data
 install -d -m 700 -o 10001 -g 10001 /var/lib/touchstone-data/operator
 install -d -m 700 -o 10002 -g 10002 /var/lib/touchstone-data/caddy-data /var/lib/touchstone-data/caddy-config
