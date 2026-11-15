@@ -18,10 +18,34 @@ on Windows instead of resetting a socket closed with an unread POST body.
 The AWS helper now rejects root sessions before cloud access and rejects root or
 unverifiable STS identities. An explicitly approved browser sign-in completed but
 returned root again. The owner confirmed there is no non-root identity available.
-The intended account is owner-confirmed; identity and eligibility are **not verified**.
+The owner changed the intended target to account ending **0507**. The local
+profile belongs to another account and remains root. STS identity and eligibility
+for the intended account are **not verified**.
 Required owner action: establish a non-root IAM user or role in that account with
 console/CLI sign-in and the documented read-only permissions, then repeat login and
 `tools/aws_preflight.py`. No root API call is permitted as a workaround.
+
+## Source changes
+
+- `touchstone/operator_auth.py`, `operator_server.py`: durable rolling throttles,
+  controlled clocks, safe bounded rejection responses.
+- `tools/aws_preflight.py`: credential-source metadata, root refusal and strict
+  non-root identity verification before further read-only checks.
+- `tools/aws_runtime_guard.py`, `render_aws_userdata.py`, `deploy/aws/bootstrap.sh`,
+  `cloudformation.json`, `install-runtime.sh`, `runtime-policy.example.json`:
+  embedded root-owned stopping window, durable counters and mount/start checks.
+- `deploy/aws/compose.yaml`, `Caddyfile`, `deploy/operator/Dockerfile`: separate
+  non-root proxy, capability removal, exact base digests, correct UID/GID,
+  required Node runtime library and frontend Python command.
+- `tools/run_operator.py`: graceful SIGTERM and removal of cloud/financial env vars.
+- `tools/build_aws_image.py`, `check_aws_container.py`: committed-source local
+  ARM64 build and isolated real-backend acceptance; no publication/provisioning.
+- `tools/check_operator_workspace.py`, `validate_release.py`: strip AWS credentials
+  from zero-spend validation children.
+- `tests/test_operator_workspace.py`, `test_aws_deployment.py`,
+  `test_aws_runtime_guard.py`: clock/migration/concurrency, identity and runtime coverage.
+- AWS plan/pricing/Guard reports and deployment documentation: actual results,
+  cost/approval blockers and exact owner acceptance steps. No financial evidence changed.
 
 ## Runtime changes
 
@@ -59,9 +83,33 @@ HostProfile, Instance, PublicIp, IpAttachment, DataVolume, DataAttachment,
 and UsageBudget. Root storage is attached to Instance; no KMS key, scheduler,
 managed database, load balancer or paid networking resource is added.
 
+## Executed local container proof
+
+**PASS**, ARM64 image built from source `79287854c92258fe7eb7f4f2e83735602e974e65`.
+The first build found Debian's existing `operator` group; the next exposed the
+missing `python` alias in the frontend build stage. Both were fixed. The final
+build compiles the frontend and verifies ARM64/OCI source identity. Its local-only
+image identifier is `sha256:c291f5eea0d9234806f2122ae287055c416bfa45cfe8efa6225d2b0b6d8ccb41`;
+**this is not a published registry digest or an approved deployment artifact**.
+
+`tools/check_aws_container.py` passes with external networking disabled and no
+published ports. The test drives actual HTTP over container loopback, verifies
+all four public frontend routes, bad/correct login, 429 after five attempts,
+CSRF rejection, arithmetic result 2000, genuine SSE, zero ledger charges, audit
+integrity, retained SQLite/session history after real container restart, and the
+absence of a payment API. Node 22 runs as the app user. Temporary test volumes and
+containers are removed. An earlier harness attempted host publishing on an
+internal Docker network; it was corrected to container-loopback testing instead
+of allowing outbound access. This is local proof, not external AWS acceptance.
+
+Caddy ARM64 configuration validation also passes as UID 10002, with dropped
+capabilities, read-only root and network disabled. Candidate digest:
+`caddy@sha256:4e2425f6009577e7c651010f16679c28f7d12df3e7b1914f941a7a3370746b3c`.
+It is not owner-approved yet. Syntax validation is not public certificate issuance.
+
 ## Release gates
 
-Full final-source validation and image runtime results will be recorded here after
+Full source/archive/browser and GitHub matrix results will be recorded after
 execution. No unrun command is a pass. A local image identifier is not a published
 registry digest. Public HTTPS, SSM, EBS retention, host shutdown and outside-machine
 acceptance remain **NOT RUN** until an exact compliant plan is explicitly approved.

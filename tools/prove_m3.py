@@ -1,13 +1,16 @@
 """Controlled M3 accounting evidence. No network, credentials or real wallets."""
 import json
+from contextlib import ExitStack
 from pathlib import Path
 import sys
 import tempfile
+import unittest
 from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parent.parent
 sys.path[:0]=[str(ROOT),str(ROOT/'tests')]
 from test_m3 import PremiumFactory
+from signed_fixture import signed_fixtures
 from touchstone.invoice_profile import paid
 from touchstone.metal import PaymentPending
 
@@ -15,8 +18,10 @@ from touchstone.metal import PaymentPending
 def main():
     health={'inference_ready':True,'chain':63825,'provider_id':'hosted-premium',
             'upstream_funding':'PARTNER_CREDITS_OPERATOR_DECLARED','provider_model':'MOCK-premium'}
-    with tempfile.TemporaryDirectory() as directory, patch('socket.create_connection',side_effect=AssertionError('No network')):
+    with tempfile.TemporaryDirectory() as directory, patch('socket.create_connection',side_effect=AssertionError('No network')), ExitStack() as cleanup:
         root=Path(directory);factory=PremiumFactory(root/'remote')
+        case=unittest.TestCase();cleanup.callback(case.doCleanups)
+        signed_fixtures(case,root)  # Real ephemeral signatures; no live provider.
         result=paid('primary','http://127.0.0.1:8093',100000,10000,2,root/'profile.json',
             execute=True,reference_scope='reference',reference_budget=50000,
             client_factory=factory,health=health,directory=root/'state')

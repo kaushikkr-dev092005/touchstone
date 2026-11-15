@@ -16,7 +16,7 @@
   "retained_data_gp3_gib": 8,
   "public_ipv4_addresses": 1,
   "image_build_strategy": "OFF_HOST_ONLY",
-  "image_build_completed": false,
+  "image_build_completed": true,
   "image_publication_authorized": false,
   "image_digest": null,
   "caddy_image_digest": null,
@@ -78,7 +78,7 @@
     "account_upgrade_authorized": false,
     "capacity_validated": false
   },
-  "expected_account_id_source": "Operator-supplied private console link; must be verified with STS and supplied as a parameter, not committed.",
+  "expected_account_id_source": "Latest explicit owner confirmation; intended account ending 0507. Full ID supplied privately at execution, never committed.",
   "last_account_preflight_status": "AWS_ROOT_CREDENTIALS_FORBIDDEN",
   "account_verification_status": "BLOCKED_OWNER_MUST_ESTABLISH_NON_ROOT_IDENTITY",
   "approved_budget_satisfied": null,
@@ -186,6 +186,21 @@
     "automatic_renewal": false,
     "on_host_validated": false,
     "hard_account_spend_bound": false,
+    "owner_approved": false
+  },
+  "owner_confirmed_account_suffix": "0507",
+  "local_profile_account_matches_target": false,
+  "local_build": {
+    "scope": "LOCAL_ONLY_NOT_PUBLISHED",
+    "architecture": "arm64",
+    "source_revision": "79287854c92258fe7eb7f4f2e83735602e974e65",
+    "local_image_id": "sha256:c291f5eea0d9234806f2122ae287055c416bfa45cfe8efa6225d2b0b6d8ccb41",
+    "container_acceptance": "PASS_NETWORK_NONE_NO_FINANCIAL_CALLS",
+    "registry_manifest_available": false
+  },
+  "caddy_local_candidate": {
+    "image": "caddy@sha256:4e2425f6009577e7c651010f16679c28f7d12df3e7b1914f941a7a3370746b3c",
+    "arm64_configuration_validation": "PASS_NETWORK_NONE_UID_10002",
     "owner_approved": false
   }
 }

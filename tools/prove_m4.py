@@ -1,13 +1,17 @@
 """Opt-in controlled M4 evidence. No provider, wallet, environment or network."""
 import json
+from contextlib import ExitStack
 from pathlib import Path
 import sys
 import tempfile
+import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path[:0] = [str(ROOT), str(ROOT/'tests')]
 
 from test_m4 import ComparisonFactory, ORIGINS
+from signed_fixture import signed_fixtures
 from touchstone.comparison import Comparison, prepare
 from touchstone.invoice_profile import save
 
@@ -15,8 +19,10 @@ from touchstone.invoice_profile import save
 def main():
     output = ROOT/'bench/results/m4/mock'
     plan = prepare('controlled-m4', ORIGINS, 2040000, 50000, steps=16)
-    with tempfile.TemporaryDirectory(prefix='touchstone-m4-proof-') as temporary:
+    with tempfile.TemporaryDirectory(prefix='touchstone-m4-proof-') as temporary, ExitStack() as cleanup, patch('socket.create_connection',side_effect=AssertionError('No network')):
         root = Path(temporary)
+        case=unittest.TestCase();cleanup.callback(case.doCleanups)
+        signed_fixtures(case,root)  # Existing test-only signer, never production keys.
         factory = ComparisonFactory(root/'remote', plan)
         study = Comparison(plan, root/'study', factory, factory.health,
                            lambda: {'connected': True, 'chain_id': 63825}, lambda *_: True)

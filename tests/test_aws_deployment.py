@@ -285,7 +285,12 @@ class AwsInfrastructureTests(unittest.TestCase):
         self.assertIsNone(plan['approved_budget_satisfied'])
         self.assertFalse(plan['out_of_pocket_target_verified'])
         self.assertIsNone(plan['selected_alternative'])
-        self.assertFalse(plan['image_build_completed'])
+        self.assertIs(type(plan['image_build_completed']),bool)
+        if plan['image_build_completed']:
+            self.assertEqual(plan['local_build']['architecture'],'arm64')
+            self.assertRegex(plan['local_build']['source_revision'],r'^[a-f0-9]{40}$')
+            self.assertEqual(plan['local_build']['scope'],'LOCAL_ONLY_NOT_PUBLISHED')
+            self.assertIsNone(plan['image_digest'])
         self.assertFalse(plan['image_publication_authorized'])
 
 

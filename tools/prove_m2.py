@@ -1,11 +1,13 @@
 """Offline M2 evidence: controlled adapters, real process death, no live funds."""
 import json
+from contextlib import ExitStack
 import os
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import threading
+import unittest
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -13,12 +15,15 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / 'tests'))
 from m2_fixtures import FixtureFactory
 from test_invariants import RandomizedOperationTests
+from signed_fixture import signed_fixtures
 from touchstone.metal_batch import MetalBatch
 
 
 def main():
-    with tempfile.TemporaryDirectory() as directory, patch('socket.create_connection', side_effect=AssertionError('No network allowed')):
+    with tempfile.TemporaryDirectory() as directory, patch('socket.create_connection', side_effect=AssertionError('No network allowed')), ExitStack() as cleanup:
         root = Path(directory)
+        case=unittest.TestCase();cleanup.callback(case.doCleanups)
+        signed_fixtures(case,root)  # Real ephemeral signatures, controlled rails only.
         factory = FixtureFactory(root/'remote', threading.Barrier(3))
         batch = MetalBatch(root/'batch', factory, root/'funding.sqlite')
         batch.prepare('parallel', 'http://127.0.0.1:8092', 3, 2, 40000, 10000, 120000)
@@ -35,6 +40,9 @@ sys.path[:0]=[str(Path.cwd()),str(Path.cwd()/'tests')]
 from m2_fixtures import FixtureFactory
 from touchstone.metal_batch import MetalBatch
 root=Path(sys.argv[1])
+import unittest
+from signed_fixture import signed_fixtures
+signed_fixtures(unittest.TestCase(),root)
 MetalBatch(root/'batch',FixtureFactory(root/'remote'),root/'funding.sqlite').run('crash',execute=True,kill_at='after_rail')
 '''
         env = {**os.environ, 'TOUCHSTONE_IGNORE_LOCAL_CONFIG': '1'}
@@ -47,6 +55,9 @@ MetalBatch(root/'batch',FixtureFactory(root/'remote'),root/'funding.sqlite').run
         replay = batch.run('crash', execute=True, recover=True)
         assert len(recovered['paid_attempts']) == 1 and recovered['receipts_reconciled']
         assert replay['paid_attempts'] == recovered['paid_attempts']
+        # The fuzz suite owns different temporary ledgers. Keep the signer
+        # directory fence intact and remove this proof's fixture before fuzzing.
+        case.doCleanups()
         fuzz = [RandomizedOperationTests().run_sequence(seed) for seed in range(100,108)]
         report = {'label': 'MOCK', 'network_requests': 0, 'live_money_moved': False,
                   'parallel': parallel, 'funding_and_purchase_order': factory.events,

@@ -5,7 +5,8 @@ operation has been created. The existing Sites deployment remains unchanged.
 The latest local preflight returns **AWS_ROOT_CREDENTIALS_FORBIDDEN** before
 any AWS API call: the default profile points to a root login session. An explicitly
 authorized browser login completed but returned root again. The owner confirmed
-that no non-root identity exists yet. The owner must create/authorize a non-root
+that no non-root identity exists yet. The owner changed the target to account ending 0507; the local root profile
+still belongs to a different account. The owner must create/authorize a non-root
 IAM user or role in the intended account before cloud checks can resume. No IAM
 resource or account plan was changed. AWS CLI 2.40.3 is installed and discovered.
 Earlier STS evidence returned AWS_ACCOUNT_MISMATCH; it does not establish the

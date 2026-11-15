@@ -51,7 +51,8 @@ health check, dropped capabilities and Caddy TLS proxy. Python port 8089 is **no
 published**. Only proxy ports 80/443 are public. There are no payer/bank secrets or
 wallet mounts. The image includes the pinned Node dependencies for read-only quote
 validation. Pin deployment images to reviewed digests before production hardening;
-the supplied tags and Docker build have not been validated on this machine.
+the shared ARM64 Dockerfile is now built and smoke-tested locally, as recorded
+in the AWS report. Public hosting and TLS remain unverified.
 
 On the approved host, point the domain's DNS at that host and copy the reviewed
 repository. Copy `deploy/operator/.env.example` to `deploy/operator/.env`, then set
